@@ -33,5 +33,5 @@
 ### ⭐ DB
 - MySql
 - Redis
-- MongoDB 
+- Mongodb 
 
