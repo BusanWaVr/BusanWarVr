@@ -1,8 +1,6 @@
 ## 공통-Sub PJT II
 ![Generic badge](https://img.shields.io/badge/pycharm-3.8-yellowgreen.svg) ![Generic badge](https://img.shields.io/badge/Robo3T-1.4.4-green.svg) ![Generic badge](https://img.shields.io/badge/mongoDB-5.0-orange.svg) ![Generic badge](https://img.shields.io/badge/Flask-2.0.1-blue.svg)
 
-<p align="center"><img src="./static/img/logo.png" height="200px" width="300px"></p>  
-
  
 
 ## 🔗여기Vr
