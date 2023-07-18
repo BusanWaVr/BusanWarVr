@@ -4,7 +4,7 @@
  
 
 ## 🔗여기Vr
-![vr](https://github.com/wjddudqls96/java/assets/59672589/4a680cbf-9663-4d63-8d64-a9b980d5fe52) 
+![메인 페이지(대충 이런 느낌)](https://github.com/kimingu7/springstudy/assets/122415709/7bcc41f2-2574-4e9e-8385-7503f3cd3439) 
 
 
 ### ✈️ 소개
