@@ -31,6 +31,6 @@
 - Spring Boot, Spring Security
 
 ### ⭐ DB
-- MySql
+- Mysql
 - Redis
 - Mongodb
