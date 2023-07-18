@@ -9,7 +9,9 @@
 
 ### ✈️ 소개
 - 360도 영상 라이브 스트리밍을 통한 생생한 VR 랜선 투어 제공 서비스
-    
+
+[와이어프레임](https://www.figma.com/file/7GGkxudmaNRwDje7VLlHeK/Untitled?type=design&mode=design&t=STKqHjQZDDVpGnip-1)
+
 ### 🛠 기능 요약 
 
 ### ⏰ 개발 기간
