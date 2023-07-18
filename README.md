@@ -9,7 +9,11 @@
 
 ### ✈️ 소개
 - 360도 영상 라이브 스트리밍을 통한 생생한 VR 랜선 투어 제공 서비스
+
 - ![팀 메뉴트리](https://miro.com/app/board/uXjVM1wjrzs=/)
+
+- ![팀 노션 바로가기](https://molangmolang.notion.site/99b8316d1e874164b050fdfa33139c33?pvs=4)
+    
 
 ### 🛠 기능 요약 
 
@@ -17,12 +21,12 @@
     07.17.2023 ~ 07.24.2023
 
 ### 👩‍💻 멤버 구성
-- 김남우(팀장) - front-end
-- 서정희 - front-end
-- 정은경 - front-end
-- 정영빈 - back-end
-- 황재영 - back-end
-- 김민구 - back-end
+- 김남우(팀장) : Front-End
+- 서정희 : Front-End
+- 정은경 : Front-End
+- 정영빈 : Back-End
+- 황재영 : Back-End
+- 김민구 : Back-End
 
 ### 🔥 Front-End Stack
 - React, TypeScript
