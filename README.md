@@ -17,12 +17,12 @@
     07.17.2023 ~ 07.24.2023
 
 ### 👩‍💻 멤버 구성
-- 김남우(팀장) - front-end
-- 서정희 - front-end
-- 정은경 - front-end
-- 정영빈 - back-end
-- 황재영 - back-end
-- 김민구 - back-end
+- 김남우(팀장) : Front-End
+- 서정희 : Front-End
+- 정은경 : Front-End
+- 정영빈 : Back-End
+- 황재영 : Back-End
+- 김민구 : Back-End
 
 ### 🔥 Front-End Stack
 - React, TypeScript
