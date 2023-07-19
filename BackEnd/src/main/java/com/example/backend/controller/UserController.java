@@ -9,17 +9,16 @@ import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.security.jwt.HeaderTokenExtractor;
 import com.example.backend.security.jwt.JwtDecoder;
 import com.example.backend.security.jwt.JwtTokenUtils;
+import com.example.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,20 +31,26 @@ public class UserController {
     private final JwtDecoder jwtDecoder;
     private final JwtTokenUtils jwtTokenUtils;
 
+    private final UserService userService;
+
     String ACCESS_TOKEN_HEADER = "Access_Token";
     String REFRESH_TOKEN_HEADER = "Refresh_Token";
     String TOKEN_TYPE = "BEARER";
 
 
     @PostMapping("/user")
-    public void signUpController(@RequestBody SignUpDto.Reqeust reqeust){
+    public Response<SignUpDto> userSiginupApi(@ModelAttribute SignUpDto.Reqeust reqeust) throws IOException, IllegalAccessException {
         String encodedPassword = passwordEncoder.encode(reqeust.getPassword());
+        System.out.println(reqeust);
+        System.out.println(reqeust.getProfileImg());
 
+        userService.signup(reqeust);
         //TODO : 이미지 저장 부분 잘보기
 
         //TODO : validation 적용
 
         // TODO : 사용자 저장
+        return new Response<>("200", "성공적으로 회원가입 되었습니다!", null);
     }
 
     //TODO : 가이드 회원가입 만들기

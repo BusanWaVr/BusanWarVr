@@ -1,14 +1,14 @@
 package com.example.backend.model;
 
 import com.example.backend.model.enums.AuthType;
-import com.example.backend.model.enums.Category;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +38,6 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.profileImg = profileImg;
-    }
-
-    public User() {
-
     }
 
     @Override
