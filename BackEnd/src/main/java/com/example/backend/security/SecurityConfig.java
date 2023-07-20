@@ -7,7 +7,6 @@ import com.example.backend.security.jwt.HeaderTokenExtractor;
 import com.example.backend.security.jwt.JwtTokenUtils;
 import com.example.backend.security.provider.FormLoginAuthProvider;
 import com.example.backend.security.provider.JWTAuthProvider;
-import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
