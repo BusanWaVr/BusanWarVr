@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public Response<SignUpDto> userSignupApi(@ModelAttribute SignUpDto.Reqeust reqeust) throws IOException, IllegalAccessException {
+    public Response<SignUpDto> userSignupApi(@Validated @ModelAttribute SignUpDto.Reqeust reqeust) throws IOException, IllegalAccessException {
         String encodedPassword = passwordEncoder.encode(reqeust.getPassword());
 //        System.out.println(reqeust);
 
