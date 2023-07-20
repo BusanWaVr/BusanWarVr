@@ -4,6 +4,7 @@ import com.example.backend.model.Category;
 import com.example.backend.model.User;
 import static com.example.backend.validation.ValidationGroups.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
@@ -16,21 +17,24 @@ import java.util.List;
 public class SignUpDto {
 
     @Data
+    @NoArgsConstructor
     public static class Reqeust{
 
         @NotBlank(message = "이메일 주소를 입력해 주세요")
         @Email(message = "올바른 이메일 주소를 입력해 주세요")
         private String email;
 
-        @NotBlank(message = "닉네임을 입력해주세요.", groups = NotBlankGroup.class)
-        @Pattern(regexp = "^[a-zA-Z0-9가-힣]+$", message = "닉네임은 숫자, 한글, 영어만 가능합니다.",
-                groups = PatternGroup.class)
-        @Size(min = 2, max = 8, message = "닉네임은 2자 이상 8자 이하여야합니다.",groups = SizeGroup.class)
+        @NotBlank(message = "닉네임을 입력해주세요.")
+        @Pattern(regexp = "^[a-zA-Z0-9가-힣]*$", message = "닉네임은 숫자, 한글, 영어만 가능합니다.")
+        @Size(min = 2, max = 8, message = "닉네임은 2자 이상 8자 이하여야합니다.")
         private String nickname;
 
         @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
-        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{10,16}", message = "비밀번호는 10~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
+//        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{10,16}", message = "비밀번호는 10~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
+        @Pattern(regexp = "^(?=(?:[^a-zA-Z]*[a-zA-Z])(?:[^\\d]*\\d|\\d*[^\\d]|[^\\w]*\\w|\\w*[^\\w]))[\\w\\W]*$", message = "비밀번호는 영문, 숫자, 특수문자 중 2종류 이상을 조합하여 설정해주세요.")
+        @Size(min = 10, message = "비밀번호는 10자 이상여야합니다.")
         private String password;
+
         private List<String> category;
         private MultipartFile profileImg;
 
