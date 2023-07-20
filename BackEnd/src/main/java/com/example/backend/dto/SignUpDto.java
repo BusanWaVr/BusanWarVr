@@ -1,5 +1,6 @@
 package com.example.backend.dto;
 
+import com.example.backend.model.Category;
 import com.example.backend.model.User;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,8 +29,12 @@ public class SignUpDto {
                     '}';
         }
 
-//        public User toUser() {
-//            return new User(this.email, this.nickname, this.password, this.category);
-//        }
+        public User toUser(String profileImg, String encodedPassword) {
+            return new User(this.email, this.nickname, encodedPassword, profileImg);
+        }
+
+        public Category toCategory(String category, User user) {
+            return  new Category(category, user);
+        }
     }
 }

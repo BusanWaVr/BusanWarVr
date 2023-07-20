@@ -39,14 +39,14 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public Response<SignUpDto> userSiginupApi(@ModelAttribute SignUpDto.Reqeust reqeust) throws IOException, IllegalAccessException {
+    public Response<SignUpDto> userSignupApi(@ModelAttribute SignUpDto.Reqeust reqeust) throws IOException, IllegalAccessException {
         String encodedPassword = passwordEncoder.encode(reqeust.getPassword());
-        System.out.println(reqeust);
-        System.out.println(reqeust.getProfileImg());
+//        System.out.println(reqeust);
 
-        userService.signup(reqeust);
+
+        userService.signup(reqeust, encodedPassword);
         //TODO : 이미지 저장 부분 잘보기
-
+//        System.out.println(reqeust.getProfileImg());
         //TODO : validation 적용
 
         // TODO : 사용자 저장

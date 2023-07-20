@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -33,12 +34,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AuthType type = AuthType.USER;
 
-    public User(String email, String password, String nickname, String profileImg){
+    public User(String email, String nickname, String password, String profileImg){
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.profileImg = profileImg;
     }
+
 
     @Override
     public String toString() {
