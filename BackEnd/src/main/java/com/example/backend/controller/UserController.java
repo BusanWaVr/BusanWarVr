@@ -83,10 +83,10 @@ public class UserController {
         return new Response<>("200", "정상적으로 처리되었습니다.", new TestDto.Response(user));
     }
 
-    @PostMapping("/email")
+    @PostMapping("/auth/email")
     public String emailAuth(@RequestBody AuthEmailDto.Request request) throws Exception {
         String confirm = emailSender.sendSimpleMessage(request.getEmail());
-
+        userService.saveEmailAuth(request.getEmail(), confirm);
         return confirm;
     }
 }
