@@ -10,6 +10,7 @@ import com.example.backend.security.jwt.HeaderTokenExtractor;
 import com.example.backend.security.jwt.JwtDecoder;
 import com.example.backend.security.jwt.JwtTokenUtils;
 import com.example.backend.service.UserService;
+import com.example.backend.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,11 +27,8 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
-    private final UserRepository userRepository;
-    private final HeaderTokenExtractor extractor;
+    private final RefreshTokenService refreshTokenService;
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private final JwtDecoder jwtDecoder;
-    private final JwtTokenUtils jwtTokenUtils;
 
     private final UserService userService;
 
@@ -57,35 +55,24 @@ public class UserController {
     //TODO : 가이드 회원가입 만들기
 
     @GetMapping("/refresh")
-    public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response){
+    public Response refresh(HttpServletRequest request, HttpServletResponse response){
         String tokenPayLoad = request.getHeader("Authorization");
-        String refreshToken = extractor.extract(tokenPayLoad, request);
-        String username = jwtDecoder.decodeUsername(refreshToken);
+        Map<String, String> accessTokenResponseMap = refreshTokenService.refresh(tokenPayLoad, request);
 
-        String accessToken = jwtTokenUtils.reissuanceAccessToken(username);
-
-        Map<String, String> accessTokenResponseMap = new HashMap<>();
-
-        // === 현재시간과 Refresh Token 만료날짜를 통해 남은 만료기간 계산 === //
-        // === Refresh Token 만료시간 계산해 1개월 미만일 시 refresh token도 발급 === //
-        long now = System.currentTimeMillis();
-        long refreshExpireTime = jwtDecoder.getExpireTime(refreshToken);
-        long diffDays = (refreshExpireTime - now) / 1000 / (24 * 3600);
-        long diffMin = (refreshExpireTime - now) / 1000 / 60;
-
-        if (diffMin < 5) {
-            String newRefreshToken = jwtTokenUtils.reissuanceRefreshToken(username);
-            User user = userRepository.findByEmail(username);
-            user.setRefreshToken(newRefreshToken);
-            userRepository.save(user);
-
-            response.addHeader(REFRESH_TOKEN_HEADER, TOKEN_TYPE + " " + newRefreshToken);
+        if (accessTokenResponseMap.containsKey(REFRESH_TOKEN_HEADER)) {
+            String refreshToken = accessTokenResponseMap.get(REFRESH_TOKEN_HEADER);
+            response.addHeader(REFRESH_TOKEN_HEADER, TOKEN_TYPE + " " + refreshToken);
         }
 
+        String accessToken = accessTokenResponseMap.get(ACCESS_TOKEN_HEADER);
         response.addHeader(ACCESS_TOKEN_HEADER,  TOKEN_TYPE + " " + accessToken);
 
-
-        return ResponseEntity.ok("완료");
+        if(accessTokenResponseMap.size() == 2){
+            return new Response("200", "성공적으로 Access-Token과 만료될 예정인 Refresh-Token을 재발급 하였습니다.", null);
+        }
+        else{
+            return new Response("200", "성공적으로 Access-Token을 재발급 하였습니다.", null);
+        }
     }
 
     @PostMapping("/test")
