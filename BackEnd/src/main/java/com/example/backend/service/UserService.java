@@ -5,7 +5,7 @@ import com.example.backend.model.Category;
 import com.example.backend.model.User;
 import com.example.backend.repository.CategoryRepository;
 import com.example.backend.repository.UserRepository;
-import com.example.backend.service.awsS3.S3Uploader;
+import com.example.backend.util.awsS3.S3Uploader;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
