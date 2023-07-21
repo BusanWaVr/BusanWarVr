@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.AuthNicknameDto;
 import com.example.backend.dto.AuthEmailDto;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.SignUpDto;
@@ -17,10 +18,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,18 +45,30 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public Response<SignUpDto> userSignupApi(@ModelAttribute SignUpDto.Reqeust reqeust) throws IOException, IllegalAccessException {
+    public Response<SignUpDto> userSignupApi(@ModelAttribute @Valid SignUpDto.Reqeust reqeust, BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
+        if(bindingResult.hasErrors()){
+            throw new BindException(bindingResult);
+        }
+
         String encodedPassword = passwordEncoder.encode(reqeust.getPassword());
-//        System.out.println(reqeust);
+        System.out.println(reqeust);
 
-
-        userService.signup(reqeust, encodedPassword);
-        //TODO : 이미지 저장 부분 잘보기
-//        System.out.println(reqeust.getProfileImg());
         //TODO : validation 적용
 
+
         // TODO : 사용자 저장
+        userService.signup(reqeust, encodedPassword);
         return new Response<>("200", "성공적으로 회원가입 되었습니다!", null);
+    }
+
+    @PostMapping("/auth/nickname")
+    public Response<AuthNicknameDto> userAuthNicknameApi(@RequestBody AuthNicknameDto.Request request) throws IllegalAccessException {
+        if(userService.checkNicknameDuplicate(request.getNickname())){
+            throw new IllegalAccessException("중복된 닉네임 입니다.");
+        }
+        else{
+            return new Response<>("200", "사용 가능한 닉네임 입니다.", null);
+        }
     }
 
     //TODO : 가이드 회원가입 만들기
