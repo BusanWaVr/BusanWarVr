@@ -4,6 +4,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import App from "./App.tsx";
 import Test from "./routes/Test.tsx";
+import Login from "./routes/Login.tsx";
 import RootLayout from "./routes/RootLayout.tsx";
 import "./index.css";
 
@@ -15,6 +16,12 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <App />,
+        children: [
+          {
+            path: "/login",
+            element: <Login />,
+          },
+        ],
       },
       {
         path: "/test",

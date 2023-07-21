@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Nav, Navbar, Container, Button } from "react-bootstrap";
 
-import Logo from "../assets/logo.svg"
+import Logo from "../../assets/logo.svg";
 
 function Header() {
   return (
@@ -22,7 +22,7 @@ function Header() {
           <Nav.Link href="/test">후기 게시판</Nav.Link>
         </Nav>
         <Navbar.Collapse className="justify-content-end">
-          <Button>로그인</Button>
+          <Button href="/login">로그인</Button>
         </Navbar.Collapse>
       </Container>
     </Navbar>
