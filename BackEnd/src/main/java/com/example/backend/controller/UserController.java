@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.AuthEmailDto;
 import com.example.backend.dto.AuthNicknameDto;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.SignUpDto;
@@ -12,6 +13,7 @@ import com.example.backend.security.jwt.JwtDecoder;
 import com.example.backend.security.jwt.JwtTokenUtils;
 import com.example.backend.service.UserService;
 import com.example.backend.service.RefreshTokenService;
+import com.example.backend.util.emailsender.EmailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,6 +37,7 @@ public class UserController {
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final UserService userService;
+    private final EmailSender emailSender;
 
     String ACCESS_TOKEN_HEADER = "Access_Token";
     String REFRESH_TOKEN_HEADER = "Refresh_Token";
@@ -95,5 +98,14 @@ public class UserController {
     public Response<TestDto.Response> test(@AuthenticationPrincipal UserDetailsImpl userDetails){
         User user = userDetails.getUser();
         return new Response<>("200", "정상적으로 처리되었습니다.", new TestDto.Response(user));
+    }
+
+    @PostMapping("/auth/email")
+    public String emailAuth(@RequestBody AuthEmailDto.Request request) throws Exception {
+        String email = request.getEmail();
+        userService.emailExistValidCheck(email);
+        String confirm = emailSender.sendSimpleMessage(email);
+        userService.saveEmailAuth(email, confirm);
+        return confirm;
     }
 }
