@@ -3,6 +3,7 @@ import { Nav, Navbar, Container, Button } from "react-bootstrap";
 
 import Logo from "../../assets/logo.svg";
 
+//TODO - 로그인 유지 추가
 function Header() {
   return (
     <Navbar className="bg-body-tertiary">
