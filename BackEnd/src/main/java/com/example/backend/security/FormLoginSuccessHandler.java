@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Map;
 
 public class FormLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+
     private final JwtTokenUtils jwtTokenUtils;
 
     String ACCESS_TOKEN_HEADER = "Access_Token";
@@ -25,11 +26,11 @@ public class FormLoginSuccessHandler extends SavedRequestAwareAuthenticationSucc
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws ServletException, IOException {
+            Authentication authentication) throws ServletException, IOException {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Map<String, String> tokens = jwtTokenUtils.generateJwtToken(userDetails);
 
-        response.addHeader(ACCESS_TOKEN_HEADER,  TOKEN_TYPE + " " + tokens.get("ACCESS_TOKEN"));
+        response.addHeader(ACCESS_TOKEN_HEADER, TOKEN_TYPE + " " + tokens.get("ACCESS_TOKEN"));
         response.addHeader(REFRESH_TOKEN_HEADER, TOKEN_TYPE + " " + tokens.get("REFRESH_TOKEN"));
         response.setContentType("application/json");
     }

@@ -20,6 +20,7 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class S3Uploader {
+
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.buket}")
@@ -39,8 +40,9 @@ public class S3Uploader {
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
-    private String makeS3ObjectName(String fileName){
-        return "busanwavr" + UUID.randomUUID() + "." + StringUtils.substringAfterLast(fileName, ".");
+    private String makeS3ObjectName(String fileName) {
+        return "busanwavr" + UUID.randomUUID() + "." + StringUtils.substringAfterLast(fileName,
+                ".");
     }
 
     private void validateImage(String exName) throws IllegalAccessException {
@@ -50,7 +52,7 @@ public class S3Uploader {
         list.add("gif");
         list.add("png");
 
-        if(!list.contains(exName)){
+        if (!list.contains(exName)) {
             throw new IllegalAccessException("올바른 파일 형식이 아닙니다. (jpg, jpeg, gif, png)");
         }
     }

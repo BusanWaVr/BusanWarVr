@@ -6,7 +6,8 @@ import lombok.Data;
 public class AuthNicknameDto {
 
     @Data
-    public static class Request{
+    public static class Request {
+
         private String nickname;
     }
 }

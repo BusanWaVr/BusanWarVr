@@ -9,11 +9,12 @@ public class TestDto {
 
     @Data
     public static class Response {
+
         private String userId;
         private String refreshToken;
         private AuthType type;
 
-        public Response(User user){
+        public Response(User user) {
             this.userId = user.getEmail();
             this.refreshToken = user.getRefreshToken();
             this.type = user.getType();

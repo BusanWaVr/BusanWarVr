@@ -15,54 +15,41 @@ import java.nio.file.AccessDeniedException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    /**
-     * javax.validation.Valid or @Validated 으로 binding error 발생시 발생한다.
-     * HttpMessageConverter 에서 등록한 HttpMessageConverter binding 못할경우 발생
-     * 주로 @RequestBody, @RequestPart 어노테이션에서 발생
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, e.getBindingResult());
+    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException e) {
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE,
+                e.getBindingResult());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    /**
-     * @ModelAttribut 으로 binding error 발생시 BindException 발생한다.
-     * ref https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-ann-modelattrib-method-args
-     */
     @ExceptionHandler(BindException.class)
     protected ResponseEntity<ErrorResponse> handleBindException(BindException e) {
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, e.getBindingResult());
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE,
+                e.getBindingResult());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    /**
-     * enum type 일치하지 않아 binding 못할 경우 발생
-     * 주로 @RequestParam enum으로 binding 못했을 경우 발생
-     */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+    protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
+            MethodArgumentTypeMismatchException e) {
         final ErrorResponse response = ErrorResponse.of(ErrorCode.ENUM_MISS_MATCH);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    /**
-     * 지원하지 않은 HTTP method 호출 할 경우 발생
-     */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+    protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException e) {
         final ErrorResponse response = ErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED);
         return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    /**
-     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생합
-     */
     @ExceptionHandler(AccessDeniedException.class)
     protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
         final ErrorResponse response = ErrorResponse.of(ErrorCode.HANDLE_ACCESS_DENIED);
         response.setMessage(e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.valueOf(ErrorCode.HANDLE_ACCESS_DENIED.getStatus()));
+        return new ResponseEntity<>(response,
+                HttpStatus.valueOf(ErrorCode.HANDLE_ACCESS_DENIED.getStatus()));
     }
 
     @ExceptionHandler(CustomException.class)
@@ -72,7 +59,6 @@ public class GlobalExceptionHandler {
         response.setMessage(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
-
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
