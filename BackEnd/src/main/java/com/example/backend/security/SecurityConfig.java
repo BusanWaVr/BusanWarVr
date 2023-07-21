@@ -80,6 +80,7 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.GET, "/docs/**"));
         skipPathList.add(new Path(HttpMethod.GET, "/v3/**"));
         skipPathList.add(new Path(HttpMethod.POST, "/auth/nickname"));
+        skipPathList.add(new Path(HttpMethod.POST, "/auth/email"));
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPathList, "/**");
         JwtAuthFilter filter = new JwtAuthFilter(matcher, extractor);
