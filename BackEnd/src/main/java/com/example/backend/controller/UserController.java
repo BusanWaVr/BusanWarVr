@@ -1,6 +1,11 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.*;
+import com.example.backend.dto.AuthEmailDto;
+import com.example.backend.dto.AuthNicknameDto;
+import com.example.backend.dto.Response;
+import com.example.backend.dto.SignUpDto;
+import com.example.backend.dto.TestDto;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.security.UserDetailsImpl;
