@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.*;
 import com.example.backend.dto.AuthEmailDto;
 import com.example.backend.dto.AuthNicknameDto;
 import com.example.backend.dto.Response;
@@ -101,11 +102,21 @@ public class UserController {
     }
 
     @PostMapping("/auth/email")
-    public String emailAuth(@RequestBody AuthEmailDto.Request request) throws Exception {
+    public Response emailAuth(@RequestBody AuthEmailDto.Request request) throws Exception {
         String email = request.getEmail();
         userService.emailExistValidCheck(email);
         String confirm = emailSender.sendSimpleMessage(email);
         userService.saveEmailAuth(email, confirm);
-        return confirm;
+        return new Response<>("200", "정상적으로 처리되었습니다.", null);
+    }
+
+    @PostMapping("/auth/code")
+    public Response codeAuth(@RequestBody AuthCodeDto.Request request) throws IllegalAccessException {
+        boolean isAuth = userService.isCodeAuth(request);
+
+        if(!isAuth){
+            throw new IllegalAccessException("이메일 인증에 실패했습니다.");
+        }
+        return new Response<>("200", "정상적으로 처리되었습니다.", null);
     }
 }
