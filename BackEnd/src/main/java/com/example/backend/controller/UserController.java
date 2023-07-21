@@ -29,6 +29,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+
     private final RefreshTokenService refreshTokenService;
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -41,8 +42,9 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public Response<SignUpDto> userSignupApi(@ModelAttribute @Valid SignUpDto.Reqeust reqeust, BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
-        if(bindingResult.hasErrors()){
+    public Response<SignUpDto> userSignupApi(@ModelAttribute @Valid SignUpDto.Reqeust reqeust,
+            BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
+        if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
 
@@ -51,18 +53,17 @@ public class UserController {
 
         //TODO : validation 적용
 
-
         // TODO : 사용자 저장
         userService.signup(reqeust, encodedPassword);
         return new Response<>("200", "성공적으로 회원가입 되었습니다!", null);
     }
 
     @PostMapping("/auth/nickname")
-    public Response<AuthNicknameDto> userAuthNicknameApi(@RequestBody AuthNicknameDto.Request request) throws IllegalAccessException {
-        if(userService.checkNicknameDuplicate(request.getNickname())){
+    public Response<AuthNicknameDto> userAuthNicknameApi(
+            @RequestBody AuthNicknameDto.Request request) throws IllegalAccessException {
+        if (userService.checkNicknameDuplicate(request.getNickname())) {
             throw new IllegalAccessException("중복된 닉네임 입니다.");
-        }
-        else{
+        } else {
             return new Response<>("200", "사용 가능한 닉네임 입니다.", null);
         }
     }
@@ -70,9 +71,10 @@ public class UserController {
     //TODO : 가이드 회원가입 만들기
 
     @GetMapping("/refresh")
-    public Response refresh(HttpServletRequest request, HttpServletResponse response){
+    public Response refresh(HttpServletRequest request, HttpServletResponse response) {
         String tokenPayLoad = request.getHeader("Authorization");
-        Map<String, String> accessTokenResponseMap = refreshTokenService.refresh(tokenPayLoad, request);
+        Map<String, String> accessTokenResponseMap = refreshTokenService.refresh(tokenPayLoad,
+                request);
 
         if (accessTokenResponseMap.containsKey(REFRESH_TOKEN_HEADER)) {
             String refreshToken = accessTokenResponseMap.get(REFRESH_TOKEN_HEADER);
@@ -80,18 +82,18 @@ public class UserController {
         }
 
         String accessToken = accessTokenResponseMap.get(ACCESS_TOKEN_HEADER);
-        response.addHeader(ACCESS_TOKEN_HEADER,  TOKEN_TYPE + " " + accessToken);
+        response.addHeader(ACCESS_TOKEN_HEADER, TOKEN_TYPE + " " + accessToken);
 
-        if(accessTokenResponseMap.size() == 2){
-            return new Response("200", "성공적으로 Access-Token과 만료될 예정인 Refresh-Token을 재발급 하였습니다.", null);
-        }
-        else{
+        if (accessTokenResponseMap.size() == 2) {
+            return new Response("200", "성공적으로 Access-Token과 만료될 예정인 Refresh-Token을 재발급 하였습니다.",
+                    null);
+        } else {
             return new Response("200", "성공적으로 Access-Token을 재발급 하였습니다.", null);
         }
     }
 
     @PostMapping("/test")
-    public Response<TestDto.Response> test(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Response<TestDto.Response> test(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         return new Response<>("200", "정상적으로 처리되었습니다.", new TestDto.Response(user));
     }
@@ -106,10 +108,11 @@ public class UserController {
     }
 
     @PostMapping("/auth/code")
-    public Response codeAuth(@RequestBody AuthCodeDto.Request request) throws IllegalAccessException {
+    public Response codeAuth(@RequestBody AuthCodeDto.Request request)
+            throws IllegalAccessException {
         boolean isAuth = userService.isCodeAuth(request);
 
-        if(!isAuth){
+        if (!isAuth) {
             throw new IllegalAccessException("이메일 인증에 실패했습니다.");
         }
         return new Response<>("200", "정상적으로 처리되었습니다.", null);

@@ -18,7 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI openAPI(){
+    public OpenAPI openAPI() {
         SecurityScheme bearerAuth = new SecurityScheme().type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
                 .bearerFormat("JWT")
@@ -39,7 +39,7 @@ public class OpenApiConfig {
     }
 
     @Bean
-    public SwaggerUiConfigProperties swaggerUiConfig(SwaggerUiConfigProperties config){
+    public SwaggerUiConfigProperties swaggerUiConfig(SwaggerUiConfigProperties config) {
         SpringDocUtils.getConfig().addAnnotationsToIgnore(AuthenticationPrincipal.class);
         config.setPath("/docs/swagger-ui.html");
         config.setOperationsSorter("alpha");
