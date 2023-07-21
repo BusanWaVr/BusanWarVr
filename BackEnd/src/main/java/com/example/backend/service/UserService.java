@@ -37,13 +37,17 @@ public class UserService {
     }
 
     public void saveEmailAuth(String email, String code) throws IllegalAccessException {
-        User user = userRepository.findByEmail(email);
+
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
-        if(user != null) throw new IllegalAccessException("이메일이 중복되어 이메일 인증이 불가합니다.");
         if(valueOperations.get(email) != null) throw new IllegalAccessException("인증 이메일이 전송되었습니다. 잠시후에 시도해주세요.");
 
         valueOperations.set(email, code);
         redisTemplate.expire(email, 5, TimeUnit.MINUTES);
+    }
+
+    public void emailExistValidCheck(String email) throws IllegalAccessException {
+        User user = userRepository.findByEmail(email);
+        if(user != null) throw new IllegalAccessException("이메일이 중복되어 이메일 인증이 불가합니다.");
     }
 }

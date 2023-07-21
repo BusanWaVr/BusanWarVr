@@ -85,8 +85,10 @@ public class UserController {
 
     @PostMapping("/auth/email")
     public String emailAuth(@RequestBody AuthEmailDto.Request request) throws Exception {
-        String confirm = emailSender.sendSimpleMessage(request.getEmail());
-        userService.saveEmailAuth(request.getEmail(), confirm);
+        String email = request.getEmail();
+        userService.emailExistValidCheck(email);
+        String confirm = emailSender.sendSimpleMessage(email);
+        userService.saveEmailAuth(email, confirm);
         return confirm;
     }
 }
