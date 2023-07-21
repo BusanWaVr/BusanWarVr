@@ -7,6 +7,8 @@ import com.example.backend.security.jwt.HeaderTokenExtractor;
 import com.example.backend.security.jwt.JwtTokenUtils;
 import com.example.backend.security.provider.FormLoginAuthProvider;
 import com.example.backend.security.provider.JWTAuthProvider;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,9 +23,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity

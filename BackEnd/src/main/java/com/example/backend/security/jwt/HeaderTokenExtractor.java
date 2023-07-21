@@ -1,9 +1,8 @@
 package com.example.backend.security.jwt;
 
-import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.NoSuchElementException;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
 
 @Component
 public class HeaderTokenExtractor {

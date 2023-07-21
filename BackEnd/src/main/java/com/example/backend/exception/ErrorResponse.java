@@ -1,12 +1,11 @@
 package com.example.backend.exception;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.validation.BindingResult;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.validation.BindingResult;
 
 @Data
 @NoArgsConstructor
