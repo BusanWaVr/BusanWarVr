@@ -7,14 +7,13 @@ import com.example.backend.model.User;
 import com.example.backend.repository.CategoryRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.util.awsS3.S3Uploader;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor

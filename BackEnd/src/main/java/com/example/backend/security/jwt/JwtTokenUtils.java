@@ -5,13 +5,12 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.security.UserDetailsImpl;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
