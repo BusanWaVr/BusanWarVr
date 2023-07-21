@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.AuthCodeDto;
 import com.example.backend.dto.SignUpDto;
 import com.example.backend.model.Category;
 import com.example.backend.model.User;
@@ -39,9 +40,7 @@ public class UserService {
     public void saveEmailAuth(String email, String code) throws IllegalAccessException {
 
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-
-        if(valueOperations.get(email) != null) throw new IllegalAccessException("인증 이메일이 전송되었습니다. 잠시후에 시도해주세요.");
-
+//        if(valueOperations.get(email) != null) throw new IllegalAccessException("인증 이메일이 전송되었습니다. 잠시후에 시도해주세요.");
         valueOperations.set(email, code);
         redisTemplate.expire(email, 5, TimeUnit.MINUTES);
     }
@@ -53,6 +52,12 @@ public class UserService {
 
     public boolean checkNicknameDuplicate(String nickname) {
         return userRepository.existsByNickname(nickname);
+    }
+
+    public boolean isCodeAuth(AuthCodeDto.Request request){
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        String auth = valueOperations.get(request.getEmail());
+        return auth.equals(request.getCode());
     }
     
 }
