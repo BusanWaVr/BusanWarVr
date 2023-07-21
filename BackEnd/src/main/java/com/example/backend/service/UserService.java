@@ -50,4 +50,9 @@ public class UserService {
         User user = userRepository.findByEmail(email);
         if(user != null) throw new IllegalAccessException("이메일이 중복되어 이메일 인증이 불가합니다.");
     }
+
+    public boolean checkNicknameDuplicate(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+    
 }
