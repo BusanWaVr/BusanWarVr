@@ -29,6 +29,7 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final UserRepository userRepository;
     private final UserDetailServiceImpl userDetailService;
     private final JwtTokenUtils jwtTokenUtils;
@@ -50,7 +51,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder encodePassword(){
+    public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
     }
 
@@ -60,12 +61,12 @@ public class SecurityConfig {
 //    }
 
     @Autowired
-    void registerProvider(AuthenticationManagerBuilder auth){
+    void registerProvider(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(new FormLoginAuthProvider(userDetailService, encodePassword()));
         auth.authenticationProvider(new JWTAuthProvider(userRepository, jwtTokenUtils));
     }
 
-    FormLoginFilter formLoginFilter(AuthenticationManager authenticationManager){
+    FormLoginFilter formLoginFilter(AuthenticationManager authenticationManager) {
         FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager);
         formLoginFilter.setFilterProcessesUrl("/user/login");
         formLoginFilter.setAuthenticationSuccessHandler(new FormLoginSuccessHandler(jwtTokenUtils));
@@ -73,7 +74,7 @@ public class SecurityConfig {
         return formLoginFilter;
     }
 
-    JwtAuthFilter jwtAuthFilter(AuthenticationManager authenticationManager){
+    JwtAuthFilter jwtAuthFilter(AuthenticationManager authenticationManager) {
         List<Path> skipPathList = new ArrayList<>();
 
         skipPathList.add(new Path(HttpMethod.POST, "/user"));
@@ -90,12 +91,16 @@ public class SecurityConfig {
     }
 
     public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {
+
         @Override
         public void configure(HttpSecurity http) throws Exception {
-            AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+            AuthenticationManager authenticationManager = http.getSharedObject(
+                    AuthenticationManager.class);
             http
-                    .addFilterBefore(formLoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
-                    .addFilterBefore(jwtAuthFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
+                    .addFilterBefore(formLoginFilter(authenticationManager),
+                            UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(jwtAuthFilter(authenticationManager),
+                            UsernamePasswordAuthenticationFilter.class);
         }
     }
 

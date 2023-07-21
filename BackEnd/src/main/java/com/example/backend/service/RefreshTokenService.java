@@ -15,6 +15,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
+
     private final HeaderTokenExtractor extractor;
     private final JwtDecoder jwtDecoder;
     private final JwtTokenUtils jwtTokenUtils;
@@ -23,7 +24,7 @@ public class RefreshTokenService {
     String ACCESS_TOKEN_HEADER = "Access_Token";
     String REFRESH_TOKEN_HEADER = "Refresh_Token";
 
-    public Map<String, String> refresh(String tokenPayLoad, HttpServletRequest request){
+    public Map<String, String> refresh(String tokenPayLoad, HttpServletRequest request) {
         String refreshToken = extractor.extract(tokenPayLoad, request);
         String username = jwtDecoder.decodeUsername(refreshToken);
         String accessToken = jwtTokenUtils.reissuanceAccessToken(username);

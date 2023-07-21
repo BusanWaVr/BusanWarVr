@@ -6,7 +6,8 @@ import lombok.Data;
 public class AuthEmailDto {
 
     @Data
-    public static class Request{
+    public static class Request {
+
         private String email;
     }
 }

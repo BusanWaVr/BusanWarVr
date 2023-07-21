@@ -2,7 +2,7 @@ package com.example.backend.dto;
 
 import com.example.backend.model.Category;
 import com.example.backend.model.User;
-import static com.example.backend.validation.ValidationGroups.*;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +18,7 @@ public class SignUpDto {
 
     @Data
     @NoArgsConstructor
-    public static class Reqeust{
+    public static class Reqeust {
 
         @NotBlank(message = "이메일 주소를 입력해 주세요")
         @Email(message = "올바른 이메일 주소를 입력해 주세요")
@@ -54,7 +54,7 @@ public class SignUpDto {
         }
 
         public Category toCategory(String category, User user) {
-            return  new Category(category, user);
+            return new Category(category, user);
         }
     }
 }

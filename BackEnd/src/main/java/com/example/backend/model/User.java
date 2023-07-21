@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,7 +35,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AuthType type = AuthType.USER;
 
-    public User(String email, String nickname, String password, String profileImg){
+    public User(String email, String nickname, String password, String profileImg) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
