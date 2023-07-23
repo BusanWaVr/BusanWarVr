@@ -79,6 +79,8 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.POST, "/user"));
         skipPathList.add(new Path(HttpMethod.GET, "/docs/**"));
         skipPathList.add(new Path(HttpMethod.GET, "/v3/**"));
+        skipPathList.add(new Path(HttpMethod.GET, "/profile"));
+        skipPathList.add(new Path(HttpMethod.GET, "/actuator/health"));
         skipPathList.add(new Path(HttpMethod.POST, "/auth/nickname"));
         skipPathList.add(new Path(HttpMethod.POST, "/auth/email"));
         skipPathList.add(new Path(HttpMethod.POST, "/auth/code"));
