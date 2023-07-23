@@ -86,6 +86,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
+        configuration.addExposedHeader("*");
         configuration.addExposedHeader("Access_Token");
         configuration.addExposedHeader("Refresh_Token");
         configuration.addAllowedOriginPattern("*"); // 배포 전 모두 허용
