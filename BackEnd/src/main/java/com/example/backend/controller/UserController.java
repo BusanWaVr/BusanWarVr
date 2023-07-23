@@ -1,36 +1,41 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.AuthCodeDto;
+import com.example.backend.dto.AuthEmailDto;
+import com.example.backend.dto.AuthNicknameDto;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.SignUpDto;
 import com.example.backend.dto.TestDto;
 import com.example.backend.model.User;
-import com.example.backend.repository.UserRepository;
 import com.example.backend.security.UserDetailsImpl;
-import com.example.backend.security.jwt.HeaderTokenExtractor;
-import com.example.backend.security.jwt.JwtDecoder;
-import com.example.backend.security.jwt.JwtTokenUtils;
+import com.example.backend.service.RefreshTokenService;
+import com.example.backend.service.UserService;
+import com.example.backend.util.emailsender.EmailSender;
+import java.io.IOException;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @RequiredArgsConstructor
 public class UserController {
-    private final UserRepository userRepository;
-    private final HeaderTokenExtractor extractor;
+
+    private final RefreshTokenService refreshTokenService;
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private final JwtDecoder jwtDecoder;
-    private final JwtTokenUtils jwtTokenUtils;
+
+    private final UserService userService;
+    private final EmailSender emailSender;
 
     String ACCESS_TOKEN_HEADER = "Access_Token";
     String REFRESH_TOKEN_HEADER = "Refresh_Token";
@@ -38,53 +43,79 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public void signUpController(@RequestBody SignUpDto.Reqeust reqeust){
-        String encodedPassword = passwordEncoder.encode(reqeust.getPassword());
+    public Response<SignUpDto> userSignupApi(@ModelAttribute @Valid SignUpDto.Reqeust reqeust,
+            BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
 
-        //TODO : 이미지 저장 부분 잘보기
+        String encodedPassword = passwordEncoder.encode(reqeust.getPassword());
+        System.out.println(reqeust);
 
         //TODO : validation 적용
 
         // TODO : 사용자 저장
+        userService.signup(reqeust, encodedPassword);
+        return new Response<>("200", "성공적으로 회원가입 되었습니다!", null);
+    }
+
+    @PostMapping("/auth/nickname")
+    public Response<AuthNicknameDto> userAuthNicknameApi(
+            @RequestBody AuthNicknameDto.Request request) throws IllegalAccessException {
+        if (userService.checkNicknameDuplicate(request.getNickname())) {
+            throw new IllegalAccessException("중복된 닉네임 입니다.");
+        } else {
+            return new Response<>("200", "사용 가능한 닉네임 입니다.", null);
+        }
     }
 
     //TODO : 가이드 회원가입 만들기
 
     @GetMapping("/refresh")
-    public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response){
+    public Response refresh(HttpServletRequest request, HttpServletResponse response) {
         String tokenPayLoad = request.getHeader("Authorization");
-        String refreshToken = extractor.extract(tokenPayLoad, request);
-        String username = jwtDecoder.decodeUsername(refreshToken);
+        Map<String, String> accessTokenResponseMap = refreshTokenService.refresh(tokenPayLoad,
+                request);
 
-        String accessToken = jwtTokenUtils.reissuanceAccessToken(username);
-
-        Map<String, String> accessTokenResponseMap = new HashMap<>();
-
-        // === 현재시간과 Refresh Token 만료날짜를 통해 남은 만료기간 계산 === //
-        // === Refresh Token 만료시간 계산해 1개월 미만일 시 refresh token도 발급 === //
-        long now = System.currentTimeMillis();
-        long refreshExpireTime = jwtDecoder.getExpireTime(refreshToken);
-        long diffDays = (refreshExpireTime - now) / 1000 / (24 * 3600);
-        long diffMin = (refreshExpireTime - now) / 1000 / 60;
-
-        if (diffMin < 5) {
-            String newRefreshToken = jwtTokenUtils.reissuanceRefreshToken(username);
-            User user = userRepository.findByEmail(username);
-            user.setRefreshToken(newRefreshToken);
-            userRepository.save(user);
-
-            response.addHeader(REFRESH_TOKEN_HEADER, TOKEN_TYPE + " " + newRefreshToken);
+        if (accessTokenResponseMap.containsKey(REFRESH_TOKEN_HEADER)) {
+            String refreshToken = accessTokenResponseMap.get(REFRESH_TOKEN_HEADER);
+            response.addHeader(REFRESH_TOKEN_HEADER, TOKEN_TYPE + " " + refreshToken);
         }
 
-        response.addHeader(ACCESS_TOKEN_HEADER,  TOKEN_TYPE + " " + accessToken);
+        String accessToken = accessTokenResponseMap.get(ACCESS_TOKEN_HEADER);
+        response.addHeader(ACCESS_TOKEN_HEADER, TOKEN_TYPE + " " + accessToken);
 
-
-        return ResponseEntity.ok("완료");
+        if (accessTokenResponseMap.size() == 2) {
+            return new Response("200", "성공적으로 Access-Token과 만료될 예정인 Refresh-Token을 재발급 하였습니다.",
+                    null);
+        } else {
+            return new Response("200", "성공적으로 Access-Token을 재발급 하였습니다.", null);
+        }
     }
 
     @PostMapping("/test")
-    public Response<TestDto.Response> test(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Response<TestDto.Response> test(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         return new Response<>("200", "정상적으로 처리되었습니다.", new TestDto.Response(user));
+    }
+
+    @PostMapping("/auth/email")
+    public Response emailAuth(@RequestBody AuthEmailDto.Request request) throws Exception {
+        String email = request.getEmail();
+        userService.emailExistValidCheck(email);
+        String confirm = emailSender.sendSimpleMessage(email);
+        userService.saveEmailAuth(email, confirm);
+        return new Response<>("200", "정상적으로 처리되었습니다.", null);
+    }
+
+    @PostMapping("/auth/code")
+    public Response codeAuth(@RequestBody AuthCodeDto.Request request)
+            throws IllegalAccessException {
+        boolean isAuth = userService.isCodeAuth(request);
+
+        if (!isAuth) {
+            throw new IllegalAccessException("이메일 인증에 실패했습니다.");
+        }
+        return new Response<>("200", "정상적으로 처리되었습니다.", null);
     }
 }

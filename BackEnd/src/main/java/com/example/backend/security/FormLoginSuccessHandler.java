@@ -1,17 +1,20 @@
 package com.example.backend.security;
 
+import com.example.backend.dto.Response;
+import com.example.backend.dto.UserLoginDto;
 import com.example.backend.security.jwt.JwtTokenUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-
+import java.io.IOException;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Map;
+import lombok.val;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 public class FormLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+
     private final JwtTokenUtils jwtTokenUtils;
 
     String ACCESS_TOKEN_HEADER = "Access_Token";
@@ -25,11 +28,16 @@ public class FormLoginSuccessHandler extends SavedRequestAwareAuthenticationSucc
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws ServletException, IOException {
+            Authentication authentication) throws ServletException, IOException {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Map<String, String> tokens = jwtTokenUtils.generateJwtToken(userDetails);
+        String access = TOKEN_TYPE + " " + tokens.get("ACCESS_TOKEN");
+        String refresh = TOKEN_TYPE + " " + tokens.get("REFRESH_TOKEN");
 
-        response.addHeader(ACCESS_TOKEN_HEADER,  TOKEN_TYPE + " " + tokens.get("ACCESS_TOKEN"));
+        val responseDto = new Response<>("200", "success", new UserLoginDto(access, refresh));
+
+        response.getWriter().write(objectMapper.writeValueAsString(responseDto));
+        response.addHeader(ACCESS_TOKEN_HEADER, TOKEN_TYPE + " " + tokens.get("ACCESS_TOKEN"));
         response.addHeader(REFRESH_TOKEN_HEADER, TOKEN_TYPE + " " + tokens.get("REFRESH_TOKEN"));
         response.setContentType("application/json");
     }

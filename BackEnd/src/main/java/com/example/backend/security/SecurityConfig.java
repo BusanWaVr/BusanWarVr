@@ -7,8 +7,10 @@ import com.example.backend.security.jwt.HeaderTokenExtractor;
 import com.example.backend.security.jwt.JwtTokenUtils;
 import com.example.backend.security.provider.FormLoginAuthProvider;
 import com.example.backend.security.provider.JWTAuthProvider;
-import javafx.util.Pair;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,14 +24,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final UserRepository userRepository;
     private final UserDetailServiceImpl userDetailService;
     private final JwtTokenUtils jwtTokenUtils;
@@ -38,6 +41,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -51,7 +56,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder encodePassword(){
+    public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
     }
 
@@ -61,12 +66,12 @@ public class SecurityConfig {
 //    }
 
     @Autowired
-    void registerProvider(AuthenticationManagerBuilder auth){
+    void registerProvider(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(new FormLoginAuthProvider(userDetailService, encodePassword()));
         auth.authenticationProvider(new JWTAuthProvider(userRepository, jwtTokenUtils));
     }
 
-    FormLoginFilter formLoginFilter(AuthenticationManager authenticationManager){
+    FormLoginFilter formLoginFilter(AuthenticationManager authenticationManager) {
         FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager);
         formLoginFilter.setFilterProcessesUrl("/user/login");
         formLoginFilter.setAuthenticationSuccessHandler(new FormLoginSuccessHandler(jwtTokenUtils));
@@ -74,13 +79,38 @@ public class SecurityConfig {
         return formLoginFilter;
     }
 
-    JwtAuthFilter jwtAuthFilter(AuthenticationManager authenticationManager){
+    @Bean
+    CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:5173"); // local 테스트 시
+        configuration.setAllowCredentials(true);
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.addExposedHeader("*");
+        configuration.addExposedHeader("Access_Token");
+        configuration.addExposedHeader("Refresh_Token");
+        configuration.addAllowedOriginPattern("*"); // 배포 전 모두 허용
+        val source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+
+
+    JwtAuthFilter jwtAuthFilter(AuthenticationManager authenticationManager) {
         List<Path> skipPathList = new ArrayList<>();
 
+        skipPathList.add(new Path(HttpMethod.POST, "/user/login"));
         skipPathList.add(new Path(HttpMethod.POST, "/user"));
         skipPathList.add(new Path(HttpMethod.GET, "/docs/**"));
         skipPathList.add(new Path(HttpMethod.GET, "/v3/**"));
-
+        skipPathList.add(new Path(HttpMethod.GET, "/profile"));
+        skipPathList.add(new Path(HttpMethod.GET, "/actuator/health"));
+        skipPathList.add(new Path(HttpMethod.POST, "/auth/nickname"));
+        skipPathList.add(new Path(HttpMethod.POST, "/auth/email"));
+        skipPathList.add(new Path(HttpMethod.POST, "/auth/code"));
+        skipPathList.add(new Path(HttpMethod.POST, "/auth/nickname"));
+      
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPathList, "/**");
         JwtAuthFilter filter = new JwtAuthFilter(matcher, extractor);
         filter.setAuthenticationManager(authenticationManager);
@@ -88,12 +118,16 @@ public class SecurityConfig {
     }
 
     public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {
+
         @Override
         public void configure(HttpSecurity http) throws Exception {
-            AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+            AuthenticationManager authenticationManager = http.getSharedObject(
+                    AuthenticationManager.class);
             http
-                    .addFilterBefore(formLoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
-                    .addFilterBefore(jwtAuthFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
+                    .addFilterBefore(formLoginFilter(authenticationManager),
+                            UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(jwtAuthFilter(authenticationManager),
+                            UsernamePasswordAuthenticationFilter.class);
         }
     }
 

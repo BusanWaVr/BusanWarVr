@@ -10,14 +10,15 @@
 ### ✈️ 소개
 - 360도 영상 라이브 스트리밍을 통한 생생한 VR 랜선 투어 제공 서비스
 
-- ![와이어프레임](https://www.figma.com/file/7GGkxudmaNRwDje7VLlHeK/Untitled?type=design&mode=design&t=STKqHjQZDDVpGnip-1)
+- [와이어프레임](https://www.figma.com/file/7GGkxudmaNRwDje7VLlHeK/Untitled?type=design&mode=design&t=STKqHjQZDDVpGnip-1)
 
-- ![팀 메뉴트리](https://miro.com/app/board/uXjVM1wjrzs=/)
+- [팀 메뉴트리](https://miro.com/app/board/uXjVM1wjrzs=/)
 
-- ![팀 노션 바로가기](https://molangmolang.notion.site/99b8316d1e874164b050fdfa33139c33?pvs=4)
+- [팀 노션 바로가기](https://molangmolang.notion.site/99b8316d1e874164b050fdfa33139c33?pvs=4)
     
 
 ### 🛠 기능 요약 
+
 
 ### ⏰ 개발 기간
     07.17.2023 ~ 07.24.2023
