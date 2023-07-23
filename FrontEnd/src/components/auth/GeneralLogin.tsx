@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { useState, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 
 const GeneralLoginWrapper = styled.div`
   /* Add your styling for the general login form wrapper */
@@ -23,7 +25,7 @@ const LoginInput = styled.input`
   border: 1px solid #ccc;
 `;
 
-const LoginButton = styled.span`
+const LoginButton = styled.button`
   display: block;
   width: 100%;
   height: 45px;
@@ -39,29 +41,82 @@ const LoginButton = styled.span`
   }
 `;
 
-function GeneralLogin() {
+interface Props {
+  setOnLoginModal: any;
+  setIsLoggedIn: any;
+}
+
+function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
+  const [formData, setFormData] = useState({ username: "", password: "" });
+  const navigate = useNavigate();
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      // 로그인 요청을 서버에 보내고 JWT 토큰을 받아옴
+      const response = await fetch("http://18.217.191.122:8080/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Login failed.");
+      }
+
+      const { accessToken, refreshToken } = await response.json();
+
+      // 받아온 JWT 토큰들을 로컬 스토리지에 저장
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      // 로그인이 성공유무
+      console.log("Login successful");
+      setOnLoginModal(false);
+      setIsLoggedIn(true);
+
+      navigate("/dashboard"); // 성공시 Dashboard 페이지로 이동
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
+  };
+
   return (
     <GeneralLoginWrapper>
-      <form action="" id="loginForm">
+      <form action="" id="loginForm" onSubmit={handleSubmit}>
         <div className="login-form__input-group">
           <LoginInputLabel htmlFor="email">이메일</LoginInputLabel>
           <LoginInput
             type="text"
-            id="email"
-            name="email"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleInputChange}
             placeholder="이메일 주소 ex) busanvr@busanvr.co.kr"
             className="login-form__input-id"
           />
           <LoginInputLabel htmlFor="password">비밀번호</LoginInputLabel>
           <LoginInput
-            type="text"
+            type="password"
             id="password"
             name="password"
+            value={formData.password}
+            onChange={handleInputChange}
             placeholder="영문,숫자,특수문자(!,@,#,$,%) 2종류 포함 10자리 이상"
             className="login-form__input-pwd"
           />
         </div>
-        <LoginButton className="login-form__submit-btn">로그인</LoginButton>
+        <LoginButton type="submit" className="login-form__submit-btn">
+          로그인
+        </LoginButton>
       </form>
     </GeneralLoginWrapper>
   );

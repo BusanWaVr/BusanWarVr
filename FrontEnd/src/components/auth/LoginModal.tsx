@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+import { createPortal } from "react-dom";
+import Login from "./Login";
 import styled from "styled-components";
 
 const Backdrop = styled.div`
@@ -12,31 +13,43 @@ const Backdrop = styled.div`
 `;
 
 const Dialog = styled.dialog`
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
   border: none;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   padding: 0;
   overflow: hidden;
   z-index: 1;
+  text-align: center;
 `;
 
 interface Props {
-  children: React.ReactNode;
+  setOnLoginModal: any;
+  setIsLoggedIn: any;
 }
 
-function Modal({ children }: Props) {
-  const navigate = useNavigate();
-
-  function closeHandler() {
-    navigate(-1);
-  }
+function LoginModal({ setOnLoginModal, setIsLoggedIn }: Props) {
+  const ID = document.getElementById("modal") as HTMLElement;
+  const closeHandler = () => {
+    setOnLoginModal(false);
+  };
 
   return (
     <>
-      <Backdrop onClick={closeHandler} />
-      <Dialog open>{children}</Dialog>
+      {createPortal(<Backdrop onClick={closeHandler} />, ID)}
+      {createPortal(
+        <Dialog open>
+          <Login
+            setOnLoginModal={setOnLoginModal}
+            setIsLoggedIn={setIsLoggedIn}
+          ></Login>
+        </Dialog>,
+        ID
+      )}
     </>
   );
 }
 
-export default Modal;
+export default LoginModal;
