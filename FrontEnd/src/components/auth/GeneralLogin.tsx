@@ -72,11 +72,15 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
         throw new Error("Login failed.");
       }
 
-      const { accessToken, refreshToken } = await response.json();
+      const JWT_Token = await response.json();
+      const accessToken = JWT_Token.data.access_Token;
+      const refreshToken = JWT_Token.data.refresh_Token;
 
       // 받아온 JWT 토큰들을 로컬 스토리지에 저장
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+
+      console.log(localStorage);
 
       // 로그인이 성공유무
       console.log("Login successful");
