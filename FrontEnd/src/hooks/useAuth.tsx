@@ -1,3 +1,4 @@
+// src/hooks/useAuth.tsx
 import { useEffect, useState } from "react";
 
 const useAuth = () => {
