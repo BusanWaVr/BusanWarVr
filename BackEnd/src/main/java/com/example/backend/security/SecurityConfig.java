@@ -86,7 +86,8 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
-        configuration.addExposedHeader("Authorization");
+        configuration.addExposedHeader("Access_Token");
+        configuration.addExposedHeader("Refresh_Token");
         configuration.addAllowedOriginPattern("*"); // 배포 전 모두 허용
         val source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -98,6 +99,7 @@ public class SecurityConfig {
     JwtAuthFilter jwtAuthFilter(AuthenticationManager authenticationManager) {
         List<Path> skipPathList = new ArrayList<>();
 
+        skipPathList.add(new Path(HttpMethod.POST, "/user/login"));
         skipPathList.add(new Path(HttpMethod.POST, "/user"));
         skipPathList.add(new Path(HttpMethod.GET, "/docs/**"));
         skipPathList.add(new Path(HttpMethod.GET, "/v3/**"));
