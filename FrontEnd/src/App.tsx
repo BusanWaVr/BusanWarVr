@@ -1,23 +1,28 @@
-import React from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
-import LoginForm from "./components/LoginForm";
-import useAuth from "./hooks/useAuth";
+import { Route, Routes } from "react-router-dom";
+import RootLayout from "./routes/RootLayout";
+import Test from "./routes/Test";
+import Dashboard from "./routes/Dashboard";
+import Home from "./routes/Home";
+import Signup from "./routes/Signup.jsx";
 
-const App: React.FC = () => {
-  const isAuthenticated = useAuth();
-
+function App() {
   return (
-    <div>
+    <div className="container-md">
       <Routes>
-        {isAuthenticated ? (
-          <>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route index element={<Navigate to="/dashboard" />} />
-          </>
-        ) : (
-          <Route path="/login" element={<LoginForm />} />
-        )}
+        <Route element={<RootLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/test" element={<Test />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/signup" element={<Signup />} />
+        </Route>
+        <Route
+          path="*"
+          element={
+            <h3>
+              <b>NOT FOUND PAGE</b>
+            </h3>
+          }
+        />
       </Routes>
     </div>
   );
