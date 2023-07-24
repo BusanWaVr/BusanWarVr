@@ -1,6 +1,7 @@
-package com.example.backend.model;
+package com.example.backend.model.user;
 
 import com.example.backend.model.enums.AuthType;
+import javax.jws.soap.SOAPBinding.Use;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -38,6 +40,12 @@ public class User {
     @Column
     @Enumerated(EnumType.STRING)
     private AuthType type = AuthType.USER;
+
+    @Column
+    private String introduction;
+
+    @Column
+    private long followId;
 
     public User(String email, String nickname, String password, String profileImg) {
         this.email = email;

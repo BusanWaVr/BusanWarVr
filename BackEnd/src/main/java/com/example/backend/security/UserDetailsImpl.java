@@ -1,6 +1,6 @@
 package com.example.backend.security;
 
-import com.example.backend.model.User;
+import com.example.backend.model.user.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

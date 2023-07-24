@@ -2,8 +2,8 @@ package com.example.backend.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.backend.model.User;
-import com.example.backend.repository.UserRepository;
+import com.example.backend.model.user.User;
+import com.example.backend.model.user.UserRepository;
 import com.example.backend.security.UserDetailsImpl;
 import java.util.Date;
 import java.util.HashMap;

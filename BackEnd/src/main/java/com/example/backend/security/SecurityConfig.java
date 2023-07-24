@@ -1,6 +1,6 @@
 package com.example.backend.security;
 
-import com.example.backend.repository.UserRepository;
+import com.example.backend.model.user.UserRepository;
 import com.example.backend.security.filter.FormLoginFilter;
 import com.example.backend.security.filter.JwtAuthFilter;
 import com.example.backend.security.jwt.HeaderTokenExtractor;

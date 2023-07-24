@@ -6,7 +6,7 @@ import com.example.backend.dto.AuthNicknameDto;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.SignUpDto;
 import com.example.backend.dto.TestDto;
-import com.example.backend.model.User;
+import com.example.backend.model.user.User;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.RefreshTokenService;
 import com.example.backend.service.UserService;
