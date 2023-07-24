@@ -1,6 +1,6 @@
 package com.example.backend.dto;
 
-import com.example.backend.model.User;
+import com.example.backend.model.user.User;
 import com.example.backend.model.enums.AuthType;
 import lombok.Data;
 

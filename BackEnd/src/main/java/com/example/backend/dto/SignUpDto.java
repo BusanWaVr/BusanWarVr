@@ -1,7 +1,7 @@
 package com.example.backend.dto;
 
-import com.example.backend.model.Category;
-import com.example.backend.model.User;
+import com.example.backend.model.category.Category;
+import com.example.backend.model.user.User;
 import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
