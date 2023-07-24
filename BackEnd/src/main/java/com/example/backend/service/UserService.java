@@ -2,10 +2,10 @@ package com.example.backend.service;
 
 import com.example.backend.dto.AuthCodeDto;
 import com.example.backend.dto.SignUpDto;
-import com.example.backend.model.Category;
-import com.example.backend.model.User;
-import com.example.backend.repository.CategoryRepository;
-import com.example.backend.repository.UserRepository;
+import com.example.backend.model.category.Category;
+import com.example.backend.model.user.User;
+import com.example.backend.model.category.CategoryRepository;
+import com.example.backend.model.user.UserRepository;
 import com.example.backend.util.awsS3.S3Uploader;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

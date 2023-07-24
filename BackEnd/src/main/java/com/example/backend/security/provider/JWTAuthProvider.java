@@ -1,7 +1,7 @@
 package com.example.backend.security.provider;
 
-import com.example.backend.model.User;
-import com.example.backend.repository.UserRepository;
+import com.example.backend.model.user.User;
+import com.example.backend.model.user.UserRepository;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.security.jwt.JwtDecoder;
 import com.example.backend.security.jwt.JwtPreProcessingToken;
