@@ -23,12 +23,11 @@ public class UserService {
     private final CategoryRepository categoryRepository;
     private final S3Uploader s3Uploader;
     private final RedisTemplate<String, String> redisTemplate;
+    private final String defaultProfileImage = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
 
     @Transactional
-    public void signup(SignUpDto.Reqeust reqeust, String encodedPassword)
-            throws IOException, IllegalAccessException {
-        String fileUrl = s3Uploader.upload(reqeust.getProfileImg());
-        User user = reqeust.toUser(fileUrl, encodedPassword);
+    public void signup(SignUpDto.Reqeust reqeust, String encodedPassword) {
+        User user = reqeust.toUser(defaultProfileImage, encodedPassword);
         userRepository.save(user);
 
         for (String categoryName : reqeust.getCategory()) {
