@@ -27,7 +27,6 @@ public class GuideSignUpDto {
         private String nickname;
 
         @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
-//        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{10,16}", message = "비밀번호는 10~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
         @Pattern(regexp = "^(?=(?:[^a-zA-Z]*[a-zA-Z])(?:[^\\d]*\\d|\\d*[^\\d]|[^\\w]*\\w|\\w*[^\\w]))[\\w\\W]*$", message = "비밀번호는 영문, 숫자, 특수문자 중 2종류 이상을 조합하여 설정해주세요.")
         @Size(min = 10, message = "비밀번호는 10자 이상여야합니다.")
         private String password;
