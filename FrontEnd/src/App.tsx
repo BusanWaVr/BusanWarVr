@@ -7,7 +7,7 @@ import Signup from "./routes/Signup.jsx";
 
 function App() {
   return (
-    <div className="container-md">
+    <>
       <Routes>
         <Route element={<RootLayout />}>
           <Route path="/" element={<Home />} />
@@ -24,8 +24,8 @@ function App() {
           }
         />
       </Routes>
-    </div>
+    </>
   );
-};
+}
 
 export default App;
