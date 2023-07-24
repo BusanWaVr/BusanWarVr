@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.AuthCodeDto;
+import com.example.backend.dto.GuideSignUpDto;
 import com.example.backend.dto.SignUpDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.user.User;
@@ -35,6 +36,14 @@ public class UserService {
             Category category = reqeust.toCategory(categoryName, user);
             categoryRepository.save(category);
         }
+    }
+
+    @Transactional
+    public void guideSignUp(GuideSignUpDto.Request request, String encodedPassword)
+        throws IOException, IllegalAccessException {
+        String fileUrl = s3Uploader.upload(request.getProfileImg());
+        User user = request.GuideSignUpDto(fileUrl, encodedPassword);
+        userRepository.save(user);
     }
 
     public void saveEmailAuth(String email, String code) throws IllegalAccessException {
