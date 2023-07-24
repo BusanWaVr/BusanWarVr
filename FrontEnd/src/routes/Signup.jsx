@@ -13,12 +13,16 @@ const Signup = () => {
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordConfirmMessage, setPasswordConfirmMessage] = useState("");
   const [emailMessage, setEmailMessage] = useState("");
+  const [emailVerifyMessage, setEmailVerifyMessage] = useState("");
+  const [codeMessage, setCodeMessage] = useState(""); // 인증코드 받기 할시 메세지
+  const [verificationCode, setVerificationCode] = useState(""); // 인증코드 입력한것
 
   const [isId, setIsId] = useState(false);
   const [isName, setIsName] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
+  const [showVerificationForm, setShowVerificationForm] = useState(false);
 
   //   카테고리
   // TODO : 3개 미만으로 선택시 알림메시지
@@ -50,12 +54,71 @@ const Signup = () => {
 
     if (!emailRegExp.test(currentEmail)) {
       setEmailMessage("이메일 형식이 올바르지 않습니다.");
-      setIsEmail(false);
     } else {
       setEmailMessage("사용 가능한 이메일 입니다.");
-      setIsEmail(true);
     }
   };
+
+  // 이메일 인증 번호 발송
+
+  const handleVerification = async () => {
+    try {
+      const response = await fetch("http://13.209.65.4/auth/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      console.log(data);
+
+      if (data.code === "200") {
+        setCodeMessage("메일로 인증 번호가 발송되었습니다.");
+        setShowVerificationForm(true);
+      } else {
+        // TODO : 이미 가입된 이메일 / 올바르지 않은 이메일 확인해보기
+        setCodeMessage("올바른 이메일인지 다시 확인해주세요.");
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
+  };
+
+  // 이메일 인증번호 검증
+  const handleSubmitVerificationCode = async (e) => {
+    e.preventDefault();
+
+    try {
+      const requestBody = {
+        email: email,
+        code: verificationCode,
+      };
+
+      const response = await fetch("http://13.209.65.4/auth/code", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();
+
+      if (data.code === "200") {
+        setEmailVerifyMessage("이메일 인증이 완료되었습니다.");
+        setIsEmail(true);
+      } else {
+        setEmailVerifyMessage("인증 번호가 일치하지 않습니다.");
+        // setIsEmail(false);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
+  };
+
   const onChangeName = (e) => {
     const currentName = e.target.value;
     setName(currentName);
@@ -84,7 +147,9 @@ const Signup = () => {
       /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
 
     if (!passwordRegExp.test(currentPassword)) {
-      setPasswordMessage("~~로 입력해주세요");
+      setPasswordMessage(
+        "영문, 숫자, 특수문자 중 최소 2가지 이상으로 8자 이상 입력해주세요"
+      );
       setIsPassword(false);
     } else {
       setPasswordMessage("안전한 비밀번호 입니다.");
@@ -103,6 +168,23 @@ const Signup = () => {
       setIsPasswordConfirm(true);
     }
   };
+
+  const createFormData = async (
+    name,
+    email,
+    password,
+    profileImage,
+    selectedCategories
+  ) => {
+    const formData = new FormData();
+    formData.append("nickname", name);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("profileImg", profileImage);
+    formData.append("category", selectedCategories);
+    return formData;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("아아아ㅏ");
@@ -115,28 +197,31 @@ const Signup = () => {
       isPasswordConfirm &&
       selectedCategories.length >= 3
     ) {
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("nickname", name);
-      formData.append("password", password);
-      formData.append("category", JSON.stringify(selectedCategories));
-      formData.append("profileImg", profileImage);
+      const formData = await createFormData(
+        name,
+        email,
+        password,
+        profileImage,
+        selectedCategories
+      );
 
-      const apiUrl = "http://18.217.191.122:8080/user";
+      console.log(formData);
+      const apiUrl = "http://13.209.65.4/user";
 
       try {
         const response = await axios.post(apiUrl, formData);
-        // 성공 모달 표시
-        alert("회원가입이 완료되었습니다.");
-
-        // 로그인 페이지로 리디렉션
-        window.location.href = "/login";
+        if (response.data.code === "200") {
+          alert(response.data.message);
+          // TODO : 로그인 된 상태로 메인화면으로 이동
+          window.location.href = "/";
+        } else {
+          console.log("회원가입 실패:", response.data.message);
+        }
       } catch (error) {
-        // 서버에서 보내준 오류 메시지 확인
-        console.error("폼 제출 중 오류 발생:", error.response.data);
+        console.error("폼 제출 중 오류 발생:", error);
       }
     } else {
-      // 필수 필드들이 모두 입력되지 않았을 경우, 에러 메시지 표시 또는 적절한 조치를 취해주세요.
+      // 필수 필드들이 모두 입력되지 않았을 경우
       alert("모든 필수 정보를 입력해주세요.");
     }
   };
@@ -165,6 +250,21 @@ const Signup = () => {
             onChange={onChangeEmail}
           />
           <p className="message">{emailMessage}</p>
+          <button onClick={handleVerification}>인증번호받기</button>
+          <div>
+            <p>{codeMessage}</p>
+            {showVerificationForm && (
+              <form onSubmit={handleSubmitVerificationCode}>
+                <input
+                  type="text"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                />
+                <button type="submit">인증</button>
+              </form>
+            )}
+          </div>
+          <p className="message">{emailVerifyMessage}</p>
         </div>
 
         <div className="form-el">
