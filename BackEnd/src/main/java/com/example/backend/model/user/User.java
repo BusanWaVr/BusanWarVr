@@ -54,6 +54,14 @@ public class User {
         this.profileImg = profileImg;
     }
 
+    public User(String email, String nickname, String password, String profileImg, AuthType type) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.profileImg = profileImg;
+        this.type = type;
+    }
+
 
     @Override
     public String toString() {
