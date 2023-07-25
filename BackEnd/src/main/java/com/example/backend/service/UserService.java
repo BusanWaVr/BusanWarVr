@@ -10,7 +10,6 @@ import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.usercategory.UserCategory;
 import com.example.backend.model.usercategory.UserCategoryRepository;
-import com.example.backend.util.awsS3.S3Uploader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +27,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final UserCategoryRepository userCategoryRepository;
-    private final S3Uploader s3Uploader;
     private final RedisTemplate<String, String> redisTemplate;
     private final static String DEFAULT_PROFILE_IMAGE = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
 

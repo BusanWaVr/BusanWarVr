@@ -43,6 +43,7 @@ public class ErrorResponse {
     }
 
     @Data
+    @NoArgsConstructor
     public static class FieldError {
 
         private String field;
