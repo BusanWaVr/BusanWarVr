@@ -109,8 +109,9 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.POST, "/auth/nickname"));
         skipPathList.add(new Path(HttpMethod.POST, "/auth/email"));
         skipPathList.add(new Path(HttpMethod.POST, "/auth/code"));
+        skipPathList.add(new Path(HttpMethod.POST, "/guide"));
         skipPathList.add(new Path(HttpMethod.POST, "/auth/nickname"));
-      
+
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPathList, "/**");
         JwtAuthFilter filter = new JwtAuthFilter(matcher, extractor);
         filter.setAuthenticationManager(authenticationManager);

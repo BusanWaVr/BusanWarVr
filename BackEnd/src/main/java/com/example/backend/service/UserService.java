@@ -1,13 +1,19 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.AuthCodeDto;
+import com.example.backend.dto.GuideSignUpDto;
 import com.example.backend.dto.SignUpDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.user.User;
 import com.example.backend.model.category.CategoryRepository;
 import com.example.backend.model.user.UserRepository;
+import com.example.backend.model.usercategory.UserCategory;
+import com.example.backend.model.usercategory.UserCategoryRepository;
 import com.example.backend.util.awsS3.S3Uploader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,20 +27,40 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final UserCategoryRepository userCategoryRepository;
     private final S3Uploader s3Uploader;
     private final RedisTemplate<String, String> redisTemplate;
+    private final String defaultProfileImageUrl = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
 
     @Transactional
-    public void signup(SignUpDto.Reqeust reqeust, String encodedPassword)
-            throws IOException, IllegalAccessException {
-        String fileUrl = s3Uploader.upload(reqeust.getProfileImg());
-        User user = reqeust.toUser(fileUrl, encodedPassword);
+    public void signup(SignUpDto.Reqeust reqeust, String encodedPassword) {
+        User user = reqeust.toUser(defaultProfileImageUrl, encodedPassword);
         userRepository.save(user);
 
-        for (String categoryName : reqeust.getCategory()) {
-            Category category = reqeust.toCategory(categoryName, user);
+        // 사용자가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
+        List<Category> categories = new ArrayList<>();
+        for (String categoryName : reqeust.getUserCategory()) {
+            Category category = reqeust.toCategory(categoryName);
+            categories.add(category);
             categoryRepository.save(category);
         }
+
+        // UserCategory 객체 생성 및 저장
+        for (Category category : categories) {
+            UserCategory userCategory = new UserCategory();
+            userCategory.setUser(user);
+            userCategory.setCategory(category);
+            userCategory.setDate(new Date());
+            userCategoryRepository.save(userCategory);
+        }
+    }
+
+    @Transactional
+    public void guideSignUp(GuideSignUpDto.Request request, String encodedPassword)
+        throws IOException, IllegalAccessException {
+        String fileUrl = s3Uploader.upload(request.getProfileImg());
+        User user = request.GuideSignUpDto(fileUrl, encodedPassword);
+        userRepository.save(user);
     }
 
     public void saveEmailAuth(String email, String code) throws IllegalAccessException {
