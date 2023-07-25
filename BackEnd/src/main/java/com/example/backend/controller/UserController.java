@@ -116,8 +116,8 @@ public class UserController {
     public Response authPassword(@AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody @Valid AuthPasswordDto.Request request) {
         String password = userDetails.getPassword();
-
         boolean checkPassword = passwordEncoder.matches(request.getPassword(), password);
+        
         if (checkPassword) {
             return new Response<>("200", "비밀번호가 일치합니다.", null);
         } else {
