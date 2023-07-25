@@ -103,7 +103,7 @@ public class UserController {
     @PostMapping("/test")
     public Response<TestDto.Response> test(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        return new Response<>("200", "CICD 테스트가 정상적으로 이루어졌습니다.", new TestDto.Response(user));
+        return new Response<>("200", "CICD 테스트5가 정상적으로 이루어졌습니다.", new TestDto.Response(user));
     }
 
     @PostMapping("/auth/email")
