@@ -51,12 +51,8 @@ public class UserController {
         }
 
         String encodedPassword = passwordEncoder.encode(reqeust.getPassword());
-        System.out.println(reqeust);
-
-        //TODO : validation 적용
-
-        // TODO : 사용자 저장
         userService.signup(reqeust, encodedPassword);
+
         return new Response<>("200", "성공적으로 회원가입 되었습니다!", null);
     }
 
@@ -75,7 +71,6 @@ public class UserController {
     public Response<GuideSignUpDto> guideSignUpApi(
             @ModelAttribute @Valid GuideSignUpDto.Request request,
             BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
-
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
@@ -129,7 +124,6 @@ public class UserController {
     public Response codeAuth(@RequestBody AuthCodeDto.Request request)
             throws IllegalAccessException {
         boolean isAuth = userService.isCodeAuth(request);
-
         if (!isAuth) {
             throw new IllegalAccessException("이메일 인증에 실패했습니다.");
         }
