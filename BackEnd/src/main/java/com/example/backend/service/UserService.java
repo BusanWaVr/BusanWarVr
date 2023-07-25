@@ -42,7 +42,7 @@ public class UserService {
     public void guideSignUp(GuideSignUpDto.Request request, String encodedPassword)
             throws IOException, IllegalAccessException {
         String fileUrl = "https://modo-phinf.pstatic.net/20220706_248/1657095680803mnUC9_JPEG/mosatoJVQz.jpeg?type=w1100";
-        User user = request.GuideSignUpDto(fileUrl, encodedPassword);
+        User user = request.toGuide(fileUrl, encodedPassword);
         userRepository.save(user);
     }
 
