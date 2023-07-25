@@ -68,20 +68,19 @@ public class UserController {
     }
 
     @PostMapping("/guide")
-    public Response<GuideSignUpDto> guideSignUpApi(@ModelAttribute @Valid GuideSignUpDto.Request request,
+    public Response<GuideSignUpDto> guideSignUpApi(
+            @ModelAttribute @Valid GuideSignUpDto.Request request,
             BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
-
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         userService.guideSignUp(request, encodedPassword);
 
-        return new Response<> ("200", "성공적으로 회원가입 되었습니다.", null);
+        return new Response<>("200", "성공적으로 회원가입 되었습니다.", null);
 
     }
-
 
     @GetMapping("/refresh")
     public Response refresh(HttpServletRequest request, HttpServletResponse response) {
@@ -108,7 +107,7 @@ public class UserController {
     @PostMapping("/test")
     public Response<TestDto.Response> test(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        return new Response<>("200", "정상적으로 처리되었습니다.", new TestDto.Response(user));
+        return new Response<>("200", "CICD 테스트가 정상적으로 이루어졌습니다.", new TestDto.Response(user));
     }
 
     @PostMapping("/auth/email")

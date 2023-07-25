@@ -33,7 +33,7 @@ public class SignUpDto {
         @Size(min = 10, message = "비밀번호는 10자 이상여야합니다.")
         private String password;
 
-        private List<String> category;
+        private List<String> userCategory;
         private MultipartFile profileImg;
 
         @Override
@@ -42,7 +42,7 @@ public class SignUpDto {
                     "email='" + email + '\'' +
                     ", nickname='" + nickname + '\'' +
                     ", password='" + password + '\'' +
-                    ", category=" + category +
+                    ", usercategory=" + userCategory +
                     ", profileImg=" + profileImg +
                     '}';
         }
@@ -51,8 +51,9 @@ public class SignUpDto {
             return new User(this.email, this.nickname, encodedPassword, profileImg);
         }
 
-        public Category toCategory(String category, User user) {
-            return new Category(category, user);
+
+        public Category toCategory(String categoryName) {
+            return new Category(categoryName);
         }
     }
 }
