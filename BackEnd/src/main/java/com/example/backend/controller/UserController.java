@@ -3,11 +3,13 @@ package com.example.backend.controller;
 import com.example.backend.dto.AuthCodeDto;
 import com.example.backend.dto.AuthEmailDto;
 import com.example.backend.dto.AuthNicknameDto;
+import com.example.backend.dto.AuthPasswordDto;
 import com.example.backend.dto.GuideSignUpDto;
 import com.example.backend.dto.Response;
-import com.example.backend.dto.UserSignUpDto;
 import com.example.backend.dto.TestDto;
+import com.example.backend.dto.UserSignUpDto;
 import com.example.backend.exception.type.DuplicatedValueException;
+import com.example.backend.exception.type.NotSameDataValueException;
 import com.example.backend.model.user.User;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.RefreshTokenService;
@@ -44,7 +46,8 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public Response<UserSignUpDto> userSignupApi(@ModelAttribute @Valid UserSignUpDto.Request request,
+    public Response<UserSignUpDto> userSignupApi(
+            @ModelAttribute @Valid UserSignUpDto.Request request,
             BindingResult bindingResult) throws BindException, DuplicatedValueException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
@@ -104,6 +107,32 @@ public class UserController {
     public Response<TestDto.Response> test(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         return new Response<>("200", "CICD 테스트5가 정상적으로 이루어졌습니다.", new TestDto.Response(user));
+    }
+
+    @PostMapping("/auth/password")
+    public Response authPassword(@AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody @Valid AuthPasswordDto.Request request) {
+        String password = userDetails.getPassword();
+
+        boolean checkPassword = passwordEncoder.matches(request.getPassword(), password);
+        if (checkPassword) {
+            return new Response<>("200", "비밀번호가 일치합니다.", null);
+        } else {
+            return new Response<>("400", "비밀번호가 일치하지 않습니다", null);
+        }
+    }
+
+    @PostMapping("/auth/password")
+    public Response authPassword(@AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody @Valid AuthPasswordDto.Request request) throws NotSameDataValueException {
+        String password = userDetails.getPassword();
+        boolean checkPassword = passwordEncoder.matches(request.getPassword(), password);
+
+        if (!checkPassword) {
+            throw new NotSameDataValueException("비밀번호가 일치하지 않습니다.");
+        }
+
+        return new Response<>("200", "비밀번호가 일치합니다.", null);
     }
 
     @PostMapping("/auth/email")

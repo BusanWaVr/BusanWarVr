@@ -2,7 +2,7 @@ import React, { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm: React.FC = () => {
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,12 +50,12 @@ const LoginForm: React.FC = () => {
       <h1>로그인 화면</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="username">이메일:</label>
+          <label htmlFor="email">이메일:</label>
           <input
             type="text"
-            id="username"
-            name="username"
-            value={formData.username}
+            id="email"
+            name="email"
+            value={formData.email}
             onChange={handleInputChange}
           />
         </div>

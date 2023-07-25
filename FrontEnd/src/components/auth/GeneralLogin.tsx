@@ -47,7 +47,7 @@ interface Props {
 }
 
 function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,9 +100,9 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
           <LoginInputLabel htmlFor="email">이메일</LoginInputLabel>
           <LoginInput
             type="text"
-            id="username"
-            name="username"
-            value={formData.username}
+            id="email"
+            name="email"
+            value={formData.email}
             onChange={handleInputChange}
             placeholder="이메일 주소 ex) busanvr@busanvr.co.kr"
             className="login-form__input-id"

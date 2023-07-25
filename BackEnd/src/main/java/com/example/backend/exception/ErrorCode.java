@@ -14,7 +14,8 @@ public enum ErrorCode {
     INVALID_TYPE_VALUE("400", "C005", " Invalid Type Value"),
     HANDLE_ACCESS_DENIED("403", "C006", "Access is Denied"),
     ENUM_MISS_MATCH("501", "C007", "enum miss match"),
-    DUPLICATE_DB_VALUE("409", "C008", "duplicated input value");
+    DUPLICATE_DB_VALUE("409", "C008", "duplicated input value"),
+    NOT_SAME_DATA_VALUE("400","C009","Not Same Data Input Value From DB");
 
     private final String status;
     private final String code;
