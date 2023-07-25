@@ -111,19 +111,6 @@ public class UserController {
 
     @PostMapping("/auth/password")
     public Response authPassword(@AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody @Valid AuthPasswordDto.Request request) {
-        String password = userDetails.getPassword();
-
-        boolean checkPassword = passwordEncoder.matches(request.getPassword(), password);
-        if (checkPassword) {
-            return new Response<>("200", "비밀번호가 일치합니다.", null);
-        } else {
-            return new Response<>("400", "비밀번호가 일치하지 않습니다", null);
-        }
-    }
-
-    @PostMapping("/auth/password")
-    public Response authPassword(@AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody @Valid AuthPasswordDto.Request request) throws NotSameDataValueException {
         String password = userDetails.getPassword();
         boolean checkPassword = passwordEncoder.matches(request.getPassword(), password);
