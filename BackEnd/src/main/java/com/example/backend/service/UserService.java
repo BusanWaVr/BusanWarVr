@@ -2,8 +2,8 @@ package com.example.backend.service;
 
 import com.example.backend.dto.AuthCodeDto;
 import com.example.backend.dto.GuideSignUpDto;
-import com.example.backend.dto.SignUpDto;
 import com.example.backend.exception.type.DuplicatedValueException;
+import com.example.backend.dto.UserSignUpDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
 import com.example.backend.model.user.User;
@@ -33,7 +33,7 @@ public class UserService {
     private final static String DEFAULT_PROFILE_IMAGE = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
 
     @Transactional
-    public void signup(SignUpDto.Request request, String encodedPassword)
+    public void signup(UserSignUpDto.Request request, String encodedPassword)
             throws DuplicatedValueException {
         emailExistValidCheck(request.getEmail());
         nicknameExistValidCheck(request.getNickname());
@@ -43,7 +43,7 @@ public class UserService {
 
         // 사용자가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
         List<Category> categories = new ArrayList<>();
-        for (String categoryName : request.getUserCategory()) {
+        for (String categoryName : request.getCategory()) {
             Category category = request.toCategory(categoryName);
             categories.add(category);
             categoryRepository.save(category);
