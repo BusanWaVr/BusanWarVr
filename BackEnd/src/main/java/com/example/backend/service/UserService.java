@@ -57,17 +57,8 @@ public class UserService {
 
     @Transactional
     public void guideSignUp(GuideSignUpDto.Request request, String encodedPassword)
-        throws IOException, IllegalAccessException {
-        String fileUrl = s3Uploader.upload(request.getProfileImg());
-        User user = request.GuideSignUpDto(fileUrl, encodedPassword);
-        userRepository.save(user);
-    }
-
-    @Transactional
-    public void guideSignUp(GuideSignUpDto.Request request, String encodedPassword)
             throws IOException, IllegalAccessException {
-        String fileUrl = "https://modo-phinf.pstatic.net/20220706_248/1657095680803mnUC9_JPEG/mosatoJVQz.jpeg?type=w1100";
-        User user = request.toGuide(fileUrl, encodedPassword);
+        User user = request.toGuide(DEFAULT_PROFILE_IMAGE, encodedPassword);
         userRepository.save(user);
     }
 
