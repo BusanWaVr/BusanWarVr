@@ -36,7 +36,7 @@
 - WebRtc
 
 ### 🔥 Back-End Stack
-- Spring Boot, Spring Security.
+- Spring Boot, Spring Security
 
 ### ⭐ DB
 - Mysql
