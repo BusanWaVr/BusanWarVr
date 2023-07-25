@@ -44,7 +44,7 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public Response<SignUpDto> userSignupApi(@ModelAttribute @Valid SignUpDto.Request request,
+    public Response<UserSignUpDto> userSignupApi(@ModelAttribute @Valid UserSignUpDto.Request request,
             BindingResult bindingResult) throws BindException, DuplicatedValueException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);

@@ -33,7 +33,7 @@ public class UserService {
     private final static String DEFAULT_PROFILE_IMAGE = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
 
     @Transactional
-    public void signup(SignUpDto.Request request, String encodedPassword)
+    public void signup(UserSignUpDto.Request request, String encodedPassword)
             throws DuplicatedValueException {
         emailExistValidCheck(request.getEmail());
         nicknameExistValidCheck(request.getNickname());
@@ -43,8 +43,8 @@ public class UserService {
 
         // 사용자가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
         List<Category> categories = new ArrayList<>();
-        for (String categoryName : reqeust.getCategory()) {
-            Category category = reqeust.toCategory(categoryName);
+        for (String categoryName : request.getCategory()) {
+            Category category = request.toCategory(categoryName);
             categories.add(category);
             categoryRepository.save(category);
         }
