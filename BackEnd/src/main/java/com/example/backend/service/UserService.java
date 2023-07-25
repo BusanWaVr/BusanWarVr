@@ -57,11 +57,11 @@ public class UserService {
 
     @Transactional
     public void guideSignUp(GuideSignUpDto.Request request, String encodedPassword)
-        throws IOException, IllegalAccessException {
-        String fileUrl = s3Uploader.upload(request.getProfileImg());
-        User user = request.GuideSignUpDto(fileUrl, encodedPassword);
+            throws IOException, IllegalAccessException {
+        User user = request.toGuide(DEFAULT_PROFILE_IMAGE, encodedPassword);
         userRepository.save(user);
     }
+
 
     public void saveEmailAuth(String email, String code) throws IllegalAccessException {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
