@@ -1,7 +1,7 @@
 package com.example.backend.dto;
 
-import com.example.backend.model.user.User;
 import com.example.backend.model.enums.AuthType;
+import com.example.backend.model.user.User;
 import lombok.Data;
 
 @Data

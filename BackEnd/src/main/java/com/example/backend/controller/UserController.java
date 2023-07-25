@@ -7,12 +7,12 @@ import com.example.backend.dto.GuideSignUpDto;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.UserSignUpDto;
 import com.example.backend.dto.TestDto;
+import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.model.user.User;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.RefreshTokenService;
 import com.example.backend.service.UserService;
 import com.example.backend.util.emailsender.EmailSender;
-import java.io.IOException;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,39 +44,35 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public Response<UserSignUpDto> userSignupApi(@ModelAttribute @Valid UserSignUpDto.Reqeust reqeust,
-            BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
+    public Response<SignUpDto> userSignupApi(@ModelAttribute @Valid SignUpDto.Request request,
+            BindingResult bindingResult) throws BindException, DuplicatedValueException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
 
-        String encodedPassword = passwordEncoder.encode(reqeust.getPassword());
-        userService.signup(reqeust, encodedPassword);
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        userService.signup(request, encodedPassword);
 
         return new Response<>("200", "성공적으로 회원가입 되었습니다!", null);
     }
 
     @PostMapping("/auth/nickname")
     public Response<AuthNicknameDto> userAuthNicknameApi(
-            @RequestBody AuthNicknameDto.Request request) throws IllegalAccessException {
-        if (userService.checkNicknameDuplicate(request.getNickname())) {
-            throw new IllegalAccessException("중복된 닉네임 입니다.");
-        } else {
-            return new Response<>("200", "사용 가능한 닉네임 입니다.", null);
-        }
+            @RequestBody AuthNicknameDto.Request request) throws DuplicatedValueException {
+        userService.nicknameExistValidCheck(request.getNickname());
+        return new Response<>("200", "사용 가능한 닉네임 입니다.", null);
     }
 
     //TODO : 가이드 회원가입 만들기
     @PostMapping("/guide")
     public Response<GuideSignUpDto> guideSignUpApi(
             @ModelAttribute @Valid GuideSignUpDto.Request request,
-            BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
+            BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-
         userService.guideSignUp(request, encodedPassword);
 
         return new Response<>("200", "성공적으로 회원가입 되었습니다.", null);
