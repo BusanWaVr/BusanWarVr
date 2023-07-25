@@ -5,6 +5,7 @@ import Dashboard from "./routes/Dashboard";
 import Home from "./routes/Home";
 import Signup from "./routes/Signup.jsx";
 import LiveStream from "./routes/LiveStream.jsx";
+import LiveStreamView from "./routes/LiveStreamView.jsx";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/livestream" element={<LiveStream />} />
+          <Route path="/livestream/:sessionid" element={<LiveStreamView />} />
         </Route>
         <Route
           path="*"
