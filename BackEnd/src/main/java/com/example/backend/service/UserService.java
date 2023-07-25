@@ -30,11 +30,11 @@ public class UserService {
     private final UserCategoryRepository userCategoryRepository;
     private final S3Uploader s3Uploader;
     private final RedisTemplate<String, String> redisTemplate;
-    private final String defaultProfileImageUrl = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
+    private final static String DEFAULT_PROFILE_IMAGE = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
 
     @Transactional
     public void signup(SignUpDto.Reqeust reqeust, String encodedPassword) {
-        User user = reqeust.toUser(defaultProfileImageUrl, encodedPassword);
+        User user = reqeust.toUser(DEFAULT_PROFILE_IMAGE, encodedPassword);
         userRepository.save(user);
 
         // 사용자가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
