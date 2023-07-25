@@ -112,9 +112,9 @@ const Signup = () => {
       if (data.code === "200") {
         setCodeMessage("메일로 인증 번호가 발송되었습니다.");
         setShowVerificationForm(true);
-      } else if (data.code === "409") {
+      } else if (data.status === "409") {
         // 중복
-        setCodeMessage("이미 가입한 이메일 입니다.");
+        setCodeMessage("이미 가입한 이메일 입니다. 로그인 해주세요.");
       } else {
         // 에러
         setCodeMessage("죄송합니다. 잠시 후 다시 시도해 주세요.");
@@ -148,8 +148,8 @@ const Signup = () => {
         setEmailVerifyMessage("이메일 인증이 완료되었습니다.");
         setIsEmail(true);
       } else {
+        // 이때 500 에러뜸
         setEmailVerifyMessage("인증 번호가 일치하지 않습니다.");
-        // setIsEmail(false);
       }
     } catch (error) {
       console.error(error);
@@ -170,7 +170,7 @@ const Signup = () => {
       setNameMessage("특수문자와 공백 없이 2자 이상 8자 이하로 입력해 주세요.");
       setIsName(false);
     } else {
-      setNameMessage("사용 가능한 닉네임 입니다.");
+      setNameMessage("");
       setIsName(true);
     }
   };
@@ -213,6 +213,8 @@ const Signup = () => {
     return formData;
   };
 
+  // 회원가입
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("슈웃");
@@ -234,13 +236,17 @@ const Signup = () => {
         const response = await axios.post(apiUrl, formData);
         if (response.data.code === "200") {
           alert(response.data.message);
+          console.log(response.data);
           // TODO : 로그인 된 상태로 메인화면으로 이동
           window.location.href = "/";
-        } else {
-          console.log("회원가입 실패:", response.data.message);
         }
       } catch (error) {
-        console.error("폼 제출 중 오류 발생:", error);
+        console.log(error.response.data);
+        if (error.response.data.status === "409") {
+          alert(error.response.data.message);
+        } else {
+          alert("죄송합니다. 잠시 후 다시 시도해 주세요.");
+        }
       }
     } else {
       // 필수 필드들이 모두 입력되지 않았을 경우
@@ -270,6 +276,7 @@ const Signup = () => {
             name="name"
             value={email}
             onChange={onChangeEmail}
+            disabled={isEmail}
           />
           <p className="message">{emailMessage}</p>
           <button onClick={handleVerification}>인증번호받기</button>
@@ -281,6 +288,7 @@ const Signup = () => {
                   type="text"
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
+                  disabled={isEmail}
                 />
                 <button type="submit">인증</button>
               </form>
