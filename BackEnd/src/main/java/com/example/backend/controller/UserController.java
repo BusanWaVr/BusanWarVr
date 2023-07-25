@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.AuthCodeDto;
 import com.example.backend.dto.AuthEmailDto;
 import com.example.backend.dto.AuthNicknameDto;
+import com.example.backend.dto.GuideSignUpDto;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.SignUpDto;
 import com.example.backend.dto.TestDto;
@@ -52,9 +53,6 @@ public class UserController {
         String encodedPassword = passwordEncoder.encode(reqeust.getPassword());
         System.out.println(reqeust);
 
-        //TODO : validation 적용
-
-        // TODO : 사용자 저장
         userService.signup(reqeust, encodedPassword);
         return new Response<>("200", "성공적으로 회원가입 되었습니다!", null);
     }
@@ -69,7 +67,20 @@ public class UserController {
         }
     }
 
-    //TODO : 가이드 회원가입 만들기
+    @PostMapping("/guide")
+    public Response<GuideSignUpDto> guideSignUpApi(
+            @ModelAttribute @Valid GuideSignUpDto.Request request,
+            BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        userService.guideSignUp(request, encodedPassword);
+
+        return new Response<>("200", "성공적으로 회원가입 되었습니다.", null);
+
+    }
 
     @GetMapping("/refresh")
     public Response refresh(HttpServletRequest request, HttpServletResponse response) {
