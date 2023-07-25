@@ -1,9 +1,7 @@
 package com.example.backend.dto;
 
-import com.example.backend.model.category.Category;
-import com.example.backend.model.enums.AuthType;
 import com.example.backend.model.user.User;
-import java.util.List;
+import com.example.backend.model.enums.AuthType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -17,7 +15,8 @@ public class GuideSignUpDto {
 
     @Data
     @NoArgsConstructor
-    public static class Request{
+    public static class Request {
+
         @NotBlank(message = "이메일 주소를 입력해 주세요")
         @Email(message = "올바른 이메일 주소를 입력해 주세요")
         private String email;
