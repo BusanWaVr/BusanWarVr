@@ -12,7 +12,7 @@ import org.springframework.validation.BindingResult;
 public class ErrorResponse {
 
     private String message;
-    private int status;
+    private String status;
     private List<FieldError> errors;
     private String code;
 
@@ -73,12 +73,4 @@ public class ErrorResponse {
                     .collect(Collectors.toList());
         }
     }
-//
-//    public void of(ErrorCode errorCode){
-//        this.message = errorCode.getMessage();
-//        this.status = errorCode.getStatus();
-//        this.code = errorCode.getCode();
-//
-//    }
-
 }
