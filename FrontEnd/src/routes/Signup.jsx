@@ -6,7 +6,6 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [email, setEmail] = useState("");
-  // const [profileImage, setProfileImage] = useState(null);
 
   const [nameMessage, setNameMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
@@ -24,7 +23,6 @@ const Signup = () => {
   const [showVerificationForm, setShowVerificationForm] = useState(false);
 
   //   카테고리
-  // TODO : 3개 미만으로 선택시 알림메시지
   const MaxAllowedCategories = 5;
   const MinRequiredCategories = 3;
   const categoriesList = [
@@ -52,16 +50,15 @@ const Signup = () => {
     const categoryIndex = updatedCategories.indexOf(category);
 
     if (categoryIndex > -1) {
-      updatedCategories.splice(categoryIndex, 1); // Remove the category if it's already selected
+      updatedCategories.splice(categoryIndex, 1);
     } else {
       if (updatedCategories.length < MaxAllowedCategories) {
-        updatedCategories.push(category); // Add the category if not already selected and not exceeding the maximum allowed count
+        updatedCategories.push(category);
       }
     }
 
     setSelectedCategories(updatedCategories);
 
-    // Update the category message and setIsCategory
     if (updatedCategories.length < MinRequiredCategories) {
       setCategoryMessage("카테고리는 최소 3개 이상 선택해 주세요.");
       setIsCategory(false);
@@ -73,12 +70,6 @@ const Signup = () => {
       setIsCategory(true);
     }
   };
-
-  // 프로필 이미지
-  // const onChangeProfileImage = (e) => {
-  //   const imageFile = e.target.files[0];
-  //   setProfileImage(imageFile);
-  // };
 
   const onChangeEmail = (e) => {
     const currentEmail = e.target.value;
@@ -258,17 +249,6 @@ const Signup = () => {
     <>
       <h3>Sign Up</h3>
       <div className="form">
-        {/* <div className="form-el">
-          <label htmlFor="profileImage">프로필 이미지</label>
-          <br />
-          <input
-            type="file"
-            id="profileImage"
-            name="profileImage"
-            onChange={onChangeProfileImage}
-          />
-        </div> */}
-
         <div className="form-el">
           <label htmlFor="email">이메일</label> <br />
           <input
