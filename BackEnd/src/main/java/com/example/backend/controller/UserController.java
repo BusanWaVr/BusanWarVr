@@ -5,7 +5,7 @@ import com.example.backend.dto.AuthEmailDto;
 import com.example.backend.dto.AuthNicknameDto;
 import com.example.backend.dto.GuideSignUpDto;
 import com.example.backend.dto.Response;
-import com.example.backend.dto.SignUpDto;
+import com.example.backend.dto.UserSignUpDto;
 import com.example.backend.dto.TestDto;
 import com.example.backend.model.user.User;
 import com.example.backend.security.UserDetailsImpl;
@@ -44,7 +44,7 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public Response<SignUpDto> userSignupApi(@ModelAttribute @Valid SignUpDto.Reqeust reqeust,
+    public Response<UserSignUpDto> userSignupApi(@ModelAttribute @Valid UserSignUpDto.Reqeust reqeust,
             BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);

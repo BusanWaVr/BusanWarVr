@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class SignUpDto {
+public class UserSignUpDto {
 
     @Data
     @NoArgsConstructor
@@ -28,12 +28,11 @@ public class SignUpDto {
         private String nickname;
 
         @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
-//        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{10,16}", message = "비밀번호는 10~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
-        @Pattern(regexp = "^(?=(?:[^a-zA-Z]*[a-zA-Z])(?:[^\\d]*\\d|\\d*[^\\d]|[^\\w]*\\w|\\w*[^\\w]))[\\w\\W]*$", message = "비밀번호는 영문, 숫자, 특수문자 중 2종류 이상을 조합하여 설정해주세요.")
+        @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%])[A-Za-z\\d!@#$%]*$", message = "비밀번호는 영문, 숫자, 특수문자(!@#$%)를 모두 포함하여 설정해주세요.")
         @Size(min = 10, message = "비밀번호는 10자 이상여야합니다.")
         private String password;
 
-        private List<String> userCategory;
+        private List<String> category;
         private MultipartFile profileImg;
 
         @Override
@@ -42,7 +41,7 @@ public class SignUpDto {
                     "email='" + email + '\'' +
                     ", nickname='" + nickname + '\'' +
                     ", password='" + password + '\'' +
-                    ", usercategory=" + userCategory +
+                    ", usercategory=" + category +
                     ", profileImg=" + profileImg +
                     '}';
         }
@@ -50,7 +49,6 @@ public class SignUpDto {
         public User toUser(String profileImg, String encodedPassword) {
             return new User(this.email, this.nickname, encodedPassword, profileImg);
         }
-
 
         public Category toCategory(String categoryName) {
             return new Category(categoryName);

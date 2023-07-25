@@ -2,7 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.dto.AuthCodeDto;
 import com.example.backend.dto.GuideSignUpDto;
-import com.example.backend.dto.SignUpDto;
+import com.example.backend.dto.UserSignUpDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.user.User;
 import com.example.backend.model.category.CategoryRepository;
@@ -33,13 +33,13 @@ public class UserService {
     private final static String DEFAULT_PROFILE_IMAGE = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
 
     @Transactional
-    public void signup(SignUpDto.Reqeust reqeust, String encodedPassword) {
+    public void signup(UserSignUpDto.Reqeust reqeust, String encodedPassword) {
         User user = reqeust.toUser(DEFAULT_PROFILE_IMAGE, encodedPassword);
         userRepository.save(user);
 
         // 사용자가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
         List<Category> categories = new ArrayList<>();
-        for (String categoryName : reqeust.getUserCategory()) {
+        for (String categoryName : reqeust.getCategory()) {
             Category category = reqeust.toCategory(categoryName);
             categories.add(category);
             categoryRepository.save(category);
