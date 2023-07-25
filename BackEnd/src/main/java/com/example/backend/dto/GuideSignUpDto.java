@@ -42,9 +42,10 @@ public class GuideSignUpDto {
                     ", profileImg=" + profileImg +
                     '}';
         }
-
-        public User GuideSignUpDto(String profileImg, String encodedPassword) {
+      
+        public User toGuide(String profileImg, String encodedPassword) {
             return new User(this.email, this.nickname, encodedPassword, profileImg, AuthType.GUIDE);
         }
+
     }
 }

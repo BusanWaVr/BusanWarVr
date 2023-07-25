@@ -63,6 +63,15 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
+    public void guideSignUp(GuideSignUpDto.Request request, String encodedPassword)
+            throws IOException, IllegalAccessException {
+        String fileUrl = "https://modo-phinf.pstatic.net/20220706_248/1657095680803mnUC9_JPEG/mosatoJVQz.jpeg?type=w1100";
+        User user = request.toGuide(fileUrl, encodedPassword);
+        userRepository.save(user);
+    }
+
+
     public void saveEmailAuth(String email, String code) throws IllegalAccessException {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(email, code);
