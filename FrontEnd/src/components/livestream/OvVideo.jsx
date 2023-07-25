@@ -1,9 +1,4 @@
-import styled from "styled-components";
-import { useRef, useEffect } from "react";
-
-const Video = styled.video`
-  border-radius: 10px;
-`;
+import React, { useRef, useEffect } from "react";
 
 export default function OpenViduVideoComponent({ streamManager }) {
   const videoRef = useRef();
@@ -14,9 +9,5 @@ export default function OpenViduVideoComponent({ streamManager }) {
     }
   }, [streamManager]);
 
-  return (
-    <>
-      <Video autoPlay={true} ref={videoRef} />
-    </>
-  );
+  return <video autoPlay={true} ref={videoRef} />;
 }

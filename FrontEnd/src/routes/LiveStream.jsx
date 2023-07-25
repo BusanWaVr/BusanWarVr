@@ -1,21 +1,18 @@
 import { OpenVidu } from "openvidu-browser";
+import Slider from "react-slick";
 
 import axios from "axios";
-import {
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./LiveStream.css";
 import UserVideoComponent from "../components/livestream/UserVideoComponent";
+import Toolbar from "../components/livestream/Toolbar";
+import LiveExample from "../components/livestream/LiveExample.jsx";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
-export default function LiveStream() {
-  const [mySessionId, setMySessionId] = useState("busanvr");
+export default function App() {
+  const [mySessionId, setMySessionId] = useState("busanVR");
   const [myUserName, setMyUserName] = useState(
     `부기${Math.floor(Math.random() * 100)}`
   );
@@ -24,6 +21,8 @@ export default function LiveStream() {
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
+  const [publisherVideoEnabled, setPublisherVideo] = useState(false);
+  const [publisherAudioEnabled, setPublisherAudio] = useState(false);
 
   const OV = useRef(new OpenVidu());
 
@@ -109,6 +108,7 @@ export default function LiveStream() {
     }
   }, [session, myUserName]);
 
+  // 라이브 종료
   const leaveSession = useCallback(() => {
     // Leave the session
     if (session) {
@@ -119,12 +119,13 @@ export default function LiveStream() {
     OV.current = new OpenVidu();
     setSession(undefined);
     setSubscribers([]);
-    setMySessionId("busanvr");
+    setMySessionId("busanVR");
     setMyUserName("부기" + Math.floor(Math.random() * 100));
     setMainStreamManager(undefined);
     setPublisher(undefined);
   }, [session]);
 
+  // 카메라 전환
   const switchCamera = useCallback(async () => {
     try {
       const devices = await OV.current.getDevices();
@@ -159,18 +160,27 @@ export default function LiveStream() {
     }
   }, [currentVideoDevice, session, mainStreamManager]);
 
-  const deleteSubscriber = useCallback((streamManager) => {
-    setSubscribers((prevSubscribers) => {
-      const index = prevSubscribers.indexOf(streamManager);
-      if (index > -1) {
-        const newSubscribers = [...prevSubscribers];
-        newSubscribers.splice(index, 1);
-        return newSubscribers;
-      } else {
-        return prevSubscribers;
-      }
-    });
-  }, []);
+  // 카메라 온오프
+  const toggleCamera = () => {
+    if (publisherVideoEnabled) {
+      setPublisherVideo(false);
+    } else {
+      setPublisherVideo(true);
+    }
+
+    publisher.publishVideo(publisherVideoEnabled);
+  };
+
+  // 마이크 온오프
+  const toggleAudio = () => {
+    if (publisherAudioEnabled) {
+      setPublisherAudio(false);
+    } else {
+      setPublisherAudio(true);
+    }
+
+    publisher.publishAudio(publisherAudioEnabled);
+  };
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -225,8 +235,17 @@ export default function LiveStream() {
     );
     return response.data; // The token
   };
+
+  const settings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 6,
+    slidesToScroll: 1,
+  };
+
   return (
-    <div className="container">
+    <div className="_container">
       {session === undefined ? (
         <div id="join">
           <div id="join-dialog" className="jumbotron vertical-center">
@@ -256,7 +275,7 @@ export default function LiveStream() {
               </p>
               <p className="text-center">
                 <input
-                  className="btn btn-success"
+                  className="btn btn-lg btn-success"
                   name="commit"
                   type="submit"
                   value="JOIN"
@@ -268,51 +287,45 @@ export default function LiveStream() {
       ) : null}
 
       {session !== undefined ? (
-        <div id="session">
-          <div id="session-header">
-            <h1 id="session-title">{mySessionId}</h1>
-            <input
-              className="btn btn-large btn-danger"
-              type="button"
-              id="buttonLeaveSession"
-              onClick={leaveSession}
-              value="Leave session"
-            />
-            <input
-              className="btn btn-large btn-success"
-              type="button"
-              id="buttonSwitchCamera"
-              onClick={switchCamera}
-              value="Switch Camera"
-            />
-          </div>
-
-          {mainStreamManager !== undefined ? (
-            <div id="main-video" className="col-md-6">
-              <UserVideoComponent streamManager={mainStreamManager} />
+        <>
+          <LiveExample className="live-example" />
+          <div id="session">
+            <div className="video-slider" style={{ width: "1200px" }}>
+              <Slider id="video-container" className="" {...settings}>
+                {/* 현재 유저 화면 */}
+                {publisher !== undefined ? (
+                  <div
+                    className="stream-container current-stream"
+                    onClick={() => handleMainVideoStream(publisher)}
+                    style={{ width: "200px" }}
+                  >
+                    <UserVideoComponent streamManager={publisher} />
+                  </div>
+                ) : null}
+                {/* 다른 유저 화면 */}
+                {subscribers.map((sub, i) => (
+                  <div
+                    key={sub.id}
+                    className="stream-container"
+                    onClick={() => handleMainVideoStream(sub)}
+                    style={{ width: "200px" }}
+                  >
+                    <span>{sub.id}</span>
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
+                ))}
+              </Slider>
             </div>
-          ) : null}
-          <div id="video-container" className="col-md-6">
-            {publisher !== undefined ? (
-              <div
-                className="stream-container col-md-6 col-xs-6"
-                onClick={() => handleMainVideoStream(publisher)}
-              >
-                <UserVideoComponent streamManager={publisher} />
-              </div>
-            ) : null}
-            {subscribers.map((sub, i) => (
-              <div
-                key={sub.id}
-                className="stream-container col-md-6 col-xs-6"
-                onClick={() => handleMainVideoStream(sub)}
-              >
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
-              </div>
-            ))}
           </div>
-        </div>
+          <Toolbar
+            leaveSession={leaveSession}
+            switchCamera={switchCamera}
+            toggleCamera={toggleCamera}
+            toggleAudio={toggleAudio}
+            publisherVideoEnabled={publisherVideoEnabled}
+            publisherAudioEnabled={publisherAudioEnabled}
+          />
+        </>
       ) : null}
     </div>
   );

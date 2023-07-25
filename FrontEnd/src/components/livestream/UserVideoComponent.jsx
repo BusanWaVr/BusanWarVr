@@ -1,4 +1,4 @@
-import { StreamManager } from "openvidu-browser";
+import React from "react";
 import OpenViduVideoComponent from "./OvVideo";
 import "./UserVideo.css";
 
