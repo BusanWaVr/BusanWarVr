@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.AuthCodeDto;
 import com.example.backend.dto.AuthEmailDto;
 import com.example.backend.dto.AuthNicknameDto;
+import com.example.backend.dto.GuideSignUpDto;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.SignUpDto;
 import com.example.backend.dto.TestDto;
@@ -70,6 +71,22 @@ public class UserController {
     }
 
     //TODO : 가이드 회원가입 만들기
+    @PostMapping("/guide")
+    public Response<GuideSignUpDto> guideSignUpApi(
+            @ModelAttribute @Valid GuideSignUpDto.Request request,
+            BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
+
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        userService.guideSignUp(request, encodedPassword);
+
+        return new Response<>("200", "성공적으로 회원가입 되었습니다.", null);
+
+    }
 
     @GetMapping("/refresh")
     public Response refresh(HttpServletRequest request, HttpServletResponse response) {
@@ -96,7 +113,7 @@ public class UserController {
     @PostMapping("/test")
     public Response<TestDto.Response> test(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        return new Response<>("200", "정상적으로 처리되었습니다.", new TestDto.Response(user));
+        return new Response<>("200", "CICD 테스트가 정상적으로 이루어졌습니다.", new TestDto.Response(user));
     }
 
     @PostMapping("/auth/email")

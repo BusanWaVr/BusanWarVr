@@ -8,7 +8,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -51,6 +50,14 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.profileImg = profileImg;
+    }
+
+    public User(String email, String nickname, String password, String profileImg, AuthType type){
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.profileImg = profileImg;
+        this.type = type;
     }
 
 
