@@ -6,7 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "../components/livestream/UserVideoComponent";
 import Toolbar from "../components/livestream/Toolbar";
-import LiveExample from "../components/livestream/LiveExample.jsx";
+import LiveExample from "../components/livestream/LiveExample";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
