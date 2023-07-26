@@ -42,7 +42,18 @@ public class ErrorResponse {
         return new ErrorResponse(code, errors);
     }
 
+    @Override
+    public String toString() {
+        return "ErrorResponse{" +
+                "message='" + message + '\'' +
+                ", status='" + status + '\'' +
+                ", errors=" + errors +
+                ", code='" + code + '\'' +
+                '}';
+    }
+
     @Data
+    @NoArgsConstructor
     public static class FieldError {
 
         private String field;
@@ -71,6 +82,15 @@ public class ErrorResponse {
                                     : error.getRejectedValue().toString(),
                             error.getDefaultMessage()))
                     .collect(Collectors.toList());
+        }
+
+        @Override
+        public String toString() {
+            return "FieldError{" +
+                    "field='" + field + '\'' +
+                    ", value='" + value + '\'' +
+                    ", reason='" + reason + '\'' +
+                    '}';
         }
     }
 }
