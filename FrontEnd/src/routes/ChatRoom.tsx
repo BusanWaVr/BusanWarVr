@@ -52,6 +52,12 @@ function ChatRoom() {
     console.log(chatMessages);
   };
 
+  const handleEnterPress = (e) => {
+    if (e.key === 'Enter') {
+      handleEnter(); // Enter 입력이 되면 클릭 이벤트 실행
+    }
+  };
+
   return (
     <>
       <h1>ChatRoom 페이지입니다.</h1>
@@ -66,6 +72,7 @@ function ChatRoom() {
         type="text"
         value={inputMessage}
         onChange={(e) => setInputMessage(e.target.value)}
+        onKeyPress={handleEnterPress}
       />
       <button onClick={handleEnter}>send</button>
       <br />
