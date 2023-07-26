@@ -1,12 +1,14 @@
 package com.example.backend.security;
 
 import com.example.backend.model.user.UserRepository;
+import com.example.backend.security.filter.ExceptionHandlerFilter;
 import com.example.backend.security.filter.FormLoginFilter;
 import com.example.backend.security.filter.JwtAuthFilter;
 import com.example.backend.security.jwt.HeaderTokenExtractor;
 import com.example.backend.security.jwt.JwtTokenUtils;
 import com.example.backend.security.provider.FormLoginAuthProvider;
 import com.example.backend.security.provider.JWTAuthProvider;
+import com.example.backend.util.mattermost.NotificationManager;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -37,6 +40,7 @@ public class SecurityConfig {
     private final UserDetailServiceImpl userDetailService;
     private final JwtTokenUtils jwtTokenUtils;
     private final HeaderTokenExtractor extractor;
+    private final NotificationManager notificationManager;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -51,6 +55,8 @@ public class SecurityConfig {
                 .apply(new MyCustomDsl()) // 커스텀 필터 등록
                 .and()
                 .authorizeRequests().anyRequest().permitAll()
+                .and()
+                .exceptionHandling()
                 .and()
                 .build();
     }
@@ -128,7 +134,9 @@ public class SecurityConfig {
                     .addFilterBefore(formLoginFilter(authenticationManager),
                             UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(jwtAuthFilter(authenticationManager),
-                            UsernamePasswordAuthenticationFilter.class);
+                            UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(new ExceptionHandlerFilter(notificationManager), JwtAuthFilter.class)
+                    .addFilterBefore(new ExceptionHandlerFilter(notificationManager), FormLoginFilter.class);
         }
     }
 
