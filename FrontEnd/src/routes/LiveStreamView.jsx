@@ -12,8 +12,8 @@ const APPLICATION_SERVER_URL =
 
 function LiveStreamView() {
   const navigate = useNavigate();
-  const { params } = useParams();
-  const [mySessionId, setMySessionId] = useState(params);
+  const { sessionid } = useParams();
+  const [mySessionId, setMySessionId] = useState(sessionid);
   const [myUserName, setMyUserName] = useState();
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -36,7 +36,6 @@ function LiveStreamView() {
 
   useEffect(() => {
     const mySession = OV.current.initSession();
-
     mySession.on("streamCreated", (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((subscribers) => [...subscribers, subscriber]);
