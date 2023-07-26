@@ -1,7 +1,11 @@
 import "./LiveExaple.css";
 import YouTube, { YouTubeProps } from "react-youtube";
 
-function LiveExample() {
+interface Props {
+  videoId: string;
+}
+
+function LiveExample({ videoId }: Props) {
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     event.target.playVideo();
   };
@@ -30,7 +34,7 @@ function LiveExample() {
       <div className="youtube-header"></div>
       <div className="youtube-container">
         <YouTube
-          videoId="hH7V-YFZbbs"
+          videoId={videoId}
           opts={opts}
           onReady={onPlayerReady}
           onStateChange={onPlayerStateChange}

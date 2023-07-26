@@ -7,6 +7,7 @@ import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "../components/livestream/UserVideoComponent";
 import Toolbar from "../components/livestream/Toolbar";
 import LiveExample from "../components/livestream/LiveExample";
+import { useData } from "../context/DataContext";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -14,8 +15,8 @@ const APPLICATION_SERVER_URL =
 function LiveStreamView() {
   const navigate = useNavigate();
   const { sessionid } = useParams();
+  const { userName, youtubeLink } = useData();
   const [mySessionId, setMySessionId] = useState(sessionid);
-  const [myUserName, setMyUserName] = useState();
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -35,6 +36,14 @@ function LiveStreamView() {
     },
     [mainStreamManager]
   );
+
+  const extractVideoIdFromLink = (link) => {
+    const regex = /(?:\?v=)([^&]+)/;
+    const match = link.match(regex);
+    return match ? match[1] : null;
+  };
+
+  const videoId = extractVideoIdFromLink(youtubeLink);
 
   useEffect(() => {
     const mySession = OV.current.initSession();
@@ -59,7 +68,7 @@ function LiveStreamView() {
       // Get a token from the OpenVidu deployment
       getToken().then(async (token) => {
         try {
-          await session.connect(token, { clientData: myUserName });
+          await session.connect(token, { clientData: userName });
 
           let publisher = await OV.current.initPublisherAsync(undefined, {
             audioSource: undefined,
@@ -97,7 +106,7 @@ function LiveStreamView() {
         }
       });
     }
-  }, [session, myUserName, mySessionId]);
+  }, [session, userName, mySessionId]);
 
   // 라이브 종료
   const leaveSession = useCallback(() => {
@@ -143,6 +152,20 @@ function LiveStreamView() {
       console.error(e);
     }
   }, [currentVideoDevice, session, mainStreamManager]);
+
+  // subscriber 삭제
+  const deleteSubscriber = useCallback((streamManager) => {
+    setSubscribers((prevSubscribers) => {
+      const index = prevSubscribers.indexOf(streamManager);
+      if (index > -1) {
+        const newSubscribers = [...prevSubscribers];
+        newSubscribers.splice(index, 1);
+        return newSubscribers;
+      } else {
+        return prevSubscribers;
+      }
+    });
+  }, []);
 
   // 카메라 온오프
   const toggleCamera = () => {
@@ -244,7 +267,7 @@ function LiveStreamView() {
 
   return (
     <FullScreen handle={handleFullScreen}>
-      <LiveExample className="live-example" />
+      <LiveExample className="live-example" videoId={videoId} />
       <div id="session">
         <div className="video-slider" style={{ width: "1200px" }}>
           <Slider id="video-container" className="" {...settings}>

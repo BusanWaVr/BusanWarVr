@@ -1,30 +1,27 @@
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useData } from "../context/DataContext";
 import { useNavigate } from "react-router-dom";
 import "./LiveStream.css";
 
-export default function App() {
+export default function LiveStream() {
   const navigate = useNavigate();
 
   const [mySessionId, setMySessionId] = useState("busanVR");
-  const [myUserName, setMyUserName] = useState(
-    `부기${Math.floor(Math.random() * 100)}`
-    );
-  const [youtubeLink, setYouTubeLink] = useState("");
+  const { youtubeLink, setYouTubeLink, userName, setUserName } = useData();
 
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
   }, []);
 
   const handleChangeUserName = useCallback((e) => {
-    setMyUserName(e.target.value);
+    setUserName(e.target.value);
   }, []);
 
   const handleChangeYouTubeLink = useCallback((e) => {
     setYouTubeLink(e.target.value);
-  },[]);
+  }, []);
 
-  const joinSession = () => {
+  const joinSession = (e) => {
     navigate(`/livestream/${mySessionId}`);
   };
 
@@ -40,7 +37,7 @@ export default function App() {
                 className="form-control"
                 type="text"
                 id="userName"
-                value={myUserName}
+                value={userName}
                 onChange={handleChangeUserName}
                 required
               />
