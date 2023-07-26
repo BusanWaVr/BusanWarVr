@@ -15,8 +15,8 @@ const APPLICATION_SERVER_URL =
 function LiveStreamView() {
   const navigate = useNavigate();
   const { sessionid } = useParams();
+  const { userName, youtubeLink } = useData();
   const [mySessionId, setMySessionId] = useState(sessionid);
-  const { username, youtubeLink } = useData();
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -68,7 +68,7 @@ function LiveStreamView() {
       // Get a token from the OpenVidu deployment
       getToken().then(async (token) => {
         try {
-          await session.connect(token, { clientData: username });
+          await session.connect(token, { clientData: userName });
 
           let publisher = await OV.current.initPublisherAsync(undefined, {
             audioSource: undefined,
@@ -106,7 +106,7 @@ function LiveStreamView() {
         }
       });
     }
-  }, [session, username, mySessionId]);
+  }, [session, userName, mySessionId]);
 
   // 라이브 종료
   const leaveSession = useCallback(() => {
