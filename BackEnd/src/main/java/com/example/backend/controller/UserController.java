@@ -48,11 +48,13 @@ public class UserController {
     @PostMapping("/user")
     public Response<UserSignUpDto> userSignupApi(
             @ModelAttribute @Valid UserSignUpDto.Request request,
-            BindingResult bindingResult) throws BindException, DuplicatedValueException {
+            BindingResult bindingResult) throws BindException, DuplicatedValueException, IllegalArgumentException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-
+        else if(!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)){
+            throw new IllegalArgumentException("카테고리 개수는 3개에서 5개 사이여야 합니다.");
+        }
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         userService.signup(request, encodedPassword);
 
