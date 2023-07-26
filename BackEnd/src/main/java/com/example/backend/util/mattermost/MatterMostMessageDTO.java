@@ -12,8 +12,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 public class MatterMostMessageDTO {
+
     @Getter
     public static class Attachments {
+
         private Props props;
         private List<Attachment> attachments;
 
@@ -41,6 +43,7 @@ public class MatterMostMessageDTO {
     @Builder
     @ToString
     public static class Attachment {
+
         private String channel;
 
         private String pretext;
@@ -63,7 +66,8 @@ public class MatterMostMessageDTO {
             this.title = e.getClass().getSimpleName();
             StringBuilder sb = new StringBuilder(text);
 
-            sb.append("**Error Message**").append("\n").append("\n").append("```").append(e.getMessage()).append("```")
+            sb.append("**Error Message**").append("\n").append("\n").append("```")
+                    .append(e.getMessage()).append("```")
                     .append("\n").append("\n");
 
             this.text = sb.toString();
@@ -75,7 +79,8 @@ public class MatterMostMessageDTO {
             this.addExceptionInfo(e);
             StringBuilder sb = new StringBuilder(text);
 
-            sb.append("**Reqeust URL**").append("\n").append("\n").append(uri).append("\n").append("\n");
+            sb.append("**Reqeust URL**").append("\n").append("\n").append(uri).append("\n")
+                    .append("\n");
 
             this.text = sb.toString();
             return this;
@@ -85,7 +90,8 @@ public class MatterMostMessageDTO {
             this.addExceptionInfo(e, uri);
             StringBuilder sb = new StringBuilder(text);
 
-            sb.append("**Parameters**").append("\n").append("\n").append(params.toString()).append("\n").append("\n");
+            sb.append("**Parameters**").append("\n").append("\n").append(params.toString())
+                    .append("\n").append("\n");
 
             this.text = sb.toString();
             return this;
@@ -96,6 +102,7 @@ public class MatterMostMessageDTO {
     @Getter
     @NoArgsConstructor
     public static class Props {
+
         private String card;
 
         public Props(Exception e) {

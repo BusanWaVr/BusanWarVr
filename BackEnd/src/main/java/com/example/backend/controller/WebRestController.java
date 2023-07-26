@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class WebRestController {
+
     private final Environment env;
 
     @GetMapping("/profile")
-    public String getProfile(){
+    public String getProfile() {
         return Arrays.stream(env.getActiveProfiles()).findFirst().orElse("");
     }
 }

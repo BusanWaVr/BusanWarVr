@@ -36,7 +36,7 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
             throws AuthenticationException, IOException, ServletException {
         String tokenPayLoad = request.getHeader("Authorization");
 
-        if(tokenPayLoad == null || tokenPayLoad.length() == 0){
+        if (tokenPayLoad == null || tokenPayLoad.length() == 0) {
             throw new JwtTokenInvalidException("Jwt Token 값이 없습니다.");
         }
 

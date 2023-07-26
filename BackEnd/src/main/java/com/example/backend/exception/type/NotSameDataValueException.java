@@ -2,7 +2,7 @@ package com.example.backend.exception.type;
 
 import com.example.backend.exception.ErrorCode;
 
-public class NotSameDataValueException extends CustomException{
+public class NotSameDataValueException extends CustomException {
 
     public NotSameDataValueException(String message, ErrorCode errorCode) {
         super(message, errorCode);

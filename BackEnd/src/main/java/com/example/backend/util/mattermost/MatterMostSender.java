@@ -3,7 +3,6 @@ package com.example.backend.util.mattermost;
 import com.example.backend.util.mattermost.MatterMostMessageDTO.Attachment;
 import com.example.backend.util.mattermost.MatterMostMessageDTO.Attachments;
 import com.google.gson.Gson;
-import java.nio.charset.Charset;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @RequiredArgsConstructor
 public class MatterMostSender {
+
     private Logger log = LoggerFactory.getLogger(MatterMostSender.class);
 
     @Value("${notification.mattermost.enabled}")
@@ -27,8 +27,9 @@ public class MatterMostSender {
     private final MattermostProperties mmProperties;
 
     public void sendMessage(Exception excpetion, String uri, String params) {
-        if (!mmEnabled)
+        if (!mmEnabled) {
             return;
+        }
 
         try {
             Attachment attachment = Attachment.builder()

@@ -15,7 +15,7 @@ public enum ErrorCode {
     HANDLE_ACCESS_DENIED("403", "C006", "Access is Denied"),
     ENUM_MISS_MATCH("501", "C007", "enum miss match"),
     DUPLICATE_DB_VALUE("409", "C008", "duplicated input value"),
-    NOT_SAME_DATA_VALUE("400","C009","Not Same Data Input Value From DB"),
+    NOT_SAME_DATA_VALUE("400", "C009", "Not Same Data Input Value From DB"),
     JWT_TOKEN_INVALID_VALUE("401", "C010", "Jwt Invalid Value"),
     JWT_TOKEN_EXPIRED("401", "C011", "Jwt Token Expired"),
     FORM_LOGIN_BAD_REQUEST("401", "C012", "Login form Bad Request"),
