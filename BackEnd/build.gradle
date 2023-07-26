@@ -48,6 +48,9 @@ dependencies {
     // health check
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    // Gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+
 }
 
 tasks.named('test') {

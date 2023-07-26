@@ -12,7 +12,7 @@ import org.springframework.validation.BindingResult;
 public class ErrorResponse {
 
     private String message;
-    private int status;
+    private String status;
     private List<FieldError> errors;
     private String code;
 
@@ -42,7 +42,18 @@ public class ErrorResponse {
         return new ErrorResponse(code, errors);
     }
 
+    @Override
+    public String toString() {
+        return "ErrorResponse{" +
+                "message='" + message + '\'' +
+                ", status='" + status + '\'' +
+                ", errors=" + errors +
+                ", code='" + code + '\'' +
+                '}';
+    }
+
     @Data
+    @NoArgsConstructor
     public static class FieldError {
 
         private String field;
@@ -72,13 +83,14 @@ public class ErrorResponse {
                             error.getDefaultMessage()))
                     .collect(Collectors.toList());
         }
-    }
-//
-//    public void of(ErrorCode errorCode){
-//        this.message = errorCode.getMessage();
-//        this.status = errorCode.getStatus();
-//        this.code = errorCode.getCode();
-//
-//    }
 
+        @Override
+        public String toString() {
+            return "FieldError{" +
+                    "field='" + field + '\'' +
+                    ", value='" + value + '\'' +
+                    ", reason='" + reason + '\'' +
+                    '}';
+        }
+    }
 }

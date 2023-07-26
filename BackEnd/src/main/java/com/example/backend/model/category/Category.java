@@ -1,12 +1,10 @@
 package com.example.backend.model.category;
 
-import com.example.backend.model.user.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +20,7 @@ public class Category {
     @Column
     private String name;
 
-    public Category(String name, User user) {
+    public Category(String name) {
         this.name = name;
     }
 }

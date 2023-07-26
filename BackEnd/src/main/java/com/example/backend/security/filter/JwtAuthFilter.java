@@ -1,6 +1,7 @@
 package com.example.backend.security.filter;
 
 
+import com.example.backend.exception.security.JwtTokenInvalidException;
 import com.example.backend.security.jwt.HeaderTokenExtractor;
 import com.example.backend.security.jwt.JwtPreProcessingToken;
 import java.io.IOException;
@@ -34,6 +35,11 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
             HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
         String tokenPayLoad = request.getHeader("Authorization");
+
+        if (tokenPayLoad == null || tokenPayLoad.length() == 0) {
+            throw new JwtTokenInvalidException("Jwt Token 값이 없습니다.");
+        }
+
         JwtPreProcessingToken jwtToken = new JwtPreProcessingToken(
                 extractor.extract(tokenPayLoad, request));
 

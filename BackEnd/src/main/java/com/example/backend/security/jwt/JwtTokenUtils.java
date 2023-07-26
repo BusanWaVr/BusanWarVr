@@ -2,6 +2,7 @@ package com.example.backend.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.backend.exception.security.JwtTokenInvalidException;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.security.UserDetailsImpl;
@@ -62,7 +63,7 @@ public class JwtTokenUtils {
 
             return map;
         } catch (Exception e) {
-            throw new IllegalArgumentException("ERROR CREATE JWT TOKEN");
+            throw new JwtTokenInvalidException("ERROR CREATE JWT TOKEN");
         }
     }
 
@@ -77,7 +78,7 @@ public class JwtTokenUtils {
 
             return accessToken;
         } catch (Exception e) {
-            throw new IllegalArgumentException("ERROR CREATE REISSUANCE ACCESS TOKEN");
+            throw new JwtTokenInvalidException("ERROR CREATE REISSUANCE ACCESS TOKEN");
         }
 
     }
@@ -93,7 +94,7 @@ public class JwtTokenUtils {
 
             return refreshToken;
         } catch (Exception e) {
-            throw new IllegalArgumentException("ERROR CREATE REISSUANCE ACCESS TOKEN");
+            throw new JwtTokenInvalidException("ERROR CREATE REISSUANCE ACCESS TOKEN");
         }
 
     }

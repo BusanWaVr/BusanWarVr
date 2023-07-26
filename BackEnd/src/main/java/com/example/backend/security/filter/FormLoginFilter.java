@@ -1,5 +1,6 @@
 package com.example.backend.security.filter;
 
+import com.example.backend.exception.security.FromLoginBadRequestException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,12 +32,12 @@ public class FormLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         try {
             JsonNode requestBody = objectMapper.readTree(request.getInputStream());
-            String username = requestBody.get("username").asText();
+            String username = requestBody.get("email").asText();
             String password = requestBody.get("password").asText();
 
             authRequest = new UsernamePasswordAuthenticationToken(username, password);
         } catch (Exception e) {
-            throw new IllegalArgumentException("username, password 입력이 필요합니다.");
+            throw new FromLoginBadRequestException("email, password입력이 필요합니다.");
         }
 
         setDetails(request, authRequest);
