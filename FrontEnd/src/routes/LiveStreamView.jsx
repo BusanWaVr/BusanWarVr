@@ -225,6 +225,23 @@ function LiveStreamView() {
     slidesToScroll: 1,
   };
 
+  useEffect(() => {
+    // 전체화면 변경 이벤트를 처리하는 함수
+    const handleFullscreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+
+    // 전체화면 변경 이벤트 리스너를 추가합니다.
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <FullScreen handle={handleFullScreen}>
       <LiveExample className="live-example" />
