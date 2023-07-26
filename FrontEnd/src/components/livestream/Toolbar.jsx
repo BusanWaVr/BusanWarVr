@@ -62,9 +62,16 @@ function Toolbar(props) {
           <MicIcon />
         </ToolbarButton>
       )}
-      <ToolbarButton>
-        <FullscreenIcon />
-      </ToolbarButton>
+      {props.isFullScreen ? (
+        <ToolbarButton onClick={props.toggleFullScreen}>
+          <FullscreenExitIcon />
+        </ToolbarButton>
+      ) : (
+        <ToolbarButton onClick={props.toggleFullScreen}>
+          <FullscreenIcon />
+        </ToolbarButton>
+      )}
+
       <ToolbarButton
         type="button"
         id="buttonLeaveSession"

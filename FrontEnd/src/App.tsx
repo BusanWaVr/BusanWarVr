@@ -17,16 +17,16 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/livestream" element={<LiveStream />} />
-          <Route path="/livestream/:sessionid" element={<LiveStreamView />} />
+          <Route
+            path="*"
+            element={
+              <h3>
+                <b>NOT FOUND PAGE</b>
+              </h3>
+            }
+          />
         </Route>
-        <Route
-          path="*"
-          element={
-            <h3>
-              <b>NOT FOUND PAGE</b>
-            </h3>
-          }
-        />
+        <Route path="/livestream/:sessionid" element={<LiveStreamView />} />
       </Routes>
     </>
   );

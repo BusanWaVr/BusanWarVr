@@ -1,8 +1,9 @@
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "../components/livestream/UserVideoComponent";
 import Toolbar from "../components/livestream/Toolbar";
 import LiveExample from "../components/livestream/LiveExample.jsx";
@@ -22,6 +23,7 @@ function LiveStreamView() {
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [publisherVideoEnabled, setPublisherVideo] = useState(false);
   const [publisherAudioEnabled, setPublisherAudio] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   const OV = useRef(new OpenVidu());
 
@@ -164,6 +166,18 @@ function LiveStreamView() {
     publisher.publishAudio(publisherAudioEnabled);
   };
 
+  // 전체화면 온오프
+  const handleFullScreen = useFullScreenHandle();
+  const toggleFullScreen = () => {
+    if (isFullScreen) {
+      setIsFullScreen(false);
+      handleFullScreen.exit();
+    } else {
+      setIsFullScreen(true);
+      handleFullScreen.enter();
+    }
+  };
+
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       leaveSession();
@@ -212,7 +226,7 @@ function LiveStreamView() {
   };
 
   return (
-    <>
+    <FullScreen handle={handleFullScreen}>
       <LiveExample className="live-example" />
       <div id="session">
         <div className="video-slider" style={{ width: "1200px" }}>
@@ -249,8 +263,10 @@ function LiveStreamView() {
         toggleAudio={toggleAudio}
         publisherVideoEnabled={publisherVideoEnabled}
         publisherAudioEnabled={publisherAudioEnabled}
+        toggleFullScreen={toggleFullScreen}
+        isFullScreen={isFullScreen}
       />
-    </>
+    </FullScreen>
   );
 }
 
