@@ -9,7 +9,8 @@ export default function App() {
   const [mySessionId, setMySessionId] = useState("busanVR");
   const [myUserName, setMyUserName] = useState(
     `부기${Math.floor(Math.random() * 100)}`
-  );
+    );
+  const [youtubeLink, setYouTubeLink] = useState("");
 
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
@@ -19,25 +20,13 @@ export default function App() {
     setMyUserName(e.target.value);
   }, []);
 
+  const handleChangeYouTubeLink = useCallback((e) => {
+    setYouTubeLink(e.target.value);
+  },[]);
+
   const joinSession = () => {
     navigate(`/livestream/${mySessionId}`);
   };
-
-  /**
-   * --------------------------------------------
-   * GETTING A TOKEN FROM YOUR APPLICATION SERVER
-   * --------------------------------------------
-   * The methods below request the creation of a Session and a Token to
-   * your application server. This keeps your OpenVidu deployment secure.
-   *
-   * In this sample code, there is no user control at all. Anybody could
-   * access your application server endpoints! In a real production
-   * environment, your application server must identify the user to allow
-   * access to the endpoints.
-   *
-   * Visit https://docs.openvidu.io/en/stable/application-server to learn
-   * more about the integration of OpenVidu in your application server.
-   */
 
   return (
     <div className="_container">
@@ -64,6 +53,17 @@ export default function App() {
                 id="sessionId"
                 value={mySessionId}
                 onChange={handleChangeSessionId}
+                required
+              />
+            </p>
+            <p>
+              <label> 유튜브 라이브 링크: </label>
+              <input
+                className="form-control"
+                type="text"
+                id="sessionId"
+                value={youtubeLink}
+                onChange={handleChangeYouTubeLink}
                 required
               />
             </p>
