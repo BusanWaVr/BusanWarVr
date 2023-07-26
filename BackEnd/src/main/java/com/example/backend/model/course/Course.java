@@ -5,8 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
 @Entity
+@NoArgsConstructor
 public class Course {
 
     @Id
@@ -24,4 +28,15 @@ public class Course {
 
     @Column
     private String content;
+
+    @Column
+    private Long tourId;
+
+    public Course(double lon, double lat, String title, String content, Long tourId){
+        this.lon = lon;
+        this.lat = lat;
+        this.title = title;
+        this.content = content;
+        this.tourId = tourId;
+    }
 }

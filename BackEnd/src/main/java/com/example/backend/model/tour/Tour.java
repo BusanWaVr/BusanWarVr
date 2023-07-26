@@ -6,9 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
 @Entity
+@NoArgsConstructor
 public class Tour {
 
     @Id
@@ -47,4 +50,16 @@ public class Tour {
 
     @Column
     private boolean isCanceled;
+
+    public Tour(String region, String title, String subTitle, String content, Date startDate,
+            Date endDate, int minMember, int maxMember) {
+        this.region = region;
+        this.title = title;
+        this.subTitle = subTitle;
+        this.content = content;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.minMember = minMember;
+        this.maxMember = maxMember;
+    }
 }
