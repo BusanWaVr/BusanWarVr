@@ -29,40 +29,41 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     private final NotificationManager notificationManager;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (JwtTokenInvalidException e){
+        } catch (JwtTokenInvalidException e) {
             objectMapper = new ObjectMapper();
             ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.JWT_TOKEN_INVALID_VALUE);
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
             response.setContentType("application/json");
-            notificationManager.sendNotification(e, request.getRequestURI(),getParams(request));
-        } catch (JwtTokenExpiredException e){
+            notificationManager.sendNotification(e, request.getRequestURI(), getParams(request));
+        } catch (JwtTokenExpiredException e) {
             objectMapper = new ObjectMapper();
             ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.JWT_TOKEN_EXPIRED);
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
             response.setContentType("application/json");
-            notificationManager.sendNotification(e, request.getRequestURI(),getParams(request));
-        } catch (FromLoginBadRequestException e){
+            notificationManager.sendNotification(e, request.getRequestURI(), getParams(request));
+        } catch (FromLoginBadRequestException e) {
             objectMapper = new ObjectMapper();
             ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.FORM_LOGIN_BAD_REQUEST);
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
             response.setContentType("application/json");
-            notificationManager.sendNotification(e, request.getRequestURI(),getParams(request));
-        } catch (FromLoginInvalidException e){
+            notificationManager.sendNotification(e, request.getRequestURI(), getParams(request));
+        } catch (FromLoginInvalidException e) {
             objectMapper = new ObjectMapper();
             ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.FORM_LOGIN_INVALID);
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
             response.setContentType("application/json");
-            notificationManager.sendNotification(e, request.getRequestURI(),getParams(request));
-        } catch (NoSuchElementException e){
+            notificationManager.sendNotification(e, request.getRequestURI(), getParams(request));
+        } catch (NoSuchElementException e) {
             objectMapper = new ObjectMapper();
             ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.NOT_SAME_DATA_VALUE);
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
             response.setContentType("application/json");
-            notificationManager.sendNotification(e, request.getRequestURI(),getParams(request));
+            notificationManager.sendNotification(e, request.getRequestURI(), getParams(request));
         }
     }
 
@@ -71,7 +72,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         Enumeration<String> keys = req.getParameterNames();
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
-            params.append("- ").append(key).append(" : ").append(req.getParameter(key)).append("\n");
+            params.append("- ").append(key).append(" : ").append(req.getParameter(key))
+                    .append("\n");
         }
 
         return params.toString();

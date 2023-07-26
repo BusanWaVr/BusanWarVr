@@ -14,6 +14,7 @@ public class EmailSender {
 
     private final JavaMailSender javaMailSender;
     private String ePw;
+
     private MimeMessage createMessage(String to) throws Exception {
         this.ePw = createKey();
         MimeMessage message = javaMailSender.createMimeMessage();
