@@ -1,5 +1,6 @@
 package com.example.backend.security.filter;
 
+import com.example.backend.exception.security.FromLoginBadRequestException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +37,7 @@ public class FormLoginFilter extends UsernamePasswordAuthenticationFilter {
 
             authRequest = new UsernamePasswordAuthenticationToken(username, password);
         } catch (Exception e) {
-            throw new IllegalArgumentException("email, password 입력이 필요합니다.");
+            throw new FromLoginBadRequestException("email, password입력이 필요합니다.");
         }
 
         setDetails(request, authRequest);
