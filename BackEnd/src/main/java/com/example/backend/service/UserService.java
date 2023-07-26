@@ -2,8 +2,8 @@ package com.example.backend.service;
 
 import com.example.backend.dto.AuthCodeDto;
 import com.example.backend.dto.GuideSignUpDto;
-import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.dto.UserSignUpDto;
+import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
 import com.example.backend.model.user.User;

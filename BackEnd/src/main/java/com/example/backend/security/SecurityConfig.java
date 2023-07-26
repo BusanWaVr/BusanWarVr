@@ -24,7 +24,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -86,7 +85,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource(){
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:5173"); // local 테스트 시
         configuration.setAllowCredentials(true);
@@ -116,7 +115,7 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.POST, "/auth/email"));
         skipPathList.add(new Path(HttpMethod.POST, "/auth/code"));
         skipPathList.add(new Path(HttpMethod.POST, "/guide"));
-        skipPathList.add(new Path(HttpMethod.POST, "/auth/nickname"));
+        skipPathList.add(new Path(HttpMethod.POST, "/.git/config"));
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPathList, "/**");
         JwtAuthFilter filter = new JwtAuthFilter(matcher, extractor);
@@ -135,8 +134,10 @@ public class SecurityConfig {
                             UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(jwtAuthFilter(authenticationManager),
                             UsernamePasswordAuthenticationFilter.class)
-                    .addFilterBefore(new ExceptionHandlerFilter(notificationManager), JwtAuthFilter.class)
-                    .addFilterBefore(new ExceptionHandlerFilter(notificationManager), FormLoginFilter.class);
+                    .addFilterBefore(new ExceptionHandlerFilter(notificationManager),
+                            JwtAuthFilter.class)
+                    .addFilterBefore(new ExceptionHandlerFilter(notificationManager),
+                            FormLoginFilter.class);
         }
     }
 
