@@ -117,6 +117,11 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.POST, "/guide"));
         skipPathList.add(new Path(HttpMethod.POST, "/.git/config"));
 
+        // Chatting
+        skipPathList.add(new Path(HttpMethod.GET, "/ws-stomp/**"));
+        skipPathList.add(new Path(HttpMethod.POST, "/ws-stomp/**"));
+        skipPathList.add(new Path(HttpMethod.GET, "/ws/**"));
+
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPathList, "/**");
         JwtAuthFilter filter = new JwtAuthFilter(matcher, extractor);
         filter.setAuthenticationManager(authenticationManager);
