@@ -7,6 +7,7 @@ import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "../components/livestream/UserVideoComponent";
 import Toolbar from "../components/livestream/Toolbar";
 import LiveExample from "../components/livestream/LiveExample";
+import ChatRoom from "./ChatRoom";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -271,6 +272,10 @@ function LiveStreamView() {
               </div>
             ))}
           </Slider>
+        </div>
+        {/* 채팅창 */}
+        <div>
+          <ChatRoom />
         </div>
       </div>
       <Toolbar

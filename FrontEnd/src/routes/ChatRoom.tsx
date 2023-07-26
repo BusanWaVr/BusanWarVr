@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
+import "./ChatRoom.css"
 
 let sockJS = new SockJS("http://13.209.65.4/ws-stomp");
 let stompClient = Stomp.over(sockJS);
@@ -11,7 +12,7 @@ export type message = {
 };
 
 function ChatRoom() {
-  const [chatMessages, setChatMessages] = useState<message[]>([]); // Initialize chat messages state
+  const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
@@ -54,13 +55,13 @@ function ChatRoom() {
 
   const handleEnterPress = (e) => {
     if (e.key === 'Enter') {
-      handleEnter(); // Enter 입력이 되면 클릭 이벤트 실행
+      handleEnter();
     }
   };
 
   return (
-    <>
-      <h1>ChatRoom 페이지입니다.</h1>
+    <div className="chatroom-container">
+      <h1 className="chat">ChatRoom</h1>
       <div>
         {chatMessages.map((msg, index) => (
           <div key={index}>
@@ -77,7 +78,7 @@ function ChatRoom() {
       <button onClick={handleEnter}>send</button>
       <br />
       <button onClick={handleEnter2}>상대방이 메시지 보내기 test</button>
-    </>
+    </div>
   );
 }
 
