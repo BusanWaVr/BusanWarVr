@@ -13,11 +13,10 @@ import org.springframework.stereotype.Component;
 public class EmailSender {
 
     private final JavaMailSender javaMailSender;
-    public static final String ePw = createKey();
+    private String ePw;
 
     private MimeMessage createMessage(String to) throws Exception {
-        System.out.println("보내는 대상 : " + to);
-        System.out.println("인증 번호 : " + ePw);
+        this.ePw = createKey();
         MimeMessage message = javaMailSender.createMimeMessage();
 
         message.addRecipients(Message.RecipientType.TO, to);//보내는 대상
@@ -38,7 +37,7 @@ public class EmailSender {
         msgg += ePw + "</strong><div><br/> ";
         msgg += "</div>";
         message.setText(msgg, "utf-8", "html");//내용
-        message.setFrom(new InternetAddress("busanwavr@gmail.com", "limjunho"));//보내는 사람
+        message.setFrom(new InternetAddress("busanwavr@gmail.com", "BusanWaVr"));//보내는 사람
 
         return message;
     }
@@ -64,6 +63,6 @@ public class EmailSender {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        return ePw;
+        return this.ePw;
     }
 }

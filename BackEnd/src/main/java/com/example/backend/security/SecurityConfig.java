@@ -1,12 +1,14 @@
 package com.example.backend.security;
 
 import com.example.backend.model.user.UserRepository;
+import com.example.backend.security.filter.ExceptionHandlerFilter;
 import com.example.backend.security.filter.FormLoginFilter;
 import com.example.backend.security.filter.JwtAuthFilter;
 import com.example.backend.security.jwt.HeaderTokenExtractor;
 import com.example.backend.security.jwt.JwtTokenUtils;
 import com.example.backend.security.provider.FormLoginAuthProvider;
 import com.example.backend.security.provider.JWTAuthProvider;
+import com.example.backend.util.mattermost.NotificationManager;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,7 @@ public class SecurityConfig {
     private final UserDetailServiceImpl userDetailService;
     private final JwtTokenUtils jwtTokenUtils;
     private final HeaderTokenExtractor extractor;
+    private final NotificationManager notificationManager;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -51,6 +54,8 @@ public class SecurityConfig {
                 .apply(new MyCustomDsl()) // 커스텀 필터 등록
                 .and()
                 .authorizeRequests().anyRequest().permitAll()
+                .and()
+                .exceptionHandling()
                 .and()
                 .build();
     }
@@ -80,7 +85,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource(){
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:5173"); // local 테스트 시
         configuration.setAllowCredentials(true);
@@ -109,6 +114,13 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.POST, "/auth/nickname"));
         skipPathList.add(new Path(HttpMethod.POST, "/auth/email"));
         skipPathList.add(new Path(HttpMethod.POST, "/auth/code"));
+        skipPathList.add(new Path(HttpMethod.POST, "/guide"));
+        skipPathList.add(new Path(HttpMethod.POST, "/.git/config"));
+
+        // Chatting
+        skipPathList.add(new Path(HttpMethod.GET, "/ws-stomp/**"));
+        skipPathList.add(new Path(HttpMethod.POST, "/ws-stomp/**"));
+        skipPathList.add(new Path(HttpMethod.GET, "/ws/**"));
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPathList, "/**");
         JwtAuthFilter filter = new JwtAuthFilter(matcher, extractor);
@@ -126,7 +138,11 @@ public class SecurityConfig {
                     .addFilterBefore(formLoginFilter(authenticationManager),
                             UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(jwtAuthFilter(authenticationManager),
-                            UsernamePasswordAuthenticationFilter.class);
+                            UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(new ExceptionHandlerFilter(notificationManager),
+                            JwtAuthFilter.class)
+                    .addFilterBefore(new ExceptionHandlerFilter(notificationManager),
+                            FormLoginFilter.class);
         }
     }
 

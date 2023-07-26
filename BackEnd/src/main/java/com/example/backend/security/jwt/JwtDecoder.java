@@ -4,6 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.backend.exception.security.JwtTokenExpiredException;
+import com.example.backend.exception.security.JwtTokenInvalidException;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,7 +23,7 @@ public class JwtDecoder {
         Date now = new Date();
 
         if (expireDate.before(now)) {
-            throw new IllegalArgumentException("토큰 만료");
+            throw new JwtTokenExpiredException("토큰 만료");
         }
 
         return decodedJWT.getClaim(jwtTokenUtils.CLAIM_USER_NAME).asString();
@@ -39,7 +41,7 @@ public class JwtDecoder {
             JWTVerifier verifier = JWT.require(algorithm).build();
             return verifier.verify(token);
         } catch (Exception e) {
-            throw new IllegalArgumentException();
+            throw new JwtTokenInvalidException("토큰 유효성 검사 실패");
         }
     }
 }

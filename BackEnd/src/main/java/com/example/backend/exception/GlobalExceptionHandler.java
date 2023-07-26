@@ -1,7 +1,11 @@
 package com.example.backend.exception;
 
 import com.example.backend.exception.type.CustomException;
+import com.example.backend.util.mattermost.NotificationManager;
 import java.nio.file.AccessDeniedException;
+import java.util.Enumeration;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -12,7 +16,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final NotificationManager notificationManager;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
@@ -52,18 +59,35 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CustomException.class)
-    protected ResponseEntity<ErrorResponse> handleBusinessException(final CustomException e) {
+    protected ResponseEntity<ErrorResponse> handleBusinessException(final CustomException e,
+            HttpServletRequest req) {
         final ErrorCode errorCode = e.getErrorCode();
         final ErrorResponse response = ErrorResponse.of(errorCode);
         response.setMessage(e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+        notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
+        return new ResponseEntity<>(response,
+                HttpStatus.valueOf(Integer.parseInt(errorCode.getStatus())));
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleException(Exception e) {
+    protected ResponseEntity<ErrorResponse> handleException(Exception e, HttpServletRequest req) {
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
+        e.printStackTrace();
         response.setMessage(e.getMessage());
+        notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private String getParams(HttpServletRequest req) {
+        StringBuilder params = new StringBuilder();
+        Enumeration<String> keys = req.getParameterNames();
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            params.append("- ").append(key).append(" : ").append(req.getParameter(key))
+                    .append("\n");
+        }
+
+        return params.toString();
     }
 
 }
