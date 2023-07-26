@@ -112,7 +112,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("사용자 회원가입 실패 테스트 - 비밀번호(영문자,숫자,특수문자 중 하나 미포함) ")
+    @DisplayName("사용자 회원가입 실패 테스트 - 비밀번호(영문자,숫자,특수문자 중 하나 미포함)")
     void signUpFailTestPassword1() throws Exception {
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/user")
@@ -132,7 +132,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("사용자 회원가입 실패 테스트 - 비밀번호(길이 부족) ")
+    @DisplayName("사용자 회원가입 실패 테스트 - 비밀번호(길이 부족)")
     void signUpFailTestPassword2() throws Exception {
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/user")
