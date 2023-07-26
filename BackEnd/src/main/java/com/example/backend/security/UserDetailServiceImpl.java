@@ -2,6 +2,7 @@ package com.example.backend.security;
 
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +19,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(userId);
         if (user == null) {
-            throw new IllegalArgumentException("해당 유저가 존재하지 않습니다.");
+            throw new NoSuchElementException("해당 유저가 존재하지 않습니다.");
         }
 
         return new UserDetailsImpl(user);
