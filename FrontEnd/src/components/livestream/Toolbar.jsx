@@ -7,8 +7,10 @@ import MicOffIcon from "@mui/icons-material/MicOff";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import styled from "styled-components";
+import { useData } from "../../context/DataContext";
 
-function Toolbar(props) {
+const Toolbar = (props) => {
+  const { isAudioEnabled, isVideoEnabled } = useData();
   const ToolbarContainer = styled.div`
     display: flex;
     justify-content: center;
@@ -37,13 +39,13 @@ function Toolbar(props) {
 
   return (
     <ToolbarContainer>
-      {props.publisherVideoEnabled ? (
-        <ToolbarButton onClick={props.toggleCamera}>
-          <VideocamOffIcon />
+      {isVideoEnabled ? (
+        <ToolbarButton onClick={props.toggleVideo}>
+          <VideocamIcon />
         </ToolbarButton>
       ) : (
-        <ToolbarButton onClick={props.toggleCamera}>
-          <VideocamIcon />
+        <ToolbarButton onClick={props.toggleVideo}>
+          <VideocamOffIcon />
         </ToolbarButton>
       )}
       <ToolbarButton
@@ -53,13 +55,13 @@ function Toolbar(props) {
       >
         <CameraswitchIcon />
       </ToolbarButton>
-      {props.publisherAudioEnabled ? (
+      {isAudioEnabled ? (
         <ToolbarButton onClick={props.toggleAudio}>
-          <MicOffIcon />
+          <MicIcon />
         </ToolbarButton>
       ) : (
         <ToolbarButton onClick={props.toggleAudio}>
-          <MicIcon />
+          <MicOffIcon />
         </ToolbarButton>
       )}
       {props.isFullScreen ? (
@@ -81,6 +83,6 @@ function Toolbar(props) {
       </ToolbarButton>
     </ToolbarContainer>
   );
-}
+};
 
 export default Toolbar;
