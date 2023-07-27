@@ -49,6 +49,10 @@ function Login({ setOnLoginModal, setIsLoggedIn }: Props) {
     window.location.href = "/signup";
   };
 
+  // guidesignup
+  const handleGuideSignupLinkClick = () => {
+    window.location.href = "/guidesignup";
+  };
 
   return (
     <LoginWrapper className="login-form">
@@ -87,13 +91,18 @@ function Login({ setOnLoginModal, setIsLoggedIn }: Props) {
         {isGeneralLoginVisible && (
           <p>
             아직 회원이 아니신가요?{" "}
-            <Link to="#" onClick={handleSignupLinkClick}>일반 회원가입</Link>
+            <Link to="#" onClick={handleSignupLinkClick}>
+              일반 회원가입
+            </Link>
           </p>
         )}
 
         {!isGeneralLoginVisible && (
           <p>
-            아직 회원이 아니신가요? 가이드 회원가입
+            아직 회원이 아니신가요?
+            <Link to="#" onClick={handleGuideSignupLinkClick}>
+              가이드 회원가입
+            </Link>
           </p>
         )}
       </div>
