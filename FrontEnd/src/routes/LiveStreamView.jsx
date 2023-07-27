@@ -7,24 +7,39 @@ import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "../components/livestream/UserVideoComponent";
 import Toolbar from "../components/livestream/Toolbar";
 import LiveExample from "../components/livestream/LiveExample";
+import { useData } from "../context/DataContext";
 import ChatRoom from "./ChatRoom";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
-function LiveStreamView() {
+const LiveStreamView = () => {
   const navigate = useNavigate();
   const { sessionid } = useParams();
-  const [mySessionId, setMySessionId] = useState(sessionid);
-  const [myUserName, setMyUserName] = useState();
+
+  const {
+    userName,
+    youtubeLink,
+    isAudioEnabled,
+    setIsAudioEnabled,
+    isVideoEnabled,
+    setIsVideoEnabled,
+  } = useData();
+
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-  const [publisherVideoEnabled, setPublisherVideo] = useState(false);
-  const [publisherAudioEnabled, setPublisherAudio] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const sliderSettings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 6,
+    slidesToScroll: 1,
+  };
 
   const OV = useRef(new OpenVidu());
 
@@ -36,6 +51,14 @@ function LiveStreamView() {
     },
     [mainStreamManager]
   );
+
+  const extractVideoIdFromLink = (link) => {
+    const regex = /(?:\?v=)([^&]+)/;
+    const match = link.match(regex);
+    return match ? match[1] : null;
+  };
+
+  const videoId = extractVideoIdFromLink(youtubeLink);
 
   useEffect(() => {
     const mySession = OV.current.initSession();
@@ -60,13 +83,13 @@ function LiveStreamView() {
       // Get a token from the OpenVidu deployment
       getToken().then(async (token) => {
         try {
-          await session.connect(token, { clientData: myUserName });
+          await session.connect(token, { clientData: userName });
 
           let publisher = await OV.current.initPublisherAsync(undefined, {
             audioSource: undefined,
             videoSource: undefined,
-            publishAudio: true,
-            publishVideo: true,
+            publishAudio: isAudioEnabled,
+            publishVideo: isVideoEnabled,
             resolution: "640x480",
             frameRate: 30,
             insertMode: "APPEND",
@@ -98,7 +121,7 @@ function LiveStreamView() {
         }
       });
     }
-  }, [session, myUserName, mySessionId]);
+  }, [session, userName, sessionid]);
 
   // 라이브 종료
   const leaveSession = useCallback(() => {
@@ -111,7 +134,7 @@ function LiveStreamView() {
   }, [session]);
 
   // 카메라 전환
-  const switchCamera = useCallback(async () => {
+  const switchVideo = useCallback(async () => {
     try {
       const devices = await OV.current.getDevices();
       const videoDevices = devices.filter(
@@ -126,8 +149,8 @@ function LiveStreamView() {
         if (newVideoDevice.length > 0) {
           const newPublisher = OV.current.initPublisher(undefined, {
             videoSource: newVideoDevice[0].deviceId,
-            publishAudio: true,
-            publishVideo: true,
+            publishAudio: isAudioEnabled,
+            publishVideo: isVideoEnabled,
             mirror: true,
           });
 
@@ -145,29 +168,45 @@ function LiveStreamView() {
     }
   }, [currentVideoDevice, session, mainStreamManager]);
 
-  // 카메라 온오프
-  const toggleCamera = () => {
-    if (publisherVideoEnabled) {
-      setPublisherVideo(false);
-    } else {
-      setPublisherVideo(true);
-    }
+  // subscriber 삭제
+  const deleteSubscriber = useCallback((streamManager) => {
+    setSubscribers((prevSubscribers) => {
+      const index = prevSubscribers.indexOf(streamManager);
+      if (index > -1) {
+        const newSubscribers = [...prevSubscribers];
+        newSubscribers.splice(index, 1);
+        return newSubscribers;
+      } else {
+        return prevSubscribers;
+      }
+    });
+  }, []);
 
-    publisher.publishVideo(publisherVideoEnabled);
+  // 카메라 온오프
+  const toggleVideo = () => {
+    setIsVideoEnabled((prev) => !prev);
+
+    publisher.publishVideo(!isVideoEnabled);
   };
 
   // 마이크 온오프
   const toggleAudio = () => {
-    if (publisherAudioEnabled) {
-      setPublisherAudio(false);
-    } else {
-      setPublisherAudio(true);
-    }
+    setIsAudioEnabled((prev) => !prev);
 
-    publisher.publishAudio(publisherAudioEnabled);
+    publisher.publishAudio(!isAudioEnabled);
   };
 
   // 전체화면 온오프
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
   const handleFullScreen = useFullScreenHandle();
   const toggleFullScreen = () => {
     if (isFullScreen) {
@@ -191,10 +230,8 @@ function LiveStreamView() {
   }, [leaveSession]);
 
   const getToken = useCallback(async () => {
-    return createSession(mySessionId).then((sessionId) =>
-      createToken(sessionId)
-    );
-  }, [mySessionId]);
+    return createSession(sessionid).then((sessionId) => createToken(sessionId));
+  }, [sessionid]);
 
   const createSession = async (sessionId) => {
     const response = await axios.post(
@@ -218,37 +255,12 @@ function LiveStreamView() {
     return response.data; // The token
   };
 
-  const settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 6,
-    slidesToScroll: 1,
-  };
-
-  useEffect(() => {
-    // 전체화면 변경 이벤트를 처리하는 함수
-    const handleFullscreenChange = () => {
-      setIsFullScreen(!!document.fullscreenElement);
-    };
-
-    // 전체화면 변경 이벤트 리스너를 추가합니다.
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-
-    // 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <FullScreen handle={handleFullScreen}>
-      <LiveExample className="live-example" />
+      <LiveExample className="live-example" videoId={videoId} />
       <div id="session">
         <div className="video-slider" style={{ width: "1200px" }}>
-          <Slider id="video-container" className="" {...settings}>
+          <Slider id="video-container" className="" {...sliderSettings}>
             {/* 현재 유저 화면 */}
             {publisher !== undefined ? (
               <div
@@ -280,16 +292,14 @@ function LiveStreamView() {
       </div>
       <Toolbar
         leaveSession={leaveSession}
-        switchCamera={switchCamera}
-        toggleCamera={toggleCamera}
         toggleAudio={toggleAudio}
-        publisherVideoEnabled={publisherVideoEnabled}
-        publisherAudioEnabled={publisherAudioEnabled}
+        toggleVideo={toggleVideo}
+        switchVideo={switchVideo}
         toggleFullScreen={toggleFullScreen}
         isFullScreen={isFullScreen}
       />
     </FullScreen>
   );
-}
+};
 
 export default LiveStreamView;

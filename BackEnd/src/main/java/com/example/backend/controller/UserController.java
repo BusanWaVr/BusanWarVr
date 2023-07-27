@@ -27,6 +27,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,11 +49,11 @@ public class UserController {
     @PostMapping("/user")
     public Response<UserSignUpDto> userSignupApi(
             @ModelAttribute @Valid UserSignUpDto.Request request,
-            BindingResult bindingResult) throws BindException, DuplicatedValueException, IllegalArgumentException {
+            BindingResult bindingResult)
+            throws BindException, DuplicatedValueException, IllegalArgumentException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
-        }
-        else if(!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)){
+        } else if (!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)) {
             throw new IllegalArgumentException("카테고리 개수는 3개에서 5개 사이여야 합니다.");
         }
         String encodedPassword = passwordEncoder.encode(request.getPassword());
@@ -123,6 +124,20 @@ public class UserController {
         }
 
         return new Response<>("200", "비밀번호가 일치합니다.", null);
+    }
+
+    @PutMapping("/user/password")
+    public Response updatePassword(@AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody @Valid AuthPasswordDto.Request request,
+            BindingResult bindingResult) throws BindException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        userService.updatePassword(userDetails.getUser().getId(), encodedPassword);
+
+        return new Response<>("200", "비밀번호를 변경했습니다.", null);
     }
 
     @PostMapping("/auth/email")
