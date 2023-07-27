@@ -65,6 +65,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
+    public void updatePassword(Long id, String encodedPassword) {
+        User user = userRepository.findById(id).get();
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+    }
 
     public void saveEmailAuth(String email, String code) throws IllegalAccessException {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();

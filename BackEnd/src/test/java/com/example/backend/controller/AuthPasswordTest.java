@@ -92,6 +92,7 @@ class AuthPasswordTest {
 
         assertThat(response.getStatus()).isEqualTo("400");
     }
+
     @Test
     @DisplayName("비밀번호 확인 실패 - 올바르지 않은 비밀번호 형식(짧은 비밀번호)")
     void AuthPasswordFailTest2() throws Exception {
@@ -133,5 +134,4 @@ class AuthPasswordTest {
         assertThat(response.getErrors().get(0).getField()).isEqualTo("password");
         assertThat(response.getErrors().size()).isEqualTo(1);
     }
-
 }
