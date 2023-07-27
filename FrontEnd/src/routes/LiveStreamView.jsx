@@ -7,6 +7,7 @@ import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "../components/livestream/UserVideoComponent";
 import Toolbar from "../components/livestream/Toolbar";
 import LiveExample from "../components/livestream/LiveExample";
+import Loader from "../components/common/Loader";
 import { useData } from "../context/DataContext";
 import ChatRoom from "./ChatRoom";
 import SockJS from "sockjs-client/dist/sockjs";
@@ -38,6 +39,7 @@ const LiveStreamView = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [stompClient, setStompClient] = useState(Stomp.over(sockJS));
   const [onload, setOnload] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const sliderSettings = {
     dots: false,
@@ -121,6 +123,8 @@ const LiveStreamView = () => {
           setMainStreamManager(publisher);
           setPublisher(publisher);
           setCurrentVideoDevice(currentVideoDevice);
+
+          setIsLoading(false);
         } catch (error) {
           console.log(
             "There was an error connecting to the session:",
@@ -265,49 +269,55 @@ const LiveStreamView = () => {
   };
 
   return (
-    <FullScreen handle={handleFullScreen}>
-      <LiveExample className="live-example" videoId={videoId} />
-      <div id="session">
-        <div className="video-slider" style={{ width: "1200px" }}>
-          <Slider id="video-container" className="" {...sliderSettings}>
-            {/* 현재 유저 화면 */}
-            {publisher !== undefined ? (
-              <div
-                className="stream-container current-stream"
-                onClick={() => handleMainVideoStream(publisher)}
-                style={{ width: "200px" }}
-              >
-                <UserVideoComponent streamManager={publisher} />
-              </div>
-            ) : null}
-            {/* 다른 유저 화면 */}
-            {subscribers.map((sub, i) => (
-              <div
-                key={sub.id}
-                className="stream-container"
-                onClick={() => handleMainVideoStream(sub)}
-                style={{ width: "200px" }}
-              >
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-        {/* 채팅창 */}
-        <div>
-          <ChatRoom stompClient={stompClient} onload={onload} />
-        </div>
-      </div>
-      <Toolbar
-        leaveSession={leaveSession}
-        toggleAudio={toggleAudio}
-        toggleVideo={toggleVideo}
-        switchVideo={switchVideo}
-        toggleFullScreen={toggleFullScreen}
-        isFullScreen={isFullScreen}
-      />
-    </FullScreen>
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <FullScreen handle={handleFullScreen}>
+          <LiveExample className="live-example" videoId={videoId} />
+          <div id="session">
+            <div className="video-slider" style={{ width: "1200px" }}>
+              <Slider id="video-container" className="" {...sliderSettings}>
+                {/* 현재 유저 화면 */}
+                {publisher !== undefined ? (
+                  <div
+                    className="stream-container current-stream"
+                    onClick={() => handleMainVideoStream(publisher)}
+                    style={{ width: "200px" }}
+                  >
+                    <UserVideoComponent streamManager={publisher} />
+                  </div>
+                ) : null}
+                {/* 다른 유저 화면 */}
+                {subscribers.map((sub, i) => (
+                  <div
+                    key={sub.id}
+                    className="stream-container"
+                    onClick={() => handleMainVideoStream(sub)}
+                    style={{ width: "200px" }}
+                  >
+                    <span>{sub.id}</span>
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
+                ))}
+              </Slider>
+            </div>
+            {/* 채팅창 */}
+            <div>
+              <ChatRoom stompClient={stompClient} onload={onload} />
+            </div>
+          </div>
+          <Toolbar
+            leaveSession={leaveSession}
+            toggleAudio={toggleAudio}
+            toggleVideo={toggleVideo}
+            switchVideo={switchVideo}
+            toggleFullScreen={toggleFullScreen}
+            isFullScreen={isFullScreen}
+          />
+        </FullScreen>
+      )}
+    </>
   );
 };
 
