@@ -48,63 +48,61 @@ const LiveStream = () => {
     <div className="_container">
       <div id="join">
         <div id="join-dialog" className="jumbotron vertical-center">
-          <h1> Join a video session </h1>
-          <form className="form-group" onSubmit={joinSession}>
-            <p>
-              <label>Participant: </label>
+          <form className="form" onSubmit={joinSession}>
+            <p className="title">Let's take a trip! </p>
+            <p className="message">신나는 온라인 VR 투어를 떠나보자. </p>
+
+            <label>
               <input
-                className="form-control"
+                className="form-control input"
                 type="text"
                 id="userName"
                 value={userName}
                 onChange={handleChangeUserName}
                 required
               />
-            </p>
-            <p>
-              <label> Session: </label>
+              <span>닉네임</span>
+            </label>
+
+            <label>
               <input
-                className="form-control"
+                className="form-control input"
                 type="text"
                 id="sessionId"
                 value={mySessionId}
                 onChange={handleChangeSessionId}
                 required
               />
-            </p>
-            <p>
-              <label> 유튜브 라이브 링크: </label>
+              <span>세션코드</span>
+            </label>
+            <label>
               <input
-                className="form-control"
+                className="form-control input"
                 type="text"
                 id="sessionId"
                 value={youtubeLink}
                 onChange={handleChangeYouTubeLink}
                 required
               />
-            </p>
-            {/* 마이크 온오프 설정 */}
-            <p>
-              <label> 마이크: </label>
-              <button type="button" onClick={toggleAudio}>
-                {isAudioEnabled ? "마이크 켜져있음" : "마이크 꺼져있음"}
-              </button>
-            </p>
-            {/* 카메라 온오프 설정 */}
-            <p>
-              <label> 카메라: </label>
-              <button type="button" onClick={toggleVideo}>
-                {isVideoEnabled ? "카메라 켜져있음" : "카메라 꺼져있음"}
-              </button>
-            </p>
-            <p className="text-center">
-              <input
-                className="btn btn-lg btn-success"
-                name="commit"
-                type="submit"
-                value="JOIN"
-              />
-            </p>
+              <span>라이브 스트리밍 링크</span>
+            </label>
+            <div className="flex">
+              {/* 카메라 온오프 설정 */}
+              <p>
+                <button type="button" onClick={toggleVideo}>
+                  {isVideoEnabled ? "카메라 켜짐" : "카메라 꺼짐"}
+                </button>
+              </p>
+              {/* 마이크 온오프 설정 */}
+              <p>
+                <button type="button" onClick={toggleAudio}>
+                  {isAudioEnabled ? "마이크 켜짐" : "마이크 꺼짐"}
+                </button>
+              </p>
+            </div>
+            <button className="button submit" name="commit" type="submit">
+              JOIN
+            </button>
           </form>
         </div>
       </div>
