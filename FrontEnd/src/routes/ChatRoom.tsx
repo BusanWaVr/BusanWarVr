@@ -11,15 +11,19 @@ export type message = {
 
 interface Props {
   stompClient: any;
-  onload: Boolean;
+  SockJS: Boolean;
 }
 
-function ChatRoom({ stompClient, onload }: Props) {
+function ChatRoom({ stompClient, SockJS }: Props) {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
     console.log(stompClient);
+  }, []);
+
+  useEffect(() => {
+    console.log(stompClient.connected);
 
     stompClient.connect({}, () => {
       console.log("연결됨");
@@ -32,13 +36,13 @@ function ChatRoom({ stompClient, onload }: Props) {
         setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
       });
     });
-  }, [stompClient]);
+  }, []);
 
   const handleEnter = () => {
     const newMessage = {
       roomId: 1,
       token:
-        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0NjYwMDMsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MUB0ZXN0LmNvbSJ9.TrUp2_DDh6JcjxF17K8ytPYVtDIoX9DNk5DjJ2MhAFU",
+        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0ODM1OTgsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MTJAdGVzdC5jb20ifQ.9LmXm9J0Ru6atakuG_pzQRfPIg6sEdXcIvvJTZGDHFk",
       message: inputMessage,
     };
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
@@ -51,7 +55,7 @@ function ChatRoom({ stompClient, onload }: Props) {
     const newMessage = {
       roomId: 1,
       token:
-        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0NjYzMjEsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MTJAdGVzdC5jb20ifQ.8zj6yJCsFKiZFo5XJRQIOafHSfVcUUMl-v_50D4qQ9c",
+        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0ODM2MzEsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MUB0ZXN0LmNvbSJ9.fLWU0zO2CgzxypzqShRNA78_XbrcDlu_q3sBUN7HDzs",
       message: "하이",
     };
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));

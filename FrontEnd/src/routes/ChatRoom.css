@@ -1,16 +1,21 @@
 .chatroom-container {
-    position: fixed; top: 170px; bottom:10px; right: 10px;
-    border-radius: 20px;
-    width: 300px;
-    height: 65vh;
-    background-color: black;
-    opacity: 0.5;
-    transition: all 0.3s ease-in-out;
-    &:hover {
-        opacity: 0.8;
-    }
+  position: fixed;
+  top: 170px;
+  bottom: 10px;
+  right: 10px;
+  border-radius: 8px;
+  width: 300px;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  background-color: #343541;
+  opacity: 0.5;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    opacity: 0.8;
+  }
 }
 
 .chat {
-    color: white;
+  color: white;
 }
