@@ -1,3 +1,5 @@
+import { useState, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 // GuideLogin.js
 import styled from "styled-components";
 
@@ -24,7 +26,7 @@ const LoginInput = styled.input`
   border: 1px solid #ccc;
 `;
 
-const LoginButton = styled.span`
+const LoginButton = styled.button`
   display: block;
   width: 100%;
   height: 45px;
@@ -41,28 +43,74 @@ const LoginButton = styled.span`
 `;
 
 function GuideLogin() {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      // 가이드 로그인 요청을 서버에 보내고 JWT 토큰을 받아옴
+      const response = await fetch("http://52.79.93.203/guide/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      console.log(response);
+      if (!response.ok) {
+        throw new Error("가이드 로그인에 실패하였습니다.");
+      }
+
+      const JWT_Token = await response.json();
+      const accessToken = JWT_Token.data.access_Token;
+      const refreshToken = JWT_Token.data.refresh_Token;
+
+      // 받아온 JWT 토큰들을 로컬 스토리지에 저장
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      // 가이드 로그인이 성공했음을 표시
+      console.log("가이드 로그인 성공");
+
+      navigate("/guide-dashboard"); // 성공시 Guide Dashboard 페이지로 이동
+    } catch (error) {
+      console.error("가이드 로그인 중 오류 발생:", error);
+    }
+  };
+
   return (
     <GuideLoginWrapper>
-      <form action="" id="loginForm">
+      <form action="" id="guideLoginForm" onSubmit={handleSubmit}>
         <div className="login-form__input-group">
           <LoginInputLabel htmlFor="email">이메일</LoginInputLabel>
           <LoginInput
             type="text"
             id="email"
             name="email"
-            placeholder="이메일 주소 ex) busanvr@busanvr.co.kr"
+            value={formData.email}
+            onChange={handleInputChange}
+            placeholder="이메일 주소 ex) guide@example.com"
             className="login-form__input-id"
           />
           <LoginInputLabel htmlFor="password">비밀번호</LoginInputLabel>
           <LoginInput
-            type="text"
+            type="password"
             id="password"
             name="password"
+            value={formData.password}
+            onChange={handleInputChange}
             placeholder="영문,숫자,특수문자(!,@,#,$,%) 2종류 포함 10자리 이상"
             className="login-form__input-pwd"
           />
         </div>
-        <LoginButton className="login-form__submit-btn">
+        <LoginButton type="submit" className="login-form__submit-btn">
           가이드 로그인
         </LoginButton>
       </form>
