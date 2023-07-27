@@ -2,6 +2,7 @@ import { useState } from "react";
 import GeneralLogin from "./GeneralLogin";
 import GuideLogin from "./GuideLogin";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const LoginWrapper = styled.div`
   width: 400px;
@@ -42,6 +43,13 @@ function Login({ setOnLoginModal, setIsLoggedIn }: Props) {
     }
   };
 
+  // 모달이 그대로 남아있어서.. 새로고침하면서 이동하게 해뒀음
+  // 이부분 없애고 아래에 Link to="/signup" 하면 새로고침 없이 이동함
+  const handleSignupLinkClick = () => {
+    window.location.href = "/signup";
+  };
+
+
   return (
     <LoginWrapper className="login-form">
       <LoginMenu className="login-menu">
@@ -74,6 +82,19 @@ function Login({ setOnLoginModal, setIsLoggedIn }: Props) {
           />
         ) : (
           <GuideLogin />
+        )}
+        {/* 아직 회원이 아니신가요? 회원가입하러 가기 링크 */}
+        {isGeneralLoginVisible && (
+          <p>
+            아직 회원이 아니신가요?{" "}
+            <Link to="#" onClick={handleSignupLinkClick}>일반 회원가입</Link>
+          </p>
+        )}
+
+        {!isGeneralLoginVisible && (
+          <p>
+            아직 회원이 아니신가요? 가이드 회원가입
+          </p>
         )}
       </div>
     </LoginWrapper>

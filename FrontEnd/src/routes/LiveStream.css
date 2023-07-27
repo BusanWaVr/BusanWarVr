@@ -1,0 +1,38 @@
+.live-example {
+  position: relative;
+}
+
+#session {
+  position: absolute;
+  top: 80px;
+  z-index: 1;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.video-slider {
+  margin: 0 auto;
+  opacity: 0.5;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.stream-container {
+  padding: 10px;
+  width: 200px;
+  object-fit: cover;
+}
+
+.current-stream video {
+  border: 2px solid #c289ff;
+}
+.streamcomponent div {
+  background: transparent !important;
+}
+
+.slick-next:before,
+.slick-prev:before {
+  color: rgb(139, 141, 255);
+}

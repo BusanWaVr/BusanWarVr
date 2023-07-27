@@ -44,7 +44,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
           <Nav className="me-auto">
             <Nav.Link href="/test">부산 여행지</Nav.Link>
             <Nav.Link href="/test">투어 메이트</Nav.Link>
-            <Nav.Link href="/test">후기 게시판</Nav.Link>
+            <Nav.Link href="/livestream">스트리밍 테스트</Nav.Link>
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             {isLoggedIn ? (
