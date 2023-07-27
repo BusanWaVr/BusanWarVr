@@ -10,13 +10,12 @@ import LiveExample from "../components/livestream/LiveExample";
 import Loader from "../components/common/Loader";
 import { useData } from "../context/DataContext";
 import ChatRoom from "./ChatRoom";
-import SockJS from "sockjs-client/dist/sockjs";
-import Stomp from "stompjs";
+
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
-let sockJS = new SockJS("http://52.79.93.203/ws-stomp");
+// let sockJS = new SockJS("http://52.79.93.203/ws-stomp");
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
@@ -37,7 +36,7 @@ const LiveStreamView = () => {
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [stompClient, setStompClient] = useState(Stomp.over(sockJS));
+  // const [stompClient, setStompClient] = useState(Stomp.over(sockJS));
   const [onload, setOnload] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -85,7 +84,7 @@ const LiveStreamView = () => {
 
     setSession(mySession);
 
-    setStompClient(Stomp.over(sockJS));
+    // setStompClient(Stomp.over(sockJS));
     setOnload(true);
   }, []);
 
@@ -304,7 +303,7 @@ const LiveStreamView = () => {
             </div>
             {/* 채팅창 */}
             <div>
-              <ChatRoom stompClient={stompClient} onload={onload} />
+              <ChatRoom onload={onload} />
             </div>
           </div>
           <Toolbar
