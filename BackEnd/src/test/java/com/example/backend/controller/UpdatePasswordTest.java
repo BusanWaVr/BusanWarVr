@@ -1,7 +1,6 @@
 package com.example.backend.controller;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.example.backend.dto.Response;
 import com.example.backend.exception.ErrorResponse;
@@ -16,18 +15,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@DisplayName("비밀번호 확인 API 테스트")
+@DisplayName("비밀번호 변경 API 테스트")
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthPasswordTest {
+class UpdatePasswordTest {
 
     @MockBean
     UserService userService;
@@ -56,12 +51,12 @@ class AuthPasswordTest {
     }
 
     @Test
-    @DisplayName("비밀번호 확인 성공")
-    void AuthPasswordSuccessTest() throws Exception {
+    @DisplayName("비밀번호 변경 성공")
+    void UpdatePasswordSuccessTest() throws Exception {
 
-        String jsonData = "{\"password\": \"azxc123!@#$\"}";
+        String jsonData = "{\"password\": \"azxc123!@#$%\"}";
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/auth/password")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/user/password")
                         .header("Authorization", accessToken)
                         .content(jsonData)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -75,27 +70,8 @@ class AuthPasswordTest {
     }
 
     @Test
-    @DisplayName("비밀번호 확인 실패 - DB와 다른 비밀번호 값 입력")
-    void AuthPasswordFailTest1() throws Exception {
-
-        String jsonData = "{\"password\": \"azxc123!@#$%\"}";
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/auth/password")
-                        .header("Authorization", accessToken)
-                        .content(jsonData)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-        String content = mvcResult.getResponse().getContentAsString();
-
-        ObjectMapper mapper = new ObjectMapper();
-        ErrorResponse response = mapper.readValue(content, ErrorResponse.class);
-
-        assertThat(response.getStatus()).isEqualTo("400");
-    }
-
-    @Test
-    @DisplayName("비밀번호 확인 실패 - 올바르지 않은 비밀번호 형식(짧은 비밀번호)")
-    void AuthPasswordFailTest2() throws Exception {
+    @DisplayName("비밀번호 변경 실패 - 올바르지 않은 비밀번호 형식(짧은 비밀번호)")
+    void UpdatePasswordFailTest1() throws Exception {
 
         String jsonData = "{\"password\": \"a1!\"}";
 
@@ -115,8 +91,8 @@ class AuthPasswordTest {
     }
 
     @Test
-    @DisplayName("비밀번호 확인 실패 - 올바르지 않은 비밀번호 형식(영/숫/특문 중 두 가지 이상 사용하지 않은 비밀번호)")
-    void AuthPasswordFailTest3() throws Exception {
+    @DisplayName("비밀번호 변경 실패 - 올바르지 않은 비밀번호 형식(영/숫/특문 중 두 가지 이상 사용하지 않은 비밀번호)")
+    void UpdatePasswordFailTest2() throws Exception {
 
         String jsonData = "{\"password\": \"1234567890\"}";
 
