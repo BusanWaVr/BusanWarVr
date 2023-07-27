@@ -16,10 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@DisplayName("사용자 컨트롤러 테스트")
+@DisplayName("사용자 회원가입 Api 테스트")
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserControllerTest {
+class UserSignUpApiTest {
 
     @MockBean
     UserService userService;
