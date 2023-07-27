@@ -58,7 +58,7 @@ public class UserController {
         }
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         userService.signup(request, encodedPassword);
-
+      
         return new Response<>("200", "성공적으로 회원가입 되었습니다!", null);
     }
 
@@ -69,7 +69,6 @@ public class UserController {
         return new Response<>("200", "사용 가능한 닉네임 입니다.", null);
     }
 
-    //TODO : 가이드 회원가입 만들기
     @PostMapping("/guide")
     public Response<GuideSignUpDto> guideSignUpApi(
             @ModelAttribute @Valid GuideSignUpDto.Request request,
@@ -110,7 +109,7 @@ public class UserController {
     @PostMapping("/test")
     public Response<TestDto.Response> test(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        return new Response<>("200", "정상적으로 처리되었습니다.", new TestDto.Response(user));
+        return new Response<>("200", "CICD 테스트6가 정상적으로 이루어졌습니다.", new TestDto.Response(user));
     }
 
     @PostMapping("/auth/password")
