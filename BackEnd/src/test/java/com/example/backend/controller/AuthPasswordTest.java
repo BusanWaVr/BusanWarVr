@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.example.backend.dto.Response;
 import com.example.backend.exception.ErrorResponse;
@@ -15,6 +16,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -129,5 +134,4 @@ class AuthPasswordTest {
         assertThat(response.getErrors().get(0).getField()).isEqualTo("password");
         assertThat(response.getErrors().size()).isEqualTo(1);
     }
-
 }

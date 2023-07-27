@@ -1,7 +1,10 @@
 package com.example.backend.controller;
 
-public class LoginRequestDto {
+import jdk.nashorn.internal.objects.annotations.Getter;
+import jdk.nashorn.internal.objects.annotations.Setter;
 
+public class LoginRequestDto {
+    
     private String email;
     private String password;
 
