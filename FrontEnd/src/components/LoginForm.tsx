@@ -23,6 +23,8 @@ const LoginForm: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
+      console.log(response);
+
       if (!response.ok) {
         throw new Error("Login failed.");
       }
