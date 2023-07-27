@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useData } from "../context/DataContext";
 import { useNavigate } from "react-router-dom";
 import "./LiveStream.css";
 
-export default function LiveStream() {
+const LiveStream = () => {
   const navigate = useNavigate();
 
   const [mySessionId, setMySessionId] = useState("busanVR");
@@ -110,4 +110,6 @@ export default function LiveStream() {
       </div>
     </div>
   );
-}
+};
+
+export default LiveStream;

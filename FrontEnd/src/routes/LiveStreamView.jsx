@@ -12,9 +12,10 @@ import { useData } from "../context/DataContext";
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
-function LiveStreamView() {
+const LiveStreamView = () => {
   const navigate = useNavigate();
   const { sessionid } = useParams();
+
   const {
     userName,
     youtubeLink,
@@ -23,13 +24,21 @@ function LiveStreamView() {
     isVideoEnabled,
     setIsVideoEnabled,
   } = useData();
-  const [mySessionId, setMySessionId] = useState(sessionid);
+
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const sliderSettings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 6,
+    slidesToScroll: 1,
+  };
 
   const OV = useRef(new OpenVidu());
 
@@ -111,7 +120,7 @@ function LiveStreamView() {
         }
       });
     }
-  }, [session, userName, mySessionId]);
+  }, [session, userName, sessionid]);
 
   // 라이브 종료
   const leaveSession = useCallback(() => {
@@ -187,6 +196,16 @@ function LiveStreamView() {
   };
 
   // 전체화면 온오프
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
   const handleFullScreen = useFullScreenHandle();
   const toggleFullScreen = () => {
     if (isFullScreen) {
@@ -210,10 +229,8 @@ function LiveStreamView() {
   }, [leaveSession]);
 
   const getToken = useCallback(async () => {
-    return createSession(mySessionId).then((sessionId) =>
-      createToken(sessionId)
-    );
-  }, [mySessionId]);
+    return createSession(sessionid).then((sessionId) => createToken(sessionId));
+  }, [sessionid]);
 
   const createSession = async (sessionId) => {
     const response = await axios.post(
@@ -237,31 +254,12 @@ function LiveStreamView() {
     return response.data; // The token
   };
 
-  const settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 6,
-    slidesToScroll: 1,
-  };
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullScreen(!!document.fullscreenElement);
-    };
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-    };
-  }, []);
-
   return (
     <FullScreen handle={handleFullScreen}>
       <LiveExample className="live-example" videoId={videoId} />
       <div id="session">
         <div className="video-slider" style={{ width: "1200px" }}>
-          <Slider id="video-container" className="" {...settings}>
+          <Slider id="video-container" className="" {...sliderSettings}>
             {/* 현재 유저 화면 */}
             {publisher !== undefined ? (
               <div
@@ -297,6 +295,6 @@ function LiveStreamView() {
       />
     </FullScreen>
   );
-}
+};
 
 export default LiveStreamView;

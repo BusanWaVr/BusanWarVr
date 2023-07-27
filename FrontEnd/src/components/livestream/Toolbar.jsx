@@ -9,7 +9,7 @@ import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import styled from "styled-components";
 import { useData } from "../../context/DataContext";
 
-function Toolbar(props) {
+const Toolbar = (props) => {
   const { isAudioEnabled, isVideoEnabled } = useData();
   const ToolbarContainer = styled.div`
     display: flex;
@@ -83,6 +83,6 @@ function Toolbar(props) {
       </ToolbarButton>
     </ToolbarContainer>
   );
-}
+};
 
 export default Toolbar;
