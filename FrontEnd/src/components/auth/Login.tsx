@@ -38,6 +38,8 @@ function Login({ setOnLoginModal, setIsLoggedIn }: Props) {
   const handleSignupLinkClick = () => {
     window.location.href = "/signup";
   };
+
+  // guidesignup
   const handleGuideSignupLinkClick = () => {
     window.location.href = "/guidesignup";
   };

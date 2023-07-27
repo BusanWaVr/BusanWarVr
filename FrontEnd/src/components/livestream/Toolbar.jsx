@@ -84,5 +84,4 @@ const Toolbar = (props) => {
     </ToolbarContainer>
   );
 };
-
 export default Toolbar;
