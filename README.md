@@ -33,7 +33,7 @@
 
 ### 🔥 Front-End Stack
 - React, TypeScript
-- WebRtc
+- WebRtc.
 
 ### 🔥 Back-End Stack
 - Spring Boot, Spring Security
@@ -41,4 +41,4 @@
 ### ⭐ DB
 - Mysql
 - Redis
-- Mongodb.
+- Mongodb
