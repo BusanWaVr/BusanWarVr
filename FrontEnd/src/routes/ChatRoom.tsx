@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
-import "./ChatRoom.css"
+import "./ChatRoom.css";
 
 let sockJS = new SockJS("http://13.209.65.4/ws-stomp");
 let stompClient = Stomp.over(sockJS);
@@ -33,7 +33,7 @@ function ChatRoom() {
     const newMessage = {
       roomId: 1,
       token:
-        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTAzOTMzOTEsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MTJAdGVzdC5jb20ifQ.LRVLb35pIKQfgq-w0TKVnCqTvMZdMZJkdqY7KXLZDyY",
+        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0NjYwMDMsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MUB0ZXN0LmNvbSJ9.TrUp2_DDh6JcjxF17K8ytPYVtDIoX9DNk5DjJ2MhAFU",
       message: inputMessage,
     };
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
@@ -46,7 +46,7 @@ function ChatRoom() {
     const newMessage = {
       roomId: 1,
       token:
-        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTAzOTM5MjYsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MUB0ZXN0LmNvbSJ9.VbHWpcHAYbalzCjKxBtsSqGNPNbwHMrktl8FIEyb4N0",
+        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0NjYzMjEsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MTJAdGVzdC5jb20ifQ.8zj6yJCsFKiZFo5XJRQIOafHSfVcUUMl-v_50D4qQ9c",
       message: "하이",
     };
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
@@ -54,7 +54,7 @@ function ChatRoom() {
   };
 
   const handleEnterPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleEnter();
     }
   };
