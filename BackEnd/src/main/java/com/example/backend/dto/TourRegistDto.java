@@ -1,8 +1,8 @@
 package com.example.backend.dto;
 
 import com.example.backend.model.category.Category;
-import com.example.backend.model.course.Course;
 import com.example.backend.model.tour.Tour;
+import com.example.backend.model.user.User;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
@@ -25,11 +25,11 @@ public class TourRegistDto {
         private int minMember;
         private int maxMember;
         // 코스 개수는 3개가 최대
-        private List<Course> courses;       //private List<CourseDto> courses;
+        private List<CourseDto> courses;       //private List<CourseDto> courses;
 
-        public Tour toTour() {
+        public Tour toTour(User user) {
             return new Tour(this.region, this.title, this.subTitle, this.content,
-                    this.startDate, this.endDate, this.minMember, this.maxMember);
+                    this.startDate, this.endDate, this.minMember, this.maxMember, user.getId());
         }
 
         public Category toCategory(String categoryName) {

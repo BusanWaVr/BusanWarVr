@@ -25,8 +25,4 @@ public class TourImage {
     @ManyToOne
     private Image image;
 
-    public TourImage(Tour tour, Image image){
-        this.tour = tour;
-        this.image = image;
-    }
 }

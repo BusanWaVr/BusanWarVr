@@ -52,7 +52,7 @@ public class Tour {
     private boolean isCanceled;
 
     public Tour(String region, String title, String subTitle, String content, Date startDate,
-            Date endDate, int minMember, int maxMember) {
+            Date endDate, int minMember, int maxMember, long userId) {
         this.region = region;
         this.title = title;
         this.subTitle = subTitle;
@@ -61,5 +61,6 @@ public class Tour {
         this.endDate = endDate;
         this.minMember = minMember;
         this.maxMember = maxMember;
+        this.userId = userId;
     }
 }
