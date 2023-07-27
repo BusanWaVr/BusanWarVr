@@ -9,13 +9,11 @@ import Toolbar from "../components/livestream/Toolbar";
 import LiveExample from "../components/livestream/LiveExample";
 import Loader from "../components/common/Loader";
 import { useData } from "../context/DataContext";
+import useCustomBack from "../hooks/useCustomBack";
 import ChatRoom from "./ChatRoom";
-
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
-
-// let sockJS = new SockJS("http://52.79.93.203/ws-stomp");
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
@@ -36,7 +34,6 @@ const LiveStreamView = () => {
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  // const [stompClient, setStompClient] = useState(Stomp.over(sockJS));
   const [onload, setOnload] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -69,23 +66,35 @@ const LiveStreamView = () => {
 
   useEffect(() => {
     const mySession = OV.current.initSession();
-    mySession.on("streamCreated", (event) => {
+
+    const handleStreamCreated = (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
-      setSubscribers((subscribers) => [...subscribers, subscriber]);
-    });
+      setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+    };
 
-    mySession.on("streamDestroyed", (event) => {
+    const handleStreamDestroyed = (event) => {
       deleteSubscriber(event.stream.streamManager);
-    });
+    };
 
-    mySession.on("exception", (exception) => {
+    const handleException = (exception) => {
       console.warn(exception);
-    });
+    };
+
+    mySession.on("streamCreated", handleStreamCreated);
+    mySession.on("streamDestroyed", handleStreamDestroyed);
+    mySession.on("exception", handleException);
 
     setSession(mySession);
-
-    // setStompClient(Stomp.over(sockJS));
     setOnload(true);
+
+    return () => {
+      // 컴포넌트가 언마운트될 때 이벤트 리스너를 해제하고 subscribers를 초기화
+      mySession.off("streamCreated", handleStreamCreated);
+      mySession.off("streamDestroyed", handleStreamDestroyed);
+      mySession.off("exception", handleException);
+      mySession.disconnect();
+      setSubscribers([]);
+    };
   }, []);
 
   useEffect(() => {
@@ -144,6 +153,19 @@ const LiveStreamView = () => {
 
     navigate("/livestream");
   }, [session]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      leaveSession();
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  useCustomBack(leaveSession);
 
   // 카메라 전환
   const switchVideo = useCallback(async () => {
@@ -229,17 +251,6 @@ const LiveStreamView = () => {
       handleFullScreen.enter();
     }
   };
-
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      leaveSession();
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [leaveSession]);
 
   const getToken = useCallback(async () => {
     return createSession(sessionid).then((sessionId) => createToken(sessionId));
