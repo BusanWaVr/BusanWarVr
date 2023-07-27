@@ -171,7 +171,7 @@ public class UserController {
 
         userService.guideUpdate(userDetails.getUser().getId(), request);
 
-        return new Response<>("200","성공적으로 회원정보를 변경했습니다.",null);
+        return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", null);
     }
 
 }
