@@ -3,17 +3,10 @@ import "./ChatRoom.css";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 
-
-
 export type message = {
   username: string;
   content: string;
 };
-
-// interface Props {
-//   stompClient: any;
-//   SockJS: Boolean;
-// }
 
 function ChatRoom() {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
