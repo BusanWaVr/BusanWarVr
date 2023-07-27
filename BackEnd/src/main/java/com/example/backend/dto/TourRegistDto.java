@@ -27,7 +27,6 @@ public class TourRegistDto {
         private Date endDate;
         private int minMember;
         private int maxMember;
-        // 코스 개수는 3개가 최대
         private List<CourseDto> courses;
 
         public Tour toTour(User user) {

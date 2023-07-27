@@ -17,7 +17,6 @@ public class TourController {
 
     private final TourService tourService;
 
-    // , @AuthenticationPrincipal UserDetailsImpl userDetails
     @PostMapping("/tour")
     public Response<TourRegistDto> tourRegistApi(@ModelAttribute TourRegistDto.Request request,
             @AuthenticationPrincipal UserDetailsImpl userDetails)
