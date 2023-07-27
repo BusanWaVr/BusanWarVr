@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
-import SockJS from "sockjs-client/dist/sockjs";
-import Stomp from "stompjs";
 import "./ChatRoom.css";
 
-let sockJS = new SockJS("http://52.79.93.203/ws-stomp");
-let stompClient = Stomp.over(sockJS);
+// let sockJS = new SockJS("http://52.79.93.203/ws-stomp");
+// let stompClient = Stomp.over(sockJS);
 
 export type message = {
   username: string;
   content: string;
 };
 
-function ChatRoom() {
+interface Props {
+  stompClient: any;
+  onload: Boolean;
+}
+
+function ChatRoom({ stompClient, onload }: Props) {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
+    console.log(stompClient);
+
     stompClient.connect({}, () => {
       console.log("연결됨");
       stompClient.subscribe("/sub/chat/message/room/1", (data) => {
@@ -27,7 +32,7 @@ function ChatRoom() {
         setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
       });
     });
-  }, []);
+  }, [stompClient]);
 
   const handleEnter = () => {
     const newMessage = {
