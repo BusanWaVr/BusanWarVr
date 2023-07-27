@@ -1,41 +1,32 @@
 import React, { useEffect, useState } from "react";
 import "./ChatRoom.css";
-
-// let sockJS = new SockJS("http://52.79.93.203/ws-stomp");
-// let stompClient = Stomp.over(sockJS);
+import SockJS from "sockjs-client/dist/sockjs";
+import Stomp from "stompjs";
 
 export type message = {
   username: string;
   content: string;
 };
 
-interface Props {
-  stompClient: any;
-  SockJS: Boolean;
-}
-
-function ChatRoom({ stompClient, SockJS }: Props) {
+function ChatRoom() {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
+  const [stompClient, setStompClient] = useState(Stomp.over(new SockJS("http://52.79.93.203/ws-stomp")));
 
   useEffect(() => {
-    console.log(stompClient);
-  }, []);
-
-  useEffect(() => {
-    console.log(stompClient.connected);
-
-    stompClient.connect({}, () => {
-      console.log("연결됨");
-      stompClient.subscribe("/sub/chat/message/room/1", (data) => {
-        const receivedMessage = JSON.parse(data.body);
-        const newChatMessage = {
-          username: receivedMessage.sender.nickname,
-          content: receivedMessage.message,
-        };
-        setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
+    if(stompClient != null){
+      stompClient.connect({}, () => {
+        console.log("연결됨");
+        stompClient.subscribe("/sub/chat/message/room/1", (data) => {
+          const receivedMessage = JSON.parse(data.body);
+          const newChatMessage = {
+            username: receivedMessage.sender.nickname,
+            content: receivedMessage.message,
+          };
+          setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
+        });
       });
-    });
+    }
   }, []);
 
   const handleEnter = () => {
