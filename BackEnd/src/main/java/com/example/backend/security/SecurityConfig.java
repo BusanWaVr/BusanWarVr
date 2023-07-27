@@ -91,6 +91,8 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
+        configuration.addAllowedHeader("Access_Token");
+        configuration.addAllowedHeader("Refresh_Token");
         configuration.addExposedHeader("*");
         configuration.addExposedHeader("Access_Token");
         configuration.addExposedHeader("Refresh_Token");
