@@ -7,6 +7,7 @@ import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "../components/livestream/UserVideoComponent";
 import Toolbar from "../components/livestream/Toolbar";
 import LiveExample from "../components/livestream/LiveExample";
+import Loader from "../components/common/Loader";
 import { useData } from "../context/DataContext";
 import ChatRoom from "./ChatRoom";
 import SockJS from "sockjs-client/dist/sockjs";
@@ -270,7 +271,7 @@ const LiveStreamView = () => {
   return (
     <>
       {isLoading ? (
-        <div>Loading...</div>
+        <Loader />
       ) : (
         <FullScreen handle={handleFullScreen}>
           <LiveExample className="live-example" videoId={videoId} />
