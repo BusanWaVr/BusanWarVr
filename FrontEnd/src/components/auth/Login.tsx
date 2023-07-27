@@ -1,6 +1,5 @@
 import { useState } from "react";
 import GeneralLogin from "./GeneralLogin";
-import GuideLogin from "./GuideLogin";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -21,7 +20,7 @@ const LoginMenu = styled.div`
 
 const LoginLink = styled.div`
   display: block;
-  width: 50%;
+  width: 100%;
   color: black;
   font-weight: 700;
 `;
@@ -34,68 +33,36 @@ interface Props {
 function Login({ setOnLoginModal, setIsLoggedIn }: Props) {
   const [isGeneralLoginVisible, setIsGeneralLoginVisible] = useState(true);
 
-  const toggleLoginType = (isGeneral: boolean) => {
-    if (
-      (isGeneral && !isGeneralLoginVisible) ||
-      (!isGeneral && isGeneralLoginVisible)
-    ) {
-      setIsGeneralLoginVisible((prevState) => !prevState);
-    }
-  };
-
   // 모달이 그대로 남아있어서.. 새로고침하면서 이동하게 해뒀음
   // 이부분 없애고 아래에 Link to="/signup" 하면 새로고침 없이 이동함
   const handleSignupLinkClick = () => {
     window.location.href = "/signup";
   };
-
+  const handleGuideSignupLinkClick = () => {
+    window.location.href = "/guidesignup";
+  };
 
   return (
     <LoginWrapper className="login-form">
       <LoginMenu className="login-menu">
-        <LoginLink
-          onClick={() => toggleLoginType(true)}
-          style={{
-            borderBottom: isGeneralLoginVisible
-              ? "2px solid #7f9dff"
-              : "2px solid transparent",
-          }}
-        >
-          일반 로그인
-        </LoginLink>
-        <LoginLink
-          onClick={() => toggleLoginType(false)}
-          style={{
-            borderBottom: !isGeneralLoginVisible
-              ? "2px solid #FF9090"
-              : "2px solid transparent",
-          }}
-        >
-          가이드 로그인
-        </LoginLink>
+        <LoginLink>로그인</LoginLink>
       </LoginMenu>
       <div className="login-wrapper">
-        {isGeneralLoginVisible ? (
-          <GeneralLogin
-            setOnLoginModal={setOnLoginModal}
-            setIsLoggedIn={setIsLoggedIn}
-          />
-        ) : (
-          <GuideLogin />
-        )}
+        <GeneralLogin
+          setOnLoginModal={setOnLoginModal}
+          setIsLoggedIn={setIsLoggedIn}
+        />
         {/* 아직 회원이 아니신가요? 회원가입하러 가기 링크 */}
-        {isGeneralLoginVisible && (
-          <p>
-            아직 회원이 아니신가요?{" "}
-            <Link to="#" onClick={handleSignupLinkClick}>일반 회원가입</Link>
-          </p>
-        )}
-
-        {!isGeneralLoginVisible && (
-          <p>
-            아직 회원이 아니신가요? 가이드 회원가입
-          </p>
-        )}
+        <p>
+          아직 회원이 아니신가요? <br />
+          <Link to="#" onClick={handleSignupLinkClick}>
+            일반 회원가입
+          </Link>
+          <br />
+          <Link to="#" onClick={handleGuideSignupLinkClick}>
+            가이드 회원가입
+          </Link>
+        </p>
       </div>
     </LoginWrapper>
   );
