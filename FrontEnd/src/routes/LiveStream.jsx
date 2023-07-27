@@ -7,7 +7,16 @@ export default function LiveStream() {
   const navigate = useNavigate();
 
   const [mySessionId, setMySessionId] = useState("busanVR");
-  const { youtubeLink, setYouTubeLink, userName, setUserName } = useData();
+  const {
+    youtubeLink,
+    setYouTubeLink,
+    userName,
+    setUserName,
+    isAudioEnabled,
+    setIsAudioEnabled,
+    isVideoEnabled,
+    setIsVideoEnabled,
+  } = useData();
 
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
@@ -20,6 +29,16 @@ export default function LiveStream() {
   const handleChangeYouTubeLink = useCallback((e) => {
     setYouTubeLink(e.target.value);
   }, []);
+
+  // 마이크 온오프 설정 함수
+  const toggleAudio = () => {
+    setIsAudioEnabled((prev) => !prev);
+  };
+
+  // 카메라 온오프 설정 함수
+  const toggleVideo = () => {
+    setIsVideoEnabled((prev) => !prev);
+  };
 
   const joinSession = (e) => {
     navigate(`/livestream/${mySessionId}`);
@@ -63,6 +82,20 @@ export default function LiveStream() {
                 onChange={handleChangeYouTubeLink}
                 required
               />
+            </p>
+            {/* 마이크 온오프 설정 */}
+            <p>
+              <label> 마이크: </label>
+              <button type="button" onClick={toggleAudio}>
+                {isAudioEnabled ? "마이크 켜져있음" : "마이크 꺼져있음"}
+              </button>
+            </p>
+            {/* 카메라 온오프 설정 */}
+            <p>
+              <label> 카메라: </label>
+              <button type="button" onClick={toggleVideo}>
+                {isVideoEnabled ? "카메라 켜져있음" : "카메라 꺼져있음"}
+              </button>
             </p>
             <p className="text-center">
               <input
