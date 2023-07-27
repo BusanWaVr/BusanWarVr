@@ -3,7 +3,7 @@ import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 import "./ChatRoom.css";
 
-let sockJS = new SockJS("http://13.209.65.4/ws-stomp");
+let sockJS = new SockJS("http://52.79.93.203/ws-stomp");
 let stompClient = Stomp.over(sockJS);
 
 export type message = {
