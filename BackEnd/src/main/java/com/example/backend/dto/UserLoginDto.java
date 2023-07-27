@@ -1,12 +1,23 @@
 package com.example.backend.dto;
 
+import com.example.backend.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 public class UserLoginDto {
 
-    private String Access_Token;
-    private String Refresh_Token;
+    private long userId;
+    private String email;
+    private String nickname;
+    private String profileImg;
+
+    public UserLoginDto(User user){
+        this.userId = user.getId();
+        this.email = user.getEmail();
+        this.nickname = user.getNickname();
+        this.profileImg = user.getProfileImg();
+    }
 }
