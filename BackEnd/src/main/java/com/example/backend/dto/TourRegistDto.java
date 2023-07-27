@@ -6,6 +6,7 @@ import com.example.backend.model.user.User;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
@@ -15,17 +16,19 @@ public class TourRegistDto {
     public static class Request {
 
         private String region;
-        private List<String> category;      //
+        private List<String> category;
         private String title;
         private String subTitle;
         private String content;
-        private List<MultipartFile> tourImgs;   //
+        private List<MultipartFile> tourImgs;
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private Date startDate;
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private Date endDate;
         private int minMember;
         private int maxMember;
         // 코스 개수는 3개가 최대
-        private List<CourseDto> courses;       //private List<CourseDto> courses;
+        private List<CourseDto> courses;
 
         public Tour toTour(User user) {
             return new Tour(this.region, this.title, this.subTitle, this.content,

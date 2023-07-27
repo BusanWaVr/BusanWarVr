@@ -42,7 +42,6 @@ public class TourService {
     @Transactional
     public void tourRegist(TourRegistDto.Request request, User user)
             throws IOException, IllegalAccessException {
-        System.out.println(user);
         Tour tour = request.toTour(user);
         tourResitory.save(tour);
 
@@ -82,7 +81,6 @@ public class TourService {
 
         // Course 객체 생성 및 저장
         for (CourseDto courseDto : request.getCourses()) {
-            System.out.println(courseDto);
             Course course = new Course(courseDto.getLon(), courseDto.getLat(), courseDto.getTitle(),
                     courseDto.getContent(), tour.getId());
             courseRepository.save(course);
