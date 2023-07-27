@@ -3,9 +3,9 @@ import RootLayout from "./routes/RootLayout";
 import Test from "./routes/Test";
 import Dashboard from "./routes/Dashboard";
 import Home from "./routes/Home";
-import Signup from "./routes/Signup.jsx";
-import LiveStream from "./routes/LiveStream.jsx";
-import LiveStreamView from "./routes/LiveStreamView.jsx";
+import Signup from "./routes/Signup";
+import LiveStream from "./routes/LiveStream";
+import LiveStreamView from "./routes/LiveStreamView";
 import ChatRoom from "./routes/ChatRoom";
 import TourRegistration from "./routes/TourRegistration.tsx";
 
