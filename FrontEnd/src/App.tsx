@@ -7,6 +7,7 @@ import Signup from "./routes/Signup.jsx";
 import LiveStream from "./routes/LiveStream.jsx";
 import LiveStreamView from "./routes/LiveStreamView.jsx";
 import ChatRoom from "./routes/ChatRoom";
+import TourRegistration from "./routes/TourRegistration.tsx";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/livestream" element={<LiveStream />} />
           <Route path="/chatroom" element={<ChatRoom />} />
+          <Route path="/tourregistration" element={<TourRegistration />} />
           <Route
             path="*"
             element={
