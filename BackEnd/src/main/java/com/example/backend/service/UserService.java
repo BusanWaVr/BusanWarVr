@@ -101,12 +101,11 @@ public class UserService {
     }
 
     @Transactional
-    public void guideUpdate(Long id, GuideUpdateDto.Request request)
+    public void guideUpdate(User user, GuideUpdateDto.Request request)
             throws IOException, IllegalAccessException {
 
         String newNickname = request.getNickname();
         String fileUrl;
-        User user = userRepository.findById(id).get();
 
         // 파일이 없을 경우 기본 프로필 이미지 URL을 지정
         if (request.getProfileImg().isEmpty()) {

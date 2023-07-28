@@ -142,7 +142,7 @@ const TourRegistration: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("http://13.209.65.4/tour", tourData);
+      const response = await axios.post("http://52.79.93.203/tour", tourData);
       console.log("Response from server:", response.data);
     } catch (error) {
       console.error("Error sending data:", error);

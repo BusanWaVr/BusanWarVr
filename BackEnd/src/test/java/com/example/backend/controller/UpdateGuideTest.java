@@ -44,7 +44,6 @@ class UpdateGuideTest {
     @Value("${test.password}")
     private String password;
 
-
     private String accessToken;
 
     @BeforeEach
