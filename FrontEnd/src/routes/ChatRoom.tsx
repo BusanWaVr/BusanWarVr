@@ -8,11 +8,6 @@ export type message = {
   content: string;
 };
 
-// interface Props {
-//   stompClient: any;
-//   SockJS: Boolean;
-// }
-
 function ChatRoom() {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
