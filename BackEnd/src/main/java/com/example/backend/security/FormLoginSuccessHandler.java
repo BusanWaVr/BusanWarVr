@@ -34,9 +34,10 @@ public class FormLoginSuccessHandler extends SavedRequestAwareAuthenticationSucc
         String access = TOKEN_TYPE + " " + tokens.get("ACCESS_TOKEN");
         String refresh = TOKEN_TYPE + " " + tokens.get("REFRESH_TOKEN");
 
+        response.setContentType("application/json;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
         val responseDto = new Response<>("200", "success", new UserLoginDto(userDetails.getUser(), access, refresh));
         response.getWriter().write(objectMapper.writeValueAsString(responseDto));
-        response.setContentType("application/json");
-        response.setCharacterEncoding("utf-8");
+
     }
 }
