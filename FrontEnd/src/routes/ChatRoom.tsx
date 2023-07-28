@@ -21,6 +21,8 @@ function ChatRoom() {
   );
 
   const accessToken = localStorage.getItem("accessToken");
+  const nickName = localStorage.getItem("nickname");
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     if (stompClient != null) {
@@ -32,7 +34,16 @@ function ChatRoom() {
             username: receivedMessage.sender.nickname,
             content: receivedMessage.message,
           };
-          setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
+
+          console.log(receivedMessage);
+
+          // 다른 유저가 보낸 메시지면
+          if (receivedMessage.sender.userId != userId) {
+            setChatMessages((prevMessages) => [
+              ...prevMessages,
+              newChatMessage,
+            ]);
+          }
         });
       });
     }
@@ -46,6 +57,13 @@ function ChatRoom() {
       token: accessToken,
       message: inputMessage,
     };
+
+    const newChatMessage = {
+      username: nickName,
+      content: inputMessage,
+    };
+
+    setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
     console.log(chatMessages);
     // console.log(inputMessage);
