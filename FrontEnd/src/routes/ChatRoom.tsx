@@ -43,6 +43,7 @@ function ChatRoom() {
         stompClient.subscribe("/sub/chat/message/room/1", (data) => {
           const receivedMessage = JSON.parse(data.body);
           const newChatMessage = {
+            senderId: receivedMessage.sender.userId,
             username: receivedMessage.sender.nickname,
             content: receivedMessage.message,
           };
@@ -81,6 +82,7 @@ function ChatRoom() {
     };
 
     const newChatMessage = {
+      senderId: userId,
       username: nickName,
       content: inputMessage,
     };
@@ -106,13 +108,21 @@ function ChatRoom() {
           <div className="h2">chatroom</div>
         </div>
         <div className="chat-body" ref={messageEndRef}>
-          {chatMessages.map((msg, index) => (
-            <div key={index} className="message incoming">
-              <p>
-                <strong>{msg.username}</strong> | {msg.content}{" "}
-              </p>
-            </div>
-          ))}
+          {chatMessages.map((msg, index) =>
+            msg.senderId == userId ? (
+              <div key={index} className="message outgoing">
+                <p>
+                  <strong>{msg.username}</strong> | {msg.content}{" "}
+                </p>
+              </div>
+            ) : (
+              <div key={index} className="message incoming">
+                <p>
+                  <strong>{msg.username}</strong> | {msg.content}{" "}
+                </p>
+              </div>
+            )
+          )}
         </div>
         <div className="chat-footer">
           <input
