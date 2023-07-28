@@ -48,7 +48,7 @@ class UpdateGuideTest {
 
     @BeforeEach
     public void settingUser() throws Exception {
-      
+
         LoginRequestDto requestDto = new LoginRequestDto(email, password);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)

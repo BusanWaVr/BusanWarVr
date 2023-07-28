@@ -11,10 +11,14 @@ export type message = {
 function ChatRoom() {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
-  const [stompClient, setStompClient] = useState(Stomp.over(new SockJS("http://52.79.93.203/ws-stomp")));
+  const [stompClient, setStompClient] = useState(
+    Stomp.over(new SockJS("http://52.79.93.203/ws-stomp"))
+  );
+
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    if(stompClient != null){
+    if (stompClient != null) {
       stompClient.connect({}, () => {
         console.log("연결됨");
         stompClient.subscribe("/sub/chat/message/room/1", (data) => {
@@ -30,10 +34,11 @@ function ChatRoom() {
   }, []);
 
   const handleEnter = () => {
+    console.log("슈우웃");
+    console.log(accessToken);
     const newMessage = {
       roomId: 1,
-      token:
-        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0ODM1OTgsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MTJAdGVzdC5jb20ifQ.9LmXm9J0Ru6atakuG_pzQRfPIg6sEdXcIvvJTZGDHFk",
+      token: accessToken,
       message: inputMessage,
     };
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
