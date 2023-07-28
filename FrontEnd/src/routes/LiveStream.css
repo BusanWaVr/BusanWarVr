@@ -26,10 +26,7 @@
 }
 
 .current-stream video {
-  border: 2px solid #c289ff;
-}
-.streamcomponent div {
-  background: transparent !important;
+  border: 2px solid #385ac2;
 }
 
 .slick-next:before,

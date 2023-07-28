@@ -312,11 +312,11 @@ const LiveStreamView = () => {
                 ))}
               </Slider>
             </div>
-            {/* 채팅창 */}
-            <div>
-              <ChatRoom onload={onload} />
-            </div>
+            
           </div>
+          {/* 채팅창 */}
+          <ChatRoom onload={onload} />
+          {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
             toggleAudio={toggleAudio}

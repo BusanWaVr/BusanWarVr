@@ -3,8 +3,6 @@ import "./ChatRoom.css";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 
-
-
 export type message = {
   username: string;
   content: string;
@@ -18,10 +16,12 @@ export type message = {
 function ChatRoom() {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
-  const [stompClient, setStompClient] = useState(Stomp.over(new SockJS("http://52.79.93.203/ws-stomp")));
+  const [stompClient, setStompClient] = useState(
+    Stomp.over(new SockJS("http://52.79.93.203/ws-stomp"))
+  );
 
   useEffect(() => {
-    if(stompClient != null){
+    if (stompClient != null) {
       stompClient.connect({}, () => {
         console.log("연결됨");
         stompClient.subscribe("/sub/chat/message/room/1", (data) => {
@@ -40,7 +40,7 @@ function ChatRoom() {
     const newMessage = {
       roomId: 1,
       token:
-        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0ODM1OTgsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MTJAdGVzdC5jb20ifQ.9LmXm9J0Ru6atakuG_pzQRfPIg6sEdXcIvvJTZGDHFk",
+        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA1NDgyODUsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJmMXJzdGYxeTlAbmF2ZXIuY29tIn0.Wjsc_R96t4h9-D9xJU1i0-Pmx60XtH8kD1uMheP9DVU",
       message: inputMessage,
     };
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
@@ -53,7 +53,7 @@ function ChatRoom() {
     const newMessage = {
       roomId: 1,
       token:
-        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0ODM2MzEsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MUB0ZXN0LmNvbSJ9.fLWU0zO2CgzxypzqShRNA78_XbrcDlu_q3sBUN7HDzs",
+        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA1NDgyODUsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJmMXJzdGYxeTlAbmF2ZXIuY29tIn0.Wjsc_R96t4h9-D9xJU1i0-Pmx60XtH8kD1uMheP9DVU",
       message: "하이",
     };
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
@@ -68,23 +68,34 @@ function ChatRoom() {
 
   return (
     <div className="chatroom-container">
-      <h1 className="chat">ChatRoom</h1>
-      <div>
-        {chatMessages.map((msg, index) => (
-          <div key={index}>
-            <strong>{msg.username}</strong>: {msg.content}
-          </div>
-        ))}
+      <div className="chat-card">
+        <div className="chat-header">
+          <div className="h2">chatroom</div>
+        </div>
+        <div className="chat-body">
+          {chatMessages.map((msg, index) => (
+            <div key={index} className="message incoming">
+              <p>
+                <strong>{msg.username}</strong> | {msg.content}{" "}
+              </p>
+            </div>
+          ))}
+          {/* <div className="message outgoing">
+            <p>I have a question about your services.</p>
+          </div> */}
+        </div>
+        <div className="chat-footer">
+          <input
+            type="text"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyPress={handleEnterPress}
+            placeholder="메세지를 입력하세요."
+          />
+          <button onClick={handleEnter}>send</button>
+        </div>
       </div>
-      <input
-        type="text"
-        value={inputMessage}
-        onChange={(e) => setInputMessage(e.target.value)}
-        onKeyPress={handleEnterPress}
-      />
-      <button onClick={handleEnter}>send</button>
-      <br />
-      <button onClick={handleEnter2}>상대방이 메시지 보내기 test</button>
+      {/* <button onClick={handleEnter2}>상대방이 메시지 보내기 test</button> */}
     </div>
   );
 }
