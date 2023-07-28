@@ -3,9 +3,10 @@ import RootLayout from "./routes/RootLayout";
 import Test from "./routes/Test";
 import Dashboard from "./routes/Dashboard";
 import Home from "./routes/Home";
-import Signup from "./routes/Signup.jsx";
-import LiveStream from "./routes/LiveStream.jsx";
-import LiveStreamView from "./routes/LiveStreamView.jsx";
+import Signup from "./routes/Signup";
+import GuideSignup from "./routes/GuideSignup";
+import LiveStream from "./routes/LiveStream";
+import LiveStreamView from "./routes/LiveStreamView";
 import ChatRoom from "./routes/ChatRoom";
 import TourRegistration from "./routes/TourRegistration.tsx";
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/test" element={<Test />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/guidesignup" element={<GuideSignup />} />
           <Route path="/livestream" element={<LiveStream />} />
           <Route path="/chatroom" element={<ChatRoom />} />
           <Route path="/tourregistration" element={<TourRegistration />} />
