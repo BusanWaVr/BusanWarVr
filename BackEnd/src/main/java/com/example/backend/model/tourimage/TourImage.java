@@ -7,8 +7,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
 @Entity
+@NoArgsConstructor
 public class TourImage {
 
     @Id
@@ -20,4 +24,5 @@ public class TourImage {
 
     @ManyToOne
     private Image image;
+
 }

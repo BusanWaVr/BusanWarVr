@@ -5,6 +5,7 @@ import com.example.backend.dto.AuthEmailDto;
 import com.example.backend.dto.AuthNicknameDto;
 import com.example.backend.dto.AuthPasswordDto;
 import com.example.backend.dto.GuideSignUpDto;
+import com.example.backend.dto.GuideUpdateDto;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.TestDto;
 import com.example.backend.dto.UserSignUpDto;
@@ -15,6 +16,7 @@ import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.RefreshTokenService;
 import com.example.backend.service.UserService;
 import com.example.backend.util.emailsender.EmailSender;
+import java.io.IOException;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -156,5 +158,18 @@ public class UserController {
             throw new IllegalAccessException("이메일 인증에 실패했습니다.");
         }
         return new Response<>("200", "정상적으로 처리되었습니다.", null);
+    }
+
+    @PutMapping("/guide")
+    public Response updateGuide(@AuthenticationPrincipal UserDetailsImpl userDetails,
+            @ModelAttribute @Valid GuideUpdateDto.Request request,
+            BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+      
+        userService.guideUpdate(userDetails.getUser(), request);
+
+        return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", null);
     }
 }

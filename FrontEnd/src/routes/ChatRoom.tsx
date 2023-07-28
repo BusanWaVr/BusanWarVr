@@ -1,44 +1,44 @@
 import React, { useEffect, useState } from "react";
 import "./ChatRoom.css";
-
-// let sockJS = new SockJS("http://52.79.93.203/ws-stomp");
-// let stompClient = Stomp.over(sockJS);
+import SockJS from "sockjs-client/dist/sockjs";
+import Stomp from "stompjs";
 
 export type message = {
   username: string;
   content: string;
 };
 
-interface Props {
-  stompClient: any;
-  onload: Boolean;
-}
-
-function ChatRoom({ stompClient, onload }: Props) {
+function ChatRoom() {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
+  const [stompClient, setStompClient] = useState(
+    Stomp.over(new SockJS("http://52.79.93.203/ws-stomp"))
+  );
+
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    console.log(stompClient);
-
-    stompClient.connect({}, () => {
-      console.log("연결됨");
-      stompClient.subscribe("/sub/chat/message/room/1", (data) => {
-        const receivedMessage = JSON.parse(data.body);
-        const newChatMessage = {
-          username: receivedMessage.sender.nickname,
-          content: receivedMessage.message,
-        };
-        setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
+    if (stompClient != null) {
+      stompClient.connect({}, () => {
+        console.log("연결됨");
+        stompClient.subscribe("/sub/chat/message/room/1", (data) => {
+          const receivedMessage = JSON.parse(data.body);
+          const newChatMessage = {
+            username: receivedMessage.sender.nickname,
+            content: receivedMessage.message,
+          };
+          setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
+        });
       });
-    });
-  }, [stompClient]);
+    }
+  }, []);
 
   const handleEnter = () => {
+    console.log("슈우웃");
+    console.log(accessToken);
     const newMessage = {
       roomId: 1,
-      token:
-        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0NjYwMDMsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MUB0ZXN0LmNvbSJ9.TrUp2_DDh6JcjxF17K8ytPYVtDIoX9DNk5DjJ2MhAFU",
+      token: accessToken,
       message: inputMessage,
     };
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
@@ -51,7 +51,7 @@ function ChatRoom({ stompClient, onload }: Props) {
     const newMessage = {
       roomId: 1,
       token:
-        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0NjYzMjEsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MTJAdGVzdC5jb20ifQ.8zj6yJCsFKiZFo5XJRQIOafHSfVcUUMl-v_50D4qQ9c",
+        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA0ODM2MzEsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJzb2NrZXN0MUB0ZXN0LmNvbSJ9.fLWU0zO2CgzxypzqShRNA78_XbrcDlu_q3sBUN7HDzs",
       message: "하이",
     };
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));

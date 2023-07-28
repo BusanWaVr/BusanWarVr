@@ -7,15 +7,13 @@ import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "../components/livestream/UserVideoComponent";
 import Toolbar from "../components/livestream/Toolbar";
 import LiveExample from "../components/livestream/LiveExample";
+import Loader from "../components/common/Loader";
 import { useData } from "../context/DataContext";
+import useCustomBack from "../hooks/useCustomBack";
 import ChatRoom from "./ChatRoom";
-import SockJS from "sockjs-client/dist/sockjs";
-import Stomp from "stompjs";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
-
-let sockJS = new SockJS("http://52.79.93.203/ws-stomp");
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
@@ -36,8 +34,8 @@ const LiveStreamView = () => {
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [stompClient, setStompClient] = useState(Stomp.over(sockJS));
   const [onload, setOnload] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const sliderSettings = {
     dots: false,
@@ -68,23 +66,35 @@ const LiveStreamView = () => {
 
   useEffect(() => {
     const mySession = OV.current.initSession();
-    mySession.on("streamCreated", (event) => {
+
+    const handleStreamCreated = (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
-      setSubscribers((subscribers) => [...subscribers, subscriber]);
-    });
+      setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+    };
 
-    mySession.on("streamDestroyed", (event) => {
+    const handleStreamDestroyed = (event) => {
       deleteSubscriber(event.stream.streamManager);
-    });
+    };
 
-    mySession.on("exception", (exception) => {
+    const handleException = (exception) => {
       console.warn(exception);
-    });
+    };
+
+    mySession.on("streamCreated", handleStreamCreated);
+    mySession.on("streamDestroyed", handleStreamDestroyed);
+    mySession.on("exception", handleException);
 
     setSession(mySession);
-
-    setStompClient(Stomp.over(sockJS));
     setOnload(true);
+
+    return () => {
+      // 컴포넌트가 언마운트될 때 이벤트 리스너를 해제하고 subscribers를 초기화
+      mySession.off("streamCreated", handleStreamCreated);
+      mySession.off("streamDestroyed", handleStreamDestroyed);
+      mySession.off("exception", handleException);
+      mySession.disconnect();
+      setSubscribers([]);
+    };
   }, []);
 
   useEffect(() => {
@@ -121,6 +131,8 @@ const LiveStreamView = () => {
           setMainStreamManager(publisher);
           setPublisher(publisher);
           setCurrentVideoDevice(currentVideoDevice);
+
+          setIsLoading(false);
         } catch (error) {
           console.log(
             "There was an error connecting to the session:",
@@ -141,6 +153,19 @@ const LiveStreamView = () => {
 
     navigate("/livestream");
   }, [session]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      leaveSession();
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  useCustomBack(leaveSession);
 
   // 카메라 전환
   const switchVideo = useCallback(async () => {
@@ -227,17 +252,6 @@ const LiveStreamView = () => {
     }
   };
 
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      leaveSession();
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [leaveSession]);
-
   const getToken = useCallback(async () => {
     return createSession(sessionid).then((sessionId) => createToken(sessionId));
   }, [sessionid]);
@@ -265,49 +279,55 @@ const LiveStreamView = () => {
   };
 
   return (
-    <FullScreen handle={handleFullScreen}>
-      <LiveExample className="live-example" videoId={videoId} />
-      <div id="session">
-        <div className="video-slider" style={{ width: "1200px" }}>
-          <Slider id="video-container" className="" {...sliderSettings}>
-            {/* 현재 유저 화면 */}
-            {publisher !== undefined ? (
-              <div
-                className="stream-container current-stream"
-                onClick={() => handleMainVideoStream(publisher)}
-                style={{ width: "200px" }}
-              >
-                <UserVideoComponent streamManager={publisher} />
-              </div>
-            ) : null}
-            {/* 다른 유저 화면 */}
-            {subscribers.map((sub, i) => (
-              <div
-                key={sub.id}
-                className="stream-container"
-                onClick={() => handleMainVideoStream(sub)}
-                style={{ width: "200px" }}
-              >
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-        {/* 채팅창 */}
-        <div>
-          <ChatRoom stompClient={stompClient} onload={onload} />
-        </div>
-      </div>
-      <Toolbar
-        leaveSession={leaveSession}
-        toggleAudio={toggleAudio}
-        toggleVideo={toggleVideo}
-        switchVideo={switchVideo}
-        toggleFullScreen={toggleFullScreen}
-        isFullScreen={isFullScreen}
-      />
-    </FullScreen>
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <FullScreen handle={handleFullScreen}>
+          <LiveExample className="live-example" videoId={videoId} />
+          <div id="session">
+            <div className="video-slider" style={{ width: "1200px" }}>
+              <Slider id="video-container" className="" {...sliderSettings}>
+                {/* 현재 유저 화면 */}
+                {publisher !== undefined ? (
+                  <div
+                    className="stream-container current-stream"
+                    onClick={() => handleMainVideoStream(publisher)}
+                    style={{ width: "200px" }}
+                  >
+                    <UserVideoComponent streamManager={publisher} />
+                  </div>
+                ) : null}
+                {/* 다른 유저 화면 */}
+                {subscribers.map((sub, i) => (
+                  <div
+                    key={sub.id}
+                    className="stream-container"
+                    onClick={() => handleMainVideoStream(sub)}
+                    style={{ width: "200px" }}
+                  >
+                    <span>{sub.id}</span>
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
+                ))}
+              </Slider>
+            </div>
+            {/* 채팅창 */}
+            <div>
+              <ChatRoom onload={onload} />
+            </div>
+          </div>
+          <Toolbar
+            leaveSession={leaveSession}
+            toggleAudio={toggleAudio}
+            toggleVideo={toggleVideo}
+            switchVideo={switchVideo}
+            toggleFullScreen={toggleFullScreen}
+            isFullScreen={isFullScreen}
+          />
+        </FullScreen>
+      )}
+    </>
   );
 };
 
