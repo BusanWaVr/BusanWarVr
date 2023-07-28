@@ -1,0 +1,11 @@
+.chat-room .chatroom-container {
+  right: -400px;
+  top: 320px;
+  width: 400px;
+  height: 100%;
+  transition: right 0.3s ease;
+}
+
+.chat-room.open .chatroom-container {
+  right: -50px;
+}
