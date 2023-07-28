@@ -12,6 +12,7 @@ import { useData } from "../context/DataContext";
 import useCustomBack from "../hooks/useCustomBack";
 import ChatRoom from "./ChatRoom";
 import "./LiveStreamView.css";
+import QRCodeComponent from "../components/QRCodeComponent";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -334,6 +335,7 @@ const LiveStreamView = () => {
             isChatOpen={isChatOpen}
             handleChatToggle={handleChatToggle}
           />
+          <QRCodeComponent youtubeLink={youtubeLink} />
         </FullScreen>
       )}
     </>
