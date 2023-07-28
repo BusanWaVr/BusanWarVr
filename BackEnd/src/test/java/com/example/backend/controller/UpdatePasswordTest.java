@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,12 +37,18 @@ class UpdatePasswordTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Value("${test.email}")
+    private String email;
+
+    @Value("${test.password}")
+    private String password;
+
     private String accessToken;
 
     @BeforeEach
     public void settingUser() throws Exception {
 
-        LoginRequestDto requestDto = new LoginRequestDto("azxc123@gmail.com", "azxc123!@#$");
+        LoginRequestDto requestDto = new LoginRequestDto(email, password);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))

@@ -20,10 +20,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@DisplayName("비밀번호 확인 API 테스트")
+
+@DisplayName("가이드 회원정보 변경 API 테스트")
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthPasswordTest {
+class UpdateGuideTest {
 
     @MockBean
     UserService userService;
@@ -41,8 +42,7 @@ class AuthPasswordTest {
     private String email;
 
     @Value("${test.password}")
-    private String password;git ad
-
+    private String password;
     private String accessToken;
 
     @BeforeEach
@@ -58,15 +58,13 @@ class AuthPasswordTest {
     }
 
     @Test
-    @DisplayName("비밀번호 확인 성공")
-    void AuthPasswordSuccessTest() throws Exception {
+    @DisplayName("가이드 회원정보 변경 성공 - 닉네임 변경하지 않았을 때")
+    void UpdateGuideSuccessTest1() throws Exception {
 
-        String jsonData = "{\"password\": \"azxc123!@#$\"}";
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/auth/password")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/guide")
                         .header("Authorization", accessToken)
-                        .content(jsonData)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .param("nickname", "azxc123")
+                        .param("introduction", "테스트"))
                 .andReturn();
         String content = mvcResult.getResponse().getContentAsString();
 
@@ -77,63 +75,78 @@ class AuthPasswordTest {
     }
 
     @Test
-    @DisplayName("비밀번호 확인 실패 - DB와 다른 비밀번호 값 입력")
-    void AuthPasswordFailTest1() throws Exception {
+    @DisplayName("가이드 회원정보 변경 성공 - 닉네임 변경했을 때")
+    void UpdateGuideSuccessTest2() throws Exception {
 
-        String jsonData = "{\"password\": \"azxc123!@#$%\"}";
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/auth/password")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/guide")
                         .header("Authorization", accessToken)
-                        .content(jsonData)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .param("nickname", "test121")
+                        .param("introduction", "테스트"))
                 .andReturn();
         String content = mvcResult.getResponse().getContentAsString();
 
         ObjectMapper mapper = new ObjectMapper();
-        ErrorResponse response = mapper.readValue(content, ErrorResponse.class);
+        Response response = mapper.readValue(content, Response.class);
 
-        assertThat(response.getStatus()).isEqualTo("400");
+        assertThat(response.getCode()).isEqualTo("200");
     }
 
     @Test
-    @DisplayName("비밀번호 확인 실패 - 올바르지 않은 비밀번호 형식(짧은 비밀번호)")
-    void AuthPasswordFailTest2() throws Exception {
+    @DisplayName("가이드 회원정보 변경 실패 테스트 - 2글자 미만인 닉네임")
+    void UpdateGuideFailTest1() throws Exception {
 
-        String jsonData = "{\"password\": \"a1!\"}";
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/auth/password")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/guide")
                         .header("Authorization", accessToken)
-                        .content(jsonData)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .param("nickname", "t"))
                 .andReturn();
+
         String content = mvcResult.getResponse().getContentAsString();
 
         ObjectMapper mapper = new ObjectMapper();
         ErrorResponse response = mapper.readValue(content, ErrorResponse.class);
 
         assertThat(response.getStatus()).isEqualTo("400");
-        assertThat(response.getErrors().get(0).getField()).isEqualTo("password");
+        assertThat(response.getErrors().get(0).getField()).isEqualTo("nickname");
         assertThat(response.getErrors().size()).isEqualTo(1);
     }
 
     @Test
-    @DisplayName("비밀번호 확인 실패 - 올바르지 않은 비밀번호 형식(영/숫/특문 중 두 가지 이상 사용하지 않은 비밀번호)")
-    void AuthPasswordFailTest3() throws Exception {
+    @DisplayName("가이드 회원정보 변경 실패 테스트 - 8글자 초과하는 닉네임")
+    void UpdateGuideFailTest2() throws Exception {
 
-        String jsonData = "{\"password\": \"1234567890\"}";
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/auth/password")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/guide")
                         .header("Authorization", accessToken)
-                        .content(jsonData)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .param("nickname", "test12345"))
                 .andReturn();
+
         String content = mvcResult.getResponse().getContentAsString();
 
         ObjectMapper mapper = new ObjectMapper();
         ErrorResponse response = mapper.readValue(content, ErrorResponse.class);
 
         assertThat(response.getStatus()).isEqualTo("400");
-        assertThat(response.getErrors().get(0).getField()).isEqualTo("password");
+        assertThat(response.getErrors().get(0).getField()).isEqualTo("nickname");
         assertThat(response.getErrors().size()).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("가이드 회원정보 변경 실패 테스트 - 지원하지 않는 형식의 파일 입력")
+    void UpdateGuideFailTest3() throws Exception {
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/guide")
+                        .header("Authorization", accessToken)
+                        .param("nickname", "test121")
+                        .param("profileImg", ""))
+                .andReturn();
+
+        String content = mvcResult.getResponse().getContentAsString();
+
+        ObjectMapper mapper = new ObjectMapper();
+        ErrorResponse response = mapper.readValue(content, ErrorResponse.class);
+
+        assertThat(response.getStatus()).isEqualTo("400");
+        assertThat(response.getErrors().get(0).getField()).isEqualTo("profileImg");
+        assertThat(response.getErrors().size()).isEqualTo(1);
+    }
+
 }
