@@ -168,7 +168,7 @@ public class UserController {
             throw new BindException(bindingResult);
         }
 
-        userService.guideUpdate(userDetails.getUser().getId(), request);
+        userService.guideUpdate(userDetails.getUser(), request);
 
         return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", null);
     }
