@@ -41,7 +41,7 @@ class AuthPasswordTest {
     private String email;
 
     @Value("${test.password}")
-    private String password;git ad
+    private String password;
 
     private String accessToken;
 
