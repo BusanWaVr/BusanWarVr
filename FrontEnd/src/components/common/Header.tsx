@@ -24,6 +24,10 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
   const logout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("email");
+    localStorage.removeItem("nickname");
+    localStorage.removeItem("profileImg");
     navigate("/");
     setIsLoggedIn(false);
   };
