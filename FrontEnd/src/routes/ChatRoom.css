@@ -46,11 +46,11 @@
 }
 
 .incoming {
-  background-color: #e1e1e1;
+  background-color: #f2f2f2;
 }
 
 .outgoing {
-  background-color: #f2f2f2;
+  background-color: #fffa97;
   text-align: right;
 }
 
