@@ -15,12 +15,14 @@ const Signup = () => {
   const [codeMessage, setCodeMessage] = useState(""); // 인증코드 받기 할시 메세지
   const [verificationCode, setVerificationCode] = useState(""); // 인증코드 입력한것
   const [categoryMessage, setCategoryMessage] = useState(""); // 카테고리 메시지
+  const [nicknameMessage, setNicknameMessage] = useState(""); // 닉네임 중복 메시지
 
   const [isName, setIsName] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
   const [showVerificationForm, setShowVerificationForm] = useState(false);
+  const [isNickname, setIsNickname] = useState(false);
 
   //   카테고리
   const MaxAllowedCategories = 5;
@@ -147,6 +149,40 @@ const Signup = () => {
     }
   };
 
+  // 닉네임 중복 체크
+  const handleSubmitName = async (e) => {
+    e.preventDefault();
+
+    try {
+      const requestBody = {
+        nickname: name,
+      };
+
+      const response = await fetch("http://52.79.93.203/auth/nickname", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();
+
+      if (data.code === "200") {
+        setNicknameMessage("사용 가능한 닉네임입니다.");
+        setIsNickname(true);
+      } else if (data.status === "409") {
+        // 중복
+        setNicknameMessage("중복된 닉네임입니다. 다른 닉네임을 사용해 주세요.");
+      } else {
+        // 에러
+        setNicknameMessage("죄송합니다. 잠시 후 다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const onChangeName = (e) => {
     const currentName = e.target.value;
     setName(currentName);
@@ -212,7 +248,14 @@ const Signup = () => {
     console.log(isCategory);
 
     // 상태 값 업데이트 이후 즉시 formData 구성
-    if (isEmail && isName && isPassword && isPasswordConfirm && isCategory) {
+    if (
+      isEmail &&
+      isName &&
+      isPassword &&
+      isPasswordConfirm &&
+      isCategory &&
+      isNickname
+    ) {
       const formData = await createFormData(
         name,
         email,
@@ -301,11 +344,30 @@ const Signup = () => {
           />
           <p className="message">{passwordConfirmMessage}</p>
         </div>
-        <div className="form-el">
+        {/* <div className="form-el">
           <label htmlFor="name">닉네임</label> <br />
           <input id="name" name="name" value={name} onChange={onChangeName} />
           <p className="message">{nameMessage}</p>
+        </div> */}
+
+        <div className="form-el">
+          <form onSubmit={handleSubmitName}>
+            <label htmlFor="name">닉네임</label> <br />
+            {/* <input id="name" name="name" value={name} onChange={onChangeName} /> */}
+            <input
+              id="name"
+              name="name"
+              type="text"
+              value={name}
+              onChange={onChangeName}
+              // disabled={isNickname}
+            />
+            <button type="submit">중복확인</button>
+            <p className="message">{nameMessage}</p>
+            <p>{nicknameMessage}</p>
+          </form>
         </div>
+
         <br />
         <br />
         <div className="form-el">
