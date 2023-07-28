@@ -60,7 +60,7 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
 
     try {
       // 로그인 요청을 서버에 보내고 JWT 토큰을 받아옴
-      const response = await fetch("http://18.217.191.122:8080/user/login", {
+      const response = await fetch("http://52.79.93.203/user/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
       const JWT_Token = await response.json();
       const accessToken = JWT_Token.data.access_Token;
       const refreshToken = JWT_Token.data.refresh_Token;
-
+      console.log(JWT_Token.data);
       // 받아온 JWT 토큰들을 로컬 스토리지에 저장
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);

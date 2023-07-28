@@ -1,7 +1,6 @@
 package com.example.backend.controller;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.example.backend.dto.Response;
 import com.example.backend.exception.ErrorResponse;
@@ -12,14 +11,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -41,12 +37,18 @@ class AuthPasswordTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Value("${test.email}")
+    private String email;
+
+    @Value("${test.password}")
+    private String password;git ad
+
     private String accessToken;
 
     @BeforeEach
     public void settingUser() throws Exception {
 
-        LoginRequestDto requestDto = new LoginRequestDto("azxc123@gmail.com", "azxc123!@#$");
+        LoginRequestDto requestDto = new LoginRequestDto(email, password);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
