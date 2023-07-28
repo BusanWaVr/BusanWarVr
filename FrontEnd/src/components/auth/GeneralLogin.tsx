@@ -75,10 +75,19 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
       const JWT_Token = await response.json();
       const accessToken = JWT_Token.data.access_Token;
       const refreshToken = JWT_Token.data.refresh_Token;
+      const userId = JWT_Token.data.userId;
+      const email = JWT_Token.data.email;
+      const nickname = JWT_Token.data.nickname;
+      const profileImg = JWT_Token.data.profileImg;
+
       console.log(JWT_Token.data);
       // 받아온 JWT 토큰들을 로컬 스토리지에 저장
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("email", email);
+      localStorage.setItem("nickname", nickname);
+      localStorage.setItem("profileImg", profileImg);
 
       console.log(localStorage);
 

@@ -17,7 +17,11 @@ function ChatRoom() {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [stompClient, setStompClient] = useState(
+    
     Stomp.over(new SockJS("http://52.79.93.203/ws-stomp"))
+  );
+
+  const accessToken = localStorage.getItem("accessToken"
   );
 
   useEffect(() => {
@@ -37,10 +41,11 @@ function ChatRoom() {
   }, []);
 
   const handleEnter = () => {
+    console.log("슈우웃");
+    console.log(accessToken);
     const newMessage = {
       roomId: 1,
-      token:
-        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA1NDgyODUsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJmMXJzdGYxeTlAbmF2ZXIuY29tIn0.Wjsc_R96t4h9-D9xJU1i0-Pmx60XtH8kD1uMheP9DVU",
+      token: accessToken,
       message: inputMessage,
     };
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
