@@ -101,14 +101,25 @@ public class UserService {
     }
 
     @Transactional
-    public void guideUpdate(Long id, GuideUpdateDto.Request request)
+    public void guideUpdate(User user, GuideUpdateDto.Request request)
             throws IOException, IllegalAccessException {
-        nicknameExistValidCheck(request.getNickname());
 
-        String fileUrl = s3Uploader.upload(request.getProfileImg());
+        String newNickname = request.getNickname();
+        String fileUrl;
 
-        User user = userRepository.findById(id).get();
-        user.setNickname(request.getNickname());
+        // 파일이 없을 경우 기본 프로필 이미지 URL을 지정
+        if (request.getProfileImg().isEmpty()) {
+            fileUrl = DEFAULT_PROFILE_IMAGE;
+        } else {
+            fileUrl = s3Uploader.upload(request.getProfileImg());
+        }
+
+        // 닉네임을 변경했을 때만 닉네임 유효성 검사
+        if (!user.getNickname().equals(newNickname)) {
+            nicknameExistValidCheck(newNickname);
+            user.setNickname(newNickname);
+        }
+
         user.setProfileImg(fileUrl);
         user.setIntroduction(request.getIntroduction());
         userRepository.save(user);
