@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.CourseDto;
+import com.example.backend.dto.TourDetailDto;
 import com.example.backend.dto.TourRegistDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
@@ -10,6 +11,8 @@ import com.example.backend.model.courseimage.CourseImage;
 import com.example.backend.model.courseimage.CourseImageRepository;
 import com.example.backend.model.image.Image;
 import com.example.backend.model.image.ImageRepository;
+import com.example.backend.model.joiner.Joiner;
+import com.example.backend.model.joiner.JoinerRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourResitory;
 import com.example.backend.model.tourcategory.TourCategory;
@@ -38,6 +41,7 @@ public class TourService {
     private final TourImageRepository tourImageRepository;
     private final ImageRepository imageRepository;
     private final CourseImageRepository courseImageRepository;
+    private final JoinerRepository joinerRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
@@ -76,13 +80,12 @@ public class TourService {
         }
 
         // Course 객체 생성 및 저장
-        for (CourseDto courseDto : request.getCourses()) {
+        for (CourseDto.Request courseDto : request.getCourses()) {
             Course course = new Course(courseDto.getLon(), courseDto.getLat(), courseDto.getTitle(),
                     courseDto.getContent(), tour.getId());
             courseRepository.save(course);
 
-            MultipartFile file = courseDto.getImage();
-            Image image = saveImage(file);
+            Image image = saveImage(courseDto.getImage());
 
             // CourseImage 객체 생성 및 저장
             CourseImage courseImage = new CourseImage();
@@ -107,6 +110,26 @@ public class TourService {
         tourCategory.setCategory(category);
         tourCategory.setDate(new Date());
         tourCategoryRepository.save(tourCategory);
+    }
+
+    public TourDetailDto.Response tourDetail(Long tourId) {
+        Tour tour = tourResitory.findById(tourId).get();
+        List<TourImage> tourImages = tourImageRepository.findAllByTourId(tourId);
+        List<String> tourImageUrls = new ArrayList<>();
+        for (TourImage tourImage : tourImages) {
+            tourImageUrls.add(tourImage.getImage().getUrl());
+        }
+        List<Course> courses = courseRepository.findAllByTourId(tourId);
+        List<CourseDto.Response> courseDtos = new ArrayList<>();
+        for (Course course : courses) {
+            CourseImage courseImage = courseImageRepository.findByCourseId(course.getId());
+            String imageUrl = courseImage.getImage().getUrl();
+            CourseDto.Response courseDto = new CourseDto.Response(course, imageUrl);
+            courseDtos.add(courseDto);
+        }
+        List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
+
+        return new TourDetailDto.Response(tour, tourImageUrls, courseDtos, joinerList);
     }
 }
 
