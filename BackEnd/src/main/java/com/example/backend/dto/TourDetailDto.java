@@ -31,10 +31,10 @@ public class TourDetailDto {
         private Date endDate;
         private int minMember;
         private int maxMember;
-        private List<CourseDto.Response> courses;
+        private List<CourseRegistDto> courses;
         private List<Joiner> joiners;
 
-        public Response(Tour tour, List<TourImage> tourImgs, List<CourseDto.Response> courses, List<Joiner> joiners){
+        public Response(Tour tour, List<TourImage> tourImgs, List<CourseRegistDto> courses, List<Joiner> joiners){
             this.region = tour.getRegion();
             this.title = tour.getTitle();
             this.subTitle = tour.getSubTitle();

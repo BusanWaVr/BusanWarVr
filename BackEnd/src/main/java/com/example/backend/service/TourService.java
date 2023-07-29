@@ -25,6 +25,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @AllArgsConstructor
@@ -45,9 +46,19 @@ public class TourService {
         Tour tour = request.toTour(user);
         tourResitory.save(tour);
 
+//        String fileUrl = s3Uploader.upload(request.getTourImgs().get(i));
+//        Image image = new Image(fileUrl);
+//        tourImages.add(image);
+//        imageRepository.save(image);
+
+
         // 투어 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
         List<Image> tourImages = new ArrayList<>();
         for (int i = 0; i < request.getTourImgs().size(); i++) {
+//            MultipartFile file = request.getTourImgs().get(i);
+//            Image image = saveImage(file);
+//            tourImages.add(image);
+
             String fileUrl = s3Uploader.upload(request.getTourImgs().get(i));
             Image image = new Image(fileUrl);
             tourImages.add(image);
@@ -65,27 +76,26 @@ public class TourService {
         // 가이드가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
         List<Category> categories = new ArrayList<>();
         for (String categoryName : request.getCategory()) {
-            Category category = request.toCategory(categoryName);
-            categories.add(category);
-            categoryRepository.save(category);
-        }
-
-        // TourCategory 객체 생성 및 저장
-        for (Category category : categories) {
-            TourCategory tourCategory = new TourCategory();
-            tourCategory.setTour(tour);
-            tourCategory.setCategory(category);
-            tourCategory.setDate(new Date());
-            tourCategoryRepository.save(tourCategory);
+            if(categoryRepository.findByName(categoryName) == null){
+                Category category = request.toCategory(categoryName);
+                categories.add(category);
+                categoryRepository.save(category);
+                tourCategoryCreate(tour, category);
+            }
+            else {
+                tourCategoryCreate(tour, categoryRepository.findByName(categoryName));
+            }
         }
 
         // Course 객체 생성 및 저장
-        for (CourseDto courseDto : request.getCourses()) {
+        for (CourseDto courseDto   : request.getCourses()) {
             Course course = new Course(courseDto.getLon(), courseDto.getLat(), courseDto.getTitle(),
                     courseDto.getContent(), tour.getId());
             courseRepository.save(course);
 
-            // 코스 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
+//            MultipartFile file = courseDto.getImage();
+//            Image image = saveImage(file);
+
             String fileUrl = s3Uploader.upload(courseDto.getImage());
             Image image = new Image(fileUrl);
             imageRepository.save(image);
@@ -97,6 +107,22 @@ public class TourService {
             courseImageRepository.save(courseImage);
 
         }
+    }
+
+    public Image saveImage(MultipartFile imageFile) throws IOException, IllegalAccessException {
+        // 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
+        String fileUrl = s3Uploader.upload(imageFile);
+        Image image = new Image(fileUrl);
+        imageRepository.save(image);
+        return image;
+    }
+
+    public void tourCategoryCreate(Tour tour, Category category){
+        TourCategory tourCategory = new TourCategory();
+        tourCategory.setTour(tour);
+        tourCategory.setCategory(category);
+        tourCategory.setDate(new Date());
+        tourCategoryRepository.save(tourCategory);
     }
 }
 
