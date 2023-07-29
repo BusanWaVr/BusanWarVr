@@ -6,6 +6,8 @@ import com.example.backend.dto.UserSignUpDto;
 import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
+import com.example.backend.model.tour.Tour;
+import com.example.backend.model.tourcategory.TourCategory;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.usercategory.UserCategory;
@@ -42,18 +44,14 @@ public class UserService {
         // 사용자가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
         List<Category> categories = new ArrayList<>();
         for (String categoryName : request.getCategory()) {
-            Category category = request.toCategory(categoryName);
-            categories.add(category);
-            categoryRepository.save(category);
-        }
-
-        // UserCategory 객체 생성 및 저장
-        for (Category category : categories) {
-            UserCategory userCategory = new UserCategory();
-            userCategory.setUser(user);
-            userCategory.setCategory(category);
-            userCategory.setDate(new Date());
-            userCategoryRepository.save(userCategory);
+            if (categoryRepository.findByName(categoryName) == null) {
+                Category category = request.toCategory(categoryName);
+                categories.add(category);
+                categoryRepository.save(category);
+                userCategoryCreate(user, category);
+            } else {
+                userCategoryCreate(user, categoryRepository.findByName(categoryName));
+            }
         }
     }
 
@@ -96,4 +94,11 @@ public class UserService {
         return auth.equals(request.getCode());
     }
 
+    public void userCategoryCreate(User user, Category category) {
+        UserCategory userCategory = new UserCategory();
+        userCategory.setUser(user);
+        userCategory.setCategory(category);
+        userCategory.setDate(new Date());
+        userCategoryRepository.save(userCategory);
+    }
 }
