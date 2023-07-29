@@ -46,23 +46,12 @@ public class TourService {
         Tour tour = request.toTour(user);
         tourResitory.save(tour);
 
-//        String fileUrl = s3Uploader.upload(request.getTourImgs().get(i));
-//        Image image = new Image(fileUrl);
-//        tourImages.add(image);
-//        imageRepository.save(image);
-
-
         // 투어 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
         List<Image> tourImages = new ArrayList<>();
         for (int i = 0; i < request.getTourImgs().size(); i++) {
-//            MultipartFile file = request.getTourImgs().get(i);
-//            Image image = saveImage(file);
-//            tourImages.add(image);
-
-            String fileUrl = s3Uploader.upload(request.getTourImgs().get(i));
-            Image image = new Image(fileUrl);
+            MultipartFile file = request.getTourImgs().get(i);
+            Image image = saveImage(file);
             tourImages.add(image);
-            imageRepository.save(image);
         }
 
         // TourImage 객체 생성 및 저장
@@ -76,29 +65,24 @@ public class TourService {
         // 가이드가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
         List<Category> categories = new ArrayList<>();
         for (String categoryName : request.getCategory()) {
-            if(categoryRepository.findByName(categoryName) == null){
+            if (categoryRepository.findByName(categoryName) == null) {
                 Category category = request.toCategory(categoryName);
                 categories.add(category);
                 categoryRepository.save(category);
                 tourCategoryCreate(tour, category);
-            }
-            else {
+            } else {
                 tourCategoryCreate(tour, categoryRepository.findByName(categoryName));
             }
         }
 
         // Course 객체 생성 및 저장
-        for (CourseDto courseDto   : request.getCourses()) {
+        for (CourseDto courseDto : request.getCourses()) {
             Course course = new Course(courseDto.getLon(), courseDto.getLat(), courseDto.getTitle(),
                     courseDto.getContent(), tour.getId());
             courseRepository.save(course);
 
-//            MultipartFile file = courseDto.getImage();
-//            Image image = saveImage(file);
-
-            String fileUrl = s3Uploader.upload(courseDto.getImage());
-            Image image = new Image(fileUrl);
-            imageRepository.save(image);
+            MultipartFile file = courseDto.getImage();
+            Image image = saveImage(file);
 
             // CourseImage 객체 생성 및 저장
             CourseImage courseImage = new CourseImage();
@@ -109,15 +93,15 @@ public class TourService {
         }
     }
 
+    // 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
     public Image saveImage(MultipartFile imageFile) throws IOException, IllegalAccessException {
-        // 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
         String fileUrl = s3Uploader.upload(imageFile);
         Image image = new Image(fileUrl);
         imageRepository.save(image);
         return image;
     }
 
-    public void tourCategoryCreate(Tour tour, Category category){
+    public void tourCategoryCreate(Tour tour, Category category) {
         TourCategory tourCategory = new TourCategory();
         tourCategory.setTour(tour);
         tourCategory.setCategory(category);
