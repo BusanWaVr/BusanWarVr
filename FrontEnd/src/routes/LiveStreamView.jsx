@@ -11,6 +11,7 @@ import Loader from "../components/common/Loader";
 import { useData } from "../context/DataContext";
 import useCustomBack from "../hooks/useCustomBack";
 import ChatRoom from "./ChatRoom";
+import "./LiveStreamView.css";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -34,6 +35,7 @@ const LiveStreamView = () => {
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [onload, setOnload] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -252,6 +254,10 @@ const LiveStreamView = () => {
     }
   };
 
+  const handleChatToggle = () => {
+    setIsChatOpen((prev) => !prev);
+  };
+
   const getToken = useCallback(async () => {
     return createSession(sessionid).then((sessionId) => createToken(sessionId));
   }, [sessionid]);
@@ -312,11 +318,12 @@ const LiveStreamView = () => {
                 ))}
               </Slider>
             </div>
-            {/* 채팅창 */}
-            <div>
-              <ChatRoom onload={onload} />
-            </div>
           </div>
+          {/* 채팅창 */}
+          <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
+            <ChatRoom onload={onload} />
+          </div>
+          {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
             toggleAudio={toggleAudio}
@@ -324,6 +331,8 @@ const LiveStreamView = () => {
             switchVideo={switchVideo}
             toggleFullScreen={toggleFullScreen}
             isFullScreen={isFullScreen}
+            isChatOpen={isChatOpen}
+            handleChatToggle={handleChatToggle}
           />
         </FullScreen>
       )}

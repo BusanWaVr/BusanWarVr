@@ -6,6 +6,9 @@ import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
+import CommentIcon from "@mui/icons-material/Comment";
+import CommentsDisabledIcon from "@mui/icons-material/CommentsDisabled";
+
 import styled from "styled-components";
 import { useData } from "../../context/DataContext";
 
@@ -71,6 +74,16 @@ const Toolbar = (props) => {
       ) : (
         <ToolbarButton onClick={props.toggleFullScreen}>
           <FullscreenIcon />
+        </ToolbarButton>
+      )}
+
+      {props.isChatOpen ? (
+        <ToolbarButton onClick={props.handleChatToggle}>
+          <CommentIcon />
+        </ToolbarButton>
+      ) : (
+        <ToolbarButton onClick={props.handleChatToggle}>
+          <CommentsDisabledIcon />
         </ToolbarButton>
       )}
 
