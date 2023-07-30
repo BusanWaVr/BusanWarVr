@@ -10,9 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Joiner {
 
     @Id
@@ -27,4 +29,10 @@ public class Joiner {
 
     @Column
     private Date joinDate;
+
+    public Joiner(Tour tour, User  user, Date joinDate){
+        this.tour = tour;
+        this.user = user;
+        this.joinDate = joinDate;
+    }
 }

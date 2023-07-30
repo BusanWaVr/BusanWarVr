@@ -36,4 +36,10 @@ public class TourController {
         TourDetailDto.Response response = tourService.tourDetail(tourId);
         return new Response<>("200", "성공적으로 투어 상세 정보를 가져 왔습니다!", response);
     }
+
+    @PostMapping("/tour/reservation/{tourId}")
+    public Response tourReservationApi(@PathVariable Long tourId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        tourService.tourReservation(tourId, userDetails.getUser());
+        return new Response("200", "성공적으로 투어를 예약 하였습니다!", null);
+    }
 }

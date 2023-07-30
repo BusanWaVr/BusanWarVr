@@ -131,6 +131,12 @@ public class TourService {
 
         return new TourDetailDto.Response(tour, tourImageUrls, courseDtos, joinerList);
     }
+
+    public void tourReservation(Long tourId, User user) {
+        Tour tour = tourResitory.findById(tourId).get();
+        Joiner joiner = new Joiner(tour, user, new Date());
+        joinerRepository.save(joiner);
+    }
 }
 
 
