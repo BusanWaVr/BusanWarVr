@@ -1,4 +1,4 @@
-import useAuthAutoLogin from "../components/useAuthAutoLogin";
+import useAuthAutoLogin from "../pages/Auth/useAuthAutoLogin";
 
 function Test() {
   useAuthAutoLogin();
