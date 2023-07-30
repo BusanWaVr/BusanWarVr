@@ -42,4 +42,10 @@ public class TourController {
         tourService.tourReservation(tourId, userDetails.getUser());
         return new Response("200", "성공적으로 투어를 예약 하였습니다!", null);
     }
+
+    @PostMapping("/tour/wish/{tourId}")
+    public Response tourEyeOnApi(@PathVariable Long tourId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        tourService.tourEyeOn(tourId, userDetails.getUser());
+        return new Response("200", "성공적으로 투어를 찜 하였습니다!", null);
+    }
 }

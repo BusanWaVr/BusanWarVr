@@ -20,6 +20,8 @@ import com.example.backend.model.tourcategory.TourCategoryRepository;
 import com.example.backend.model.tourimage.TourImage;
 import com.example.backend.model.tourimage.TourImageRepository;
 import com.example.backend.model.user.User;
+import com.example.backend.model.wish.Wish;
+import com.example.backend.model.wish.WishRepository;
 import com.example.backend.util.awsS3.S3Uploader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ public class TourService {
     private final ImageRepository imageRepository;
     private final CourseImageRepository courseImageRepository;
     private final JoinerRepository joinerRepository;
+    private final WishRepository wishRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
@@ -136,6 +139,12 @@ public class TourService {
         Tour tour = tourResitory.findById(tourId).get();
         Joiner joiner = new Joiner(tour, user, new Date());
         joinerRepository.save(joiner);
+    }
+
+    public void tourEyeOn(Long tourId, User user) {
+        Tour tour = tourResitory.findById(tourId).get();
+        Wish wish = new Wish(tour, user.getId());
+        wishRepository.save(wish);
     }
 }
 
