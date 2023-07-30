@@ -1,14 +1,14 @@
 import { Route, Routes } from "react-router-dom";
-import RootLayout from "./routes/RootLayout";
-import Test from "./routes/Test";
-import Dashboard from "./routes/Dashboard";
-import Home from "./routes/Home";
-import Signup from "./routes/Signup";
-import GuideSignup from "./routes/GuideSignup";
-import LiveStream from "./routes/LiveStream";
-import LiveStreamView from "./routes/LiveStreamView";
-import ChatRoom from "./routes/ChatRoom";
-import TourRegistration from "./routes/TourRegistration.tsx";
+import RootLayout from "../components/pages/Root/RootLayout.tsx";
+import Test from "../components/blocks/Test.tsx";
+import Dashboard from "../components/pages/Auth/Dashboard.tsx";
+import Home from "../components/pages/Home/Home.tsx";
+import Signup from "../components/pages/Auth/Signup.jsx";
+import GuideSignup from "../components/pages/Auth/GuideSignup.jsx";
+import LiveStream from "../components/pages/LiveStream/LiveStream.jsx";
+import LiveStreamView from "../components/pages/LiveStream/LiveStreamView.jsx";
+import ChatRoom from "../components/pages/LiveStream/ChatRoom.tsx";
+import TourRegistration from "../components/pages/Tour/TourRegistration.tsx";
 
 function App() {
   return (

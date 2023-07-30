@@ -4,7 +4,7 @@ import { Nav, Navbar, Container, Button } from "react-bootstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import LoginModal from "../auth/LoginModal";
+import LoginModal from "../pages/Auth/LoginModal";
 import Logo from "../../assets/logo.svg";
 
 interface Props {
