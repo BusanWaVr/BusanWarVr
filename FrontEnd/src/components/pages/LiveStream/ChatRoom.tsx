@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./ChatRoom.css";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
@@ -12,13 +12,28 @@ function ChatRoom() {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [stompClient, setStompClient] = useState(
-    
     Stomp.over(new SockJS("http://52.79.93.203/ws-stomp"))
   );
 
   const accessToken = localStorage.getItem("accessToken");
   const nickName = localStorage.getItem("nickname");
   const userId = localStorage.getItem("userId");
+
+  const messageEndRef = useRef(null);
+
+  // const scrollToBottom = () => {
+  //   if (messageEndRef.current) {
+  //     messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
+  //   }
+  // };
+
+  const scrollToBottom = () => {
+    messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatMessages]);
 
   useEffect(() => {
     if (stompClient != null) {
@@ -27,9 +42,14 @@ function ChatRoom() {
         stompClient.subscribe("/sub/chat/message/room/1", (data) => {
           const receivedMessage = JSON.parse(data.body);
           const newChatMessage = {
+            senderId: receivedMessage.sender.userId,
             username: receivedMessage.sender.nickname,
             content: receivedMessage.message,
           };
+
+
+          // 일단 넣어두기
+          scrollToBottom();
 
           console.log(receivedMessage);
 
@@ -45,9 +65,17 @@ function ChatRoom() {
     }
   }, []);
 
+  // useEffect(() => {
+  //   messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+  // }, [chatMessages]);
+
   const handleEnter = () => {
     console.log("슈우웃");
     console.log(accessToken);
+
+    // 단 넣어두기22
+    scrollToBottom();
+
     const newMessage = {
       roomId: 1,
       token: accessToken,
@@ -55,26 +83,17 @@ function ChatRoom() {
     };
 
     const newChatMessage = {
+      senderId: userId,
       username: nickName,
       content: inputMessage,
     };
 
     setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
+
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
     console.log(chatMessages);
     // console.log(inputMessage);
     setInputMessage("");
-  };
-
-  const handleEnter2 = () => {
-    const newMessage = {
-      roomId: 1,
-      token:
-        "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2OTA1NDgyODUsImlzcyI6InRlc3QiLCJVU0VSX05BTUUiOiJmMXJzdGYxeTlAbmF2ZXIuY29tIn0.Wjsc_R96t4h9-D9xJU1i0-Pmx60XtH8kD1uMheP9DVU",
-      message: "하이",
-    };
-    stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
-    console.log(chatMessages);
   };
 
   const handleEnterPress = (e) => {
@@ -89,17 +108,22 @@ function ChatRoom() {
         <div className="chat-header">
           <div className="h2">chatroom</div>
         </div>
-        <div className="chat-body">
-          {chatMessages.map((msg, index) => (
-            <div key={index} className="message incoming">
-              <p>
-                <strong>{msg.username}</strong> | {msg.content}{" "}
-              </p>
-            </div>
-          ))}
-          {/* <div className="message outgoing">
-            <p>I have a question about your services.</p>
-          </div> */}
+        <div className="chat-body" ref={messageEndRef}>
+          {chatMessages.map((msg, index) =>
+            msg.senderId == userId ? (
+              <div key={index} className="message outgoing">
+                <p>
+                  <strong>{msg.username}</strong> | {msg.content}{" "}
+                </p>
+              </div>
+            ) : (
+              <div key={index} className="message incoming">
+                <p>
+                  <strong>{msg.username}</strong> | {msg.content}{" "}
+                </p>
+              </div>
+            )
+          )}
         </div>
         <div className="chat-footer">
           <input
@@ -112,7 +136,6 @@ function ChatRoom() {
           <button onClick={handleEnter}>send</button>
         </div>
       </div>
-      {/* <button onClick={handleEnter2}>상대방이 메시지 보내기 test</button> */}
     </div>
   );
 }

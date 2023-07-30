@@ -4,13 +4,15 @@ import Slider from "react-slick";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import UserVideoComponent from "../components/livestream/UserVideoComponent";
-import Toolbar from "../components/livestream/Toolbar";
-import LiveExample from "../components/livestream/LiveExample";
-import Loader from "../components/common/Loader";
-import { useData } from "../context/DataContext";
-import useCustomBack from "../hooks/useCustomBack";
+import UserVideoComponent from "./UserVideoComponent";
+import Toolbar from "./Toolbar";
+import LiveExample from "./LiveExample";
+import Loader from "../../atoms/Loader";
+import { useData } from "../../../store/DataContext";
+import useCustomBack from "../../../hooks/useCustomBack";
 import ChatRoom from "./ChatRoom";
+import QRCodeComponent from "./QRCodeComponent";
+
 import "./LiveStreamView.css";
 
 const APPLICATION_SERVER_URL =
@@ -334,6 +336,7 @@ const LiveStreamView = () => {
             isChatOpen={isChatOpen}
             handleChatToggle={handleChatToggle}
           />
+          <QRCodeComponent youtubeLink={youtubeLink} />
         </FullScreen>
       )}
     </>
