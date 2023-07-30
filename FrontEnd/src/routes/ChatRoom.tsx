@@ -37,6 +37,10 @@ function ChatRoom() {
   };
 
   useEffect(() => {
+    scrollToBottom();
+  }, [chatMessages]);
+
+  useEffect(() => {
     if (stompClient != null) {
       stompClient.connect({}, () => {
         console.log("연결됨");
@@ -48,6 +52,8 @@ function ChatRoom() {
             content: receivedMessage.message,
           };
 
+
+          // 일단 넣어두기
           scrollToBottom();
 
           console.log(receivedMessage);
@@ -72,7 +78,7 @@ function ChatRoom() {
     console.log("슈우웃");
     console.log(accessToken);
 
-    // 스크롤 임시
+    // 단 넣어두기22
     scrollToBottom();
 
     const newMessage = {
