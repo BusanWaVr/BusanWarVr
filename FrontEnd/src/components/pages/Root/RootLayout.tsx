@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
-import Header from "../components/common/Header.tsx";
+import Header from "../../blocks/Header.tsx";
 
 function RootLayout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
