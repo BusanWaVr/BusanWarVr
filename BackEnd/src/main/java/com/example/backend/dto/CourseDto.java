@@ -22,7 +22,7 @@ public class CourseDto {
     }
 
     @Data
-    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Response {
 
         private double lon;

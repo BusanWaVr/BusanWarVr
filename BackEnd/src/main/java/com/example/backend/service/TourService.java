@@ -17,6 +17,7 @@ import com.example.backend.model.tourcategory.TourCategoryRepository;
 import com.example.backend.model.tourimage.TourImage;
 import com.example.backend.model.tourimage.TourImageRepository;
 import com.example.backend.model.user.User;
+import com.example.backend.model.wish.Wish;
 import com.example.backend.util.awsS3.S3Uploader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -107,6 +108,9 @@ public class TourService {
         tourCategory.setCategory(category);
         tourCategory.setDate(new Date());
         tourCategoryRepository.save(tourCategory);
+    }
+    public List<TourCategory> getTourCategories(Long tourId) {
+        return tourCategoryRepository.findAllByTourId(tourId);
     }
 }
 

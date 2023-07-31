@@ -7,7 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import lombok.Data;
 
+@Data
 @Entity
 public class Wish {
 
@@ -20,4 +22,12 @@ public class Wish {
 
     @Column
     private long userId;
+    @Override
+    public String toString() {
+        return "Wish{" +
+                "id=" + id +
+                ", tour=" + tour +
+                ", userId=" + userId +
+                '}';
+    }
 }
