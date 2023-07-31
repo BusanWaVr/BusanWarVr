@@ -56,6 +56,15 @@ public class UserService {
                 userCategoryCreate(user, categoryRepository.findByName(categoryName));
             }
         }
+
+//        for (String categoryName : request.getCategory()) {
+//            if (categoryRepository.findByName(categoryName) != null) {
+//                userCategoryCreate(user, categoryRepository.findByName(categoryName));
+//            }
+//            else {
+//                throw new IllegalAccessException("등록된 카테고리만 추가 가능합니다.");
+//            }
+//        }
     }
 
     @Transactional
