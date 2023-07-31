@@ -15,6 +15,7 @@ import com.example.backend.model.mate.MateRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.user.User;
+import com.example.backend.model.user.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 public class MateService {
 
     private final MateRepository mateRepository;
+    private final UserRepository userRepository;
     private final TourRepository tourRepository;
     private final JoinerRepository joinerRepository;
 
@@ -49,8 +51,9 @@ public class MateService {
 
     public MateDetailDto.Response getDetailMate(Long mateId) {
         Mate mate = mateRepository.findById(mateId).get();
+        User user = userRepository.findById(mate.getUserId()).get();
         Tour tour = tourRepository.findById(mate.getTourId()).get();
-        MateInfoDetailDto mateInfoDetailDto = new MateInfoDetailDto(mate, tour.getTitle());
+        MateInfoDetailDto mateInfoDetailDto = new MateInfoDetailDto(mate, tour.getTitle(), user);
         List<Joiner> joiners = joinerRepository.findAllByTourId(mate.getTourId());
         List<MateJoinerDto> mateInfoDetailDtos = new ArrayList<>();
 
