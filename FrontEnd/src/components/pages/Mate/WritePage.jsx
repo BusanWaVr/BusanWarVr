@@ -2,6 +2,7 @@ import React, { useState } from "react";
 // import Responsive from "../../common/Responsive";
 import Editor from "./Editor";
 import styled from "styled-components";
+// import axios from "axios";
 
 const StyledWritePage = styled.div`
   width: 60%;
@@ -9,20 +10,18 @@ const StyledWritePage = styled.div`
 `;
 
 const WritePage = () => {
-  const [url, setUrl] = useState("");
+  const [tourId, setTourId] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const handleUrlChange = (event) => {
-    setUrl(event.target.value);
+  const accessToken = localStorage.getItem("accessToken");
+
+  const handleTourIdChange = (event) => {
+    setTourId(event.target.value);
   };
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
-  };
-
-  const handleContentChange = (value) => {
-    setContent(value);
   };
 
   // const [desc, setDesc] = useState("");
@@ -30,53 +29,49 @@ const WritePage = () => {
   //   setDesc(value);
   // }
 
-  const createFormData = async (url, title, content) => {
-    const formData = new FormData();
-    formData.append("url", url);
-    formData.append("title", title);
-    formData.append("content", content);
-    return formData;
-  };
+  // const createFormData = async (tourId, title, content) => {
+  //   const formData = new FormData();
+  //   formData.append("tourId", tourId);
+  //   formData.append("title", title);
+  //   formData.append("content", content);
+  //   return formData;
+  // };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
     console.log("슈웃");
+    e.preventDefault();
 
-    if (title && content && url) {
-      const formData = await createFormData(url, title, content);
-
-      let values = formData.values();
-      for (const pair of values) {
-        console.log(pair);
-      }
-
-      const apiUrl = "http://52.79.93.203/mate";
-
+    if (tourId && title && content) {
       try {
-        const response = await axios.post(apiUrl, formData);
-        if (response.data && response.data.code === "200") {
-          alert(response.data.message);
-          console.log(response.data);
+        const requestBody = {
+          tourId: tourId,
+          title: title,
+          content: content,
+        };
 
-          // 메이트 목록 페이지로 이동?
-          // 아니면 직전 화면으로?
-          window.location.href = "/";
+        const response = await fetch("http://52.79.93.203/mate", {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        const data = await response.json();
+
+        if (data.code === "200") {
+          const newMateId = data.data.mateId;
+          alert(data.message);
+          window.location.href = `/matedetail/${newMateId}`;
+        } else {
+          // 에러
+          console.log(data.message);
+          alert("죄송합니다. 잠시후 다시 시도해 주세요.");
         }
       } catch (error) {
-        // console.log(error.response.data);
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.status === "409"
-        ) {
-          alert(error.response.data.message);
-        } else {
-          alert("죄송합니다. 잠시 후 다시 시도해 주세요.");
-        }
+        console.error(error);
       }
-    } else {
-      // 필수 필드들이 모두 입력되지 않았을 경우
-      alert("모든 필수 정보를 입력해주세요.");
     }
   };
 
@@ -88,12 +83,12 @@ const WritePage = () => {
         <br />
         <form>
           {/* 임시 */}
-          <label htmlFor="url">투어 url :　</label>
+          <label htmlFor="tourId">투어 id :　</label>
           <input
             type="text"
-            id="url"
-            value={url}
-            onChange={handleUrlChange}
+            id="tourId"
+            value={tourId}
+            onChange={handleTourIdChange}
             placeholder="여기는 나중에 수정합니당"
           />
           <br />
@@ -108,7 +103,15 @@ const WritePage = () => {
           />
           <br />
           <br />
-          <Editor value={content} onChange={handleContentChange} />
+          <Editor value={content} onChange={setContent} />
+          {/* <label htmlFor="content">내용 :　</label>
+          <input
+            type="text"
+            id="content"
+            value={content}
+            onChange={handleContentChange}
+            placeholder="냉요"
+          /> */}
         </form>
       </div>
       <br />

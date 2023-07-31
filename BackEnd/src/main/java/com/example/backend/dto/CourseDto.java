@@ -29,7 +29,6 @@ public class CourseDto {
         private double lat;
         private String title;
         private String content;
-        private Long tourId;
         private String image;
 
         public Response(Course course, String image) {
@@ -37,7 +36,6 @@ public class CourseDto {
             this.lat = course.getLat();
             this.title = course.getTitle();
             this.content = course.getContent();
-            this.tourId = course.getTourId();
             this.image = image;
         }
     }

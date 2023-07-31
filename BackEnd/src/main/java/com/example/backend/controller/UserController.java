@@ -61,7 +61,7 @@ public class UserController {
     public Response<UserSignUpDto> userSignupApi(
             @ModelAttribute @Valid UserSignUpDto.Request request,
             BindingResult bindingResult)
-            throws BindException, DuplicatedValueException, IllegalArgumentException {
+            throws BindException, DuplicatedValueException, IllegalArgumentException, IllegalAccessException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         } else if (!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)) {

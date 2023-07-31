@@ -1,6 +1,8 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.CourseDto;
+import com.example.backend.dto.JoinerDto;
+import com.example.backend.dto.TourDetailDto;
 import com.example.backend.dto.TourRegistDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
@@ -8,8 +10,11 @@ import com.example.backend.model.course.Course;
 import com.example.backend.model.course.CourseRepository;
 import com.example.backend.model.courseimage.CourseImage;
 import com.example.backend.model.courseimage.CourseImageRepository;
+import com.example.backend.model.enums.AuthType;
 import com.example.backend.model.image.Image;
 import com.example.backend.model.image.ImageRepository;
+import com.example.backend.model.joiner.Joiner;
+import com.example.backend.model.joiner.JoinerRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.tourcategory.TourCategory;
@@ -18,6 +23,7 @@ import com.example.backend.model.tourimage.TourImage;
 import com.example.backend.model.tourimage.TourImageRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.wish.Wish;
+import com.example.backend.model.wish.WishRepository;
 import com.example.backend.util.awsS3.S3Uploader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,60 +45,67 @@ public class TourService {
     private final TourImageRepository tourImageRepository;
     private final ImageRepository imageRepository;
     private final CourseImageRepository courseImageRepository;
+    private final JoinerRepository joinerRepository;
+    private final WishRepository wishRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
     public void tourRegist(TourRegistDto.Request request, User user)
             throws IOException, IllegalAccessException {
-        Tour tour = request.toTour(user);
-        tourResitory.save(tour);
 
-        // 투어 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
-        List<Image> tourImages = new ArrayList<>();
-        for (int i = 0; i < request.getTourImgs().size(); i++) {
-            MultipartFile file = request.getTourImgs().get(i);
-            Image image = saveImage(file);
-            tourImages.add(image);
-        }
+        if (user.getType() == AuthType.GUIDE) {
+            Tour tour = request.toTour(user);
+            tourResitory.save(tour);
 
-        // TourImage 객체 생성 및 저장
-        for (Image image : tourImages) {
-            TourImage tourImage = new TourImage();
-            tourImage.setTour(tour);
-            tourImage.setImage(image);
-            tourImageRepository.save(tourImage);
-        }
+            // 이미지 등록 부분 조건적으로 처리
+            if (request.getTourImgs() != null && !request.getTourImgs().isEmpty()) {
+                // 투어 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
+                List<Image> tourImages = new ArrayList<>();
+                for (MultipartFile file : request.getTourImgs()) {
+                    Image image = saveImage(file);
+                    tourImages.add(image);
+                }
 
-        // 가이드가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
-        List<Category> categories = new ArrayList<>();
-        for (String categoryName : request.getCategory()) {
-            if (categoryRepository.findByName(categoryName) == null) {
-                Category category = request.toCategory(categoryName);
-                categories.add(category);
-                categoryRepository.save(category);
-                tourCategoryCreate(tour, category);
-            } else {
-                tourCategoryCreate(tour, categoryRepository.findByName(categoryName));
+                // TourImage 객체 생성 및 저장
+                for (Image image : tourImages) {
+                    TourImage tourImage = new TourImage();
+                    tourImage.setTour(tour);
+                    tourImage.setImage(image);
+                    tourImageRepository.save(tourImage);
+                }
             }
-        }
 
-        // Course 객체 생성 및 저장
-        for (CourseDto.Request courseDto : request.getCourses()) {
-            Course course = new Course(courseDto.getLon(), courseDto.getLat(), courseDto.getTitle(),
-                    courseDto.getContent(), tour.getId());
-            courseRepository.save(course);
+            // 가이드가 선택한 카테고리 이름들을 TourCategory 객체로 변환하고 저장
+            for (String categoryName : request.getCategory()) {
+                if (categoryRepository.findByName(categoryName) != null) {
+                    tourCategoryCreate(tour, categoryRepository.findByName(categoryName));
+                } else {
+                    throw new IllegalAccessException("등록된 카테고리만 추가 가능합니다.");
+                }
+            }
 
-            Image image = saveImage(courseDto.getImage());
+            // Course 객체 생성 및 저장
+            for (CourseDto.Request courseDto : request.getCourses()) {
+                Course course = new Course(courseDto.getLon(), courseDto.getLat(),
+                        courseDto.getTitle(),
+                        courseDto.getContent(), tour.getId());
+                courseRepository.save(course);
 
-            // CourseImage 객체 생성 및 저장
-            CourseImage courseImage = new CourseImage();
-            courseImage.setCourse(course);
-            courseImage.setImage(image);
-            courseImageRepository.save(courseImage);
+                // 이미지 등록 부분 조건적으로 처리
+                if (courseDto.getImage() != null) {
+                    Image image = saveImage(courseDto.getImage());
 
+                    // CourseImage 객체 생성 및 저장
+                    CourseImage courseImage = new CourseImage();
+                    courseImage.setCourse(course);
+                    courseImage.setImage(image);
+                    courseImageRepository.save(courseImage);
+                }
+            }
+        } else {
+            throw new IllegalAccessException("가이드만 투어 등록이 가능합니다.");
         }
     }
-
 
     // 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
     public Image saveImage(MultipartFile imageFile) throws IOException, IllegalAccessException {
@@ -109,8 +122,81 @@ public class TourService {
         tourCategory.setDate(new Date());
         tourCategoryRepository.save(tourCategory);
     }
-    public List<TourCategory> getTourCategories(Long tourId) {
-        return tourCategoryRepository.findAllByTourId(tourId);
+
+    public TourDetailDto.Response tourDetail(Long tourId) {
+        Tour tour = tourResitory.findById(tourId).get();
+        List<TourCategory> categories = tourCategoryRepository.findAllByTourId(tourId);
+        List<String> tourCategories = new ArrayList<>();
+        for (TourCategory tourCategory : categories) {
+            Category category = tourCategory.getCategory();
+            tourCategories.add(category.getName());
+        }
+        List<TourImage> tourImages = tourImageRepository.findAllByTourId(tourId);
+        List<String> tourImageUrls = new ArrayList<>();
+        if (tourImages != null) {
+            for (TourImage tourImage : tourImages) {
+                tourImageUrls.add(tourImage.getImage().getUrl());
+            }
+        }
+        List<Course> courses = courseRepository.findAllByTourId(tourId);
+        List<CourseDto.Response> courseDtos = new ArrayList<>();
+        for (Course course : courses) {
+            CourseImage courseImage = courseImageRepository.findByCourseId(course.getId());
+            String imageUrl = "";
+            if (courseImage != null) {
+                imageUrl = courseImage.getImage().getUrl();
+            }
+            CourseDto.Response courseDto = new CourseDto.Response(course, imageUrl);
+            courseDtos.add(courseDto);
+        }
+        List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
+        List<JoinerDto> joinerDtos = new ArrayList<>();
+        for (Joiner joiner : joinerList) {
+            JoinerDto joinerDto = new JoinerDto(joiner.getUser().getProfileImg(),
+                    joiner.getUser().getNickname(), joiner.getJoinDate());
+            joinerDtos.add(joinerDto);
+        }
+        return new TourDetailDto.Response(tour, tourCategories, tourImageUrls, courseDtos,
+                joinerDtos);
+    }
+
+    public void tourReservation(Long tourId, User user) {
+        Tour tour = tourResitory.findById(tourId).get();
+        Joiner joiner = new Joiner(tour, user, new Date());
+        joinerRepository.save(joiner);
+    }
+
+    public void tourWish(Long tourId, User user) {
+        Tour tour = tourResitory.findById(tourId).get();
+        Wish wish = new Wish(tour, user.getId());
+        wishRepository.save(wish);
+    }
+
+    public void tourReservationCancel(Long tourId, User user) throws IllegalArgumentException{
+        List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
+        for (Joiner joiner : joiners) {
+            if(joiner.getUser().getId() == user.getId()){
+               joinerRepository.deleteById(joiner.getId());
+            }
+            else {
+                throw new IllegalArgumentException("예약 고객만 예약 취소가 가능합니다.");
+            }
+        }
+    }
+
+    public void tourCancel(Long tourId, User user)
+            throws IllegalAccessException {
+        Tour tour = tourResitory.findById(tourId).get();
+        if((user.getType() == AuthType.GUIDE) && (tour.getUserId() == user.getId())){
+            tour.setCanceled(true);
+            tourResitory.save(tour);
+        }
+        else if(user.getType() == AuthType.USER){
+            throw new IllegalAccessException("가이드만 투어 취소 가능합니다.");
+        }
+        else {
+            throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 취소 가능합니다.");
+        }
     }
 }
 

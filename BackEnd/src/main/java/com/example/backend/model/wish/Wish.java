@@ -22,6 +22,7 @@ public class Wish {
 
     @Column
     private long userId;
+
     @Override
     public String toString() {
         return "Wish{" +
@@ -29,5 +30,11 @@ public class Wish {
                 ", tour=" + tour +
                 ", userId=" + userId +
                 '}';
+
+
+    public Wish(Tour tour, Long id) {
+        this.tour = tour;
+        this.userId = id;
+
     }
 }
