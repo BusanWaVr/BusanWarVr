@@ -30,7 +30,7 @@ function App() {
           <Route path="/guide/:guideId/detail" element={<GuideDetail />} />
           <Route path="/guide/:guideId/mypage" element={<GuideMyPage />} />
           <Route path="/write" element={<WritePage />} />
-          <Route path="/matedetail" element={<MateDetail />} />
+          <Route path="/matedetail/:mateId" element={<MateDetail />} />
           <Route
             path="*"
             element={
