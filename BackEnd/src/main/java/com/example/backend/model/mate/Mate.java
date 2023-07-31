@@ -1,6 +1,7 @@
 package com.example.backend.model.mate;
 
 import com.example.backend.dto.MateRegistDto;
+import com.example.backend.dto.MateUpdateDto;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.user.User;
 import javax.persistence.Column;
@@ -49,5 +50,10 @@ public class Mate {
         this.maxMember = tour.getMaxMember();
         this.joinMember = joinMember;
         this.userId = user.getId();
+    }
+
+    public void updateMate(MateUpdateDto.Request request){
+        this.title = request.getTitle();
+        this.content = request.getContent();
     }
 }
