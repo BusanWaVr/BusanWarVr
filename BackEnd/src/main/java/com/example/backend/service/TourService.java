@@ -1,7 +1,6 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.CourseDto;
-import com.example.backend.dto.Response;
 import com.example.backend.dto.TourDetailDto;
 import com.example.backend.dto.TourRegistDto;
 import com.example.backend.model.category.Category;
@@ -52,55 +51,57 @@ public class TourService {
     @Transactional
     public void tourRegist(TourRegistDto.Request request, User user)
             throws IOException, IllegalAccessException {
-        System.out.println(user.getType());
-        System.out.println(AuthType.GUIDE);
-        if(user.getType() == AuthType.GUIDE){
+
+        if (user.getType() == AuthType.GUIDE) {
             Tour tour = request.toTour(user);
             tourResitory.save(tour);
 
-            // 투어 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
-            List<Image> tourImages = new ArrayList<>();
-            for (int i = 0; i < request.getTourImgs().size(); i++) {
-                MultipartFile file = request.getTourImgs().get(i);
-                Image image = saveImage(file);
-                tourImages.add(image);
-            }
+            // 이미지 등록 부분 조건적으로 처리
+            if (request.getTourImgs() != null && !request.getTourImgs().isEmpty()) {
+                // 투어 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
+                List<Image> tourImages = new ArrayList<>();
+                for (MultipartFile file : request.getTourImgs()) {
+                    Image image = saveImage(file);
+                    tourImages.add(image);
+                }
 
-            // TourImage 객체 생성 및 저장
-            for (Image image : tourImages) {
-                TourImage tourImage = new TourImage();
-                tourImage.setTour(tour);
-                tourImage.setImage(image);
-                tourImageRepository.save(tourImage);
+                // TourImage 객체 생성 및 저장
+                for (Image image : tourImages) {
+                    TourImage tourImage = new TourImage();
+                    tourImage.setTour(tour);
+                    tourImage.setImage(image);
+                    tourImageRepository.save(tourImage);
+                }
             }
 
             // 가이드가 선택한 카테고리 이름들을 TourCategory 객체로 변환하고 저장
             for (String categoryName : request.getCategory()) {
                 if (categoryRepository.findByName(categoryName) != null) {
                     tourCategoryCreate(tour, categoryRepository.findByName(categoryName));
-                }
-                else {
+                } else {
                     throw new IllegalAccessException("등록된 카테고리만 추가 가능합니다.");
                 }
             }
 
             // Course 객체 생성 및 저장
             for (CourseDto.Request courseDto : request.getCourses()) {
-                Course course = new Course(courseDto.getLon(), courseDto.getLat(), courseDto.getTitle(),
+                Course course = new Course(courseDto.getLon(), courseDto.getLat(),
+                        courseDto.getTitle(),
                         courseDto.getContent(), tour.getId());
                 courseRepository.save(course);
 
-                Image image = saveImage(courseDto.getImage());
+                // 이미지 등록 부분 조건적으로 처리
+                if (courseDto.getImage() != null) {
+                    Image image = saveImage(courseDto.getImage());
 
-                // CourseImage 객체 생성 및 저장
-                CourseImage courseImage = new CourseImage();
-                courseImage.setCourse(course);
-                courseImage.setImage(image);
-                courseImageRepository.save(courseImage);
-
+                    // CourseImage 객체 생성 및 저장
+                    CourseImage courseImage = new CourseImage();
+                    courseImage.setCourse(course);
+                    courseImage.setImage(image);
+                    courseImageRepository.save(courseImage);
+                }
             }
-        }
-        else{
+        } else {
             throw new IllegalAccessException("가이드만 투어 등록이 가능합니다.");
         }
     }
@@ -144,7 +145,8 @@ public class TourService {
         }
         List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
 
-        return new TourDetailDto.Response(tour, tourCategories, tourImageUrls, courseDtos, joinerList);
+        return new TourDetailDto.Response(tour, tourCategories, tourImageUrls, courseDtos,
+                joinerList);
     }
 
     public void tourReservation(Long tourId, User user) {
