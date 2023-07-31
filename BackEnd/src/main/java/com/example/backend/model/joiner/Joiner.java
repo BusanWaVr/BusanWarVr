@@ -25,4 +25,10 @@ public class Joiner {
 
     @Column
     private Date joinDate;
+
+    public Joiner(Tour tour, User user, Date date) {
+        this.tour = tour;
+        this.user = user;
+        this.joinDate = date;
+    }
 }
