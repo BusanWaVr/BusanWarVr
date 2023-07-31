@@ -13,22 +13,49 @@ interface TourCourseState {
 }
 
 const initialState: TourCourseState = {
-  courses: [],
+  courses: [{ lon: 0, lat: 0, title: "", content: "", image: null }],
 };
 
 const tourCourseSlice = createSlice({
   name: "tourCourse",
   initialState,
   reducers: {
-    setCourses(
+    setTitle(state, action: PayloadAction<{ index: number; title: string }>) {
+      const { index, title } = action.payload;
+      state.courses[index].title = title;
+    },
+    setLongitude(state, action: PayloadAction<{ index: number; lon: number }>) {
+      const { index, lon } = action.payload;
+      state.courses[index].lon = lon;
+    },
+    setLatitude(state, action: PayloadAction<{ index: number; lat: number }>) {
+      const { index, lat } = action.payload;
+      state.courses[index].lat = lat;
+    },
+    setContent(
       state,
-      action: PayloadAction<{ index: number; course: TourCourseInfo }>
+      action: PayloadAction<{ index: number; content: string }>
     ) {
-      const { index, course } = action.payload;
-      state.courses[index] = course;
+      const { index, content } = action.payload;
+      state.courses[index].content = content;
+    },
+    setImage(state, action: PayloadAction<{ index: number; image: string }>) {
+      const { index, image } = action.payload;
+      state.courses[index].image = image;
+    },
+    setCourses(state, action: PayloadAction<TourCourseInfo>) {
+      const course = action.payload;
+      state.courses = [...state.courses, course];
     },
   },
 });
 
-export const { setCourses } = tourCourseSlice.actions;
+export const {
+  setTitle,
+  setContent,
+  setImage,
+  setLatitude,
+  setLongitude,
+  setCourses,
+} = tourCourseSlice.actions;
 export default tourCourseSlice.reducer;

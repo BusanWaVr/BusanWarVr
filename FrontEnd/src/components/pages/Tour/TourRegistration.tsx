@@ -71,8 +71,10 @@ type TourData = {
 };
 
 const TourRegistration: React.FC = () => {
-  const { courses } = useSelector((state) => state.tourCourse);
+  const { courses } = useSelector((state: any) => state.tourCourse);
   const dispatch = useDispatch();
+
+  const accessToken = localStorage.getItem("accessToken");
 
   const [coursesNum, setCoursesNum] = useState(1);
   const [tourData, setTourData] = useState<TourData>({
@@ -129,6 +131,9 @@ const TourRegistration: React.FC = () => {
   const increaseCoursesNum = () => {
     if (coursesNum <= 2) {
       setCoursesNum(coursesNum + 1);
+      dispatch(
+        setCourses({ lon: 0, lat: 0, title: "", content: "", image: null })
+      );
     } else {
       alert("코스는 최대 3개까지 등록할 수 있습니다.");
     }
@@ -165,11 +170,27 @@ const TourRegistration: React.FC = () => {
     }
 
     try {
+      console.log("제출");
+      tourData.courses = courses;
       console.log(tourData);
-      // const response = await axios.post("http://52.79.93.203/tour", tourData);
-      // console.log("Response from server:", response.data);
+      // const response = await fetch("http://52.79.93.203/tour", {
+      //   method: "POST",
+      //   headers: {
+      //     Authorization: accessToken,
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(tourData),
+      // });
+
+      // const data = await response.json();
+
+      // if (data.code === "200") {
+      //   // window.location.href = 투어상세페이지;
+      // } else {
+      //   console.log(data.message);
+      // }
     } catch (error) {
-      console.error("Error sending data:", error);
+      console.error(error);
     }
   };
 
@@ -321,7 +342,7 @@ const TourRegistration: React.FC = () => {
 
       {/* 투어 코스 */}
       {Array.from({ length: coursesNum }, (_, index) => (
-        <TourCourseUpload index={index}/>
+        <TourCourseUpload index={index} />
       ))}
 
       <div onClick={increaseCoursesNum}>
