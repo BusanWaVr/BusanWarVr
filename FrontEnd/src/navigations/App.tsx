@@ -11,6 +11,7 @@ import ChatRoom from "../components/pages/LiveStream/ChatRoom.tsx";
 import TourRegistration from "../components/pages/Tour/TourRegistration.tsx";
 import GuideDetail from "../components/pages/GuideProfile/GuideDetail.tsx";
 import GuideMyPage from "../components/pages/GuideProfile/GuideMyPage.tsx";
+import WritePage from "../components/pages/Mate/WritePage";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/tourregistration" element={<TourRegistration />} />
           <Route path="/guide/:guideId/detail" element={<GuideDetail />} />
           <Route path="/guide/:guideId/mypage" element={<GuideMyPage />} />
+          <Route path="/write" element={<WritePage />} />
           <Route
             path="*"
             element={

@@ -20,4 +20,9 @@ public class Wish {
 
     @Column
     private long userId;
+
+    public Wish(Tour tour, Long id) {
+        this.tour = tour;
+        this.userId = id;
+    }
 }
