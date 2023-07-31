@@ -10,10 +10,14 @@ import CommentIcon from "@mui/icons-material/Comment";
 import CommentsDisabledIcon from "@mui/icons-material/CommentsDisabled";
 
 import styled from "styled-components";
-import { useData } from "../../../store/DataContext";
+
+import { useSelector, useDispatch } from "react-redux";
 
 const Toolbar = (props) => {
-  const { isAudioEnabled, isVideoEnabled } = useData();
+  const { isAudioEnabled, isVideoEnabled, isFullScreen, isChatOpen } =
+    useSelector((state) => state.liveStream);
+  const dispatch = useDispatch();
+
   const ToolbarContainer = styled.div`
     display: flex;
     justify-content: center;
@@ -67,7 +71,7 @@ const Toolbar = (props) => {
           <MicOffIcon />
         </ToolbarButton>
       )}
-      {props.isFullScreen ? (
+      {isFullScreen ? (
         <ToolbarButton onClick={props.toggleFullScreen}>
           <FullscreenExitIcon />
         </ToolbarButton>
@@ -77,7 +81,7 @@ const Toolbar = (props) => {
         </ToolbarButton>
       )}
 
-      {props.isChatOpen ? (
+      {isChatOpen ? (
         <ToolbarButton onClick={props.handleChatToggle}>
           <CommentIcon />
         </ToolbarButton>
