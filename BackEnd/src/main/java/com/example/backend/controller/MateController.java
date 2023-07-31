@@ -1,12 +1,15 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.MateDetailDto;
+import com.example.backend.dto.MateListDto;
 import com.example.backend.dto.MateRegistDto;
 import com.example.backend.dto.Response;
 import com.example.backend.model.user.User;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.MateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,8 +37,15 @@ public class MateController {
     }
 
     @GetMapping("/mate/{mateId}")
-    public Response<MateDetailDto.Response> getMateDetail(@PathVariable Long mateId){
+    public Response<MateDetailDto.Response> getMateDetail(@PathVariable Long mateId) {
         MateDetailDto.Response response = mateService.getDetailMate(mateId);
         return new Response<>("200", "성공적으로 메이트 상세를 가져왔습니다.", response);
+    }
+
+    @GetMapping("/mate")
+    public Response<MateListDto.Response> getMateList(
+            @PageableDefault(size = 6) Pageable pageable) {
+        MateListDto.Response response = mateService.getMateList(pageable);
+        return new Response<>("200", "성곡적으로 메이트 리스트를 불러왔습니다.", response);
     }
 }
