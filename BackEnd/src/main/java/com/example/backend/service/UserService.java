@@ -37,34 +37,22 @@ public class UserService {
 
     @Transactional
     public void signup(UserSignUpDto.Request request, String encodedPassword)
-            throws DuplicatedValueException {
+            throws DuplicatedValueException, IllegalAccessException {
         emailExistValidCheck(request.getEmail());
         nicknameExistValidCheck(request.getNickname());
 
         User user = request.toUser(DEFAULT_PROFILE_IMAGE, encodedPassword);
         userRepository.save(user);
 
-        // 사용자가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
-        List<Category> categories = new ArrayList<>();
+        // 사용자가 선택한 카테고리 이름들을 UserCategory 객체로 변환하고 저장
         for (String categoryName : request.getCategory()) {
-            if (categoryRepository.findByName(categoryName) == null) {
-                Category category = request.toCategory(categoryName);
-                categories.add(category);
-                categoryRepository.save(category);
-                userCategoryCreate(user, category);
-            } else {
+            if (categoryRepository.findByName(categoryName) != null) {
                 userCategoryCreate(user, categoryRepository.findByName(categoryName));
             }
+            else {
+                throw new IllegalAccessException("등록된 카테고리만 추가 가능합니다.");
+            }
         }
-
-//        for (String categoryName : request.getCategory()) {
-//            if (categoryRepository.findByName(categoryName) != null) {
-//                userCategoryCreate(user, categoryRepository.findByName(categoryName));
-//            }
-//            else {
-//                throw new IllegalAccessException("등록된 카테고리만 추가 가능합니다.");
-//            }
-//        }
     }
 
     @Transactional
