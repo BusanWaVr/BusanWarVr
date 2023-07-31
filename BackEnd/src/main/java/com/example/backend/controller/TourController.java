@@ -8,6 +8,7 @@ import com.example.backend.service.TourService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,5 +48,11 @@ public class TourController {
     public Response tourWishApi(@PathVariable Long tourId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         tourService.tourWish(tourId, userDetails.getUser());
         return new Response("200", "성공적으로 투어를 찜 하였습니다!", null);
+    }
+
+    @DeleteMapping("/tour/reservation/{tourId}")
+    public Response tourReservationCancelApi(@PathVariable Long tourId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        tourService.tourReservationCancel(tourId, userDetails.getUser());
+        return new Response("200", "성공적으로 투어 예약을 취소 하였습니다!", null);
     }
 }

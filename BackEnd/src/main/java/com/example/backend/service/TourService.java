@@ -133,7 +133,7 @@ public class TourService {
         }
         List<TourImage> tourImages = tourImageRepository.findAllByTourId(tourId);
         List<String> tourImageUrls = new ArrayList<>();
-        if(tourImages != null){
+        if (tourImages != null) {
             for (TourImage tourImage : tourImages) {
                 tourImageUrls.add(tourImage.getImage().getUrl());
             }
@@ -143,7 +143,7 @@ public class TourService {
         for (Course course : courses) {
             CourseImage courseImage = courseImageRepository.findByCourseId(course.getId());
             String imageUrl = "";
-            if(courseImage != null){
+            if (courseImage != null) {
                 imageUrl = courseImage.getImage().getUrl();
             }
             CourseDto.Response courseDto = new CourseDto.Response(course, imageUrl);
@@ -152,7 +152,8 @@ public class TourService {
         List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
         List<JoinerDto> joinerDtos = new ArrayList<>();
         for (Joiner joiner : joinerList) {
-            JoinerDto joinerDto = new JoinerDto(joiner.getUser().getProfileImg(), joiner.getUser().getNickname(), joiner.getJoinDate());
+            JoinerDto joinerDto = new JoinerDto(joiner.getUser().getProfileImg(),
+                    joiner.getUser().getNickname(), joiner.getJoinDate());
             joinerDtos.add(joinerDto);
         }
         return new TourDetailDto.Response(tour, tourCategories, tourImageUrls, courseDtos,
@@ -169,6 +170,18 @@ public class TourService {
         Tour tour = tourResitory.findById(tourId).get();
         Wish wish = new Wish(tour, user.getId());
         wishRepository.save(wish);
+    }
+
+    public void tourReservationCancel(Long tourId, User user) throws IllegalArgumentException{
+        List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
+        for (Joiner joiner : joiners) {
+            if(joiner.getUser().getId() == user.getId()){
+               joinerRepository.deleteById(joiner.getId());
+            }
+            else {
+                throw new IllegalArgumentException("예약 고객만 예약 취소가 가능합니다.");
+            }
+        }
     }
 }
 
