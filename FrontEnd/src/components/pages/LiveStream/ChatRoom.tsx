@@ -21,7 +21,6 @@ function ChatRoom() {
   );
 
   const messageEndRef = useRef(null);
-
   const scrollToBottom = () => {
     messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
   };
