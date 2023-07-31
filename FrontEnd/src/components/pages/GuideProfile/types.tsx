@@ -7,6 +7,13 @@ export interface ScheduledTour {
   isLiked: boolean;
 }
 
+export interface endedTour {
+  tourId: number;
+  title: string;
+  image: string;
+  isLiked: boolean;
+}
+
 export interface Review {
   tourId: number;
   tourTitle: string;

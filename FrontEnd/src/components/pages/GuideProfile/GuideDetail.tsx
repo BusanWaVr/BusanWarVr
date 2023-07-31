@@ -85,7 +85,6 @@ const GuideDetail: React.FC = () => {
     setGuide((prevGuide) => {
       const updatedScheduledTours = prevGuide.scheduledTours.map((tour) => {
         if (tour.tourId === tourId) {
-          console.log(tour);
           return { ...tour, isLiked: !tour.isLiked };
         }
         return tour;

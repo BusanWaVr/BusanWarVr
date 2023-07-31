@@ -1,8 +1,8 @@
 // RightPanel.tsx
 
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { GuideData, ScheduledTour } from "./types";
+import { GuideData, ScheduledTour, endedTour } from "./types";
 import ReviewCard from "./ReviewCard";
 
 interface RightPanelProps {
@@ -16,17 +16,39 @@ const RightPanel: React.FC<RightPanelProps> = ({
   setGuide,
   onLikeClick,
 }) => {
+  const [guideState, setsGuideState] = useState<GuideData>(guide);
+
   const handleLikeClick = (
     tourId: number,
+    index: number,
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
+    event.preventDefault();
     event.stopPropagation(); // 이벤트 버블링 방지
+    console.log(index);
+    const box = guideState;
+    box.scheduledTours[index].isLiked = !box.scheduledTours[index].isLiked;
+    console.log(box.scheduledTours[index]);
+
+    setsGuideState(box);
     onLikeClick(tourId);
   };
 
-  useEffect(() => {
-    setGuide(guide);
-  }, [guide]);
+  const handleLikeClickEnded = (
+    tourId: number,
+    index: number,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    event.stopPropagation(); // 이벤트 버블링 방지
+    console.log(index);
+    const box = guideState;
+    box.endedTours[index].isLiked = !box.endedTours[index].isLiked;
+    console.log(box.endedTours[index]);
+
+    setsGuideState(box);
+    onLikeClick(tourId);
+  };
 
   return (
     <div id="right-panel" className="right-panel">
@@ -35,7 +57,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
       <h3>진행중인 투어</h3>
       <Link to={`/guide/${guide.userId}/scheduledtours`}>더보기</Link>
       <div className="tour-card-container">
-        {guide.scheduledTours.map((tour: ScheduledTour) => (
+        {guideState.scheduledTours.map((tour: ScheduledTour, index: number) => (
           <div
             key={tour.tourId}
             onClick={() => (window.location.href = `/tour/${tour.tourId}`)}
@@ -43,7 +65,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
             <div className="tour-card">
               <img src={tour.image} alt={tour.title} />
               <h4>{tour.title}</h4>
-              <button onClick={(e) => handleLikeClick(tour.tourId, e)}>
+              <button onClick={(e) => handleLikeClick(tour.tourId, index, e)}>
                 {tour.isLiked ? "좋아요 취소" : "좋아요"}
               </button>
             </div>
@@ -52,9 +74,9 @@ const RightPanel: React.FC<RightPanelProps> = ({
       </div>
 
       <h3>지난 투어</h3>
-      <Link to={`/guide/${guide.userId}/endedtours`}>더보기</Link>
+      <Link to={`/guide/${guide.userId}/endedTours`}>더보기</Link>
       <div className="tour-card-container">
-        {guide.endedTours.map((tour: ScheduledTour) => (
+        {guideState.endedTours.map((tour: endedTour, index: number) => (
           <div
             key={tour.tourId}
             onClick={() => (window.location.href = `/tour/${tour.tourId}`)}
@@ -62,7 +84,9 @@ const RightPanel: React.FC<RightPanelProps> = ({
             <div className="tour-card">
               <img src={tour.image} alt={tour.title} />
               <h4>{tour.title}</h4>
-              <button onClick={(e) => handleLikeClick(tour.tourId, e)}>
+              <button
+                onClick={(e) => handleLikeClickEnded(tour.tourId, index, e)}
+              >
                 {tour.isLiked ? "좋아요 취소" : "좋아요"}
               </button>
             </div>
