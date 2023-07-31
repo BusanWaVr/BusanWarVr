@@ -49,7 +49,8 @@ public class MateService {
 
     public MateDetailDto.Response getDetailMate(Long mateId) {
         Mate mate = mateRepository.findById(mateId).get();
-        MateInfoDetailDto mateInfoDetailDto = new MateInfoDetailDto(mate);
+        Tour tour = tourRepository.findById(mate.getTourId()).get();
+        MateInfoDetailDto mateInfoDetailDto = new MateInfoDetailDto(mate, tour.getTitle());
         List<Joiner> joiners = joinerRepository.findAllByTourId(mate.getTourId());
         List<MateJoinerDto> mateInfoDetailDtos = new ArrayList<>();
 
