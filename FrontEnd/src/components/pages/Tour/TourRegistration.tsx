@@ -3,6 +3,7 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
+import TourAddressSearch from "./TourAddressSearch/TourAddressSearch";
 
 const regionList = [
   "강서구",
@@ -276,6 +277,7 @@ const TourRegistration: React.FC = () => {
           </button>
         ))}
       </div>
+      <TourAddressSearch />
       <textarea
         placeholder="Courses (Comma-separated descriptions)"
         value={tourData.courses.join(", ")}
