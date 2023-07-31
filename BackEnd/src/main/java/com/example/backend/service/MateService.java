@@ -71,19 +71,19 @@ public class MateService {
     public MateListDto.Response getMateList(Pageable pageable) {
         Page<Mate> mates = mateRepository.findAllByOrderById(pageable);
         List<MateInfoForListDto> mateInfoForListDtos = new ArrayList<>();
-
+        Long totalCount = mateRepository.count();
         for (Mate mate : mates) {
             mateInfoForListDtos.add(new MateInfoForListDto(mate));
         }
 
-        return new MateListDto.Response(mateInfoForListDtos);
+        return new MateListDto.Response(totalCount, mateInfoForListDtos);
     }
 
     @Transactional
     public void updateMate(MateUpdateDto.Request request, Long mateId, User user) {
         Mate mate = mateRepository.findById(mateId).get();
 
-        if(mate.getUserId() != user.getId()){
+        if (mate.getUserId() != user.getId()) {
             throw new IllegalArgumentException("수정할 메이트 정보와 사용자가 일치하지 않습니다.");
         }
 
@@ -97,10 +97,10 @@ public class MateService {
     }
 
     @Transactional
-    public void deleteMate(Long mateId, User user){
+    public void deleteMate(Long mateId, User user) {
         Mate mate = mateRepository.findById(mateId).get();
 
-        if(mate.getUserId() != user.getId()){
+        if (mate.getUserId() != user.getId()) {
             throw new IllegalArgumentException("삭제할 메이트 정보와 사용자가 일치하지 않습니다.");
         }
 
