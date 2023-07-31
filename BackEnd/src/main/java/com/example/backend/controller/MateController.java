@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,5 +59,12 @@ public class MateController {
             @PathVariable Long mateId, @RequestBody MateUpdateDto.Request request) {
         mateService.updateMate(request, mateId, userDetails.getUser());
         return new Response<>("200", "성곡적으로 메이트 정보를 변경하였습니다.", null);
+    }
+
+    @DeleteMapping("/mate/{mateId}")
+    public Response deleteMate(@AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long mateId) {
+        mateService.deleteMate(mateId, userDetails.getUser());
+        return new Response<>("200", "성곡적으로 메이트 정보를 삭제하였습니다.", null);
     }
 }
