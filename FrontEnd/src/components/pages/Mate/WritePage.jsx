@@ -61,8 +61,9 @@ const WritePage = () => {
         const data = await response.json();
 
         if (data.code === "200") {
+          const newMateId = data.data.mateId;
           alert(data.message);
-          window.location.href = "/matedetail";
+          window.location.href = `/matedetail/${newMateId}`;
         } else {
           // 에러
           console.log(data.message);
