@@ -1,13 +1,16 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
+import com.example.backend.dto.TourDetailDto;
 import com.example.backend.dto.TourRegistDto;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.TourService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,5 +29,11 @@ public class TourController {
         }
         tourService.tourRegist(request, userDetails.getUser());
         return new Response<>("200", "성공적으로 투어 등록 되었습니다!", null);
+    }
+
+    @GetMapping("/tour/{tourId}")
+    public Response<TourDetailDto.Response> tourDetailApi(@PathVariable Long tourId){
+        TourDetailDto.Response response = tourService.tourDetail(tourId);
+        return new Response<>("200", "성공적으로 투어 상세 정보를 가져 왔습니다!", response);
     }
 }
