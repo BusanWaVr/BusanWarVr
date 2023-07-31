@@ -4,6 +4,7 @@ import com.example.backend.dto.AuthCodeDto;
 import com.example.backend.dto.GuideSignUpDto;
 import com.example.backend.dto.GuideUpdateDto;
 import com.example.backend.dto.UserSignUpDto;
+import com.example.backend.dto.UserUpdateDto;
 import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
@@ -46,19 +47,24 @@ public class UserService {
         // 사용자가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
         List<Category> categories = new ArrayList<>();
         for (String categoryName : request.getCategory()) {
-            Category category = request.toCategory(categoryName);
-            categories.add(category);
-            categoryRepository.save(category);
+            if (categoryRepository.findByName(categoryName) == null) {
+                Category category = request.toCategory(categoryName);
+                categories.add(category);
+                categoryRepository.save(category);
+                userCategoryCreate(user, category);
+            } else {
+                userCategoryCreate(user, categoryRepository.findByName(categoryName));
+            }
         }
 
-        // UserCategory 객체 생성 및 저장
-        for (Category category : categories) {
-            UserCategory userCategory = new UserCategory();
-            userCategory.setUser(user);
-            userCategory.setCategory(category);
-            userCategory.setDate(new Date());
-            userCategoryRepository.save(userCategory);
-        }
+//        for (String categoryName : request.getCategory()) {
+//            if (categoryRepository.findByName(categoryName) != null) {
+//                userCategoryCreate(user, categoryRepository.findByName(categoryName));
+//            }
+//            else {
+//                throw new IllegalAccessException("등록된 카테고리만 추가 가능합니다.");
+//            }
+//        }
     }
 
     @Transactional
@@ -125,4 +131,57 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void userCategoryCreate(User user, Category category) {
+        UserCategory userCategory = new UserCategory();
+        userCategory.setUser(user);
+        userCategory.setCategory(category);
+        userCategory.setDate(new Date());
+        userCategoryRepository.save(userCategory);
+    }
+
+    public void userCategoryDelete(User user) {
+        List<UserCategory> userCategories = userCategoryRepository.findAllByUser(user);
+
+        for (UserCategory userCategory : userCategories) {
+            userCategoryRepository.delete(userCategory);
+        }
+    }
+
+    @Transactional
+    public void userUpdate(User user, UserUpdateDto.Request request)
+            throws IOException, IllegalAccessException {
+
+        String newNickname = request.getNickname();
+        String fileUrl;
+
+        // 파일이 없을 경우 기본 프로필 이미지 URL을 지정
+        if (request.getProfileImg().isEmpty()) {
+            fileUrl = DEFAULT_PROFILE_IMAGE;
+        } else {
+            fileUrl = s3Uploader.upload(request.getProfileImg());
+        }
+
+        // 닉네임을 변경했을 때만 닉네임 유효성 검사
+        if (!user.getNickname().equals(newNickname)) {
+            nicknameExistValidCheck(newNickname);
+            user.setNickname(newNickname);
+        }
+
+        user.setProfileImg(fileUrl);
+        userRepository.save(user);
+
+        userCategoryDelete(user);
+
+        List<Category> categories = new ArrayList<>();
+        for (String categoryName : request.getCategory()) {
+            if (categoryRepository.findByName(categoryName) == null) {
+                Category category = request.toCategory(categoryName);
+                categories.add(category);
+                categoryRepository.save(category);
+                userCategoryCreate(user, category);
+            } else {
+                userCategoryCreate(user, categoryRepository.findByName(categoryName));
+            }
+        }
+    }
 }

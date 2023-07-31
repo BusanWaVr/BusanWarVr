@@ -6,6 +6,7 @@ import com.example.backend.dto.Response;
 import com.example.backend.exception.ErrorResponse;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

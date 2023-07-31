@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
-import Header from "../components/common/Header.tsx";
+import Header from "../../blocks/Header.tsx";
+import { useSelector } from "react-redux";
 
 function RootLayout() {
+  const { accessToken, refreshToken } = useSelector(
+    (state: any) => state.userInfo
+  );
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
     if (accessToken && refreshToken) {
       setIsLoggedIn(true);
     } else {

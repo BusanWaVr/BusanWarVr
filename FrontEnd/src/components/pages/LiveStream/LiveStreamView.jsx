@@ -4,14 +4,22 @@ import Slider from "react-slick";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import UserVideoComponent from "../components/livestream/UserVideoComponent";
-import Toolbar from "../components/livestream/Toolbar";
-import LiveExample from "../components/livestream/LiveExample";
-import Loader from "../components/common/Loader";
-import { useData } from "../context/DataContext";
-import useCustomBack from "../hooks/useCustomBack";
+import UserVideoComponent from "./UserVideoComponent";
+import Toolbar from "./Toolbar";
+import LiveExample from "./LiveExample";
+import Loader from "../../atoms/Loader";
+import useCustomBack from "../../../hooks/useCustomBack";
 import ChatRoom from "./ChatRoom";
+import QRCodeComponent from "./QRCodeComponent";
 import "./LiveStreamView.css";
+
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setIsAudioEnabled,
+  setIsVideoEnabled,
+  setIsFullScreen,
+  setIsChatOpen,
+} from "./LiveStreamReducer";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -21,13 +29,14 @@ const LiveStreamView = () => {
   const { sessionid } = useParams();
 
   const {
-    userName,
     youtubeLink,
     isAudioEnabled,
-    setIsAudioEnabled,
     isVideoEnabled,
-    setIsVideoEnabled,
-  } = useData();
+    isFullScreen,
+    isChatOpen,
+  } = useSelector((state) => state.liveStream);
+  const { nickname } = useSelector((state) => state.userInfo);
+  const dispatch = useDispatch();
 
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -36,8 +45,6 @@ const LiveStreamView = () => {
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [onload, setOnload] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   const sliderSettings = {
     dots: false,
@@ -104,7 +111,7 @@ const LiveStreamView = () => {
       // Get a token from the OpenVidu deployment
       getToken().then(async (token) => {
         try {
-          await session.connect(token, { clientData: userName });
+          await session.connect(token, { clientData: nickname });
 
           let publisher = await OV.current.initPublisherAsync(undefined, {
             audioSource: undefined,
@@ -144,7 +151,7 @@ const LiveStreamView = () => {
         }
       });
     }
-  }, [session, userName, sessionid]);
+  }, [session, nickname, sessionid]);
 
   // 라이브 종료
   const leaveSession = useCallback(() => {
@@ -220,22 +227,20 @@ const LiveStreamView = () => {
 
   // 카메라 온오프
   const toggleVideo = () => {
-    setIsVideoEnabled((prev) => !prev);
-
+    dispatch(setIsVideoEnabled(!isVideoEnabled));
     publisher.publishVideo(!isVideoEnabled);
   };
 
   // 마이크 온오프
   const toggleAudio = () => {
-    setIsAudioEnabled((prev) => !prev);
-
+    dispatch(setIsAudioEnabled(!isAudioEnabled));
     publisher.publishAudio(!isAudioEnabled);
   };
 
   // 전체화면 온오프
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullScreen(!!document.fullscreenElement);
+      dispatch(setIsFullScreen(!!document.fullscreenElement));
     };
     document.addEventListener("fullscreenchange", handleFullscreenChange);
 
@@ -243,19 +248,21 @@ const LiveStreamView = () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
   }, []);
+
   const handleFullScreen = useFullScreenHandle();
+
   const toggleFullScreen = () => {
     if (isFullScreen) {
-      setIsFullScreen(false);
-      handleFullScreen.exit();
+      dispatch(setIsFullScreen(false));
+      handleFullScreen.exit(); // 전체화면 종료
     } else {
-      setIsFullScreen(true);
-      handleFullScreen.enter();
+      dispatch(setIsFullScreen(true));
+      handleFullScreen.enter(); // 전체화면 시작
     }
   };
 
   const handleChatToggle = () => {
-    setIsChatOpen((prev) => !prev);
+    dispatch(setIsChatOpen(!isChatOpen));
   };
 
   const getToken = useCallback(async () => {
@@ -334,6 +341,7 @@ const LiveStreamView = () => {
             isChatOpen={isChatOpen}
             handleChatToggle={handleChatToggle}
           />
+          <QRCodeComponent youtubeLink={youtubeLink} />
         </FullScreen>
       )}
     </>

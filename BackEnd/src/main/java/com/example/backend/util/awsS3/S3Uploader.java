@@ -23,8 +23,7 @@ public class S3Uploader {
 
     public String upload(MultipartFile file) throws IllegalAccessException, IOException {
         validateImage(StringUtils.substringAfterLast(file.getOriginalFilename(), "."));
-        String fileName = file.getOriginalFilename();
-        String fileUrl = "https://" + bucket + "/test" + fileName;
+        String fileName = makeS3ObjectName(file.getOriginalFilename());
         ObjectMetadata metadata = new ObjectMetadata();
 
         metadata.setContentType(file.getContentType());
@@ -36,7 +35,7 @@ public class S3Uploader {
     }
 
     private String makeS3ObjectName(String fileName) {
-        return "busanwavr" + UUID.randomUUID() + "." + StringUtils.substringAfterLast(fileName,
+        return UUID.randomUUID() + "." + StringUtils.substringAfterLast(fileName,
                 ".");
     }
 

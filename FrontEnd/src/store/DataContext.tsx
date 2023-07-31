@@ -18,8 +18,10 @@ const DataContext = createContext<Data | undefined>(undefined);
 // DataProvider 컴포넌트 생성
 export function DataProvider({ children }: { children: React.ReactNode }) {
   const [youtubeLink, setYouTubeLink] = useState("");
+
+  const nickname = localStorage.getItem("nickname");
   const [userName, setUserName] = useState(
-    `부기${Math.floor(Math.random() * 100)}`
+    nickname ? nickname : `부기${Math.floor(Math.random() * 100)}`
   );
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
