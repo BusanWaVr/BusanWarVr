@@ -168,6 +168,10 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
+
+        if (userDetails.getUser().getType().toString() == "USER") {
+            return new Response<>("400", "잘못된 접근입니다.", null);
+        }
       
         userService.guideUpdate(userDetails.getUser(), request);
 
@@ -182,6 +186,10 @@ public class UserController {
             throw new BindException(bindingResult);
         } else if (!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)) {
             throw new IllegalArgumentException("카테고리 개수는 3개에서 5개 사이여야 합니다.");
+        }
+
+        if (userDetails.getUser().getType().toString() == "GUIDE") {
+            return new Response<>("400", "잘못된 접근입니다.", null);
         }
 
         userService.userUpdate(userDetails.getUser(), request);
