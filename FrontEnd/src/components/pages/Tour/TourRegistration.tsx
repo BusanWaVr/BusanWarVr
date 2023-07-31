@@ -4,6 +4,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
 import TourCourseUpload from "./TourCourseUpload";
+import { useSelector, useDispatch } from "react-redux";
+import { setCourses } from "./TourCourseReducer";
 
 const regionList = [
   "강서구",
@@ -46,6 +48,14 @@ const categoryList = [
   { name: "카페", label: "카페" },
 ];
 
+type TourCourseInfo = {
+  lon: number;
+  lat: number;
+  title: string;
+  content: string;
+  image: any;
+};
+
 type TourData = {
   region: string;
   category: string[];
@@ -60,27 +70,25 @@ type TourData = {
   courses: TourCourseInfo[];
 };
 
-type TourCourseInfo = {
-  lon: number;
-  lat: number;
-  title: string;
-  content: string;
-  image: any;
-};
-
 const TourRegistration: React.FC = () => {
+  const { courses } = useSelector((state: any) => state.tourCourse);
+  const dispatch = useDispatch();
+
+  const accessToken = localStorage.getItem("accessToken");
+
+  const [coursesNum, setCoursesNum] = useState(1);
   const [tourData, setTourData] = useState<TourData>({
     region: "",
-    category: [], // 카테고리를 빈 배열로 초기화
+    category: [],
     title: "",
     subTitle: "",
     content: "",
-    tourImgs: [], // tourImgs를 문자열 배열로 가정 (이미지 URL)
+    tourImgs: [],
     startDate: new Date(),
     endDate: new Date(),
     minMember: 0,
     maxMember: 1,
-    courses: [], // courses를 문자열 배열로 가정 (코스 설명)
+    courses: [],
   });
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,6 +128,17 @@ const TourRegistration: React.FC = () => {
   const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
   const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
 
+  const increaseCoursesNum = () => {
+    if (coursesNum <= 2) {
+      setCoursesNum(coursesNum + 1);
+      dispatch(
+        setCourses({ lon: 0, lat: 0, title: "", content: "", image: null })
+      );
+    } else {
+      alert("코스는 최대 3개까지 등록할 수 있습니다.");
+    }
+  };
+
   const handleMinMemberClick = (value: number) => {
     if (value <= selectedMaxMember) {
       setSelectedMinMember(value);
@@ -151,10 +170,27 @@ const TourRegistration: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("http://52.79.93.203/tour", tourData);
-      console.log("Response from server:", response.data);
+      console.log("제출");
+      tourData.courses = courses;
+      console.log(tourData);
+      // const response = await fetch("http://52.79.93.203/tour", {
+      //   method: "POST",
+      //   headers: {
+      //     Authorization: accessToken,
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(tourData),
+      // });
+
+      // const data = await response.json();
+
+      // if (data.code === "200") {
+      //   // window.location.href = 투어상세페이지;
+      // } else {
+      //   console.log(data.message);
+      // }
     } catch (error) {
-      console.error("Error sending data:", error);
+      console.error(error);
     }
   };
 
@@ -191,7 +227,7 @@ const TourRegistration: React.FC = () => {
           </label>
         ))}
       </div>
-      
+
       {/* 제목 */}
       <div>
         <span>제목</span>
@@ -305,7 +341,13 @@ const TourRegistration: React.FC = () => {
       <hr />
 
       {/* 투어 코스 */}
-      <TourCourseUpload />
+      {Array.from({ length: coursesNum }, (_, index) => (
+        <TourCourseUpload index={index} />
+      ))}
+
+      <div onClick={increaseCoursesNum}>
+        <button>장소 추가</button>
+      </div>
 
       <div onClick={handleSubmit} style={{ cursor: "pointer" }}>
         <button>투어 등록</button>
