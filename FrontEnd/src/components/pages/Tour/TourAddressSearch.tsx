@@ -45,7 +45,11 @@ const TourAddressSearch = () => {
     <>
       <main>
         우편번호찾기
-        <input type="text" onClick={postCode} />
+        <input
+          type="text"
+          onClick={postCode}
+          value={fullAddress != "부산와Vr" ? fullAddress : ""}
+        />
       </main>
       <Map // 지도를 표시할 Container
         center={{
