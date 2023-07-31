@@ -13,6 +13,7 @@ public class UserLoginDto {
     private String email;
     private String nickname;
     private String profileImg;
+    private String type;
     private String Access_Token;
     private String Refresh_Token;
 
@@ -21,6 +22,7 @@ public class UserLoginDto {
         this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.profileImg = user.getProfileImg();
+        this.type = user.getType().toString();
         this.Access_Token = access;
         this.Refresh_Token = refresh;
     }
