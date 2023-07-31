@@ -11,7 +11,7 @@ import com.example.backend.model.courseimage.CourseImageRepository;
 import com.example.backend.model.image.Image;
 import com.example.backend.model.image.ImageRepository;
 import com.example.backend.model.tour.Tour;
-import com.example.backend.model.tour.TourResitory;
+import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.tourcategory.TourCategory;
 import com.example.backend.model.tourcategory.TourCategoryRepository;
 import com.example.backend.model.tourimage.TourImage;
@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class TourService {
 
-    private final TourResitory tourResitory;
+    private final TourRepository tourResitory;
     private final CourseRepository courseRepository;
     private final CategoryRepository categoryRepository;
     private final TourCategoryRepository tourCategoryRepository;
