@@ -2,11 +2,13 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import ReactDaumPost from "react-daumpost-hook";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { useSelector, useDispatch } from "react-redux";
+import { setLongitude, setLatitude } from "./TourCourseReducer";
 
 const TourAddressSearch = () => {
+  const { lon, lat } = useSelector((state) => state.tourCourse);
+  const dispatch = useDispatch();
   const [fullAddress, setFullAddress] = useState("부산와Vr");
-  const [latitude, setLatitude] = useState(35.096171208475724);
-  const [longitude, setLongitude] = useState(128.85357686495757);
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -21,8 +23,8 @@ const TourAddressSearch = () => {
         );
 
         const location = response.data.documents[0];
-        setLatitude(parseFloat(location.y));
-        setLongitude(parseFloat(location.x));
+        dispatch(setLatitude(parseFloat(location.y)));
+        dispatch(setLongitude(parseFloat(location.x)));
         console.log(location.x, location.y);
       } catch (error) {
         console.error(error);
@@ -54,8 +56,8 @@ const TourAddressSearch = () => {
       <Map // 지도를 표시할 Container
         center={{
           // 지도의 중심좌표
-          lat: latitude,
-          lng: longitude,
+          lat: lat,
+          lng: lon,
         }}
         style={{
           // 지도의 크기
@@ -67,8 +69,8 @@ const TourAddressSearch = () => {
         <MapMarker // 인포윈도우를 생성하고 지도에 표시합니다
           position={{
             // 인포윈도우가 표시될 위치입니다
-            lat: latitude,
-            lng: longitude,
+            lat: lat,
+            lng: lon,
           }}
         >
           {/* MapMarker의 자식을 넣어줌으로 해당 자식이 InfoWindow로 만들어지게 합니다 */}

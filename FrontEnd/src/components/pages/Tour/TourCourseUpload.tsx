@@ -1,51 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import TourAddressSearch from "./TourAddressSearch";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setLongitude,
-  setLatitude,
-  setTitle,
-  setContent,
-  setImage,
-} from "./TourCourseReducer";
+import { setCourses } from "./TourCourseReducer";
 
-type TourCourseInfo = {
-  lon: number | null;
-  lat: number | null;
-  title: string;
-  content: string;
-  image: any;
-};
-
-const TourCourseUpload = () => {
-  const { lon, lat, title, content, image } = useSelector(
-    (state) => state.tourCourse
-  );
+const TourCourseUpload = ({ index }) => {
+  const [course, setCourse] = useState({});
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [image, setImage] = useState("");
+  const [longitude, setLongitude] = useState(0);
+  const [latitude, setLatitude] = useState(0);
+  const { courses } = useSelector((state) => state.tourCourse);
   const dispatch = useDispatch();
 
+  useEffect(()=>{
+    setCourse({lon: longitude, lat: latitude,  })
+  }, [])
+
   const handleTitleChange = (e) => {
-    dispatch(setTitle(e.target.value));
+    setTitle(e.target.value);
+    setCourse({ ...course, title: title });
+    setCourses({ index: index, course: course });
   };
 
   const handleContentChange = (e) => {
-    dispatch(setContent(e.target.value));
+    setContent(e.target.value);
   };
 
   const handleImageChange = (e) => {
-    dispatch(setImage(e.target.value));
+    setImage(e.target.value);
   };
 
   return (
     <>
-      <TourAddressSearch />
+      <TourAddressSearch longitude={longitude} latitude={latitude} />
       <div>
         <label>
           위도:
-          <input type="text" value={lon} />
+          <input
+            type="text"
+            value={longitude}
+            onChange={handleLongtitudeChange}
+          />
         </label>
         <label>
           경도:
-          <input type="text" value={lat} />
+          <input type="text" value={latitude} onChange={handleLatitudeChange} />
         </label>
         <label>
           제목:
@@ -63,7 +63,6 @@ const TourCourseUpload = () => {
           onChange={handleImageChange}
         />
       </div>
-      <button> 장소 추가 </button>
     </>
   );
 };
