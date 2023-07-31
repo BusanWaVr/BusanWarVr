@@ -170,7 +170,7 @@ public class UserController {
         }
 
         if (userDetails.getUser().getType().toString() == "USER") {
-            return new Response<>("400", "잘못된 접근입니다.", null);
+            throw new IllegalArgumentException("권한이 없는 사용자의 접근입니다.");
         }
       
         userService.guideUpdate(userDetails.getUser(), request);
@@ -184,12 +184,14 @@ public class UserController {
             BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
-        } else if (!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)) {
+        }
+
+        if (!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)) {
             throw new IllegalArgumentException("카테고리 개수는 3개에서 5개 사이여야 합니다.");
         }
 
         if (userDetails.getUser().getType().toString() == "GUIDE") {
-            return new Response<>("400", "잘못된 접근입니다.", null);
+            throw new IllegalArgumentException("권한이 없는 사용자의 접근입니다.");
         }
 
         userService.userUpdate(userDetails.getUser(), request);
