@@ -1,12 +1,17 @@
 package com.example.backend.model.mate;
 
+import com.example.backend.dto.MateRegistDto;
+import com.example.backend.model.tour.Tour;
+import com.example.backend.model.user.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 public class Mate {
 
     @Id
@@ -14,7 +19,7 @@ public class Mate {
     private Long id;
 
     @Column
-    private String url;
+    private Long tourId;
 
     @Column
     private String title;
@@ -33,4 +38,14 @@ public class Mate {
 
     @Column
     private long userId;
+
+    public Mate(MateRegistDto.Request request, Tour tour, User user, int joinMember) {
+        this.tourId = request.getTourId();
+        this.title = request.getTitle();
+        this.content = request.getTitle();
+        this.minMember = tour.getMinMember();
+        this.maxMember = tour.getMaxMember();
+        this.joinMember = joinMember;
+        this.userId = user.getId();
+    }
 }
