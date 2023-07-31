@@ -1,12 +1,12 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.MateDetailDto;
-import com.example.backend.dto.MateDetailDto.Response;
 import com.example.backend.dto.MateInfoDetailDto;
 import com.example.backend.dto.MateInfoForListDto;
 import com.example.backend.dto.MateJoinerDto;
 import com.example.backend.dto.MateListDto;
 import com.example.backend.dto.MateRegistDto;
+import com.example.backend.dto.MateRegistDto.Request;
 import com.example.backend.model.joiner.Joiner;
 import com.example.backend.model.joiner.JoinerRepository;
 import com.example.backend.model.mate.Mate;
@@ -31,7 +31,7 @@ public class MateService {
     private final JoinerRepository joinerRepository;
 
     @Transactional
-    public void registMateService(MateRegistDto.Request request, User user){
+    public MateRegistDto.Response registMateService(Request request, User user){
         Tour tour = tourRepository.findById(request.getTourId()).get();
         int joinMember = Math.toIntExact(joinerRepository.countByTour(tour));
 
@@ -41,6 +41,8 @@ public class MateService {
 
         Mate mate = new Mate(request, tour, user, joinMember);
         mateRepository.save(mate);
+        MateRegistDto.Response response = new MateRegistDto.Response(mate.getId());
+        return response;
     }
 
     public MateDetailDto.Response getDetailMate(Long mateId){
