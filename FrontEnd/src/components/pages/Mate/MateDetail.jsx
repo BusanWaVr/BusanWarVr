@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import styled from "styled-components";
 
 const JoinerContainer = styled.div`
@@ -50,11 +50,6 @@ const MateDetail = () => {
       <br />
       {mateData ? (
         <div>
-          <div>
-            {/* <p>여기 같이가요!</p> */}
-            {/* 투어 아이디 받아와서 링크랑 제목달아주기! 참가인원도! */}
-            
-          </div>
 
           <h3><strong>제목: {mateData.title}</strong></h3>
           <br />
@@ -63,10 +58,13 @@ const MateDetail = () => {
 
           <br />
           <br />
+          <Link to={`/tour/${mateData.tourId}`}>해당 투어로 이동하기^_^</Link>
           <br />
           {joinerData.length > 0 ? (
             <div>
-              <h2>참가자 목록</h2>
+              <h3><strong>이 투어에 참여하는 사람들이에요</strong></h3>
+              <p>총 <strong>{mateData.maxMember}</strong>명 중 <strong>{joinerData.length}</strong>명이 모였어요.</p>
+
               <CenteredContainer>
                 <ul>
                   {joinerData.map((joiner, index) => (
@@ -78,7 +76,7 @@ const MateDetail = () => {
                           width: "200px",
                           height: "200px",
                           borderRadius: "50%"}} />
-                        <div>{joiner.nickname}</div>
+                        <div><strong>{joiner.nickname}</strong> 님</div>
                         <div>{joiner.joinDate}</div>
                       </JoinerContainer>
                     </li>
