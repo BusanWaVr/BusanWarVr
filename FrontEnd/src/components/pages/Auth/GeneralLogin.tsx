@@ -1,6 +1,15 @@
 import styled from "styled-components";
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setUserId,
+  setEmail,
+  changeNickname,
+  changeProfileImg,
+  changeAccessToken,
+  changeRefreshToken,
+} from "../../../store/reducers/UserInfoReducer";
 
 const GeneralLoginWrapper = styled.div`
   /* Add your styling for the general login form wrapper */
@@ -49,6 +58,7 @@ interface Props {
 function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -82,12 +92,12 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
 
       console.log(JWT_Token.data);
       // 받아온 JWT 토큰들을 로컬 스토리지에 저장
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("userId", userId);
-      localStorage.setItem("email", email);
-      localStorage.setItem("nickname", nickname);
-      localStorage.setItem("profileImg", profileImg);
+      dispatch(changeAccessToken(accessToken));
+      dispatch(changeRefreshToken(refreshToken));
+      dispatch(setUserId(userId));
+      dispatch(setEmail(email));
+      dispatch(changeNickname(nickname));
+      dispatch(changeProfileImg(profileImg));
 
       console.log(localStorage);
 
