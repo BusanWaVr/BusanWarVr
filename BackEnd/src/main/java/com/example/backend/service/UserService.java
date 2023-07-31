@@ -46,18 +46,14 @@ public class UserService {
         // 사용자가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
         List<Category> categories = new ArrayList<>();
         for (String categoryName : request.getCategory()) {
-            Category category = request.toCategory(categoryName);
-            categories.add(category);
-            categoryRepository.save(category);
-        }
-
-        // UserCategory 객체 생성 및 저장
-        for (Category category : categories) {
-            UserCategory userCategory = new UserCategory();
-            userCategory.setUser(user);
-            userCategory.setCategory(category);
-            userCategory.setDate(new Date());
-            userCategoryRepository.save(userCategory);
+            if (categoryRepository.findByName(categoryName) == null) {
+                Category category = request.toCategory(categoryName);
+                categories.add(category);
+                categoryRepository.save(category);
+                userCategoryCreate(user, category);
+            } else {
+                userCategoryCreate(user, categoryRepository.findByName(categoryName));
+            }
         }
     }
 
@@ -123,6 +119,14 @@ public class UserService {
         user.setProfileImg(fileUrl);
         user.setIntroduction(request.getIntroduction());
         userRepository.save(user);
+    }
+
+    public void userCategoryCreate(User user, Category category) {
+        UserCategory userCategory = new UserCategory();
+        userCategory.setUser(user);
+        userCategory.setCategory(category);
+        userCategory.setDate(new Date());
+        userCategoryRepository.save(userCategory);
     }
 
 }
