@@ -3,7 +3,7 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
-import TourAddressSearch from "./TourAddressSearch/TourAddressSearch";
+import TourCourseUpload from "./TourCourseUpload";
 
 const regionList = [
   "강서구",
@@ -57,7 +57,15 @@ type TourData = {
   endDate: Date;
   minMember: number;
   maxMember: number;
-  courses: string[];
+  courses: TourCourseInfo[];
+};
+
+type TourCourseInfo = {
+  lon: number;
+  lat: number;
+  title: string;
+  content: string;
+  image: any;
 };
 
 const TourRegistration: React.FC = () => {
@@ -67,12 +75,12 @@ const TourRegistration: React.FC = () => {
     title: "",
     subTitle: "",
     content: "",
-    tourImgs: [] as string[], // tourImgs를 문자열 배열로 가정 (이미지 URL)
+    tourImgs: [], // tourImgs를 문자열 배열로 가정 (이미지 URL)
     startDate: new Date(),
     endDate: new Date(),
     minMember: 0,
     maxMember: 1,
-    courses: [] as string[], // courses를 문자열 배열로 가정 (코스 설명)
+    courses: [], // courses를 문자열 배열로 가정 (코스 설명)
   });
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,6 +160,7 @@ const TourRegistration: React.FC = () => {
 
   return (
     <div>
+      {/* 지역 */}
       <div>
         <span>지역</span>
         <select
@@ -166,6 +175,8 @@ const TourRegistration: React.FC = () => {
           ))}
         </select>
       </div>
+
+      {/* 카테고리 */}
       <div>
         <span>카테고리</span>
         {categoryList.map((category) => (
@@ -180,6 +191,8 @@ const TourRegistration: React.FC = () => {
           </label>
         ))}
       </div>
+      
+      {/* 제목 */}
       <div>
         <span>제목</span>
         <input
@@ -189,6 +202,8 @@ const TourRegistration: React.FC = () => {
           onChange={(e) => setTourData({ ...tourData, title: e.target.value })}
         />
       </div>
+
+      {/* 서브 제목 */}
       <div>
         <span>서브 제목</span>
         <input
@@ -200,6 +215,8 @@ const TourRegistration: React.FC = () => {
           }
         />
       </div>
+
+      {/* 내용 */}
       <div>
         <span>내용</span>
         <textarea
@@ -210,6 +227,8 @@ const TourRegistration: React.FC = () => {
           }
         />
       </div>
+
+      {/* 이미지 */}
       <div>
         <span>이미지</span>
         <input
@@ -231,6 +250,8 @@ const TourRegistration: React.FC = () => {
           onChange={handleImageChange}
         />
       </div>
+
+      {/* 여행 날짜 */}
       <div>
         <span>여행날짜</span>
         <DatePicker
@@ -248,6 +269,8 @@ const TourRegistration: React.FC = () => {
           onChange={(date: Date) => setTourData({ ...tourData, endDate: date })}
         />
       </div>
+
+      {/* 최소 인원 */}
       <div>
         <span>최소 인원 : </span>
         {[1, 2, 3, 4, 5, 6].map((value) => (
@@ -263,6 +286,7 @@ const TourRegistration: React.FC = () => {
         ))}
       </div>
 
+      {/* 최대 인원 */}
       <div>
         <span>최대 인원 : </span>
         {[1, 2, 3, 4, 5, 6].map((value) => (
@@ -277,17 +301,14 @@ const TourRegistration: React.FC = () => {
           </button>
         ))}
       </div>
-      <TourAddressSearch />
-      <textarea
-        placeholder="Courses (Comma-separated descriptions)"
-        value={tourData.courses.join(", ")}
-        onChange={(e) =>
-          setTourData({ ...tourData, courses: e.target.value.split(", ") })
-        }
-      />
+
+      <hr />
+
+      {/* 투어 코스 */}
+      <TourCourseUpload />
 
       <div onClick={handleSubmit} style={{ cursor: "pointer" }}>
-        <button>Submit</button>
+        <button>투어 등록</button>
       </div>
     </div>
   );

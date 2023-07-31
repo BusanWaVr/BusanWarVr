@@ -24,7 +24,7 @@ public class MateController {
     private final MateService mateService;
 
     @PostMapping("/mate")
-    public Response registMate(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public Response<MateRegistDto.Response> registMate(@AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody MateRegistDto.Request request) {
         User user = userDetails.getUser();
 
@@ -32,8 +32,8 @@ public class MateController {
             throw new IllegalArgumentException("가이드는 mate 등록을 할 수 없습니다.");
         }
 
-        mateService.registMateService(request, userDetails.getUser());
-        return new Response<>("200", "성공적으로 메이트 등록 되었습니다!", null);
+        MateRegistDto.Response response = mateService.registMateService(request, userDetails.getUser());
+        return new Response<>("200", "성공적으로 메이트 등록 되었습니다!", response);
     }
 
     @GetMapping("/mate/{mateId}")
