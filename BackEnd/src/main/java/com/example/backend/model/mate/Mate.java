@@ -44,7 +44,7 @@ public class Mate {
     public Mate(MateRegistDto.Request request, Tour tour, User user, int joinMember) {
         this.tourId = request.getTourId();
         this.title = request.getTitle();
-        this.content = request.getTitle();
+        this.content = request.getContent();
         this.minMember = tour.getMinMember();
         this.maxMember = tour.getMaxMember();
         this.joinMember = joinMember;
