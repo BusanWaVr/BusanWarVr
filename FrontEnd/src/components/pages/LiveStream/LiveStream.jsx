@@ -1,43 +1,45 @@
 import React, { useCallback, useState } from "react";
-import { useData } from "../../../store/DataContext";
 import { useNavigate } from "react-router-dom";
 import "./LiveStream.css";
+
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setYoutubeLink,
+  setIsAudioEnabled,
+  setIsVideoEnabled,
+} from "./LiveStreamReducer";
 
 const LiveStream = () => {
   const navigate = useNavigate();
 
+  const { youtubeLink, isAudioEnabled, isVideoEnabled } = useSelector(
+    (state) => state.liveStream
+  );
+  const { nickname } = useSelector((state) => state.userInfo);
+  const dispatch = useDispatch();
+
   const [mySessionId, setMySessionId] = useState("busanVR");
-  const {
-    youtubeLink,
-    setYouTubeLink,
-    userName,
-    setUserName,
-    isAudioEnabled,
-    setIsAudioEnabled,
-    isVideoEnabled,
-    setIsVideoEnabled,
-  } = useData();
 
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
   }, []);
 
-  const handleChangeUserName = useCallback((e) => {
-    setUserName(e.target.value);
-  }, []);
+  // const handleChangeUserName = useCallback((e) => {
+  //   dispatch(setUserName(e.target.value));
+  // }, []);
 
   const handleChangeYouTubeLink = useCallback((e) => {
-    setYouTubeLink(e.target.value);
+    dispatch(setYoutubeLink(e.target.value));
   }, []);
 
   // 마이크 온오프 설정 함수
   const toggleAudio = () => {
-    setIsAudioEnabled((prev) => !prev);
+    dispatch(setIsAudioEnabled(!isAudioEnabled));
   };
 
   // 카메라 온오프 설정 함수
   const toggleVideo = () => {
-    setIsVideoEnabled((prev) => !prev);
+    dispatch(setIsVideoEnabled(!isVideoEnabled));
   };
 
   const joinSession = (e) => {
@@ -57,9 +59,8 @@ const LiveStream = () => {
                 className="form-control input"
                 type="text"
                 id="userName"
-                value={userName}
-                onChange={handleChangeUserName}
-                required
+                value={nickname}
+                disabled
               />
               <span>닉네임</span>
             </label>

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "./ChatRoom.css";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
+import { useSelector } from "react-redux";
 
 export type message = {
   username: string;
@@ -15,17 +16,11 @@ function ChatRoom() {
     Stomp.over(new SockJS("http://52.79.93.203/ws-stomp"))
   );
 
-  const accessToken = localStorage.getItem("accessToken");
-  const nickName = localStorage.getItem("nickname");
-  const userId = localStorage.getItem("userId");
+  const { nickname, accessToken, userId } = useSelector(
+    (state: any) => state.userInfo
+  );
 
   const messageEndRef = useRef(null);
-
-  // const scrollToBottom = () => {
-  //   if (messageEndRef.current) {
-  //     messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
-  //   }
-  // };
 
   const scrollToBottom = () => {
     messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
@@ -47,7 +42,6 @@ function ChatRoom() {
             content: receivedMessage.message,
           };
 
-
           // 일단 넣어두기
           scrollToBottom();
 
@@ -65,10 +59,6 @@ function ChatRoom() {
     }
   }, []);
 
-  // useEffect(() => {
-  //   messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-  // }, [chatMessages]);
-
   const handleEnter = () => {
     console.log("슈우웃");
     console.log(accessToken);
@@ -84,7 +74,7 @@ function ChatRoom() {
 
     const newChatMessage = {
       senderId: userId,
-      username: nickName,
+      username: nickname,
       content: inputMessage,
     };
 
@@ -92,7 +82,6 @@ function ChatRoom() {
 
     stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
     console.log(chatMessages);
-    // console.log(inputMessage);
     setInputMessage("");
   };
 
