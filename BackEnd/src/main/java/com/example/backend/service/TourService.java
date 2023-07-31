@@ -71,7 +71,7 @@ public class TourService {
                 tourImageRepository.save(tourImage);
             }
 
-            // 가이드가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
+            // 가이드가 선택한 카테고리 이름들을 TourCategory 객체로 변환하고 저장
             for (String categoryName : request.getCategory()) {
                 if (categoryRepository.findByName(categoryName) != null) {
                     tourCategoryCreate(tour, categoryRepository.findByName(categoryName));
@@ -142,6 +142,12 @@ public class TourService {
         List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
 
         return new TourDetailDto.Response(tour, tourCategories, tourImageUrls, courseDtos, joinerList);
+    }
+
+    public void tourReservation(Long tourId, User user) {
+        Tour tour = tourResitory.findById(tourId).get();
+        Joiner joiner = new Joiner(tour, user, new Date());
+        joinerRepository.save(joiner);
     }
 }
 
