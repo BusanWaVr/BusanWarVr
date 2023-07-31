@@ -3,6 +3,7 @@ package com.example.backend.service;
 import com.example.backend.dto.CourseDto;
 import com.example.backend.dto.JoinerDto;
 import com.example.backend.dto.TourDetailDto;
+import com.example.backend.dto.TourListDto.Response;
 import com.example.backend.dto.TourRegistDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
@@ -38,7 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class TourService {
 
-    private final TourRepository tourResitory;
+    private final TourRepository tourRepository;
     private final CourseRepository courseRepository;
     private final CategoryRepository categoryRepository;
     private final TourCategoryRepository tourCategoryRepository;
@@ -55,7 +56,7 @@ public class TourService {
 
         if (user.getType() == AuthType.GUIDE) {
             Tour tour = request.toTour(user);
-            tourResitory.save(tour);
+            tourRepository.save(tour);
 
             // 이미지 등록 부분 조건적으로 처리
             if (request.getTourImgs() != null && !request.getTourImgs().isEmpty()) {
@@ -124,7 +125,7 @@ public class TourService {
     }
 
     public TourDetailDto.Response tourDetail(Long tourId) {
-        Tour tour = tourResitory.findById(tourId).get();
+        Tour tour = tourRepository.findById(tourId).get();
         List<TourCategory> categories = tourCategoryRepository.findAllByTourId(tourId);
         List<String> tourCategories = new ArrayList<>();
         for (TourCategory tourCategory : categories) {
@@ -161,13 +162,13 @@ public class TourService {
     }
 
     public void tourReservation(Long tourId, User user) {
-        Tour tour = tourResitory.findById(tourId).get();
+        Tour tour = tourRepository.findById(tourId).get();
         Joiner joiner = new Joiner(tour, user, new Date());
         joinerRepository.save(joiner);
     }
 
     public void tourWish(Long tourId, User user) {
-        Tour tour = tourResitory.findById(tourId).get();
+        Tour tour = tourRepository.findById(tourId).get();
         Wish wish = new Wish(tour, user.getId());
         wishRepository.save(wish);
     }
@@ -186,10 +187,10 @@ public class TourService {
 
     public void tourCancel(Long tourId, User user)
             throws IllegalAccessException {
-        Tour tour = tourResitory.findById(tourId).get();
+        Tour tour = tourRepository.findById(tourId).get();
         if((user.getType() == AuthType.GUIDE) && (tour.getUserId() == user.getId())){
             tour.setCanceled(true);
-            tourResitory.save(tour);
+            tourRepository.save(tour);
         }
         else if(user.getType() == AuthType.USER){
             throw new IllegalAccessException("가이드만 투어 취소 가능합니다.");
@@ -197,6 +198,10 @@ public class TourService {
         else {
             throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 취소 가능합니다.");
         }
+    }
+
+    public List<Response> getALLTour() {
+        return null;
     }
 }
 

@@ -2,10 +2,12 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
 import com.example.backend.dto.TourDetailDto;
+import com.example.backend.dto.TourListDto;
 import com.example.backend.dto.TourRegistDto;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.TourService;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,5 +63,11 @@ public class TourController {
             throws IllegalAccessException {
         tourService.tourCancel(tourId, userDetails.getUser());
         return new Response("200", "성공적으로 투어를 취소 하였습니다!", null);
+    }
+
+    @GetMapping("tour")
+    public Response<List<TourListDto.Response>> getALLTourApi(){
+        List<TourListDto.Response> tourList = tourService.getALLTour();
+        return new Response("200", "성공적으로 투어를 취소 하였습니다!", tourList);
     }
 }
