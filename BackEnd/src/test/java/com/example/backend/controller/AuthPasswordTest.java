@@ -6,6 +6,7 @@ import com.example.backend.dto.Response;
 import com.example.backend.exception.ErrorResponse;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -61,7 +62,7 @@ class AuthPasswordTest {
     @DisplayName("비밀번호 확인 성공")
     void AuthPasswordSuccessTest() throws Exception {
 
-        String jsonData = "{\"password\": \"azxc123!@#$\"}";
+        String jsonData = "{\"password\": \"test1234!@\"}";
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/auth/password")
                         .header("Authorization", accessToken)
