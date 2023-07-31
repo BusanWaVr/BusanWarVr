@@ -23,6 +23,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -122,6 +123,9 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.GET, "/ws-stomp/**"));
         skipPathList.add(new Path(HttpMethod.POST, "/ws-stomp/**"));
         skipPathList.add(new Path(HttpMethod.GET, "/ws/**"));
+
+        // Mate
+        skipPathList.add(new Path(HttpMethod.GET, "/mate/**"));
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPathList, "/**");
         JwtAuthFilter filter = new JwtAuthFilter(matcher, extractor);

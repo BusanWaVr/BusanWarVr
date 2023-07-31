@@ -22,6 +22,8 @@ import com.example.backend.model.tourcategory.TourCategoryRepository;
 import com.example.backend.model.tourimage.TourImage;
 import com.example.backend.model.tourimage.TourImageRepository;
 import com.example.backend.model.user.User;
+import com.example.backend.model.wish.Wish;
+import com.example.backend.model.wish.WishRepository;
 import com.example.backend.util.awsS3.S3Uploader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class TourService {
     private final ImageRepository imageRepository;
     private final CourseImageRepository courseImageRepository;
     private final JoinerRepository joinerRepository;
+    private final WishRepository wishRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
@@ -71,7 +74,7 @@ public class TourService {
                 tourImageRepository.save(tourImage);
             }
 
-            // 가이드가 선택한 카테고리 이름들을 Category 객체로 변환하고 저장
+            // 가이드가 선택한 카테고리 이름들을 TourCategory 객체로 변환하고 저장
             for (String categoryName : request.getCategory()) {
                 if (categoryRepository.findByName(categoryName) != null) {
                     tourCategoryCreate(tour, categoryRepository.findByName(categoryName));
@@ -142,6 +145,18 @@ public class TourService {
         List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
 
         return new TourDetailDto.Response(tour, tourCategories, tourImageUrls, courseDtos, joinerList);
+    }
+
+    public void tourReservation(Long tourId, User user) {
+        Tour tour = tourResitory.findById(tourId).get();
+        Joiner joiner = new Joiner(tour, user, new Date());
+        joinerRepository.save(joiner);
+    }
+
+    public void tourWish(Long tourId, User user) {
+        Tour tour = tourResitory.findById(tourId).get();
+        Wish wish = new Wish(tour, user.getId());
+        wishRepository.save(wish);
     }
 }
 
