@@ -3,7 +3,7 @@
 ## ✌️ Part
   - [ ] FE
   - [ ] BE
-  - [ ] Data Preprocessiong
+  - [ ] Data Preprocessing
 
 ## 💬 작업사항
 - 내용을 적어주세요.
