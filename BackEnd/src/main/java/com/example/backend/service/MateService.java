@@ -94,4 +94,15 @@ public class MateService {
         mate.updateMate(request);
         mateRepository.save(mate);
     }
+
+    @Transactional
+    public void deleteMate(Long mateId, User user){
+        Mate mate = mateRepository.findById(mateId).get();
+
+        if(mate.getUserId() != user.getId()){
+            throw new IllegalArgumentException("삭제할 메이트 정보와 사용자가 일치하지 않습니다.");
+        }
+
+        mateRepository.deleteById(mateId);
+    }
 }
