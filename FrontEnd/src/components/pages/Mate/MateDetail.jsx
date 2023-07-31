@@ -15,8 +15,8 @@ const CenteredContainer = styled.div`
 
 const MateDetail = () => {
   const { mateId } = useParams();
-  const [mateData, setMateData] = useState(null);
-  const [joinerData, setJoinerData] = useState(null);
+  const [ mateData, setMateData ] = useState(null);
+  const [ joinerData, setJoinerData ] = useState(null);
 
   useEffect(() => {
     const fetchMateData = async () => {
