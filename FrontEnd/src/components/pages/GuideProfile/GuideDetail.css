@@ -1,0 +1,72 @@
+.container {
+  display: flex;
+}
+
+.left-panel {
+  flex: 0 0 300px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.right-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* 가이드 프로필 이미지 */
+img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* 팔로워, 투어 수 가로 배치를 위한 스타일 */
+.left-panel p {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+/* 홈, 후기, 진행 중인 투어, 지난 투어 세로 배치를 위한 스타일 */
+.left-panel a {
+  display: block;
+  margin-bottom: 10px;
+  color: black;
+  text-decoration: none;
+}
+
+.left-panel a:hover {
+  /* Optional: Add hover effect if desired */
+  color: #646cffaa; /* Change the color on hover if needed */
+}
+
+ul {
+  list-style-type: none; /* 목록의 점 스타일을 없앱니다. */
+  padding: 0; /* 목록의 패딩을 없앱니다. */
+}
+
+.tour-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.tour-card {
+  width: calc(33.3333% - 20px);
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.tour-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.tour-card h4 {
+  margin: 10px 0;
+  font-size: 16px;
+}
