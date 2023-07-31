@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.CourseDto;
+import com.example.backend.dto.TourDetailDto;
 import com.example.backend.dto.TourRegistDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
@@ -10,6 +11,8 @@ import com.example.backend.model.courseimage.CourseImage;
 import com.example.backend.model.courseimage.CourseImageRepository;
 import com.example.backend.model.image.Image;
 import com.example.backend.model.image.ImageRepository;
+import com.example.backend.model.joiner.Joiner;
+import com.example.backend.model.joiner.JoinerRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourResitory;
 import com.example.backend.model.tourcategory.TourCategory;
@@ -38,6 +41,7 @@ public class TourService {
     private final TourImageRepository tourImageRepository;
     private final ImageRepository imageRepository;
     private final CourseImageRepository courseImageRepository;
+    private final JoinerRepository joinerRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
@@ -92,7 +96,6 @@ public class TourService {
         }
     }
 
-
     // 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
     public Image saveImage(MultipartFile imageFile) throws IOException, IllegalAccessException {
         String fileUrl = s3Uploader.upload(imageFile);
@@ -107,6 +110,32 @@ public class TourService {
         tourCategory.setCategory(category);
         tourCategory.setDate(new Date());
         tourCategoryRepository.save(tourCategory);
+    }
+
+    public TourDetailDto.Response tourDetail(Long tourId) {
+        Tour tour = tourResitory.findById(tourId).get();
+        List<TourCategory> categories = tourCategoryRepository.findAllByTourId(tourId);
+        List<String> tourCategories = new ArrayList<>();
+        for (TourCategory tourCategory : categories) {
+            Category category = tourCategory.getCategory();
+            tourCategories.add(category.getName());
+        }
+        List<TourImage> tourImages = tourImageRepository.findAllByTourId(tourId);
+        List<String> tourImageUrls = new ArrayList<>();
+        for (TourImage tourImage : tourImages) {
+            tourImageUrls.add(tourImage.getImage().getUrl());
+        }
+        List<Course> courses = courseRepository.findAllByTourId(tourId);
+        List<CourseDto.Response> courseDtos = new ArrayList<>();
+        for (Course course : courses) {
+            CourseImage courseImage = courseImageRepository.findByCourseId(course.getId());
+            String imageUrl = courseImage.getImage().getUrl();
+            CourseDto.Response courseDto = new CourseDto.Response(course, imageUrl);
+            courseDtos.add(courseDto);
+        }
+        List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
+
+        return new TourDetailDto.Response(tour, tourCategories, tourImageUrls, courseDtos, joinerList);
     }
 }
 
