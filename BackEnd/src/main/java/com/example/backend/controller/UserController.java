@@ -9,6 +9,7 @@ import com.example.backend.dto.GuideUpdateDto;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.TestDto;
 import com.example.backend.dto.UserSignUpDto;
+import com.example.backend.dto.UserUpdateDto;
 import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.exception.type.NotSameDataValueException;
 import com.example.backend.model.user.User;
@@ -60,7 +61,7 @@ public class UserController {
         }
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         userService.signup(request, encodedPassword);
-      
+
         return new Response<>("200", "성공적으로 회원가입 되었습니다!", null);
     }
 
@@ -169,6 +170,22 @@ public class UserController {
         }
       
         userService.guideUpdate(userDetails.getUser(), request);
+
+        return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", null);
+    }
+
+
+    @PutMapping("/user")
+    public Response updateGuide(@AuthenticationPrincipal UserDetailsImpl userDetails,
+            @ModelAttribute @Valid UserUpdateDto.Request request,
+            BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        } else if (!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)) {
+            throw new IllegalArgumentException("카테고리 개수는 3개에서 5개 사이여야 합니다.");
+        }
+
+        userService.userUpdate(userDetails.getUser(), request);
 
         return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", null);
     }
