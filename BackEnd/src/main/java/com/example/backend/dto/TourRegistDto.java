@@ -6,6 +6,7 @@ import com.example.backend.model.user.User;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +28,7 @@ public class TourRegistDto {
         private Date endDate;
         private int minMember;
         private int maxMember;
-        private List<CourseDto> courses;
+        private List<CourseDto.Request> courses;
 
         public Tour toTour(User user) {
             return new Tour(this.region, this.title, this.subTitle, this.content,
