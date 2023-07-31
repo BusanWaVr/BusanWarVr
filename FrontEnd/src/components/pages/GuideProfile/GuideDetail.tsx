@@ -129,7 +129,13 @@ const GuideDetail: React.FC = () => {
     }));
   };
 
-  const handleLikeClick = (tourId: number) => {
+  const handleLikeClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    tourId: number
+  ) => {
+    // 이벤트 버블링 방지
+    event.stopPropagation();
+
     setGuide((prevGuide) => {
       const updatedScheduledTours = prevGuide.scheduledTours.map((tour) => {
         if (tour.tourId === tourId) {
@@ -151,6 +157,15 @@ const GuideDetail: React.FC = () => {
         endedTours: updatedEndedTours,
       };
     });
+  };
+
+  const handleCardBoxClick = (tourId: number) => {
+    const tour = guide.scheduledTours.find((tour) => tour.tourId === tourId);
+    if (tour) {
+      if (tour.isLiked) return;
+      const tourDetailUrl = `/tour/${tourId}`;
+      window.location.href = tourDetailUrl;
+    }
   };
 
   // URL 변수 선언
@@ -190,15 +205,17 @@ const GuideDetail: React.FC = () => {
         <Link to={scheduledToursUrl}>더보기</Link>
         <div className="tour-card-container">
           {guide.scheduledTours.map((tour) => (
-            <Link key={tour.tourId} to={`/tour/${tour.tourId}`}>
-              <div className="tour-card">
-                <img src={tour.image} alt={tour.title} />
-                <h4>{tour.title}</h4>
-                <button onClick={() => handleLikeClick(tour.tourId)}>
-                  {tour.isLiked ? "좋아요 취소" : "좋아요"}
-                </button>
-              </div>
-            </Link>
+            <div
+              className="tour-card"
+              key={tour.tourId}
+              onClick={() => handleCardBoxClick(tour.tourId)}
+            >
+              <img src={tour.image} alt={tour.title} />
+              <h4>{tour.title}</h4>
+              <button onClick={(event) => handleLikeClick(event, tour.tourId)}>
+                {tour.isLiked ? "좋아요 취소" : "좋아요"}
+              </button>
+            </div>
           ))}
         </div>
 
@@ -206,15 +223,17 @@ const GuideDetail: React.FC = () => {
         <Link to={endedToursUrl}>더보기</Link>
         <div className="tour-card-container">
           {guide.endedTours.map((tour) => (
-            <Link key={tour.tourId} to={`/tour/${tour.tourId}`}>
-              <div className="tour-card">
-                <img src={tour.image} alt={tour.title} />
-                <h4>{tour.title}</h4>
-                <button onClick={() => handleLikeClick(tour.tourId)}>
-                  {tour.isLiked ? "좋아요 취소" : "좋아요"}
-                </button>
-              </div>
-            </Link>
+            <div
+              className="tour-card"
+              key={tour.tourId}
+              onClick={() => handleCardBoxClick(tour.tourId)}
+            >
+              <img src={tour.image} alt={tour.title} />
+              <h4>{tour.title}</h4>
+              <button onClick={(event) => handleLikeClick(event, tour.tourId)}>
+                {tour.isLiked ? "좋아요 취소" : "좋아요"}
+              </button>
+            </div>
           ))}
         </div>
 
