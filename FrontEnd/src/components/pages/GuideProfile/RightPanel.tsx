@@ -11,11 +11,7 @@ interface RightPanelProps {
   onLikeClick: (tourId: number) => void;
 }
 
-const RightPanel: React.FC<RightPanelProps> = ({
-  guide,
-  setGuide,
-  onLikeClick,
-}) => {
+const RightPanel: React.FC<RightPanelProps> = ({ guide, onLikeClick }) => {
   const [guideState, setsGuideState] = useState<GuideData>(guide);
 
   const handleLikeClick = (

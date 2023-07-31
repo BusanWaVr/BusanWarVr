@@ -4,7 +4,6 @@ import React from "react";
 import { Review } from "./types"; // types.ts에서 Review 타입 import
 
 const ReviewCard: React.FC<Review> = ({
-  tourId,
   tourTitle,
   date,
   content,

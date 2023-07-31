@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { GuideData } from "./types"; // GuideData 타입 정의한 파일을 import
+import { GuideData } from "./types";
 import "./GuideMini.css";
 
 interface GuideMiniProps {
@@ -9,7 +9,7 @@ interface GuideMiniProps {
 }
 
 const GuideMini: React.FC<GuideMiniProps> = ({ guide, onFollowClick }) => {
-  const [isFollowing, setIsFollowing] = useState<Boolean>(false);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
   const handleFollowClick = () => {
     onFollowClick(); // Call the onFollowClick function passed from GuideDetail
@@ -30,6 +30,10 @@ const GuideMini: React.FC<GuideMiniProps> = ({ guide, onFollowClick }) => {
     console.log(isFollowing);
   };
 
+  const handleHomeClick = () => {
+    window.scrollTo(0, 0); // Scroll to the top of the page
+  };
+
   return (
     <div className="guidemini">
       <img src={guide.profileImg} alt={guide.nickname} />
@@ -40,7 +44,7 @@ const GuideMini: React.FC<GuideMiniProps> = ({ guide, onFollowClick }) => {
       <p>팔로워 {guide.followers}</p>
       <p>투어 {guide.toursCount}</p>
 
-      <Link to={`/guide/${guide.userId}/detail`}>홈</Link>
+      <button onClick={handleHomeClick}>홈</button>
       <Link to={`/guide/${guide.userId}/scheduledtours`}>진행 중인 투어</Link>
       <Link to={`/guide/${guide.userId}/endedtours`}>지난 투어</Link>
       <Link to={`/guide/${guide.userId}/reviews`}>후기</Link>
