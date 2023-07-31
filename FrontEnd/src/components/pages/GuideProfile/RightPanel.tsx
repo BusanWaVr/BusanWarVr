@@ -24,6 +24,13 @@ const RightPanel: React.FC<RightPanelProps> = ({
     onLikeClick(tourId);
   };
 
+<<<<<<< Updated upstream
+=======
+  useEffect(() => {
+    setGuide(guide);
+  }, [guide]);
+
+>>>>>>> Stashed changes
   return (
     <div id="right-panel" className="right-panel">
       <p id="introduction">&#123; {guide.introduction} &#125;</p>
