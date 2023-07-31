@@ -50,7 +50,6 @@ public class UserController {
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final UserService userService;
-    private final TourService tourService;
     private final EmailSender emailSender;
 
     String ACCESS_TOKEN_HEADER = "Access_Token";
@@ -210,8 +209,7 @@ public class UserController {
 
     @GetMapping("/user/wish")
     public Response getUserWishList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-        return new Response<>("200", "일단 테스트", null);
-
+        List<UserWishDto.Response> responseList = userService.getUserWishList(userDetails.getUser().getId());
+        return new Response<>("200", "성공적으로 위시리스트를 가져왔습니다.", responseList);
     }
 }

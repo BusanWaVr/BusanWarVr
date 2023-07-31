@@ -12,6 +12,7 @@ import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tourcategory.TourCategory;
+import com.example.backend.model.tourcategory.TourCategoryRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.usercategory.UserCategory;
@@ -37,10 +38,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final UserCategoryRepository userCategoryRepository;
+    private final TourCategoryRepository tourCategoryRepository;
     private final WishRepository wishRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
-    private final TourService tourService;
     private final static String DEFAULT_PROFILE_IMAGE = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
     private final S3Uploader s3Uploader;
 
@@ -185,19 +186,29 @@ public class UserService {
         }
     }
 
-    public void getUserWishList(Long userId) {
-        List<Wish> userWishes = wishRepository.findAllByUserId(userId);
+    public List<UserWishDto.Response> getUserWishList(Long userId) {
+        List<Wish> userWishLists = wishRepository.findAllByUserId(userId);
         List<UserWishDto.Response> responseList = new ArrayList<>();
 
-        for (Wish wish : userWishes) {
+        for (Wish wish : userWishLists) {
             Tour tour = wish.getTour();
-            List<TourCategory> categories = tourService.getTourCategories(tour.getId());
-            List<String> categoryNames = new ArrayList<>();
-            for (TourCategory category : categories) {
-                categoryNames.add(category.getCategory().getName());
+            List<TourCategory> tourCategories = tourCategoryRepository.findAllByTourId(tour.getId());
+            List<String> categoryList = new ArrayList<>();
+
+            for (TourCategory tourCategory : tourCategories) {
+                categoryList.add(tourCategory.getCategory().getName());
             }
-            UserWishDto.Response response = new UserWishDto.Response(tour, categoryNames, guide);
+
+            User tourGuide = userRepository.findById(tour.getUserId()).get();
+
+            GuideInfoForUserWishDto guide = new GuideInfoForUserWishDto();
+            guide.setId(tourGuide.getId());
+            guide.setName(tourGuide.getNickname());
+            UserWishDto.Response response = new UserWishDto.Response(tour, categoryList, guide);
             responseList.add(response);
         }
+
+        return responseList;
+
     }
 }
