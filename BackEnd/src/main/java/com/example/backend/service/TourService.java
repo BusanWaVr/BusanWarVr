@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.CourseDto;
+import com.example.backend.dto.JoinerDto;
 import com.example.backend.dto.TourDetailDto;
 import com.example.backend.dto.TourRegistDto;
 import com.example.backend.model.category.Category;
@@ -132,21 +133,30 @@ public class TourService {
         }
         List<TourImage> tourImages = tourImageRepository.findAllByTourId(tourId);
         List<String> tourImageUrls = new ArrayList<>();
-        for (TourImage tourImage : tourImages) {
-            tourImageUrls.add(tourImage.getImage().getUrl());
+        if(tourImages != null){
+            for (TourImage tourImage : tourImages) {
+                tourImageUrls.add(tourImage.getImage().getUrl());
+            }
         }
         List<Course> courses = courseRepository.findAllByTourId(tourId);
         List<CourseDto.Response> courseDtos = new ArrayList<>();
         for (Course course : courses) {
             CourseImage courseImage = courseImageRepository.findByCourseId(course.getId());
-            String imageUrl = courseImage.getImage().getUrl();
+            String imageUrl = "";
+            if(courseImage != null){
+                imageUrl = courseImage.getImage().getUrl();
+            }
             CourseDto.Response courseDto = new CourseDto.Response(course, imageUrl);
             courseDtos.add(courseDto);
         }
         List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
-
+        List<JoinerDto> joinerDtos = new ArrayList<>();
+        for (Joiner joiner : joinerList) {
+            JoinerDto joinerDto = new JoinerDto(joiner.getUser().getProfileImg(), joiner.getUser().getNickname(), joiner.getJoinDate());
+            joinerDtos.add(joinerDto);
+        }
         return new TourDetailDto.Response(tour, tourCategories, tourImageUrls, courseDtos,
-                joinerList);
+                joinerDtos);
     }
 
     public void tourReservation(Long tourId, User user) {
