@@ -27,9 +27,9 @@ public class TourDetailDto {
         private int minMember;
         private int maxMember;
         private List<CourseDto.Response> courses;
-        private List<Joiner> joiners;
+        private List<JoinerDto> joiners;
 
-        public Response(Tour tour, List<String> category,List<String> tourImgs, List<CourseDto.Response> courses, List<Joiner> joiners){
+        public Response(Tour tour, List<String> category,List<String> tourImgs, List<CourseDto.Response> courses, List<JoinerDto> joiners){
             this.region = tour.getRegion();
             this.category = category;
             this.title = tour.getTitle();
