@@ -1,45 +1,61 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface TourCourseState {
-  lon: number | null;
-  lat: number | null;
+type TourCourseInfo = {
+  lon: number;
+  lat: number;
   title: string;
   content: string;
   image: any;
+};
+
+interface TourCourseState {
   courses: TourCourseInfo[];
 }
 
 const initialState: TourCourseState = {
-  lon: 128.85357686495757,
-  lat: 35.096171208475724,
-  title: "",
-  content: "",
-  image: "",
-  courses: [],
+  courses: [{ lon: 0, lat: 0, title: "", content: "", image: null }],
 };
 
 const tourCourseSlice = createSlice({
   name: "tourCourse",
   initialState,
   reducers: {
-    setLongitude(state, action: PayloadAction<number>) {
-      state.lon = action.payload;
+    setTitle(state, action: PayloadAction<{ index: number; title: string }>) {
+      const { index, title } = action.payload;
+      state.courses[index].title = title;
     },
-    setLatitude(state, action: PayloadAction<number>) {
-      state.lat = action.payload;
+    setLongitude(state, action: PayloadAction<{ index: number; lon: number }>) {
+      const { index, lon } = action.payload;
+      state.courses[index].lon = lon;
     },
-    setTitle(state, action: PayloadAction<string>) {
-      state.title = action.payload;
+    setLatitude(state, action: PayloadAction<{ index: number; lat: number }>) {
+      const { index, lat } = action.payload;
+      state.courses[index].lat = lat;
     },
-    setContent(state, action: PayloadAction<string>) {
-      state.content = action.payload;
+    setContent(
+      state,
+      action: PayloadAction<{ index: number; content: string }>
+    ) {
+      const { index, content } = action.payload;
+      state.courses[index].content = content;
     },
-    setImage(state, action: PayloadAction<any>) {
-      state.image = action.payload;
+    setImage(state, action: PayloadAction<{ index: number; image: string }>) {
+      const { index, image } = action.payload;
+      state.courses[index].image = image;
+    },
+    setCourses(state, action: PayloadAction<TourCourseInfo>) {
+      const course = action.payload;
+      state.courses = [...state.courses, course];
     },
   },
 });
 
-export const { setLongitude, setLatitude, setTitle, setContent, setImage } =
-  tourCourseSlice.actions;
+export const {
+  setTitle,
+  setContent,
+  setImage,
+  setLatitude,
+  setLongitude,
+  setCourses,
+} = tourCourseSlice.actions;
 export default tourCourseSlice.reducer;
