@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CourseDto {
 
     @Data
-    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Request {
 
         private double lon;
