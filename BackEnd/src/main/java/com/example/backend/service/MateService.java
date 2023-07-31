@@ -3,7 +3,9 @@ package com.example.backend.service;
 import com.example.backend.dto.MateDetailDto;
 import com.example.backend.dto.MateDetailDto.Response;
 import com.example.backend.dto.MateInfoDetailDto;
+import com.example.backend.dto.MateInfoForListDto;
 import com.example.backend.dto.MateJoinerDto;
+import com.example.backend.dto.MateListDto;
 import com.example.backend.dto.MateRegistDto;
 import com.example.backend.model.joiner.Joiner;
 import com.example.backend.model.joiner.JoinerRepository;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,5 +61,16 @@ public class MateService {
         response.setMate(mateInfoDetailDto);
         response.setJoiners(mateInfoDetailDtos);
         return response;
+    }
+
+    public MateListDto.Response getMateList(Pageable pageable){
+        Page<Mate> mates = mateRepository.findAllByOrderById(pageable);
+        List<MateInfoForListDto> mateInfoForListDtos = new ArrayList<>();
+
+        for(Mate mate : mates){
+            mateInfoForListDtos.add(new MateInfoForListDto(mate));
+        }
+
+        return new MateListDto.Response(mateInfoForListDtos);
     }
 }
