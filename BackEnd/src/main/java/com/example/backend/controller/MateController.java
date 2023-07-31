@@ -51,14 +51,14 @@ public class MateController {
     public Response<MateListDto.Response> getMateList(
             @PageableDefault(size = 6) Pageable pageable) {
         MateListDto.Response response = mateService.getMateList(pageable);
-        return new Response<>("200", "성곡적으로 메이트 리스트를 불러왔습니다.", response);
+        return new Response<>("200", "성공적으로 메이트 리스트를 불러왔습니다.", response);
     }
 
     @PutMapping("/mate/{mateId}")
     public Response putMate(@AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long mateId, @RequestBody MateUpdateDto.Request request) {
         mateService.updateMate(request, mateId, userDetails.getUser());
-        return new Response<>("200", "성곡적으로 메이트 정보를 변경하였습니다.", null);
+        return new Response<>("200", "성공적으로 메이트 정보를 변경하였습니다.", null);
     }
 
     @DeleteMapping("/mate/{mateId}")

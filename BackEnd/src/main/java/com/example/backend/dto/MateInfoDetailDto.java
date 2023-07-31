@@ -8,13 +8,15 @@ import lombok.Data;
 @AllArgsConstructor
 public class MateInfoDetailDto {
     private Long tourId;
+    private String tourTitle;
     private String title;
     private String content;
     private int minMember;
     private int maxMember;
 
-    public MateInfoDetailDto(Mate mate){
+    public MateInfoDetailDto(Mate mate, String tourTitle){
         this.tourId = mate.getTourId();
+        this.tourTitle = tourTitle;
         this.title = mate.getTitle();
         this.content = mate.getContent();
         this.minMember = mate.getMinMember();
