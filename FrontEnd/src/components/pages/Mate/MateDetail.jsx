@@ -1,5 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import styled from "styled-components";
+
+const JoinerContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const CenteredContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const MateDetail = () => {
   const { mateId } = useParams();
@@ -18,7 +30,7 @@ const MateDetail = () => {
           setMateData(data.data.mate);
 
           // joiner정보
-          setJoinerData(data.data.joiner);
+          setJoinerData(data.data.joiners);
 
         } else {
           // 아마도...
@@ -38,9 +50,45 @@ const MateDetail = () => {
       <br />
       {mateData ? (
         <div>
-          <h3><strong>{mateData.title}</strong></h3>
+          <div>
+            {/* <p>여기 같이가요!</p> */}
+            {/* 투어 아이디 받아와서 링크랑 제목달아주기! 참가인원도! */}
+            
+          </div>
+
+          <h3><strong>제목: {mateData.title}</strong></h3>
           <br />
+          <span>내용: </span>
           <div dangerouslySetInnerHTML={{ __html: mateData.content }} />
+
+          <br />
+          <br />
+          <br />
+          {joinerData.length > 0 ? (
+            <div>
+              <h2>참가자 목록</h2>
+              <CenteredContainer>
+                <ul>
+                  {joinerData.map((joiner, index) => (
+                    <li key={index}>
+                      <JoinerContainer>
+                        <img src={joiner.profileImg} alt="프로필 이미지"
+                        // 임시로 이미지 줄여둠
+                        style={{
+                          width: "200px",
+                          height: "200px",
+                          borderRadius: "50%"}} />
+                        <div>{joiner.nickname}</div>
+                        <div>{joiner.joinDate}</div>
+                      </JoinerContainer>
+                    </li>
+                  ))}
+                </ul>
+              </CenteredContainer>
+            </div>
+          ) : (
+            <p>참가자가 없습니다.</p>
+          )}
         </div>
       ) : (
         <p>로딩중ㅎ</p>
