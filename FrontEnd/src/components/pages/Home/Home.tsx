@@ -4,8 +4,12 @@ import reactLogo from "../../../assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./Home.css";
 
-function Home() {
-  const [count, setCount] = useState(0);
+import { useSelector, useDispatch } from "react-redux";
+import { increment } from "./counterReducer";
+
+const Home: React.FC = () => {
+  const counter = useSelector((state: any) => state.counter.value);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -19,8 +23,8 @@ function Home() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={() => dispatch(increment())}>
+          count is {counter}
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
@@ -31,6 +35,6 @@ function Home() {
       </p>
     </>
   );
-}
+};
 
 export default Home;
