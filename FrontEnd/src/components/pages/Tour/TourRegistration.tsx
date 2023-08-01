@@ -215,7 +215,9 @@ const TourRegistration: React.FC = () => {
         `courses[${i}].content`,
         JSON.stringify(tourData.courses[i].content)
       );
-      formData.append(`courses[${i}].image`, tourData.courses[i].imageFile);
+      if (tourData.courses[i].imageFile) {
+        formData.append(`courses[${i}].image`, tourData.courses[i].imageFile);
+      }
     }
 
     try {
