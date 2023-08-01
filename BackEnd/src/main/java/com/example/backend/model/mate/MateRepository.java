@@ -5,5 +5,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MateRepository extends JpaRepository<Mate, Long> {
-    Page<Mate> findAllByOrderById(Pageable pageable);
+    Page<Mate> findAllByOrderByIdDesc(Pageable pageable);
 }

@@ -15,8 +15,8 @@ const CenteredContainer = styled.div`
 
 const MateDetail = () => {
   const { mateId } = useParams();
-  const [ mateData, setMateData ] = useState(null);
-  const [ joinerData, setJoinerData ] = useState(null);
+  const [mateData, setMateData] = useState(null);
+  const [joinerData, setJoinerData] = useState(null);
 
   useEffect(() => {
     const fetchMateData = async () => {
@@ -51,6 +51,10 @@ const MateDetail = () => {
       {mateData ? (
         <div>
 
+          <p>모집중인 투어</p>
+          <Link to={`/tour/${mateData.tourId}`}>{mateData.tourTitle}</Link>
+          <br />
+          <br />
           <h3><strong>제목: {mateData.title}</strong></h3>
           <br />
           <span>내용: </span>
@@ -58,11 +62,10 @@ const MateDetail = () => {
 
           <br />
           <br />
-          <Link to={`/tour/${mateData.tourId}`}>해당 투어로 이동하기^_^</Link>
           <br />
           {joinerData.length > 0 ? (
             <div>
-              <h3><strong>이 투어에 참여하는 사람들이에요</strong></h3>
+              <h3><strong>이 투어에 참여하는 사람들</strong></h3>
               <p>총 <strong>{mateData.maxMember}</strong>명 중 <strong>{joinerData.length}</strong>명이 모였어요.</p>
 
               <CenteredContainer>
