@@ -1,15 +1,18 @@
-// GuideMini.tsx
+// GuideMyPageMini.tsx
 import React, { useState, useEffect } from "react";
 import { GuideData } from "./types";
-import GuideDetailMenu from "./GuideDetailMenu";
-import "./GuideMini.css";
+import GuideMyPageMenu from "./GuideMyPageMenu";
+import "./GuideMyPageMini.css";
 
-interface GuideMiniProps {
+interface GuideMyPageMiniProps {
   guide: GuideData;
   onFollowClick: () => void;
 }
 
-const GuideMini: React.FC<GuideMiniProps> = ({ guide, onFollowClick }) => {
+const GuideMyPageMini: React.FC<GuideMyPageMiniProps> = ({
+  guide,
+  onFollowClick,
+}) => {
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
   useEffect(() => {
@@ -17,7 +20,7 @@ const GuideMini: React.FC<GuideMiniProps> = ({ guide, onFollowClick }) => {
   }, [guide.isFollowing]);
 
   const handleFollowClick = () => {
-    onFollowClick(); // GuideDetail에서 전달받은 onFollowClick 함수 호출
+    onFollowClick(); // GuideMyPage에서 전달받은 onFollowClick 함수 호출
   };
 
   const handleFollowClick2 = () => {
@@ -30,7 +33,7 @@ const GuideMini: React.FC<GuideMiniProps> = ({ guide, onFollowClick }) => {
   };
 
   return (
-    <div className="guidemini">
+    <div className="GuideMyPageMini">
       <img src={guide.profileImg} alt={guide.nickname} />
       <h2>{guide.nickname}</h2>
       <button onClick={handleFollowClick2}>
@@ -38,7 +41,7 @@ const GuideMini: React.FC<GuideMiniProps> = ({ guide, onFollowClick }) => {
       </button>
       <p>팔로워 {guide.followers}</p>
       <p>투어 {guide.toursCount}</p>
-      <GuideDetailMenu
+      <GuideMyPageMenu
         userId={guide.userId}
         handleHomeClick={handleHomeClick}
       />
@@ -46,4 +49,4 @@ const GuideMini: React.FC<GuideMiniProps> = ({ guide, onFollowClick }) => {
   );
 };
 
-export default GuideMini;
+export default GuideMyPageMini;
