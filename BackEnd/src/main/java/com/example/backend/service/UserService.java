@@ -8,12 +8,10 @@ import com.example.backend.dto.user.UserUpdateDto;
 import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
-import com.example.backend.model.tourcategory.TourCategoryRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.usercategory.UserCategory;
 import com.example.backend.model.usercategory.UserCategoryRepository;
-import com.example.backend.model.wish.WishRepository;
 import com.example.backend.util.awsS3.S3Uploader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,8 +31,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final UserCategoryRepository userCategoryRepository;
-    private final TourCategoryRepository tourCategoryRepository;
-    private final WishRepository wishRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
     private final static String DEFAULT_PROFILE_IMAGE = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
@@ -42,21 +38,27 @@ public class UserService {
 
     @Transactional
     public void signup(UserSignUpDto.Request request, String encodedPassword)
-            throws DuplicatedValueException, IllegalAccessException {
+            throws DuplicatedValueException, IllegalArgumentException {
         emailExistValidCheck(request.getEmail());
         nicknameExistValidCheck(request.getNickname());
 
+        boolean isUnRegistered = false;
+
+        // 사용자가 선택한 카테고리 이름들이 모두 등록 가능한지 체크
+        for (String categoryName : request.getCategory()) {
+            if (categoryRepository.findByName(categoryName) == null) {
+                isUnRegistered = true;
+            }
+        }
+
+        if (isUnRegistered) {
+            throw new IllegalArgumentException("등록된 카테고리만 추가 가능합니다.");
+        }
         User user = request.toUser(DEFAULT_PROFILE_IMAGE, encodedPassword);
         userRepository.save(user);
-
         // 사용자가 선택한 카테고리 이름들을 UserCategory 객체로 변환하고 저장
         for (String categoryName : request.getCategory()) {
-            if (categoryRepository.findByName(categoryName) != null) {
-                userCategoryCreate(user, categoryRepository.findByName(categoryName));
-            }
-            else {
-                throw new IllegalAccessException("등록된 카테고리만 추가 가능합니다.");
-            }
+            userCategoryCreate(user, categoryRepository.findByName(categoryName));
         }
     }
 
