@@ -10,14 +10,22 @@ import com.example.backend.dto.Response;
 import com.example.backend.dto.TestDto;
 import com.example.backend.dto.UserSignUpDto;
 import com.example.backend.dto.UserUpdateDto;
+import com.example.backend.dto.UserWishDto;
 import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.exception.type.NotSameDataValueException;
+import com.example.backend.model.tour.Tour;
+import com.example.backend.model.tourcategory.TourCategory;
 import com.example.backend.model.user.User;
+import com.example.backend.model.usercategory.UserCategory;
+import com.example.backend.model.wish.Wish;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.RefreshTokenService;
+import com.example.backend.service.TourService;
 import com.example.backend.service.UserService;
 import com.example.backend.util.emailsender.EmailSender;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -172,7 +180,7 @@ public class UserController {
         if (userDetails.getUser().getType().toString() == "USER") {
             throw new IllegalArgumentException("권한이 없는 사용자의 접근입니다.");
         }
-      
+
         userService.guideUpdate(userDetails.getUser(), request);
 
         return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", null);
