@@ -1,7 +1,6 @@
 package com.example.backend.model.tour;
 
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,6 +53,9 @@ public class Tour {
 
     @Column
     private boolean isCanceled;
+
+    @Column
+    private boolean isEnded;
 
     public Tour(String region, String title, String subTitle, String content, Date startDate,
             Date endDate, int minMember, int maxMember, long userId) {

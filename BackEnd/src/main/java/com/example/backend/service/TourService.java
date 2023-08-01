@@ -198,4 +198,18 @@ public class TourService {
             throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 취소 가능합니다.");
         }
     }
+
+    public void tourTerminate(Long tourId, User user) throws IllegalAccessException {
+        Tour tour = tourRepository.findById(tourId).get();
+        if((user.getType() == AuthType.GUIDE) && (tour.getUserId() == user.getId())){
+            tour.setEnded(true);
+            tourRepository.save(tour);
+        }
+        else if(user.getType() == AuthType.USER){
+            throw new IllegalAccessException("가이드만 투어 취소 가능합니다.");
+        }
+        else {
+            throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 취소 가능합니다.");
+        }
+    }
 }
