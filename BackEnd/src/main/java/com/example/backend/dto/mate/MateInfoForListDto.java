@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class MateInfoForListDto {
+
     private Long mateId;
     private Long tourId;
     private String title;
@@ -15,7 +16,7 @@ public class MateInfoForListDto {
     private int maxMember;
     private int joinMember;
 
-    public MateInfoForListDto(Mate mate){
+    public MateInfoForListDto(Mate mate) {
         this.mateId = mate.getId();
         this.tourId = mate.getTourId();
         this.title = mate.getTitle();

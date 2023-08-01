@@ -15,7 +15,8 @@ public class TourDetailDto {
 
     @Data
     @NoArgsConstructor
-    public static class Response{
+    public static class Response {
+
         private String region;
         private List<String> category;
         private String title;
@@ -36,7 +37,8 @@ public class TourDetailDto {
         private boolean isCanceled;
         private boolean isEnded;
 
-        public Response(Tour tour, User user, List<String> category,List<String> tourImgs, List<CourseDto.Response> courses, List<JoinerDto> joiners){
+        public Response(Tour tour, User user, List<String> category, List<String> tourImgs,
+                List<CourseDto.Response> courses, List<JoinerDto> joiners) {
             this.region = tour.getRegion();
             this.category = category;
             this.title = tour.getTitle();

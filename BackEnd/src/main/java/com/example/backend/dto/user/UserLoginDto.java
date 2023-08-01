@@ -1,7 +1,6 @@
 package com.example.backend.dto.user;
 
 import com.example.backend.model.user.User;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +16,7 @@ public class UserLoginDto {
     private String Access_Token;
     private String Refresh_Token;
 
-    public UserLoginDto(User user, String access, String refresh){
+    public UserLoginDto(User user, String access, String refresh) {
         this.userId = user.getId();
         this.email = user.getEmail();
         this.nickname = user.getNickname();

@@ -9,7 +9,8 @@ public class MateRegistDto {
 
     @Data
     @NoArgsConstructor
-    public static class Request{
+    public static class Request {
+
         private long tourId;
         private String title;
         private String content;
@@ -18,7 +19,8 @@ public class MateRegistDto {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Response{
+    public static class Response {
+
         private long mateId;
     }
 }

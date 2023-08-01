@@ -9,6 +9,7 @@ public class ChatRoomRegistDto {
     @Data
     @NoArgsConstructor
     public static class Request {
+
         private Long tourId;
     }
 }

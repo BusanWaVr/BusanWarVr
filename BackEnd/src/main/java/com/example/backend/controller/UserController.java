@@ -1,13 +1,13 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.Response;
+import com.example.backend.dto.TestDto;
 import com.example.backend.dto.user.AuthCodeDto;
 import com.example.backend.dto.user.AuthEmailDto;
 import com.example.backend.dto.user.AuthNicknameDto;
 import com.example.backend.dto.user.AuthPasswordDto;
 import com.example.backend.dto.user.GuideSignUpDto;
 import com.example.backend.dto.user.GuideUpdateDto;
-import com.example.backend.dto.Response;
-import com.example.backend.dto.TestDto;
 import com.example.backend.dto.user.UserSignUpDto;
 import com.example.backend.dto.user.UserUpdateDto;
 import com.example.backend.exception.type.DuplicatedValueException;
@@ -56,9 +56,11 @@ public class UserController {
             throws BindException, DuplicatedValueException, IllegalArgumentException, IllegalAccessException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
-        } else if (!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)) {
+        }
+        if (!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)) {
             throw new IllegalArgumentException("카테고리 개수는 3개에서 5개 사이여야 합니다.");
         }
+
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         userService.signup(request, encodedPassword);
 
