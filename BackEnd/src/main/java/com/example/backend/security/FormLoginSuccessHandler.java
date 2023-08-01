@@ -1,7 +1,7 @@
 package com.example.backend.security;
 
 import com.example.backend.dto.Response;
-import com.example.backend.dto.UserLoginDto;
+import com.example.backend.dto.user.UserLoginDto;
 import com.example.backend.security.jwt.JwtTokenUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;

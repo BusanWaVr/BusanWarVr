@@ -1,6 +1,5 @@
 package com.example.backend.dto.mate;
 
-import com.example.backend.dto.mate.MateInfoForListDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
