@@ -1,5 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 import RootLayout from "../components/pages/Root/RootLayout.tsx";
+
+import PrivateRoute from "./PrivateRoute.tsx";
+import PublicRoute from "./PublicRoute.tsx";
+import GuideRoute from "./GuideRoute.tsx";
+import UserRoute from "./UserRouter.tsx";
+
 import Test from "../components/blocks/Test.tsx";
 import Dashboard from "../components/pages/Auth/Dashboard.tsx";
 import Home from "../components/pages/Home/Home.tsx";
@@ -27,20 +33,45 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/test" element={<Test />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/update" element={<Update />} />
-          <Route path="/guidesignup" element={<GuideSignup />} />
-          <Route path="/livestream" element={<LiveStream />} />
-          <Route path="/chatroom" element={<ChatRoom />} />
-          <Route path="/tour/:tourId/update" element={<TourUpdate />} />
-          <Route path="/tour/write" element={<TourRegistration />} />
+
+          <Route element={<PublicRoute />}>
+            <Route path="/signup" element={<Signup />} />
+          </Route>
+
+          <Route element={<PublicRoute />}>
+            <Route path="/guidesignup" element={<GuideSignup />} />
+          </Route>
+
+          <Route element={<PrivateRoute />}>
+            <Route path="/livestream" element={<LiveStream />} />
+          </Route>
+
+          <Route element={<PrivateRoute />}>
+            <Route path="/chatroom" element={<ChatRoom />} />
+          </Route>
+
+          <Route element={<GuideRoute />}>
+            <Route path="/tour/write" element={<TourRegistration />} />
+          </Route>
+
           <Route path="/tour/:tourId" element={<TourDetail />} />
           <Route path="/guide/:guideId/detail" element={<GuideDetail />} />
-          <Route path="/guide/:guideId/mypage" element={<GuideMyPage />} />
-          <Route path="/write" element={<WritePage />} />
+
+          <Route element={<GuideRoute />}>
+            <Route path="/guide/:guideId/mypage" element={<GuideMyPage />} />
+          </Route>
+
+          <Route element={<UserRoute />}>
+            <Route path="/write" element={<WritePage />} />
+          </Route>
+
           <Route path="/matedetail/:mateId" element={<MateDetail />} />
           <Route path="/mate" element={<MateList />} />
-          <Route path="/mateedit/:mateId" element={<MateEdit />} />
+
+          <Route element={<UserRoute />}>
+            <Route path="/mateedit/:mateId" element={<MateEdit />} />
+          </Route>
+
           <Route
             path="*"
             element={

@@ -15,6 +15,6 @@ public class RedisSubscriber {
     public void sendMessage(String publishMessage) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         ChatMessageResponseDto messageResponseDto = objectMapper.readValue(publishMessage, ChatMessageResponseDto.class);
-        messagingTemplate.convertAndSend("/sub/chat/room/" + messageResponseDto.getRoomId(), messageResponseDto);
+        messagingTemplate.convertAndSend("/sub/chat/room/" + messageResponseDto.getRoomUid(), messageResponseDto);
     }
 }
