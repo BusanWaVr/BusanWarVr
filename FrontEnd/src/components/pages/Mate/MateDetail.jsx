@@ -139,12 +139,11 @@ const MateDetail = () => {
           ) : (
             <p>참가자가 없습니다.</p>
           )}
+          <button onClick={handleDelete}>삭제</button>
         </div>
       ) : (
         <p>로딩중ㅎ</p>
       )}
-
-      <button onClick={handleDelete}>삭제</button>
     </div>
   );
 };
