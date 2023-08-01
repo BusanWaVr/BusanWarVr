@@ -43,8 +43,8 @@ const LiveStreamView = () => {
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-  const [onload, setOnload] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const sliderSettings = {
     dots: false,
