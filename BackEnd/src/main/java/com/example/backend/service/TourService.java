@@ -22,6 +22,7 @@ import com.example.backend.model.tourcategory.TourCategoryRepository;
 import com.example.backend.model.tourimage.TourImage;
 import com.example.backend.model.tourimage.TourImageRepository;
 import com.example.backend.model.user.User;
+import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.wish.Wish;
 import com.example.backend.model.wish.WishRepository;
 import com.example.backend.util.awsS3.S3Uploader;
@@ -38,6 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class TourService {
 
+    private final UserRepository userRepository;
     private final TourRepository tourRepository;
     private final CourseRepository courseRepository;
     private final CategoryRepository categoryRepository;
@@ -125,6 +127,7 @@ public class TourService {
 
     public TourDetailDto.Response tourDetail(Long tourId) {
         Tour tour = tourRepository.findById(tourId).get();
+        User user = userRepository.findById(tour.getUserId()).get();
         List<TourCategory> categories = tourCategoryRepository.findAllByTourId(tourId);
         List<String> tourCategories = new ArrayList<>();
         for (TourCategory tourCategory : categories) {
@@ -156,7 +159,7 @@ public class TourService {
                     joiner.getUser().getNickname(), joiner.getJoinDate());
             joinerDtos.add(joinerDto);
         }
-        return new TourDetailDto.Response(tour, tourCategories, tourImageUrls, courseDtos,
+        return new TourDetailDto.Response(tour, user, tourCategories, tourImageUrls, courseDtos,
                 joinerDtos);
     }
 

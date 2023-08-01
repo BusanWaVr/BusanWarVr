@@ -81,11 +81,17 @@ const MateDetail = () => {
   };
 
   // 수정페이지로
-  const handleButtonClick = () => {
+  const handleButtonClick = ({ mateData }) => {
     if (userId === mateData.writerId) {
-      navigate(`/mateedit/${mateId}`);
+      navigate(`/mateedit/${mateId}`, {
+        state: {
+          tourId: mateData.tourId,
+          title: mateData.title,
+          content: mateData.content,
+        },
+      });
     } else {
-      ("글 작성자 본인만 수정할 수 있습니다.");
+      alert("글 작성자 본인만 수정할 수 있습니다.");
     }
   };
 
@@ -93,6 +99,7 @@ const MateDetail = () => {
     <div>
       <h1>메이트 상세페이지</h1>
       <br />
+      {/* 자식 컴포넌트로 데이터 보내기 */}
       {mateData ? (
         <div>
           <p>모집중인 투어</p>
@@ -148,7 +155,7 @@ const MateDetail = () => {
           ) : (
             <p>참가자가 없습니다.</p>
           )}
-          <button onClick={handleButtonClick}>수정</button>
+          <button onClick={() => handleButtonClick({ mateData })}>수정</button>
           <button onClick={handleDelete}>삭제</button>
         </div>
       ) : (

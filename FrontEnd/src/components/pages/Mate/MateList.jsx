@@ -9,16 +9,19 @@ const MateList = () => {
   useEffect(() => {
     const fetchMateListData = async () => {
       try {
-        const response = await fetch(`http://52.79.93.203/mate?page=${currentPage}`);
+        const response = await fetch(
+          `http://52.79.93.203/mate?page=${currentPage}`
+        );
         if (response.status === 200) {
           const data = await response.json();
           setMateListData(data.data.mateList);
-          
 
           // 페이지 수
-          setTotalPages(Math.floor(data.data.totalCount / 6) + 1);
+          setTotalPages(data.data.pageCount);
         } else {
-          alert("메이트 목록을 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.");
+          alert(
+            "메이트 목록을 불러올 수 없습니다. 잠시 후 다시 시도해 주세요."
+          );
         }
       } catch (error) {
         console.error(error);
@@ -46,7 +49,10 @@ const MateList = () => {
       {mateListData.map((mate, index) => (
         <div key={mate.mateId}>
           <h3>
-            <Link to={`/matedetail/${mate.mateId}`} style={{ fontWeight: "bold" }}>
+            <Link
+              to={`/matedetail/${mate.mateId}`}
+              style={{ fontWeight: "bold" }}
+            >
               {mate.title}
             </Link>
           </h3>
@@ -56,13 +62,15 @@ const MateList = () => {
           </p>
           {index % 3 === 2 && <br />}
         </div>
-        
       ))}
       <div>
         <button onClick={handlePrevPage} disabled={currentPage === 0}>
           이전 페이지
         </button>
-        <button onClick={handleNextPage} disabled={currentPage === totalPages - 1}>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages - 1}
+        >
           다음 페이지
         </button>
       </div>
