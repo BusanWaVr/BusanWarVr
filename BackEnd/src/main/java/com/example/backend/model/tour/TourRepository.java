@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TourRepository extends JpaRepository<Tour, Long> {
     List<Tour> findAllByUserId(Long userId);
+    Tour findByUid(String uid);
 }

@@ -49,4 +49,8 @@ public class ChatRoomService {
             chatParticipantsInfoRepository.save(chatParticipantsInfo);
         }
     }
+
+    public void deleteChatRoom(User user, ChatRoomRegistDto.Request request){
+        
+    }
 }
