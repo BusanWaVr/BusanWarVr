@@ -1,11 +1,14 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserWishDto;
+import com.example.backend.dto.userinfo.UserFollowDto;
 import com.example.backend.dto.userinfo.UserWishDto;
-import com.example.backend.dto.userinfo.UserWishDto.Response;
+import com.example.backend.dto.userinfo.UserWishTourDto;
 import com.example.backend.model.follower.Follower;
 import com.example.backend.model.follower.FollowerRepository;
 import com.example.backend.model.tour.Tour;
+import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.tourcategory.TourCategory;
 import com.example.backend.model.tourcategory.TourCategoryRepository;
 import com.example.backend.model.user.User;
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,14 +27,15 @@ import org.springframework.stereotype.Service;
 public class UserInfoService {
 
     private final UserRepository userRepository;
+    private final TourRepository tourRepository;
     private final TourCategoryRepository tourCategoryRepository;
     private final WishRepository wishRepository;
     private final FollowerRepository followerRepository;
 
 
-    public List<Response> getUserWishList(Long userId) {
-        List<Wish> userWishLists = wishRepository.findAllByUserId(userId);
-        List<UserWishDto.Response> responseList = new ArrayList<>();
+    public UserWishDto.Response getUserWishList(Long userId, Pageable pageable) {
+        List<Wish> userWishLists = wishRepository.findAllByUserId(userId, pageable);
+        List<UserWishTourDto> wishList = new ArrayList<>();
 
         for (Wish wish : userWishLists) {
             Tour tour = wish.getTour();
@@ -47,12 +52,10 @@ public class UserInfoService {
             GuideInfoForUserWishDto guide = new GuideInfoForUserWishDto();
             guide.setId(tourGuide.getId());
             guide.setName(tourGuide.getNickname());
-            UserWishDto.Response response = new UserWishDto.Response(tour, categoryList, guide);
-            responseList.add(response);
+
+            wishList.add(new UserWishTourDto(tour, categoryList, guide));
         }
-
-        return responseList;
-
+        return new UserWishDto.Response(wishList);
     }
 
     @Transactional
@@ -87,5 +90,25 @@ public class UserInfoService {
 
     public void followerDelete(User user, User guide) {
         followerRepository.deleteByUserAndGuide(user, guide);
+    }
+
+    public UserFollowDto.Response getFollowingGuideList(User user, Pageable pageable) {
+        List<Follower> followingGuideList = followerRepository.findAllByUser(user, pageable);
+        List<GuideInfoForUserFollowDto> responseList = new ArrayList<>();
+
+        for (Follower followingGuide : followingGuideList) {
+
+            GuideInfoForUserFollowDto guide = new GuideInfoForUserFollowDto();
+            List<Follower> followedGuideList = followerRepository.findAllByGuide(followingGuide.getGuide());
+            List<Tour> guideTourList = tourRepository.findAllByUserId(followingGuide.getGuide().getId());
+            guide.setId(followingGuide.getGuide().getId());
+            guide.setNickname(followingGuide.getGuide().getNickname());
+            guide.setFollower(followedGuideList.size());
+            guide.setTourNumbers(guideTourList.size());
+
+            responseList.add(guide);
+        }
+
+        return new UserFollowDto.Response(responseList);
     }
 }
