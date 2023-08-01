@@ -1,25 +1,18 @@
 package com.example.backend.dto.userinfo;
 
-import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 public class UserFollowDto {
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Response {
 
-        private Long id;
-        private String nickname;
-        private int follower;
-        private int tourNumbers;
-
-        public Response(GuideInfoForUserFollowDto guide) {
-            this.id = guide.getId();
-            this.nickname = guide.getNickname();
-            this.follower = guide.getFollower();
-            this.tourNumbers = guide.getTourNumbers();
-
-        }
+        private List<GuideInfoForUserFollowDto> guides;
     }
-
 }
