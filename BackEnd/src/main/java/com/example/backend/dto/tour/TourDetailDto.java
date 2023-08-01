@@ -1,8 +1,10 @@
 package com.example.backend.dto.tour;
 
 import com.example.backend.dto.course.CourseDto;
+import com.example.backend.dto.course.CourseDto.Response;
 import com.example.backend.dto.joiner.JoinerDto;
 import com.example.backend.model.tour.Tour;
+import com.example.backend.model.user.User;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
@@ -23,15 +25,17 @@ public class TourDetailDto {
         private List<String> tourImgs;
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z")
         private Date startDate;
-//        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z")
         private Date endDate;
         private int minMember;
         private int maxMember;
         private List<CourseDto.Response> courses;
         private List<JoinerDto> joiners;
+        private Long tourId;
+        private String nickname;
+        private String profileImg;
 
-        public Response(Tour tour, List<String> category,List<String> tourImgs, List<CourseDto.Response> courses, List<JoinerDto> joiners){
+        public Response(Tour tour, User user, List<String> category,List<String> tourImgs, List<CourseDto.Response> courses, List<JoinerDto> joiners){
             this.region = tour.getRegion();
             this.category = category;
             this.title = tour.getTitle();
@@ -44,6 +48,9 @@ public class TourDetailDto {
             this.tourImgs = tourImgs;
             this.courses = courses;
             this.joiners = joiners;
+            this.tourId = tour.getId();
+            this.nickname = user.getNickname();
+            this.profileImg = user.getProfileImg();
         }
     }
 }
