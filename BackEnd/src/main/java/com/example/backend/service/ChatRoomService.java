@@ -37,7 +37,6 @@ public class ChatRoomService {
 
         isValidTourHost(user, tour);
 
-
         ChatRoom chatRoom = chatRoomRepository.findByTour(tour);
         List<Joiner> joiners = joinerRepository.findAllByTourId(request.getTourId());
 
@@ -49,7 +48,7 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void deleteChatRoom(User user, ChatRoomRegistDto.Request request){
+    public void deleteChatRoom(User user, ChatRoomRegistDto.Request request) {
         isValidGuide(user);
 
         Tour tour = tourRepository.findById(request.getTourId()).get();
@@ -63,13 +62,23 @@ public class ChatRoomService {
         chatRoomRepository.deleteByTourId(request.getTourId());
     }
 
-    public void isValidGuide(User user){
+    public void rejoinChatRoom(User user, ChatRoomRegistDto.Request request) {
+        Tour tour = tourRepository.findById(request.getTourId()).get();
+
+        isValidTourHost(user, tour);
+
+        ChatRoom chatRoom = chatRoomRepository.findByTour(tour);
+        ChatParticipantsInfo chatParticipantsInfo = new ChatParticipantsInfo(user, chatRoom);
+        chatParticipantsInfoRepository.save(chatParticipantsInfo);
+    }
+
+    public void isValidGuide(User user) {
         if (user.getType().toString() != "GUIDE") {
             throw new IllegalArgumentException("가이드만 채팅방을 시작할 수 있습니다.");
         }
     }
 
-    public void isValidTourHost(User user, Tour tour){
+    public void isValidTourHost(User user, Tour tour) {
         if (user.getId() != tour.getUserId()) {
             throw new IllegalArgumentException("투어 설립자가 아닙니다.");
         }

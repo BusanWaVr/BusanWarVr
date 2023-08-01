@@ -41,4 +41,12 @@ public class ChatRoomController {
         return new Response("200", "정상적으로 채팅방이 삭제되었습니다.", null);
     }
 
+    @PostMapping("/chatroom/rejoin")
+    public Response rejoinChatRoom(@AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody ChatRoomRegistDto.Request request) {
+        chatRoomService.rejoinChatRoom(userDetails.getUser(), request);
+
+        return new Response("200", "정상적으로 채팅방에 재참여되었습니다.", null);
+    }
+
 }
