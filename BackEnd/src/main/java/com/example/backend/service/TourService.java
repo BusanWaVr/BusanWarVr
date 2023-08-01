@@ -176,7 +176,7 @@ public class TourService {
         List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
         for (Joiner joiner : joiners) {
             if(joiner.getUser().getId() == user.getId()){
-               joinerRepository.deleteById(joiner.getId());
+                joinerRepository.deleteById(joiner.getId());
             }
             else {
                 throw new IllegalArgumentException("예약 고객만 예약 취소가 가능합니다.");
@@ -199,5 +199,3 @@ public class TourService {
         }
     }
 }
-
-
