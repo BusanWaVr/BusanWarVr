@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MateInfoDetailDto {
+
     private Long tourId;
     private String tourTitle;
     private Long writerId;
@@ -17,7 +18,7 @@ public class MateInfoDetailDto {
     private int minMember;
     private int maxMember;
 
-    public MateInfoDetailDto(Mate mate, String tourTitle, User user){
+    public MateInfoDetailDto(Mate mate, String tourTitle, User user) {
         this.tourId = mate.getTourId();
         this.tourTitle = tourTitle;
         this.writerId = user.getId();
