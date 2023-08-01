@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import GuideMyPageMini from "./GuideMyPageMini";
-// import MyPageRightPanel from "./MyPageRightPanel"; // 아직 작성안함
+import MyPageRightPanel from "./MyPageRightPanel"; // 아직 작성안함
 import { GuideData } from "./types"; // GuideData 타입 정의한 파일을 import
 import "./GuideMyPage.css";
 
@@ -119,12 +119,7 @@ const GuideMyPage: React.FC = () => {
         />
       </div>
       <div className="right-panel">
-        {/* Pass the handleLikeClick function to RightPanel */}
-        {/* <RightPanel
-          guide={currentGuide}
-          setGuide={setGuide}
-          onLikeClick={handleLikeClick}
-        /> */}
+        <MyPageRightPanel guide={currentGuide} />
       </div>
     </div>
   );
