@@ -2,11 +2,14 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
 import com.example.backend.dto.tour.TourDetailDto;
+import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.TourService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,15 +71,17 @@ public class TourController {
     }
 
     @DeleteMapping("/tour/end/{tourId}")
-    public Response tourTerminateApi(@PathVariable Long tourId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+    public Response tourTerminateApi(@PathVariable Long tourId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails)
             throws IllegalAccessException {
         tourService.tourTerminate(tourId, userDetails.getUser());
         return new Response("200", "성공적으로 투어를 종료 하였습니다!", null);
     }
 
-//    @GetMapping("tour")
-//    public Response<List<TourListDto.Response>> getALLTourApi(){
-//        List<TourListDto.Response> tourList = tourService.getALLTour();
-//        return new Response("200", "성공적으로 투어를 취소 하였습니다!", tourList);
-//    }
+    @GetMapping("/tour")
+    public Response<TourListDto.Response> getALLTourApi(
+            @PageableDefault(size = 6) Pageable pageable) {
+        TourListDto.Response response = tourService.getALLTour(pageable);
+        return new Response("200", "성공적으로 투어 목록을 불러왔습니다!", response);
+    }
 }
