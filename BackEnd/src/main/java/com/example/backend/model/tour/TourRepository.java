@@ -9,4 +9,6 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     List<Tour> findAllByUserId(Long userId);
 
     List<Tour> findByIsEndedFalseOrderByStartDateDesc(Pageable pageable);
+
+    Tour findByUid(String uid);
 }

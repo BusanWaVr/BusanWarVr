@@ -7,6 +7,7 @@ interface UserInfoState {
   profileImg: string;
   accessToken: string | null;
   refreshToken: string | null;
+  userType: string | null;
 }
 
 const userId = localStorage.getItem("userId");
@@ -15,6 +16,7 @@ const email = localStorage.getItem("email");
 const profileImg = localStorage.getItem("profileImg");
 const accessToken = localStorage.getItem("accessToken");
 const refreshToken = localStorage.getItem("refreshToken");
+const userType = localStorage.getItem("userType");
 
 const initialState: UserInfoState = {
   userId: userId ? userId : "",
@@ -23,6 +25,7 @@ const initialState: UserInfoState = {
   profileImg: profileImg ? profileImg : "",
   accessToken: accessToken ? accessToken : null,
   refreshToken: refreshToken ? refreshToken : null,
+  userType: userType ? userType : null,
 };
 
 const userInfoSlice = createSlice({
@@ -36,6 +39,10 @@ const userInfoSlice = createSlice({
     setEmail(state, action: PayloadAction<string>) {
       state.email = action.payload;
       localStorage.setItem("email", state.email);
+    },
+    setUserType(state, action: PayloadAction<string>) {
+      state.userType = action.payload;
+      localStorage.setItem("userType", state.userType);
     },
     changeNickname(state, action: PayloadAction<string>) {
       state.nickname = action.payload;
@@ -59,6 +66,7 @@ const userInfoSlice = createSlice({
 export const {
   setUserId,
   setEmail,
+  setUserType,
   changeNickname,
   changeProfileImg,
   changeAccessToken,
