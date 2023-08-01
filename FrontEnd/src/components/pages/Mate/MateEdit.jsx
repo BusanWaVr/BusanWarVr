@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import Responsive from "../../common/Responsive";
 import Editor from "../../blocks/Editor";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 const StyledWritePage = styled.div`
   width: 60%;
@@ -16,8 +16,23 @@ const MateEdit = () => {
   const [content, setContent] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const accessToken = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    // location.state에서 초기값을 가져와서 설정합니다.
+    if (location.state) {
+      const {
+        tourId: initialTourId,
+        title: initialTitle,
+        content: initialContent,
+      } = location.state;
+      setTourId(initialTourId);
+      setTitle(initialTitle);
+      setContent(initialContent);
+    }
+  }, [location.state]);
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
