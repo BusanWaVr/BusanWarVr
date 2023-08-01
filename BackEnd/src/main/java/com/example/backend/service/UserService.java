@@ -1,10 +1,10 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.AuthCodeDto;
-import com.example.backend.dto.GuideSignUpDto;
-import com.example.backend.dto.GuideUpdateDto;
-import com.example.backend.dto.UserSignUpDto;
-import com.example.backend.dto.UserUpdateDto;
+import com.example.backend.dto.user.AuthCodeDto;
+import com.example.backend.dto.user.GuideSignUpDto;
+import com.example.backend.dto.user.GuideUpdateDto;
+import com.example.backend.dto.user.UserSignUpDto;
+import com.example.backend.dto.user.UserUpdateDto;
 import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
@@ -32,26 +32,33 @@ public class UserService {
     private final CategoryRepository categoryRepository;
     private final UserCategoryRepository userCategoryRepository;
     private final RedisTemplate<String, String> redisTemplate;
+
     private final static String DEFAULT_PROFILE_IMAGE = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
     private final S3Uploader s3Uploader;
 
     @Transactional
     public void signup(UserSignUpDto.Request request, String encodedPassword)
-            throws DuplicatedValueException, IllegalAccessException {
+            throws DuplicatedValueException, IllegalArgumentException {
         emailExistValidCheck(request.getEmail());
         nicknameExistValidCheck(request.getNickname());
 
+        boolean isUnRegistered = false;
+
+        // 사용자가 선택한 카테고리 이름들이 모두 등록 가능한지 체크
+        for (String categoryName : request.getCategory()) {
+            if (categoryRepository.findByName(categoryName) == null) {
+                isUnRegistered = true;
+            }
+        }
+
+        if (isUnRegistered) {
+            throw new IllegalArgumentException("등록된 카테고리만 추가 가능합니다.");
+        }
         User user = request.toUser(DEFAULT_PROFILE_IMAGE, encodedPassword);
         userRepository.save(user);
-
         // 사용자가 선택한 카테고리 이름들을 UserCategory 객체로 변환하고 저장
         for (String categoryName : request.getCategory()) {
-            if (categoryRepository.findByName(categoryName) != null) {
-                userCategoryCreate(user, categoryRepository.findByName(categoryName));
-            }
-            else {
-                throw new IllegalAccessException("등록된 카테고리만 추가 가능합니다.");
-            }
+            userCategoryCreate(user, categoryRepository.findByName(categoryName));
         }
     }
 

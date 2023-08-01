@@ -3,7 +3,11 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
-import TourAddressSearch from "./TourAddressSearch/TourAddressSearch";
+import TourCourseUpload from "./TourCourseUpload";
+import { useSelector, useDispatch } from "react-redux";
+import { setCourses } from "./TourCourseReducer";
+import TourImageUpload from "./TourImageUpload";
+import Editor from "../../blocks/Editor";
 
 const regionList = [
   "강서구",
@@ -26,7 +30,6 @@ const regionList = [
 
 const MaxAllowedcategory = 5;
 const MinRequiredcategory = 3;
-const MaxTourImgs = 3;
 
 const categoryList = [
   { name: "힐링", label: "힐링" },
@@ -46,34 +49,54 @@ const categoryList = [
   { name: "카페", label: "카페" },
 ];
 
+type TourCourseInfo = {
+  lon: number;
+  lat: number;
+  title: string;
+  content: string;
+  image: any;
+  imageFile: File;
+};
+
 type TourData = {
   region: string;
   category: string[];
   title: string;
   subTitle: string;
   content: string;
-  tourImgs: string[];
+  tourImgs: any[];
   startDate: Date;
   endDate: Date;
   minMember: number;
   maxMember: number;
-  courses: string[];
+  courses: TourCourseInfo[];
 };
 
 const TourRegistration: React.FC = () => {
+  const { courses } = useSelector((state: any) => state.tourCourse);
+  const dispatch = useDispatch();
+
+  const accessToken = localStorage.getItem("accessToken");
+
   const [tourData, setTourData] = useState<TourData>({
     region: "",
-    category: [], // 카테고리를 빈 배열로 초기화
+    category: [],
     title: "",
     subTitle: "",
     content: "",
-    tourImgs: [] as string[], // tourImgs를 문자열 배열로 가정 (이미지 URL)
+    tourImgs: [],
     startDate: new Date(),
     endDate: new Date(),
-    minMember: 0,
-    maxMember: 1,
-    courses: [] as string[], // courses를 문자열 배열로 가정 (코스 설명)
+    minMember: 1,
+    maxMember: 2,
+    courses: [],
   });
+
+  const [imageNum, setImageNum] = useState(1);
+  const [coursesNum, setCoursesNum] = useState(1);
+  const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
+  const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
@@ -96,21 +119,23 @@ const TourRegistration: React.FC = () => {
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    const selectedImages = Array.from(files).map((file) =>
-      URL.createObjectURL(file)
-    );
-    setTourData((prevData) => ({
-      ...prevData,
-      tourImgs: selectedImages.slice(0, MaxTourImgs), // 최대 이미지 수를 적용하여 설정
-    }));
+  const increaseCoursesNum = () => {
+    if (coursesNum <= 2) {
+      setCoursesNum(coursesNum + 1);
+      dispatch(
+        setCourses({
+          lon: 0,
+          lat: 0,
+          title: "",
+          content: "",
+          image: null,
+          imageFile: null,
+        })
+      );
+    } else {
+      alert("코스는 최대 3개까지 등록할 수 있습니다.");
+    }
   };
-
-  const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
-  const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
 
   const handleMinMemberClick = (value: number) => {
     if (value <= selectedMaxMember) {
@@ -136,22 +161,77 @@ const TourRegistration: React.FC = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
     if (tourData.category.length < MinRequiredcategory) {
       alert(`최소 ${MinRequiredcategory}개의 카테고리를 선택해 주세요.`);
       return;
     }
 
+    tourData.courses = courses;
+
+    const formData = new FormData();
+
+    formData.append("region", tourData.region);
+    formData.append("title", tourData.title);
+    formData.append("subTitle", tourData.subTitle);
+    formData.append("content", tourData.content);
+    formData.append("startDate", tourData.startDate.toISOString());
+    formData.append("endDate", tourData.endDate.toISOString());
+    formData.append("minMember", tourData.minMember.toString());
+    formData.append("maxMember", tourData.maxMember.toString());
+
+    let category = "";
+
+    for (let i = 0; i < tourData.category.length; i++) {
+      category += `${tourData.category[i]},`;
+    }
+
+    category = category.substr(0, category.length - 1);
+
+    formData.append("category", category);
+
+    for (let i = 0; i < imageFiles.length; i++) {
+      formData.append("tourImgs", imageFiles[i]);
+    }
+
+    for (let i = 0; i < tourData.courses.length; i++) {
+      formData.append(
+        `courses[${i}].lon`,
+        JSON.stringify(tourData.courses[i].lon)
+      );
+      formData.append(
+        `courses[${i}].lat`,
+        JSON.stringify(tourData.courses[i].lat)
+      );
+      formData.append(
+        `courses[${i}].title`,
+        JSON.stringify(tourData.courses[i].title)
+      );
+      formData.append(
+        `courses[${i}].content`,
+        JSON.stringify(tourData.courses[i].content)
+      );
+      formData.append(`courses[${i}].image`, tourData.courses[i].imageFile);
+    }
+
     try {
-      const response = await axios.post("http://52.79.93.203/tour", tourData);
-      console.log("Response from server:", response.data);
+      const res = await axios.post("http://52.79.93.203/tour", formData, {
+        headers: {
+          Authorization: accessToken,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(res.data);
     } catch (error) {
-      console.error("Error sending data:", error);
+      console.error(error);
     }
   };
 
   return (
     <div>
+      {/* 지역 */}
       <div>
         <span>지역</span>
         <select
@@ -166,6 +246,8 @@ const TourRegistration: React.FC = () => {
           ))}
         </select>
       </div>
+
+      {/* 카테고리 */}
       <div>
         <span>카테고리</span>
         {categoryList.map((category) => (
@@ -180,6 +262,8 @@ const TourRegistration: React.FC = () => {
           </label>
         ))}
       </div>
+
+      {/* 제목 */}
       <div>
         <span>제목</span>
         <input
@@ -189,6 +273,8 @@ const TourRegistration: React.FC = () => {
           onChange={(e) => setTourData({ ...tourData, title: e.target.value })}
         />
       </div>
+
+      {/* 서브 제목 */}
       <div>
         <span>서브 제목</span>
         <input
@@ -200,37 +286,33 @@ const TourRegistration: React.FC = () => {
           }
         />
       </div>
+
+      {/* 내용 */}
+      <Editor
+        value={tourData.content}
+        onChange={(content: string) =>
+          setTourData({ ...tourData, content: content })
+        }
+      />
       <div>
         <span>내용</span>
-        <textarea
-          placeholder="Content"
-          value={tourData.content}
-          onChange={(e) =>
-            setTourData({ ...tourData, content: e.target.value })
-          }
-        />
       </div>
+
+      {/* 이미지 */}
       <div>
         <span>이미지</span>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleImageChange}
-        />
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleImageChange}
-        />
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleImageChange}
-        />
+        {Array.from({ length: imageNum }, (_, index) => (
+          <TourImageUpload
+            key={index}
+            imageNum={imageNum}
+            setImageNum={setImageNum}
+            imageFiles={imageFiles}
+            setImageFiles={setImageFiles}
+          />
+        ))}
       </div>
+
+      {/* 여행 날짜 */}
       <div>
         <span>여행날짜</span>
         <DatePicker
@@ -248,6 +330,8 @@ const TourRegistration: React.FC = () => {
           onChange={(date: Date) => setTourData({ ...tourData, endDate: date })}
         />
       </div>
+
+      {/* 최소 인원 */}
       <div>
         <span>최소 인원 : </span>
         {[1, 2, 3, 4, 5, 6].map((value) => (
@@ -263,6 +347,7 @@ const TourRegistration: React.FC = () => {
         ))}
       </div>
 
+      {/* 최대 인원 */}
       <div>
         <span>최대 인원 : </span>
         {[1, 2, 3, 4, 5, 6].map((value) => (
@@ -277,18 +362,19 @@ const TourRegistration: React.FC = () => {
           </button>
         ))}
       </div>
-      <TourAddressSearch />
-      <textarea
-        placeholder="Courses (Comma-separated descriptions)"
-        value={tourData.courses.join(", ")}
-        onChange={(e) =>
-          setTourData({ ...tourData, courses: e.target.value.split(", ") })
-        }
-      />
 
-      <div onClick={handleSubmit} style={{ cursor: "pointer" }}>
-        <button>Submit</button>
+      <hr />
+
+      {/* 투어 코스 */}
+      {Array.from({ length: coursesNum }, (_, index) => (
+        <TourCourseUpload key={index} index={index} />
+      ))}
+
+      <div onClick={increaseCoursesNum}>
+        <button>장소 추가</button>
       </div>
+
+      <button onClick={handleSubmit}>투어 등록</button>
     </div>
   );
 };

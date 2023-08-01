@@ -10,11 +10,14 @@ import LiveStream from "../components/pages/LiveStream/LiveStream.jsx";
 import LiveStreamView from "../components/pages/LiveStream/LiveStreamView.jsx";
 import ChatRoom from "../components/pages/LiveStream/ChatRoom.tsx";
 import TourRegistration from "../components/pages/Tour/TourRegistration.tsx";
+import TourDetail from "../components/pages/Tour/TourDetail.tsx";
 import GuideDetail from "../components/pages/GuideProfile/GuideDetail.tsx";
 import GuideMyPage from "../components/pages/GuideProfile/GuideMyPage.tsx";
 import TourUpdate from "../components/pages/Tour/TourUpdate.tsx";
 import WritePage from "../components/pages/Mate/WritePage";
 import MateDetail from "../components/pages/Mate/MateDetail";
+import MateList from "../components/pages/Mate/MateList";
+import MateEdit from "../components/pages/Mate/MateEdit";
 
 function App() {
   return (
@@ -29,12 +32,15 @@ function App() {
           <Route path="/guidesignup" element={<GuideSignup />} />
           <Route path="/livestream" element={<LiveStream />} />
           <Route path="/chatroom" element={<ChatRoom />} />
-          <Route path="/tourregistration" element={<TourRegistration />} />
           <Route path="/tour/:tourId/update" element={<TourUpdate />} />
+          <Route path="/tour/write" element={<TourRegistration />} />
+          <Route path="/tour/:tourId" element={<TourDetail />} />
           <Route path="/guide/:guideId/detail" element={<GuideDetail />} />
           <Route path="/guide/:guideId/mypage" element={<GuideMyPage />} />
           <Route path="/write" element={<WritePage />} />
-          <Route path="/matedetail" element={<MateDetail />} />
+          <Route path="/matedetail/:mateId" element={<MateDetail />} />
+          <Route path="/mate" element={<MateList />} />
+          <Route path="/mateedit/:mateId" element={<MateEdit />} />
           <Route
             path="*"
             element={

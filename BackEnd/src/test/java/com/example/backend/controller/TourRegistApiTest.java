@@ -3,7 +3,7 @@ package com.example.backend.controller;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 
-import com.example.backend.dto.LoginRequestDto;
+import com.example.backend.dto.user.LoginRequestDto;
 import com.example.backend.dto.Response;
 import com.example.backend.service.TourService;
 import com.fasterxml.jackson.databind.ObjectMapper;

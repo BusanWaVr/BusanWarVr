@@ -2,7 +2,6 @@ package com.example.backend.service;
 
 import com.example.backend.config.pubsub.RedisPublisher;
 import com.example.backend.dto.chat.ChatMessageRequestDto;
-import com.example.backend.dto.chat.ChatMessageResponseDto;
 import com.example.backend.model.chat.ChatRoom;
 import com.example.backend.model.chat.ChatRoomRepository;
 import com.example.backend.model.user.User;
@@ -14,14 +13,16 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {
+
     private final RedisPublisher redisPublisher;
     private final UserRepository userRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final JwtDecoder jwtDecoder;
 
-    public void sendChatMessage(ChatMessageRequestDto chatMessageRequestDto ){
-        ChatRoom chatRoom = (ChatRoom) chatRoomRepository.findById(chatMessageRequestDto.getRoomId()).get();
-        if(chatRoom == null){
+    public void sendChatMessage(ChatMessageRequestDto chatMessageRequestDto) {
+        ChatRoom chatRoom = (ChatRoom) chatRoomRepository.findById(
+                chatMessageRequestDto.getRoomId()).get();
+        if (chatRoom == null) {
             throw new IllegalArgumentException("채팅방이 존재하지 않습니다.");
         }
 

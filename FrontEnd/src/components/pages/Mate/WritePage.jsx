@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 // import Responsive from "../../common/Responsive";
-import Editor from "./Editor";
+import Editor from "../../blocks/Editor";
 import styled from "styled-components";
-// import axios from "axios";
 
 const StyledWritePage = styled.div`
   width: 60%;
@@ -23,19 +22,6 @@ const WritePage = () => {
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
-
-  // const [desc, setDesc] = useState("");
-  // function onEditorChange(value) {
-  //   setDesc(value);
-  // }
-
-  // const createFormData = async (tourId, title, content) => {
-  //   const formData = new FormData();
-  //   formData.append("tourId", tourId);
-  //   formData.append("title", title);
-  //   formData.append("content", content);
-  //   return formData;
-  // };
 
   const handleSubmit = async (e) => {
     console.log("슈웃");
@@ -61,8 +47,9 @@ const WritePage = () => {
         const data = await response.json();
 
         if (data.code === "200") {
+          const newMateId = data.data.mateId;
           alert(data.message);
-          window.location.href = "/matedetail";
+          window.location.href = `/matedetail/${newMateId}`;
         } else {
           // 에러
           console.log(data.message);
@@ -103,14 +90,6 @@ const WritePage = () => {
           <br />
           <br />
           <Editor value={content} onChange={setContent} />
-          {/* <label htmlFor="content">내용 :　</label>
-          <input
-            type="text"
-            id="content"
-            value={content}
-            onChange={handleContentChange}
-            placeholder="냉요"
-          /> */}
         </form>
       </div>
       <br />

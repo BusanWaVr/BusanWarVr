@@ -5,12 +5,13 @@ import lombok.Data;
 
 @Data
 public class SenderResponseDto {
+
     private long userId;
     private String email;
     private String nickname;
     private String profileImg;
 
-    public SenderResponseDto(User user){
+    public SenderResponseDto(User user) {
         this.userId = user.getId();
         this.email = user.getEmail();
         this.nickname = user.getNickname();

@@ -1,15 +1,15 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.AuthCodeDto;
-import com.example.backend.dto.AuthEmailDto;
-import com.example.backend.dto.AuthNicknameDto;
-import com.example.backend.dto.AuthPasswordDto;
-import com.example.backend.dto.GuideSignUpDto;
-import com.example.backend.dto.GuideUpdateDto;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.TestDto;
-import com.example.backend.dto.UserSignUpDto;
-import com.example.backend.dto.UserUpdateDto;
+import com.example.backend.dto.user.AuthCodeDto;
+import com.example.backend.dto.user.AuthEmailDto;
+import com.example.backend.dto.user.AuthNicknameDto;
+import com.example.backend.dto.user.AuthPasswordDto;
+import com.example.backend.dto.user.GuideSignUpDto;
+import com.example.backend.dto.user.GuideUpdateDto;
+import com.example.backend.dto.user.UserSignUpDto;
+import com.example.backend.dto.user.UserUpdateDto;
 import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.exception.type.NotSameDataValueException;
 import com.example.backend.model.user.User;
@@ -56,9 +56,11 @@ public class UserController {
             throws BindException, DuplicatedValueException, IllegalArgumentException, IllegalAccessException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
-        } else if (!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)) {
+        }
+        if (!(request.getCategory().size() >= 3 && request.getCategory().size() <= 5)) {
             throw new IllegalArgumentException("카테고리 개수는 3개에서 5개 사이여야 합니다.");
         }
+
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         userService.signup(request, encodedPassword);
 
@@ -172,7 +174,7 @@ public class UserController {
         if (userDetails.getUser().getType().toString() == "USER") {
             throw new IllegalArgumentException("권한이 없는 사용자의 접근입니다.");
         }
-      
+
         userService.guideUpdate(userDetails.getUser(), request);
 
         return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", null);
@@ -198,5 +200,4 @@ public class UserController {
 
         return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", null);
     }
-
 }
