@@ -1,27 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
-const TourDetail = () => {
-  const { tourId } = useParams();
-  const [tourData, setTourData] = useState(null);
-  const currentUser = localStorage.getItem("userId");
+interface TourData {
+  tourId: string;
+  title: string;
+  subTitle: string;
+  userId: string;
+  profileImg: string;
+  nickname: string;
+  category: string[];
+  startDate: string;
+  endDate: string;
+  minMember: number;
+  maxMember: number;
+  content: string;
+  tourImgs: string[];
+  joiners: Joiner[];
+  canceled: boolean;
+  ended: boolean;
+}
 
-  function dateFormat(date) {
-    let dateFormat2 =
-      date.getFullYear() +
-      "-" +
-      (date.getMonth() + 1 < 9
-        ? "0" + (date.getMonth() + 1)
-        : date.getMonth() + 1) +
-      "-" +
-      (date.getDate() < 9 ? "0" + date.getDate() : date.getDate());
-    return dateFormat2;
-  }
+interface Joiner {
+  profileImg: string;
+  nickname: string;
+  joinDate: string;
+}
+
+const TourDetail: React.FC = () => {
+  const { tourId } = useParams<{ tourId: string }>();
+  const [tourData, setTourData] = useState<TourData | null>(null);
+  const currentUser = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchTourData = async () => {
       try {
-        const response = await fetch(`tour/${tourId}`);
+        const response = await fetch(`http://52.79.93.203/tour/${tourId}`);
         if (response.status === 200) {
           const res = await response.json();
           console.log(res);
@@ -122,12 +135,15 @@ const TourDetail = () => {
             </>
           ) : (
             <>
-              {tourData.canceled ? <button>투어 예약하기</button> : null}
+              {!tourData.canceled && !tourData.ended ? (
+                <button>투어 예약하기</button>
+              ) : null}
               {tourData.ended ||
-              (Date(tourData.startDate) < Date() && !tourData.canceled) ? (
+              (new Date(tourData.startDate) < new Date() &&
+                !tourData.canceled) ? (
                 <button disabled>종료된 투어입니다.</button>
               ) : null}
-              {!tourData.canceled && !tourData.canceled ? (
+              {tourData.canceled ? (
                 <button disabled>취소된 투어입니다.</button>
               ) : null}
             </>
