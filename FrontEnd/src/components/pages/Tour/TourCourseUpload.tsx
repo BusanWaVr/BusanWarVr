@@ -6,6 +6,7 @@ import {
   setImage,
   setLatitude,
   setLongitude,
+  setImageFile,
 } from "./TourCourseReducer";
 
 type TourCourseUploadProps = {
@@ -26,7 +27,11 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({ index }) => {
   };
 
   const handleImageChange = (e) => {
-    dispatch(setImage({ index: index, image: e.target.value }));
+    const files = e.target.files;
+    if (!files) return;
+
+    const imageFile = files[0];
+    dispatch(setImageFile({ index: index, imageFile: imageFile }));
   };
 
   const handleLongitudeChange = (e) => {

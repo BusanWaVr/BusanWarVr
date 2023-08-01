@@ -54,6 +54,7 @@ type TourCourseInfo = {
   title: string;
   content: string;
   image: any;
+  imageFile: File;
 };
 
 type TourData = {
@@ -62,7 +63,7 @@ type TourData = {
   title: string;
   subTitle: string;
   content: string;
-  tourImgs: string[];
+  tourImgs: any[];
   startDate: Date;
   endDate: Date;
   minMember: number;
@@ -93,6 +94,7 @@ const TourRegistration: React.FC = () => {
   const [coursesNum, setCoursesNum] = useState(1);
   const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
   const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
@@ -119,13 +121,8 @@ const TourRegistration: React.FC = () => {
     const files = e.target.files;
     if (!files) return;
 
-    const selectedImages = Array.from(files).map((file) =>
-      URL.createObjectURL(file)
-    );
-    setTourData((prevData) => ({
-      ...prevData,
-      tourImgs: selectedImages.slice(0, MaxTourImgs), // 최대 이미지 수를 적용하여 설정
-    }));
+    const selectedImages = Array.from(files);
+    setImageFiles(selectedImages.slice(0, MaxTourImgs));
   };
 
   const increaseCoursesNum = () => {
@@ -171,26 +168,49 @@ const TourRegistration: React.FC = () => {
       return;
     }
 
+    tourData.courses = courses;
+
+    const formData = new FormData();
+
+    formData.append("region", tourData.region);
+    formData.append("title", tourData.title);
+    formData.append("subTitle", tourData.subTitle);
+    formData.append("content", tourData.content);
+    formData.append("startDate", tourData.startDate.toISOString());
+    formData.append("endDate", tourData.endDate.toISOString());
+    formData.append("minMember", tourData.minMember.toString());
+    formData.append("maxMember", tourData.maxMember.toString());
+
+    let category = '';
+    
+    for (let i = 0; i < tourData.category.length; i++) {
+      category += `${tourData.category[i]},`
+    }
+
+    category = category.substr(0, category.length - 1);
+
+    formData.append("category", category);
+
+    for (let i = 0; i < imageFiles.length; i++) {
+      formData.append("tourImgs", imageFiles[i]);
+    }
+
+    for (let i = 0; i < tourData.courses.length; i++){
+      formData.append(`courses[${i}].lon`, JSON.stringify(tourData.courses[i].lon));
+      formData.append(`courses[${i}].lat`, JSON.stringify(tourData.courses[i].lat));
+      formData.append(`courses[${i}].title`, JSON.stringify(tourData.courses[i].title));
+      formData.append(`courses[${i}].content`, JSON.stringify(tourData.courses[i].content));
+      formData.append(`courses[${i}].image`, tourData.courses[i].imageFile);
+    }
+
     try {
-      console.log("제출");
-      tourData.courses = courses;
-      console.log(tourData);
-      const response = await fetch("http://52.79.93.203/tour", {
-        method: "POST",
+      const res = await axios.post("http://52.79.93.203/tour", formData, {
         headers: {
           Authorization: accessToken,
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
-        body: JSON.stringify(tourData),
       });
-
-      const data = await response.json();
-
-      if (data.code === "200") {
-        // window.location.href = 투어상세페이지;
-      } else {
-        console.log(data.message);
-      }
+      console.log(res.data);
     } catch (error) {
       console.error(error);
     }
@@ -304,7 +324,9 @@ const TourRegistration: React.FC = () => {
           selected={tourData.endDate ? new Date(tourData.endDate) : null}
           dateFormat="MM월 dd일 (eee)"
           locale={ko}
-          onChange={(date: Date) => setTourData({ ...tourData, endDate: date })}
+          onChange={(date: Date) =>
+            setTourData({ ...tourData, endDate: date })
+          }
         />
       </div>
 
