@@ -24,4 +24,9 @@ public class ChatParticipantsInfo {
 
     @ManyToOne
     private ChatRoom chatRoom;
+
+    public ChatParticipantsInfo(User user, ChatRoom chatRoom) {
+        this.user = user;
+        this.chatRoom = chatRoom;
+    }
 }
