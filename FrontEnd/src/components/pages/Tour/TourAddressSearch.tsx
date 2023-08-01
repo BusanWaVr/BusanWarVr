@@ -2,11 +2,17 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import ReactDaumPost from "react-daumpost-hook";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { useSelector, useDispatch } from "react-redux";
+import { setLatitude, setLongitude } from "./TourCourseReducer";
 
-const TourAddressSearch = () => {
+const TourAddressSearch = ({ index }) => {
+  const { courses } = useSelector((state: any) => state.tourCourse);
+  const dispatch = useDispatch();
   const [fullAddress, setFullAddress] = useState("부산와Vr");
-  const [latitude, setLatitude] = useState(35.096171208475724);
-  const [longitude, setLongitude] = useState(128.85357686495757);
+  const [center, setCenter] = useState({
+    lat: courses[index]?.lat || 0,
+    lng: courses[index]?.lon || 0,
+  });
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -21,9 +27,11 @@ const TourAddressSearch = () => {
         );
 
         const location = response.data.documents[0];
-        setLatitude(parseFloat(location.y));
-        setLongitude(parseFloat(location.x));
+        console.log(location.y, location.x);
+        dispatch(setLatitude({ index: index, lat: parseFloat(location.y) }));
+        dispatch(setLongitude({ index: index, lon: parseFloat(location.x) }));
         console.log(location.x, location.y);
+        setCenter({ lat: location.y, lng: location.x });
       } catch (error) {
         console.error(error);
       }
@@ -51,28 +59,15 @@ const TourAddressSearch = () => {
           value={fullAddress != "부산와Vr" ? fullAddress : ""}
         />
       </main>
-      <Map // 지도를 표시할 Container
-        center={{
-          // 지도의 중심좌표
-          lat: latitude,
-          lng: longitude,
-        }}
+      <Map
+        center={center}
         style={{
-          // 지도의 크기
           width: "100%",
           height: "450px",
         }}
-        level={3} // 지도의 확대 레벨
+        level={3}
       >
-        <MapMarker // 인포윈도우를 생성하고 지도에 표시합니다
-          position={{
-            // 인포윈도우가 표시될 위치입니다
-            lat: latitude,
-            lng: longitude,
-          }}
-        >
-          {/* MapMarker의 자식을 넣어줌으로 해당 자식이 InfoWindow로 만들어지게 합니다 */}
-          {/* 인포윈도우에 표출될 내용으로 HTML 문자열이나 React Component가 가능합니다 */}
+        <MapMarker position={center}>
           <div style={{ padding: "5px", color: "#000" }}>
             {fullAddress}
             <br />

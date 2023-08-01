@@ -176,7 +176,7 @@ public class TourService {
         List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
         for (Joiner joiner : joiners) {
             if(joiner.getUser().getId() == user.getId()){
-               joinerRepository.deleteById(joiner.getId());
+                joinerRepository.deleteById(joiner.getId());
             }
             else {
                 throw new IllegalArgumentException("예약 고객만 예약 취소가 가능합니다.");
@@ -198,15 +198,5 @@ public class TourService {
             throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 취소 가능합니다.");
         }
     }
-
-//    public List<TourListDto.Response> getALLTour() {
-//        List<Tour> tours = tourRepository.findAll();
-//        List<TourListDto.Response> tourList = new ArrayList<>();
-//        for (Tour tour : tours) {
-//            TourListDto.Response tourListDto = new TourListDto.Response(tour);
-//        }
-//        return tourList;
-//    }
 }
-
 

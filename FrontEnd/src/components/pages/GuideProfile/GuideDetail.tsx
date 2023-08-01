@@ -1,70 +1,22 @@
-// 가이드 상세 페이지
+// GuideDetail.tsx
 
 import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import GuideMini from "./GuideMini";
+import RightPanel from "./RightPanel";
+import { GuideData } from "./types"; // GuideData 타입 정의한 파일을 import
 import "./GuideDetail.css";
-
-interface ScheduledTour {
-  tourId: number;
-  title: string;
-  image: string;
-  isLiked: boolean;
-}
-
-interface Review {
-  tourId: number;
-  tourTitle: string;
-  date: string;
-  content: string;
-  score: number;
-  user: {
-    id: number;
-    name: string;
-  };
-}
-
-interface GuideData {
-  id: string | null;
-  name: string;
-  profileImage: string;
-  isFollowing: boolean;
-  followers: number;
-  toursCount: number;
-  introduction: string;
-  scheduledTours: ScheduledTour[];
-  endedTours: ScheduledTour[];
-  reviews: Review[];
-}
-
-const ReviewCard: React.FC<Review> = ({
-  tourId,
-  tourTitle,
-  date,
-  content,
-  score,
-  user,
-}) => {
-  return (
-    <div className="review-card">
-      <h4>{tourTitle}</h4>
-      <p>{date}</p>
-      <p>{content}</p>
-      <p>평점: {score}</p>
-      <p>작성자: {user.name}</p>
-    </div>
-  );
-};
 
 const GuideDetail: React.FC = () => {
   // 예시로 사용할 가이드 데이터
   const guideData: GuideData = {
-    id: localStorage.getItem("userId"),
-    name: localStorage.getItem("nickname") || "",
-    profileImage: localStorage.getItem("profileImg") || "",
+    userId: localStorage.getItem("userId"),
+    nickname: localStorage.getItem("nickname") || "",
+    profileImg: localStorage.getItem("profileImg") || "",
     isFollowing: false,
     followers: 1000,
     toursCount: 50,
-    introduction: "마! 광안리 등킨드나쓰 무봤나!",
+    introduction: "부산을 좋아하는 부기에요",
     scheduledTours: [
       {
         tourId: 101,
@@ -101,8 +53,8 @@ const GuideDetail: React.FC = () => {
         content: "너무너무 재밌어서 눈물이 뚝뚝!",
         score: 4.5,
         user: {
-          id: 4,
-          name: "김싸피",
+          userId: 4,
+          nickname: "김싸피",
         },
       },
       {
@@ -112,8 +64,8 @@ const GuideDetail: React.FC = () => {
         content: "너무너무 웃겨서 콧물이 뚝뚝!",
         score: 5.0,
         user: {
-          id: 5,
-          name: "김부산",
+          userId: 5,
+          nickname: "김부산",
         },
       },
     ],
@@ -129,13 +81,7 @@ const GuideDetail: React.FC = () => {
     }));
   };
 
-  const handleLikeClick = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    tourId: number
-  ) => {
-    // 이벤트 버블링 방지
-    event.stopPropagation();
-
+  const handleLikeClick = (tourId: number) => {
     setGuide((prevGuide) => {
       const updatedScheduledTours = prevGuide.scheduledTours.map((tour) => {
         if (tour.tourId === tourId) {
@@ -159,23 +105,8 @@ const GuideDetail: React.FC = () => {
     });
   };
 
-  const handleCardBoxClick = (tourId: number) => {
-    const tour = guide.scheduledTours.find((tour) => tour.tourId === tourId);
-    if (tour) {
-      if (tour.isLiked) return;
-      const tourDetailUrl = `/tour/${tourId}`;
-      window.location.href = tourDetailUrl;
-    }
-  };
-
-  // URL 변수 선언
-  const homeUrl = `/guide/${guideId}/detail`;
-  const scheduledToursUrl = `/guide/${guideId}/scheduled-tours`;
-  const endedToursUrl = `/guide/${guideId}/ended-tours`;
-  const reviewsUrl = `/guide/${guideId}/reviews`;
-
   // 가이드 ID에 해당하는 데이터 찾기
-  const currentGuide = guideData.id === guideId ? guideData : null;
+  const currentGuide = guideData.userId === guideId ? guideData : null;
 
   if (!currentGuide) {
     return <div>가이드를 찾을 수 없습니다.</div>;
@@ -184,76 +115,18 @@ const GuideDetail: React.FC = () => {
   return (
     <div className="container">
       <div className="left-panel">
-        <img src={currentGuide.profileImage} alt={currentGuide.name} />
-        <h2>{currentGuide.name}</h2>
-        <button onClick={handleFollowClick}>
-          {guide.isFollowing ? "언팔로우" : "+ 팔로우"}
-        </button>
-        <p>팔로워 {currentGuide.followers}</p>
-        <p>투어 {currentGuide.toursCount}</p>
-
-        <Link to={homeUrl}>홈</Link>
-        <Link to={scheduledToursUrl}>진행 중인 투어</Link>
-        <Link to={endedToursUrl}>지난 투어</Link>
-        <Link to={reviewsUrl}>후기</Link>
+        <GuideMini guide={currentGuide} onFollowClick={handleFollowClick} />
       </div>
-
-      <div id="right-panel" className="right-panel">
-        <p id="introduction">&#123; {guide.introduction} &#125;</p>
-
-        <h3>진행중인 투어</h3>
-        <Link to={scheduledToursUrl}>더보기</Link>
-        <div className="tour-card-container">
-          {guide.scheduledTours.map((tour) => (
-            <div
-              className="tour-card"
-              key={tour.tourId}
-              onClick={() => handleCardBoxClick(tour.tourId)}
-            >
-              <img src={tour.image} alt={tour.title} />
-              <h4>{tour.title}</h4>
-              <button onClick={(event) => handleLikeClick(event, tour.tourId)}>
-                {tour.isLiked ? "좋아요 취소" : "좋아요"}
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <h3>지난 투어</h3>
-        <Link to={endedToursUrl}>더보기</Link>
-        <div className="tour-card-container">
-          {guide.endedTours.map((tour) => (
-            <div
-              className="tour-card"
-              key={tour.tourId}
-              onClick={() => handleCardBoxClick(tour.tourId)}
-            >
-              <img src={tour.image} alt={tour.title} />
-              <h4>{tour.title}</h4>
-              <button onClick={(event) => handleLikeClick(event, tour.tourId)}>
-                {tour.isLiked ? "좋아요 취소" : "좋아요"}
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <h3 id="reviews">후기/평점</h3>
-        <Link to={reviewsUrl}>더보기</Link>
-        <div className="review-card-container">
-          {guide.reviews.map((review) => (
-            <ReviewCard
-              key={review.tourId}
-              tourId={review.tourId}
-              tourTitle={review.tourTitle}
-              date={review.date}
-              content={review.content}
-              score={review.score}
-              user={review.user}
-            />
-          ))}
-        </div>
+      <div className="right-panel">
+        {/* Pass the handleLikeClick function to RightPanel */}
+        <RightPanel
+          guide={currentGuide}
+          setGuide={setGuide}
+          onLikeClick={handleLikeClick}
+        />
       </div>
     </div>
   );
 };
+
 export default GuideDetail;

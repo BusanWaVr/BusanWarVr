@@ -1,17 +1,24 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.AuthCodeDto;
+import com.example.backend.dto.GuideInfoForUserWishDto;
 import com.example.backend.dto.GuideSignUpDto;
 import com.example.backend.dto.GuideUpdateDto;
 import com.example.backend.dto.UserSignUpDto;
 import com.example.backend.dto.UserUpdateDto;
+import com.example.backend.dto.UserWishDto;
 import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
+import com.example.backend.model.tour.Tour;
+import com.example.backend.model.tourcategory.TourCategory;
+import com.example.backend.model.tourcategory.TourCategoryRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.usercategory.UserCategory;
 import com.example.backend.model.usercategory.UserCategoryRepository;
+import com.example.backend.model.wish.Wish;
+import com.example.backend.model.wish.WishRepository;
 import com.example.backend.util.awsS3.S3Uploader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +38,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final UserCategoryRepository userCategoryRepository;
+    private final TourCategoryRepository tourCategoryRepository;
+    private final WishRepository wishRepository;
     private final RedisTemplate<String, String> redisTemplate;
+
     private final static String DEFAULT_PROFILE_IMAGE = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
     private final S3Uploader s3Uploader;
 
