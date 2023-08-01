@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const JoinerContainer = styled.div`
@@ -17,6 +17,7 @@ const MateDetail = () => {
   const { mateId } = useParams();
   const [mateData, setMateData] = useState(null);
   const [joinerData, setJoinerData] = useState(null);
+  const navigate = useNavigate();
 
   // 상세페이지 데이터 받아오기
   useEffect(() => {
@@ -67,10 +68,8 @@ const MateDetail = () => {
 
         if (response.status === 200) {
           alert("삭제되었습니다.");
-          window.location.href = "/mate";
-          // Handle any other actions after successful deletion, such as redirecting the user.
+          navigate("/mate");
         } else {
-          // Handle the case when the request is not successful
           alert(response.message);
         }
       } else {
@@ -81,7 +80,14 @@ const MateDetail = () => {
     }
   };
 
-  // 수정
+  // 수정페이지로
+  const handleButtonClick = () => {
+    if (userId === mateData.writerId) {
+      navigate(`/mateedit/${mateId}`);
+    } else {
+      ("글 작성자 본인만 수정할 수 있습니다.");
+    }
+  };
 
   return (
     <div>
@@ -142,6 +148,7 @@ const MateDetail = () => {
           ) : (
             <p>참가자가 없습니다.</p>
           )}
+          <button onClick={handleButtonClick}>수정</button>
           <button onClick={handleDelete}>삭제</button>
         </div>
       ) : (

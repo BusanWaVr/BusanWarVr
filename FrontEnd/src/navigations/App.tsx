@@ -14,6 +14,7 @@ import GuideMyPage from "../components/pages/GuideProfile/GuideMyPage.tsx";
 import WritePage from "../components/pages/Mate/WritePage";
 import MateDetail from "../components/pages/Mate/MateDetail";
 import MateList from "../components/pages/Mate/MateList";
+import MateEdit from "../components/pages/Mate/MateEdit";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/write" element={<WritePage />} />
           <Route path="/matedetail/:mateId" element={<MateDetail />} />
           <Route path="/mate" element={<MateList />} />
+          <Route path="/mateedit/:mateId" element={<MateEdit />} />
           <Route
             path="*"
             element={
