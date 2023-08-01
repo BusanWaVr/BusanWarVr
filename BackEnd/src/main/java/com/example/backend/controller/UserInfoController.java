@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.UserWishDto;
 import com.example.backend.model.user.User;
+import com.example.backend.model.user.UserRepository;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.UserInfoService;
 import java.util.List;
@@ -29,9 +30,14 @@ public class UserInfoController {
     @PostMapping("/user/{guideId}")
     public Response followGuide(@AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long guideId) {
-        userInfoService.userFollow(userDetails.getUser().getId(), guideId);
 
-        return new Response<>("200", "성공적으로 가이드를 팔로우했습니다.", null);
+        boolean isFollowed = userInfoService.userFollow(userDetails.getUser().getId(), guideId);
+
+        if (isFollowed) {
+            return new Response<>("200", "성공적으로 가이드를 팔로우했습니다.", null);
+        } else {
+            return new Response<>("200", "성공적으로 가이드를 언팔로우했습니다.", null);
+        }
     }
 
 }

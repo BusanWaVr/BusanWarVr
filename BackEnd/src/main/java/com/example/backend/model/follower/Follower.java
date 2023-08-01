@@ -17,9 +17,9 @@ public class Follower {
     private long id;
 
     @ManyToOne
-    private User userId;
+    private User user;
 
     @ManyToOne
-    private User guideId;
+    private User guide;
 
 }

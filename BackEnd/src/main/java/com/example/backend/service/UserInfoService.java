@@ -14,6 +14,7 @@ import com.example.backend.model.wish.Wish;
 import com.example.backend.model.wish.WishRepository;
 import java.util.ArrayList;
 import java.util.List;
+import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -54,14 +55,37 @@ public class UserInfoService {
 
     }
 
-    public void userFollow(Long userId, Long guideId) {
+    @Transactional
+    public boolean userFollow(Long userId, Long guideId) {
 
         User user = userRepository.findById(userId).get();
         User guide = userRepository.findById(guideId).get();
 
+        if (user.getType().toString() == "GUIDE") {
+            throw new IllegalArgumentException("가이드는 팔로잉할 수 없습니다.");
+        }
+
+        if (guide.getType().toString() == "USER") {
+            throw new IllegalArgumentException("유저를 팔로우할 수 없습니다.");
+        }
+
+        if (followerRepository.existsByUserAndGuide(user, guide)) {
+            followerDelete(user, guide);
+            return false;
+        } else {
+            followerCreate(user, guide);
+            return true;
+        }
+    }
+
+    public void followerCreate(User user, User guide) {
         Follower follower = new Follower();
-        follower.setUserId(user);
-        follower.setGuideId(guide);
+        follower.setUser(user);
+        follower.setGuide(guide);
         followerRepository.save(follower);
+    }
+
+    public void followerDelete(User user, User guide) {
+        followerRepository.deleteByUserAndGuide(user, guide);
     }
 }
