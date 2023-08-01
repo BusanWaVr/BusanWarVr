@@ -1,6 +1,5 @@
 package com.example.backend.dto.mate;
 
-import com.example.backend.dto.mate.MateInfoForListDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +13,7 @@ public class MateListDto {
     @NoArgsConstructor
     public static class Response {
 
-        private Long totalCount;
+        private Long pageCount;
         private List<MateInfoForListDto> mateList;
     }
 }

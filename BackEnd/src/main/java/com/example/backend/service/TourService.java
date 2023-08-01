@@ -1,9 +1,9 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.CourseDto;
-import com.example.backend.dto.JoinerDto;
-import com.example.backend.dto.TourDetailDto;
-import com.example.backend.dto.TourRegistDto;
+import com.example.backend.dto.course.CourseDto;
+import com.example.backend.dto.joiner.JoinerDto;
+import com.example.backend.dto.tour.TourDetailDto;
+import com.example.backend.dto.tour.TourRegistDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
 import com.example.backend.model.course.Course;

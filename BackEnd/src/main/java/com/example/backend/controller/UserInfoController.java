@@ -1,9 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
-import com.example.backend.dto.UserWishDto;
-import com.example.backend.model.user.User;
-import com.example.backend.model.user.UserRepository;
+import com.example.backend.dto.userinfo.UserWishDto;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.UserInfoService;
 import java.util.List;

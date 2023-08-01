@@ -1,13 +1,13 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.MateDetailDto;
-import com.example.backend.dto.MateInfoDetailDto;
-import com.example.backend.dto.MateInfoForListDto;
-import com.example.backend.dto.MateJoinerDto;
-import com.example.backend.dto.MateListDto;
-import com.example.backend.dto.MateRegistDto;
-import com.example.backend.dto.MateRegistDto.Request;
-import com.example.backend.dto.MateUpdateDto;
+import com.example.backend.dto.mate.MateDetailDto;
+import com.example.backend.dto.mate.MateInfoDetailDto;
+import com.example.backend.dto.mate.MateInfoForListDto;
+import com.example.backend.dto.mate.MateJoinerDto;
+import com.example.backend.dto.mate.MateListDto;
+import com.example.backend.dto.mate.MateRegistDto;
+import com.example.backend.dto.mate.MateRegistDto.Request;
+import com.example.backend.dto.mate.MateUpdateDto;
 import com.example.backend.model.joiner.Joiner;
 import com.example.backend.model.joiner.JoinerRepository;
 import com.example.backend.model.mate.Mate;
@@ -74,12 +74,13 @@ public class MateService {
     public MateListDto.Response getMateList(Pageable pageable) {
         Page<Mate> mates = mateRepository.findAllByOrderByIdDesc(pageable);
         List<MateInfoForListDto> mateInfoForListDtos = new ArrayList<>();
-        Long totalCount = mateRepository.count();
+//        Long totalCount = mateRepository.count();
+        Long pageCount = (long) mates.getTotalPages();
         for (Mate mate : mates) {
             mateInfoForListDtos.add(new MateInfoForListDto(mate));
         }
 
-        return new MateListDto.Response(totalCount, mateInfoForListDtos);
+        return new MateListDto.Response(pageCount, mateInfoForListDtos);
     }
 
     @Transactional

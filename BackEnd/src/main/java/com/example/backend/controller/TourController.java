@@ -1,8 +1,8 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
-import com.example.backend.dto.TourDetailDto;
-import com.example.backend.dto.TourRegistDto;
+import com.example.backend.dto.tour.TourDetailDto;
+import com.example.backend.dto.tour.TourRegistDto;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.TourService;
 import java.io.IOException;

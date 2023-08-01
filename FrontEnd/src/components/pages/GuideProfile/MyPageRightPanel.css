@@ -1,0 +1,32 @@
+.my-page-right-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+.tabs button.active {
+  background-color: #f0f0f0;
+}
+
+.tour-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 16px;
+  margin-top: 16px;
+}

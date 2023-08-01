@@ -1,8 +1,8 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.GuideInfoForUserWishDto;
-import com.example.backend.dto.UserWishDto;
-import com.example.backend.dto.UserWishDto.Response;
+import com.example.backend.dto.userinfo.GuideInfoForUserWishDto;
+import com.example.backend.dto.userinfo.UserWishDto;
+import com.example.backend.dto.userinfo.UserWishDto.Response;
 import com.example.backend.model.follower.Follower;
 import com.example.backend.model.follower.FollowerRepository;
 import com.example.backend.model.tour.Tour;

@@ -1,15 +1,14 @@
-package com.example.backend.dto;
+package com.example.backend.dto.chat;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-public class MateUpdateDto {
+public class ChatRoomRegistDto {
 
     @Data
     @NoArgsConstructor
     public static class Request {
-        private String title;
-        private String content;
+        private Long tourId;
     }
 }
