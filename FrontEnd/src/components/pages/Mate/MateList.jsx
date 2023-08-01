@@ -4,49 +4,53 @@ import { Link } from "react-router-dom";
 const MateList = () => {
   const [mateListData, setMateListData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
+  const [tempPage, setTempPage] = useState(0);
 
   useEffect(() => {
-    const fetchMateListData = async () => {
-      try {
-        const response = await fetch(
-          `http://52.79.93.203/mate?page=${currentPage}`
-        );
-        if (response.status === 200) {
-          const data = await response.json();
-          setMateListData(data.data.mateList);
-
-          // 페이지 수
-          setTotalPages(data.data.pageCount);
-        } else {
-          alert(
-            "메이트 목록을 불러올 수 없습니다. 잠시 후 다시 시도해 주세요."
-          );
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchMateListData();
+    fetchData();
   }, [currentPage]);
 
-  const handlePrevPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage((prevPage) => prevPage - 1);
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `http://52.79.93.203/mate?page=${currentPage}`
+      );
+      if (response.status === 200) {
+        console.log("데이터18개받았어용");
+        const data = await response.json();
+        setMateListData(data.data.mateList);
+      } else {
+        alert("메이트 목록을 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
+  const handlePrevClick = () => {
+    setCurrentPage((currentPage) => currentPage - 1);
+  };
+
+  const handleNextClick = () => {
+    setCurrentPage((currentPage) => currentPage + 1);
+  };
+
+  const oneClick = () => {
+    setTempPage(1);
+  };
+
+  const twoClick = () => {
+    setTempPage(2);
+  };
+
+  const threeClick = () => {
+    setTempPage(3);
   };
 
   return (
     <div>
       <h1>메이트 목록 페이지</h1>
-      {mateListData.map((mate, index) => (
+      {mateListData.slice(tempPage * 6, (tempPage + 1) * 6).map((mate) => (
         <div key={mate.mateId}>
           <h3>
             <Link
@@ -60,19 +64,17 @@ const MateList = () => {
           <p>
             참가인원: {mate.joinMember}/{mate.maxMember}
           </p>
-          {index % 3 === 2 && <br />}
         </div>
       ))}
       <div>
-        <button onClick={handlePrevPage} disabled={currentPage === 0}>
-          이전 페이지
+        <button onClick={handlePrevClick} disabled={currentPage === 0}>
+          이전
         </button>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages - 1}
-        >
-          다음 페이지
-        </button>
+
+        <button onClick={oneClick}>{currentPage * 3 + 1}</button>
+        <button onClick={twoClick}>{currentPage * 3 + 2}</button>
+        <button onClick={threeClick}>{currentPage * 3 + 3}</button>
+        <button onClick={handleNextClick}>다음</button>
       </div>
     </div>
   );
