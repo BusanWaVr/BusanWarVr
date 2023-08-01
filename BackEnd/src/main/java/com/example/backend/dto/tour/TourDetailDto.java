@@ -31,7 +31,7 @@ public class TourDetailDto {
         private int maxMember;
         private List<CourseDto.Response> courses;
         private List<JoinerDto> joiners;
-        private Long tourId;
+        private Long userId;
         private String nickname;
         private String profileImg;
 
@@ -48,7 +48,7 @@ public class TourDetailDto {
             this.tourImgs = tourImgs;
             this.courses = courses;
             this.joiners = joiners;
-            this.tourId = tour.getId();
+            this.userId = user.getId();
             this.nickname = user.getNickname();
             this.profileImg = user.getProfileImg();
         }
