@@ -149,6 +149,12 @@ public class TourService {
     }
 
     public void tourReservation(Long tourId, User user) {
+        List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
+        for (Joiner joiner : joiners) {
+            if (joiner.getUser().getId() == user.getId()) {
+                throw new IllegalArgumentException("이미 예약된 고객입니다");
+            }
+        }
         Tour tour = tourRepository.findById(tourId).get();
         Joiner joiner = new Joiner(tour, user, new Date());
         joinerRepository.save(joiner);
