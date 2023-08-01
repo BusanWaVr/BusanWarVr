@@ -11,6 +11,7 @@ import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.user.User;
 import java.util.List;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,15 +31,12 @@ public class ChatRoomService {
     }
 
     public void startChatRoom(User user, ChatRoomRegistDto.Request request) {
-        if (user.getType().toString() != "GUIDE") {
-            throw new IllegalArgumentException("가이드만 채팅방을 시작할 수 있습니다.");
-        }
+        isValidGuide(user);
 
         Tour tour = tourRepository.findById(request.getTourId()).get();
 
-        if (user.getId() != tour.getUserId()) {
-            throw new IllegalArgumentException("투어 설립자가 아닙니다.");
-        }
+        isValidTourHost(user, tour);
+
 
         ChatRoom chatRoom = chatRoomRepository.findByTour(tour);
         List<Joiner> joiners = joinerRepository.findAllByTourId(request.getTourId());
@@ -50,7 +48,30 @@ public class ChatRoomService {
         }
     }
 
+    @Transactional
     public void deleteChatRoom(User user, ChatRoomRegistDto.Request request){
-        
+        isValidGuide(user);
+
+        Tour tour = tourRepository.findById(request.getTourId()).get();
+
+        isValidTourHost(user, tour);
+
+        ChatRoom chatRoom = chatRoomRepository.findByTour(tour);
+
+        chatParticipantsInfoRepository.deleteAllByChatRoomId(chatRoom.getId());
+        joinerRepository.deleteAllByTourId(request.getTourId());
+        chatRoomRepository.deleteByTourId(request.getTourId());
+    }
+
+    public void isValidGuide(User user){
+        if (user.getType().toString() != "GUIDE") {
+            throw new IllegalArgumentException("가이드만 채팅방을 시작할 수 있습니다.");
+        }
+    }
+
+    public void isValidTourHost(User user, Tour tour){
+        if (user.getId() != tour.getUserId()) {
+            throw new IllegalArgumentException("투어 설립자가 아닙니다.");
+        }
     }
 }

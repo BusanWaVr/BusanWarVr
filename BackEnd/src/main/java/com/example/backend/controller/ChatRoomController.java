@@ -36,7 +36,9 @@ public class ChatRoomController {
     @DeleteMapping("/chatroom")
     public Response deleteChatRoom(@AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody ChatRoomRegistDto.Request request) {
+        chatRoomService.deleteChatRoom(userDetails.getUser(), request);
 
+        return new Response("200", "정상적으로 채팅방이 삭제되었습니다.", null);
     }
 
 }
