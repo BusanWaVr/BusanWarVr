@@ -67,6 +67,7 @@ const MateDetail = () => {
 
         if (response.status === 200) {
           alert("삭제되었습니다.");
+          window.location.href = "/mate";
           // Handle any other actions after successful deletion, such as redirecting the user.
         } else {
           // Handle the case when the request is not successful
@@ -79,6 +80,8 @@ const MateDetail = () => {
       console.error(error);
     }
   };
+
+  // 수정
 
   return (
     <div>
