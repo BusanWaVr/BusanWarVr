@@ -7,6 +7,7 @@ import TourCourseUpload from "./TourCourseUpload";
 import { useSelector, useDispatch } from "react-redux";
 import { setCourses } from "./TourCourseReducer";
 import TourImageUpload from "./TourImageUpload";
+import Editor from "../../blocks/Editor";
 
 const regionList = [
   "강서구",
@@ -287,15 +288,14 @@ const TourRegistration: React.FC = () => {
       </div>
 
       {/* 내용 */}
+      <Editor
+        value={tourData.content}
+        onChange={(content: string) =>
+          setTourData({ ...tourData, content: content })
+        }
+      />
       <div>
         <span>내용</span>
-        <textarea
-          placeholder="Content"
-          value={tourData.content}
-          onChange={(e) =>
-            setTourData({ ...tourData, content: e.target.value })
-          }
-        />
       </div>
 
       {/* 이미지 */}
