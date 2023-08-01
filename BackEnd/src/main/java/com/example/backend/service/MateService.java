@@ -72,15 +72,13 @@ public class MateService {
     }
 
     public MateListDto.Response getMateList(Pageable pageable) {
-        Page<Mate> mates = mateRepository.findAllByOrderByIdDesc(pageable);
+        List<Mate> mates = mateRepository.findAllByOrderByIdDesc(pageable);
         List<MateInfoForListDto> mateInfoForListDtos = new ArrayList<>();
-//        Long totalCount = mateRepository.count();
-        Long pageCount = (long) mates.getTotalPages();
         for (Mate mate : mates) {
             mateInfoForListDtos.add(new MateInfoForListDto(mate));
         }
 
-        return new MateListDto.Response(pageCount, mateInfoForListDtos);
+        return new MateListDto.Response(mateInfoForListDtos);
     }
 
     @Transactional

@@ -5,7 +5,11 @@ import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { useSelector, useDispatch } from "react-redux";
 import { setLatitude, setLongitude } from "./TourCourseReducer";
 
-const TourAddressSearch = ({ index }) => {
+type TourAddressSearchProps = {
+  index: number;
+};
+
+const TourAddressSearch = ({ index }: TourAddressSearchProps) => {
   const { courses } = useSelector((state: any) => state.tourCourse);
   const dispatch = useDispatch();
   const [fullAddress, setFullAddress] = useState("부산와Vr");
@@ -13,6 +17,8 @@ const TourAddressSearch = ({ index }) => {
     lat: courses[index]?.lat || 0,
     lng: courses[index]?.lon || 0,
   });
+  const [searchCompleted, setSearchCompleted] = useState(false);
+  const [mapRenderCount, setMapRenderCount] = useState(0);
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -26,24 +32,29 @@ const TourAddressSearch = ({ index }) => {
           }
         );
 
-        const location = response.data.documents[0];
-        console.log(location.y, location.x);
-        dispatch(setLatitude({ index: index, lat: parseFloat(location.y) }));
-        dispatch(setLongitude({ index: index, lon: parseFloat(location.x) }));
-        console.log(location.x, location.y);
-        setCenter({ lat: location.y, lng: location.x });
+        if (response.data.documents && response.data.documents.length > 0) {
+          const location = response.data.documents[0];
+          dispatch(setLatitude({ index: index, lat: parseFloat(location.y) }));
+          dispatch(setLongitude({ index: index, lon: parseFloat(location.x) }));
+          setCenter({ lat: location.y, lng: location.x });
+          setMapRenderCount((prev) => prev + 1); // Map 컴포넌트 렌더링 횟수 증가
+        } else {
+          console.error("해당 주소를 찾을 수 없습니다.");
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchCoordinates();
-  }, [fullAddress]);
+    if (searchCompleted) {
+      fetchCoordinates();
+    }
+  }, [fullAddress, searchCompleted]);
 
   const postConfig = {
     onComplete: async (data: any) => {
-      console.log(data);
       setFullAddress(data.address);
+      setSearchCompleted(true);
     },
   };
 
@@ -52,28 +63,38 @@ const TourAddressSearch = ({ index }) => {
   return (
     <>
       <main>
-        우편번호찾기
-        <input
-          type="text"
-          onClick={postCode}
-          value={fullAddress != "부산와Vr" ? fullAddress : ""}
-        />
+        <div>
+          우편번호찾기
+          <input
+            type="text"
+            onClick={postCode}
+            defaultValue={fullAddress != "부산와Vr" ? fullAddress : ""}
+            readOnly
+          />
+        </div>
+        {searchCompleted && mapRenderCount < 2 ? (
+          <Map
+            center={center}
+            style={{
+              width: "100%",
+              height: "450px",
+            }}
+            level={3}
+            key={mapRenderCount}
+          >
+            <MapMarker position={center}>
+              <div style={{ padding: "5px", color: "#000" }}>
+                {fullAddress}
+                <br />
+              </div>
+            </MapMarker>
+          </Map>
+        ) : (
+          <>
+            <div>주소를 검색해보세요</div>
+          </>
+        )}
       </main>
-      <Map
-        center={center}
-        style={{
-          width: "100%",
-          height: "450px",
-        }}
-        level={3}
-      >
-        <MapMarker position={center}>
-          <div style={{ padding: "5px", color: "#000" }}>
-            {fullAddress}
-            <br />
-          </div>
-        </MapMarker>
-      </Map>
     </>
   );
 };

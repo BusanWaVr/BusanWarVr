@@ -6,6 +6,7 @@ type TourCourseInfo = {
   title: string;
   content: string;
   image: any;
+  imageFile: File | null,
 };
 
 interface TourCourseState {
@@ -13,7 +14,7 @@ interface TourCourseState {
 }
 
 const initialState: TourCourseState = {
-  courses: [{ lon: 0, lat: 0, title: "", content: "", image: null }],
+  courses: [{ lon: 0, lat: 0, title: "", content: "", image: null, imageFile: null}],
 };
 
 const tourCourseSlice = createSlice({
@@ -47,6 +48,10 @@ const tourCourseSlice = createSlice({
       const course = action.payload;
       state.courses = [...state.courses, course];
     },
+    setImageFile(state, action: PayloadAction<{ index: number; imageFile: File | null }>) {
+      const { index, imageFile } = action.payload;
+      state.courses[index].imageFile = imageFile;
+    },
   },
 });
 
@@ -57,5 +62,6 @@ export const {
   setLatitude,
   setLongitude,
   setCourses,
+  setImageFile,
 } = tourCourseSlice.actions;
 export default tourCourseSlice.reducer;
