@@ -6,8 +6,8 @@ import com.example.backend.model.user.User;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
@@ -22,9 +22,9 @@ public class TourRegistDto {
         private String subTitle;
         private String content;
         private List<MultipartFile> tourImgs;
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(iso = ISO.DATE_TIME)
         private Date startDate;
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(iso = ISO.DATE_TIME)
         private Date endDate;
         private int minMember;
         private int maxMember;
@@ -34,7 +34,6 @@ public class TourRegistDto {
             return new Tour(this.region, this.title, this.subTitle, this.content,
                     this.startDate, this.endDate, this.minMember, this.maxMember, user.getId());
         }
-
         public Category toCategory(String categoryName) {
             return new Category(categoryName);
         }

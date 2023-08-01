@@ -1,6 +1,5 @@
 package com.example.backend.dto;
 
-import com.example.backend.model.joiner.Joiner;
 import com.example.backend.model.tour.Tour;
 import java.util.Date;
 import java.util.List;
@@ -20,9 +19,10 @@ public class TourDetailDto {
         private String subTitle;
         private String content;
         private List<String> tourImgs;
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z")
         private Date startDate;
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z")
         private Date endDate;
         private int minMember;
         private int maxMember;
