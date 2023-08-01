@@ -10,6 +10,10 @@ const MateList = () => {
     fetchData();
   }, [currentPage]);
 
+  useEffect(() => {
+    console.log(tempPage);
+  }, [tempPage]);
+
   const fetchData = async () => {
     try {
       const response = await fetch(
@@ -36,15 +40,15 @@ const MateList = () => {
   };
 
   const oneClick = () => {
-    setTempPage(1);
+    setTempPage(0);
   };
 
   const twoClick = () => {
-    setTempPage(2);
+    setTempPage(1);
   };
 
   const threeClick = () => {
-    setTempPage(3);
+    setTempPage(2);
   };
 
   return (

@@ -20,7 +20,7 @@ import TourDetail from "../components/pages/Tour/TourDetail.tsx";
 import GuideDetail from "../components/pages/GuideProfile/GuideDetail.tsx";
 import GuideMyPage from "../components/pages/GuideProfile/GuideMyPage.tsx";
 import TourUpdate from "../components/pages/Tour/TourUpdate.tsx";
-import WritePage from "../components/pages/Mate/WritePage";
+import MateWrite from "../components/pages/Mate/MateWrite.jsx";
 import MateDetail from "../components/pages/Mate/MateDetail";
 import MateList from "../components/pages/Mate/MateList";
 import MateEdit from "../components/pages/Mate/MateEdit";
@@ -64,7 +64,7 @@ function App() {
           </Route>
 
           <Route element={<UserRoute />}>
-            <Route path="/write" element={<WritePage />} />
+            <Route path="/mate/write" element={<MateWrite />} />
           </Route>
 
           <Route path="/matedetail/:mateId" element={<MateDetail />} />

@@ -8,7 +8,7 @@ const StyledWritePage = styled.div`
   margin: 0 auto;
 `;
 
-const WritePage = () => {
+const MateWrite = () => {
   const [tourId, setTourId] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -101,4 +101,4 @@ const WritePage = () => {
   );
 };
 
-export default WritePage;
+export default MateWrite;

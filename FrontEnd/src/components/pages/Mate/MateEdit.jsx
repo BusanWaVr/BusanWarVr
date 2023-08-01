@@ -21,7 +21,6 @@ const MateEdit = () => {
   const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    // location.state에서 초기값을 가져와서 설정합니다.
     if (location.state) {
       const {
         tourId: initialTourId,

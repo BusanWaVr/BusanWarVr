@@ -99,7 +99,6 @@ const MateDetail = () => {
     <div>
       <h1>메이트 상세페이지</h1>
       <br />
-      {/* 자식 컴포넌트로 데이터 보내기 */}
       {mateData ? (
         <div>
           <p>모집중인 투어</p>
