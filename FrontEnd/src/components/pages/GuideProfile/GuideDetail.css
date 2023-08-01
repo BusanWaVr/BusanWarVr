@@ -2,17 +2,14 @@
   display: flex;
 }
 
-.left-panel {
-  flex: 0 0 300px;
+.guidemini {
+  flex: 0 0 200px; /* 왼쪽 패널의 너비를 조정합니다 */
   padding: 20px;
-  display: flex;
-  flex-direction: column;
 }
 
 .right-panel {
-  flex: 1;
+  flex: 1; /* 오른쪽 패널이 남아있는 공간을 모두 차지하도록 flex 속성을 추가합니다 */
   overflow-y: auto;
-  padding: 20px;
 }
 
 /* 가이드 프로필 이미지 */
@@ -25,20 +22,20 @@ img {
 }
 
 /* 팔로워, 투어 수 가로 배치를 위한 스타일 */
-.left-panel p {
+.guidemini p {
   display: inline-block;
   margin-right: 20px;
 }
 
 /* 홈, 후기, 진행 중인 투어, 지난 투어 세로 배치를 위한 스타일 */
-.left-panel a {
+.guidemini a {
   display: block;
   margin-bottom: 10px;
   color: black;
   text-decoration: none;
 }
 
-.left-panel a:hover {
+.guidemini a:hover {
   /* Optional: Add hover effect if desired */
   color: #646cffaa; /* Change the color on hover if needed */
 }
