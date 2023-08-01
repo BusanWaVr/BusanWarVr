@@ -1,31 +1,62 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import TourDetailCourse from "./TourDetailCourse";
+import TourReserveButton from "./TourReserveButton";
+import { useSelector } from "react-redux";
+import TourCancelButton from "./TourCancelButton";
 
-const TourDetail = () => {
-  const { tourId } = useParams();
-  const [tourData, setTourData] = useState(null);
-  const currentUser = localStorage.getItem("userId");
+interface TourData {
+  tourId: string;
+  title: string;
+  subTitle: string;
+  userId: string;
+  profileImg: string;
+  nickname: string;
+  category: string[];
+  startDate: string;
+  endDate: string;
+  minMember: number;
+  maxMember: number;
+  content: string;
+  tourImgs: string[];
+  joiners: Joiner[];
+  canceled: boolean;
+  ended: boolean;
+  courses: Course[];
+}
 
-  function dateFormat(date) {
-    let dateFormat2 =
-      date.getFullYear() +
-      "-" +
-      (date.getMonth() + 1 < 9
-        ? "0" + (date.getMonth() + 1)
-        : date.getMonth() + 1) +
-      "-" +
-      (date.getDate() < 9 ? "0" + date.getDate() : date.getDate());
-    return dateFormat2;
-  }
+interface Course {
+  lon: number;
+  lat: number;
+  title: string;
+  content: string;
+  image: string;
+}
+
+interface Joiner {
+  profileImg: string;
+  nickname: string;
+  joinDate: string;
+}
+
+const TourDetail: React.FC = () => {
+  const { tourId } = useParams<{ tourId: string }>();
+  const [tourData, setTourData] = useState<TourData | null>(null);
+  const { userId, nickname } = useSelector((state: any) => state.userInfo);
+  const [isJoined, setIsJoined] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTourData = async () => {
       try {
-        const response = await fetch(`tour/${tourId}`);
+        const response = await fetch(`http://52.79.93.203/tour/${tourId}`);
         if (response.status === 200) {
           const res = await response.json();
           console.log(res);
           setTourData(res.data);
+          const isUserJoined = res.data.joiners.some(
+            (joiner: Joiner) => joiner.nickname === nickname
+          );
+          setIsJoined(isUserJoined);
         } else {
           alert("해당 투어가 존재하지 않습니다.");
         }
@@ -72,6 +103,15 @@ const TourDetail = () => {
           </div>
           <hr />
           {/* TODO - 코스 목록 띄우기 (지도 API를 포함한 코스 컴포넌트 만들기) */}
+          {tourData.courses.map((course) => (
+            <TourDetailCourse
+              lon={course.lon}
+              lat={course.lat}
+              title={course.title}
+              content={course.content}
+              image={course.image}
+            />
+          ))}
           <hr />
           <div>
             <p>현재 모집 현황</p>
@@ -115,19 +155,28 @@ const TourDetail = () => {
           </div>
           <hr />
           {/* TODO - 각 버튼이 동작하도록 기능 구현 */}
-          {currentUser == tourData.userId ? (
+          {userId == tourData.userId ? (
             <>
-              <button>수정하기</button>
-              <button>투어 진행 취소하기..:(</button>
+              {tourData.canceled ? (
+                <button disabled>취소된 투어입니다.</button>
+              ) : (
+                <>
+                  <button>수정하기</button>
+                  <TourCancelButton tourId={tourId} />
+                </>
+              )}
             </>
           ) : (
             <>
-              {tourData.canceled ? <button>투어 예약하기</button> : null}
+              {!tourData.canceled && !tourData.ended ? (
+                <TourReserveButton tourId={tourId} isJoined={isJoined} />
+              ) : null}
               {tourData.ended ||
-              (Date(tourData.startDate) < Date() && !tourData.canceled) ? (
+              (new Date(tourData.startDate) < new Date() &&
+                !tourData.canceled) ? (
                 <button disabled>종료된 투어입니다.</button>
               ) : null}
-              {!tourData.canceled && !tourData.canceled ? (
+              {tourData.canceled ? (
                 <button disabled>취소된 투어입니다.</button>
               ) : null}
             </>
