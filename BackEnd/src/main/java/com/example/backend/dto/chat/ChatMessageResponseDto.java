@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class ChatMessageResponseDto <T>{
 
     private String roomUid;
-    private SenderResponseDto sender;
+    private SenderDto sender;
     private String type;
     private T body;
 }

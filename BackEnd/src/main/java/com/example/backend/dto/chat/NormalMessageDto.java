@@ -13,7 +13,7 @@ public class NormalMessageDto {
     private String message;
 
     public ChatMessageResponseDto<String> toChatMessageResponseDto(User user) {
-        return new ChatMessageResponseDto<>(this.roomUid, new SenderResponseDto(user), "NORMAL", this.message);
+        return new ChatMessageResponseDto<>(this.roomUid, new SenderDto(user), "NORMAL", this.message);
     }
 
     public Message toMessage(User user, String type){
