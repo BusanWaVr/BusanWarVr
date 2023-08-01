@@ -2,7 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.document.EventDoc;
 import com.example.backend.document.EventRepository;
-import com.example.backend.dto.chat.ChatMessageRequestDto;
+import com.example.backend.dto.chat.NormalMessageDto;
 import com.example.backend.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,9 +17,10 @@ public class ChatController {
     private final ChatMessageService chatMessageService;
     private final EventRepository eventRepository;
 
-    @MessageMapping("/chat/message")
-    public void chatMessage(@RequestBody ChatMessageRequestDto requestDto) {
-        chatMessageService.sendChatMessage(requestDto);
+    @MessageMapping("/chat/message/normal")
+    public void chatMessage(@RequestBody NormalMessageDto requestDto) {
+        System.out.println(requestDto);
+        chatMessageService.sendNormalMessage(requestDto);
     }
 
     @GetMapping("/mongoTest")

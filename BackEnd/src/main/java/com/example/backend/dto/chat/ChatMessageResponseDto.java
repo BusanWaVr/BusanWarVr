@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatMessageResponseDto {
+public class ChatMessageResponseDto <T>{
 
-    private long roomId;
+    private String roomUid;
     private SenderResponseDto sender;
-    private String message;
+    private String type;
+    private T body;
 }
