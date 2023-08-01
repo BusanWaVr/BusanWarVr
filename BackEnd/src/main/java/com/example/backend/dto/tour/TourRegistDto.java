@@ -34,10 +34,11 @@ public class TourRegistDto {
 
         public Tour toTour(User user) {
             UUID uuid = UUID.randomUUID();
-            String uid = uuid + "/" +  new Date();
+            String uid = uuid + "/" + new Date();
             return new Tour(uid, this.region, this.title, this.subTitle, this.content,
                     this.startDate, this.endDate, this.minMember, this.maxMember, user.getId());
         }
+
         public Category toCategory(String categoryName) {
             return new Category(categoryName);
         }

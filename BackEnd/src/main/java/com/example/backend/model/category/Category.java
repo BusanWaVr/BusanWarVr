@@ -1,6 +1,5 @@
 package com.example.backend.model.category;
 
-import com.example.backend.model.user.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

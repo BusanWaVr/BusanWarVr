@@ -23,28 +23,29 @@ public class ChatRoomService {
     private final TourRepository tourRepository;
     private final JoinerRepository joinerRepository;
 
-    public void createChatRoom(User user, ChatRoomRegistDto.Request request){
+    public void createChatRoom(User user, ChatRoomRegistDto.Request request) {
         Tour tour = tourRepository.findById(request.getTourId()).get();
         ChatRoom chatRoom = new ChatRoom(user, tour);
         chatRoomRepository.save(chatRoom);
     }
 
-    public void startChatRoom(User user, ChatRoomRegistDto.Request request){
-        if(user.getType().toString() != "GUIDE"){
+    public void startChatRoom(User user, ChatRoomRegistDto.Request request) {
+        if (user.getType().toString() != "GUIDE") {
             throw new IllegalArgumentException("가이드만 채팅방을 시작할 수 있습니다.");
         }
 
         Tour tour = tourRepository.findById(request.getTourId()).get();
 
-        if(user.getId() != tour.getUserId()){
+        if (user.getId() != tour.getUserId()) {
             throw new IllegalArgumentException("투어 설립자가 아닙니다.");
         }
 
         ChatRoom chatRoom = chatRoomRepository.findByTour(tour);
         List<Joiner> joiners = joinerRepository.findAllByTourId(request.getTourId());
 
-        for(Joiner joiner : joiners){
-            ChatParticipantsInfo chatParticipantsInfo = new ChatParticipantsInfo(joiner.getUser(), chatRoom);
+        for (Joiner joiner : joiners) {
+            ChatParticipantsInfo chatParticipantsInfo = new ChatParticipantsInfo(joiner.getUser(),
+                    chatRoom);
             chatParticipantsInfoRepository.save(chatParticipantsInfo);
         }
     }
