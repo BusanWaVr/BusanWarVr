@@ -3,6 +3,8 @@ package com.example.backend.service;
 import com.example.backend.dto.GuideInfoForUserWishDto;
 import com.example.backend.dto.UserWishDto;
 import com.example.backend.dto.UserWishDto.Response;
+import com.example.backend.model.follower.Follower;
+import com.example.backend.model.follower.FollowerRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tourcategory.TourCategory;
 import com.example.backend.model.tourcategory.TourCategoryRepository;
@@ -22,6 +24,7 @@ public class UserInfoService {
     private final UserRepository userRepository;
     private final TourCategoryRepository tourCategoryRepository;
     private final WishRepository wishRepository;
+    private final FollowerRepository followerRepository;
 
 
     public List<Response> getUserWishList(Long userId) {
@@ -51,4 +54,14 @@ public class UserInfoService {
 
     }
 
+    public void userFollow(Long userId, Long guideId) {
+
+        User user = userRepository.findById(userId).get();
+        User guide = userRepository.findById(guideId).get();
+
+        Follower follower = new Follower();
+        follower.setUserId(user);
+        follower.setGuideId(guide);
+        followerRepository.save(follower);
+    }
 }
