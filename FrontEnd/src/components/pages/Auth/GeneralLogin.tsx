@@ -90,7 +90,7 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
       const email = res.data.email;
       const nickname = res.data.nickname;
       const profileImg = res.data.profileImg;
-      const userType = res.data.userType;
+      const userType = res.data.type;
 
       console.log(res.data);
       // 받아온 JWT 토큰들을 로컬 스토리지에 저장
