@@ -76,7 +76,6 @@ const TourRegistration: React.FC = () => {
 
   const accessToken = localStorage.getItem("accessToken");
 
-  const [coursesNum, setCoursesNum] = useState(1);
   const [tourData, setTourData] = useState<TourData>({
     region: "",
     category: [],
@@ -86,10 +85,14 @@ const TourRegistration: React.FC = () => {
     tourImgs: [],
     startDate: new Date(),
     endDate: new Date(),
-    minMember: 0,
-    maxMember: 1,
+    minMember: 1,
+    maxMember: 2,
     courses: [],
   });
+
+  const [coursesNum, setCoursesNum] = useState(1);
+  const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
+  const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
@@ -124,9 +127,6 @@ const TourRegistration: React.FC = () => {
       tourImgs: selectedImages.slice(0, MaxTourImgs), // 최대 이미지 수를 적용하여 설정
     }));
   };
-
-  const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
-  const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
 
   const increaseCoursesNum = () => {
     if (coursesNum <= 2) {
@@ -163,7 +163,9 @@ const TourRegistration: React.FC = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (tourData.category.length < MinRequiredcategory) {
       alert(`최소 ${MinRequiredcategory}개의 카테고리를 선택해 주세요.`);
       return;
@@ -173,22 +175,22 @@ const TourRegistration: React.FC = () => {
       console.log("제출");
       tourData.courses = courses;
       console.log(tourData);
-      // const response = await fetch("http://52.79.93.203/tour", {
-      //   method: "POST",
-      //   headers: {
-      //     Authorization: accessToken,
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(tourData),
-      // });
+      const response = await fetch("http://52.79.93.203/tour", {
+        method: "POST",
+        headers: {
+          Authorization: accessToken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tourData),
+      });
 
-      // const data = await response.json();
+      const data = await response.json();
 
-      // if (data.code === "200") {
-      //   // window.location.href = 투어상세페이지;
-      // } else {
-      //   console.log(data.message);
-      // }
+      if (data.code === "200") {
+        // window.location.href = 투어상세페이지;
+      } else {
+        console.log(data.message);
+      }
     } catch (error) {
       console.error(error);
     }
