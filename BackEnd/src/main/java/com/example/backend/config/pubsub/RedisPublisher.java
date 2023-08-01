@@ -15,6 +15,6 @@ public class RedisPublisher {
     private final SimpMessageSendingOperations messagingTemplate;
 
     public void chatMessagePublish(ChatMessageResponseDto messageDto){
-        messagingTemplate.convertAndSend("/sub/chat/message/room/" + messageDto.getRoomId(), messageDto);
+        messagingTemplate.convertAndSend("/sub/chat/message/room/" + messageDto.getRoomUid(), messageDto);
     }
 }
