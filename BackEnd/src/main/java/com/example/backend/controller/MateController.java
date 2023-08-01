@@ -1,9 +1,9 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.MateDetailDto;
-import com.example.backend.dto.MateListDto;
-import com.example.backend.dto.MateRegistDto;
-import com.example.backend.dto.MateUpdateDto;
+import com.example.backend.dto.mate.MateDetailDto;
+import com.example.backend.dto.mate.MateListDto;
+import com.example.backend.dto.mate.MateRegistDto;
+import com.example.backend.dto.mate.MateUpdateDto;
 import com.example.backend.dto.Response;
 import com.example.backend.model.user.User;
 import com.example.backend.security.UserDetailsImpl;

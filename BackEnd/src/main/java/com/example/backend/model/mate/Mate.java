@@ -1,7 +1,7 @@
 package com.example.backend.model.mate;
 
-import com.example.backend.dto.MateRegistDto;
-import com.example.backend.dto.MateUpdateDto;
+import com.example.backend.dto.mate.MateRegistDto;
+import com.example.backend.dto.mate.MateUpdateDto;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.user.User;
 import javax.persistence.Column;
