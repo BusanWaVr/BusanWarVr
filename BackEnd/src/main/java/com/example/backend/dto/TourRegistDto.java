@@ -5,6 +5,7 @@ import com.example.backend.model.tour.Tour;
 import com.example.backend.model.user.User;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -31,7 +32,9 @@ public class TourRegistDto {
         private List<CourseDto.Request> courses;
 
         public Tour toTour(User user) {
-            return new Tour(this.region, this.title, this.subTitle, this.content,
+            UUID uuid = UUID.randomUUID();
+            String uid = uuid + "/" +  new Date();
+            return new Tour(uid, this.region, this.title, this.subTitle, this.content,
                     this.startDate, this.endDate, this.minMember, this.maxMember, user.getId());
         }
         public Category toCategory(String categoryName) {

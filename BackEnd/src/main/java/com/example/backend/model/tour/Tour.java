@@ -20,6 +20,9 @@ public class Tour {
     private Long id;
 
     @Column
+    private String uid;
+
+    @Column
     private String region;
 
     @Column
@@ -65,4 +68,17 @@ public class Tour {
         this.userId = userId;
     }
 
+    public Tour(String uid, String region, String title, String subTitle, String content, Date startDate,
+            Date endDate, int minMember, int maxMember, long userId) {
+        this.uid = uid;
+        this.region = region;
+        this.title = title;
+        this.subTitle = subTitle;
+        this.content = content;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.minMember = minMember;
+        this.maxMember = maxMember;
+        this.userId = userId;
+    }
 }
