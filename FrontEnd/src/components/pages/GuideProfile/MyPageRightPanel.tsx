@@ -60,7 +60,7 @@ const MyPageRightPanel: React.FC<MyPageRightPanelProps> = ({ guide }) => {
               <img src={tour.image} alt={tour.title} />
               <h4>{tour.title}</h4>
             </Link>
-            <Link to={`/edit-tour/${tour.tourId}`} className="edit-button">
+            <Link to={`/tour/${tour.tourId}/update`} className="edit-button">
               수정하기
             </Link>
           </div>

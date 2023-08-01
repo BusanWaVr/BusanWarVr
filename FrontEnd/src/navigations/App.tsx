@@ -4,6 +4,7 @@ import Test from "../components/blocks/Test.tsx";
 import Dashboard from "../components/pages/Auth/Dashboard.tsx";
 import Home from "../components/pages/Home/Home.tsx";
 import Signup from "../components/pages/Auth/Signup.jsx";
+import Update from "../components/pages/Auth/Update.tsx";
 import GuideSignup from "../components/pages/Auth/GuideSignup.jsx";
 import LiveStream from "../components/pages/LiveStream/LiveStream.jsx";
 import LiveStreamView from "../components/pages/LiveStream/LiveStreamView.jsx";
@@ -12,6 +13,7 @@ import TourRegistration from "../components/pages/Tour/TourRegistration.tsx";
 import TourDetail from "../components/pages/Tour/TourDetail.tsx";
 import GuideDetail from "../components/pages/GuideProfile/GuideDetail.tsx";
 import GuideMyPage from "../components/pages/GuideProfile/GuideMyPage.tsx";
+import TourUpdate from "../components/pages/Tour/TourUpdate.tsx";
 import WritePage from "../components/pages/Mate/WritePage";
 import MateDetail from "../components/pages/Mate/MateDetail";
 import MateList from "../components/pages/Mate/MateList";
@@ -26,9 +28,11 @@ function App() {
           <Route path="/test" element={<Test />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/update" element={<Update />} />
           <Route path="/guidesignup" element={<GuideSignup />} />
           <Route path="/livestream" element={<LiveStream />} />
           <Route path="/chatroom" element={<ChatRoom />} />
+          <Route path="/tour/:tourId/update" element={<TourUpdate />} />
           <Route path="/tour/write" element={<TourRegistration />} />
           <Route path="/tour/:tourId" element={<TourDetail />} />
           <Route path="/guide/:guideId/detail" element={<GuideDetail />} />
