@@ -7,7 +7,6 @@ import com.example.backend.dto.tour.TourRegistDto;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.TourService;
 import java.io.IOException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;

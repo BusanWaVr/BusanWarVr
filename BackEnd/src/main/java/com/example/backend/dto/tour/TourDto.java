@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 public class TourDto {
 
+    private Long tourId;
     private String region;
     private List<String> category;
     private String title;
@@ -36,6 +37,7 @@ public class TourDto {
 
     public TourDto(Tour tour, User user, List<String> category, List<String> tourImgs,
             List<CourseDto.Response> courses, List<JoinerDto> joiners) {
+        this.tourId = tour.getId();
         this.region = tour.getRegion();
         this.category = category;
         this.title = tour.getTitle();
@@ -54,5 +56,4 @@ public class TourDto {
         this.isCanceled = tour.isCanceled();
         this.isEnded = tour.isEnded();
     }
-
 }

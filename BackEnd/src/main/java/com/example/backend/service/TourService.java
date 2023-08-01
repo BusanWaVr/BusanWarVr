@@ -131,37 +131,19 @@ public class TourService {
     public TourDetailDto.Response tourDetail(Long tourId) {
         Tour tour = tourRepository.findById(tourId).get();
         User user = userRepository.findById(tour.getUserId()).get();
-        List<TourCategory> categories = tourCategoryRepository.findAllByTourId(tourId);
+
         List<String> tourCategories = new ArrayList<>();
-        for (TourCategory tourCategory : categories) {
-            Category category = tourCategory.getCategory();
-            tourCategories.add(category.getName());
-        }
-        List<TourImage> tourImages = tourImageRepository.findAllByTourId(tourId);
+        tourCategoryList(tourId, tourCategories);
+
         List<String> tourImageUrls = new ArrayList<>();
-        if (tourImages != null) {
-            for (TourImage tourImage : tourImages) {
-                tourImageUrls.add(tourImage.getImage().getUrl());
-            }
-        }
-        List<Course> courses = courseRepository.findAllByTourId(tourId);
+        tourImageUrlList(tourId, tourImageUrls);
+
         List<CourseDto.Response> courseDtos = new ArrayList<>();
-        for (Course course : courses) {
-            CourseImage courseImage = courseImageRepository.findByCourseId(course.getId());
-            String imageUrl = "";
-            if (courseImage != null) {
-                imageUrl = courseImage.getImage().getUrl();
-            }
-            CourseDto.Response courseDto = new CourseDto.Response(course, imageUrl);
-            courseDtos.add(courseDto);
-        }
-        List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
+        courseDtoList(tourId, courseDtos);
+
         List<JoinerDto> joinerDtos = new ArrayList<>();
-        for (Joiner joiner : joinerList) {
-            JoinerDto joinerDto = new JoinerDto(joiner.getUser().getProfileImg(),
-                    joiner.getUser().getNickname(), joiner.getJoinDate());
-            joinerDtos.add(joinerDto);
-        }
+        joinerDtoList(tourId, joinerDtos);
+
         return new TourDetailDto.Response(tour, user, tourCategories, tourImageUrls, courseDtos,
                 joinerDtos);
     }
@@ -215,45 +197,28 @@ public class TourService {
     }
 
     public TourListDto.Response getALLTour(Pageable pageable) {
-        List<Tour> tours = tourRepository.findAllByOrderByIdDesc(pageable);
+        List<Tour> tours = tourRepository.findByIsEndedFalseOrderByStartDateDesc(pageable);
         List<TourDto> tourDtoList = new ArrayList<>();
 
         for (Tour tour : tours) {
             if (tour.isEnded()) {
+                continue;
             }
             User user = userRepository.findById(tour.getUserId()).get();
             Long tourId = tour.getId();
-            List<TourCategory> categories = tourCategoryRepository.findAllByTourId(tourId);
+
             List<String> tourCategories = new ArrayList<>();
-            for (TourCategory tourCategory : categories) {
-                Category category = tourCategory.getCategory();
-                tourCategories.add(category.getName());
-            }
-            List<TourImage> tourImages = tourImageRepository.findAllByTourId(tourId);
+            tourCategoryList(tourId, tourCategories);
+
             List<String> tourImageUrls = new ArrayList<>();
-            if (tourImages != null) {
-                for (TourImage tourImage : tourImages) {
-                    tourImageUrls.add(tourImage.getImage().getUrl());
-                }
-            }
-            List<Course> courses = courseRepository.findAllByTourId(tourId);
+            tourImageUrlList(tourId, tourImageUrls);
+
             List<CourseDto.Response> courseDtos = new ArrayList<>();
-            for (Course course : courses) {
-                CourseImage courseImage = courseImageRepository.findByCourseId(course.getId());
-                String imageUrl = "";
-                if (courseImage != null) {
-                    imageUrl = courseImage.getImage().getUrl();
-                }
-                CourseDto.Response courseDto = new CourseDto.Response(course, imageUrl);
-                courseDtos.add(courseDto);
-            }
-            List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
+            courseDtoList(tourId, courseDtos);
+
             List<JoinerDto> joinerDtos = new ArrayList<>();
-            for (Joiner joiner : joinerList) {
-                JoinerDto joinerDto = new JoinerDto(joiner.getUser().getProfileImg(),
-                        joiner.getUser().getNickname(), joiner.getJoinDate());
-                joinerDtos.add(joinerDto);
-            }
+            joinerDtoList(tourId, joinerDtos);
+
             tourDtoList.add(
                     new TourDto(tour, user, tourCategories, tourImageUrls, courseDtos, joinerDtos));
         }
@@ -261,4 +226,42 @@ public class TourService {
         return new TourListDto.Response(tourDtoList);
     }
 
+    public void tourCategoryList(Long tourId, List<String> tourCategories) {
+        List<TourCategory> categories = tourCategoryRepository.findAllByTourId(tourId);
+        for (TourCategory tourCategory : categories) {
+            Category category = tourCategory.getCategory();
+            tourCategories.add(category.getName());
+        }
+    }
+
+    public void tourImageUrlList(Long tourId, List<String> tourImageUrls) {
+        List<TourImage> tourImages = tourImageRepository.findAllByTourId(tourId);
+        if (tourImages != null) {
+            for (TourImage tourImage : tourImages) {
+                tourImageUrls.add(tourImage.getImage().getUrl());
+            }
+        }
+    }
+
+    public void courseDtoList(Long tourId, List<CourseDto.Response> courseDtos) {
+        List<Course> courses = courseRepository.findAllByTourId(tourId);
+        for (Course course : courses) {
+            CourseImage courseImage = courseImageRepository.findByCourseId(course.getId());
+            String imageUrl = "";
+            if (courseImage != null) {
+                imageUrl = courseImage.getImage().getUrl();
+            }
+            CourseDto.Response courseDto = new CourseDto.Response(course, imageUrl);
+            courseDtos.add(courseDto);
+        }
+    }
+
+    public void joinerDtoList(Long tourId, List<JoinerDto> joinerDtos) {
+        List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
+        for (Joiner joiner : joinerList) {
+            JoinerDto joinerDto = new JoinerDto(joiner.getUser().getProfileImg(),
+                    joiner.getUser().getNickname(), joiner.getJoinDate());
+            joinerDtos.add(joinerDto);
+        }
+    }
 }
