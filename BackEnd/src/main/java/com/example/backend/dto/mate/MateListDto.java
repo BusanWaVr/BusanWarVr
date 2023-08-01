@@ -13,7 +13,7 @@ public class MateListDto {
     @NoArgsConstructor
     public static class Response {
 
-        private Long totalCount;
+        private Long pageCount;
         private List<MateInfoForListDto> mateList;
     }
 }
