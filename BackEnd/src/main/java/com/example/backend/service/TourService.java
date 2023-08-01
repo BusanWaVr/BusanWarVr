@@ -3,6 +3,8 @@ package com.example.backend.service;
 import com.example.backend.dto.course.CourseDto;
 import com.example.backend.dto.joiner.JoinerDto;
 import com.example.backend.dto.tour.TourDetailDto;
+import com.example.backend.dto.tour.TourDto;
+import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
@@ -32,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -201,15 +204,61 @@ public class TourService {
 
     public void tourTerminate(Long tourId, User user) throws IllegalAccessException {
         Tour tour = tourRepository.findById(tourId).get();
-        if((user.getType() == AuthType.GUIDE) && (tour.getUserId() == user.getId())){
+        if ((user.getType() == AuthType.GUIDE) && (tour.getUserId() == user.getId())) {
             tour.setEnded(true);
             tourRepository.save(tour);
-        }
-        else if(user.getType() == AuthType.USER){
+        } else if (user.getType() == AuthType.USER) {
             throw new IllegalAccessException("가이드만 투어 취소 가능합니다.");
-        }
-        else {
+        } else {
             throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 취소 가능합니다.");
         }
     }
+
+    public TourListDto.Response getALLTour(Pageable pageable) {
+        List<Tour> tours = tourRepository.findAllByOrderByIdDesc(pageable);
+        List<TourDto> tourDtoList = new ArrayList<>();
+
+        for (Tour tour : tours) {
+            if (tour.isEnded()) {
+            }
+            User user = userRepository.findById(tour.getUserId()).get();
+            Long tourId = tour.getId();
+            List<TourCategory> categories = tourCategoryRepository.findAllByTourId(tourId);
+            List<String> tourCategories = new ArrayList<>();
+            for (TourCategory tourCategory : categories) {
+                Category category = tourCategory.getCategory();
+                tourCategories.add(category.getName());
+            }
+            List<TourImage> tourImages = tourImageRepository.findAllByTourId(tourId);
+            List<String> tourImageUrls = new ArrayList<>();
+            if (tourImages != null) {
+                for (TourImage tourImage : tourImages) {
+                    tourImageUrls.add(tourImage.getImage().getUrl());
+                }
+            }
+            List<Course> courses = courseRepository.findAllByTourId(tourId);
+            List<CourseDto.Response> courseDtos = new ArrayList<>();
+            for (Course course : courses) {
+                CourseImage courseImage = courseImageRepository.findByCourseId(course.getId());
+                String imageUrl = "";
+                if (courseImage != null) {
+                    imageUrl = courseImage.getImage().getUrl();
+                }
+                CourseDto.Response courseDto = new CourseDto.Response(course, imageUrl);
+                courseDtos.add(courseDto);
+            }
+            List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
+            List<JoinerDto> joinerDtos = new ArrayList<>();
+            for (Joiner joiner : joinerList) {
+                JoinerDto joinerDto = new JoinerDto(joiner.getUser().getProfileImg(),
+                        joiner.getUser().getNickname(), joiner.getJoinDate());
+                joinerDtos.add(joinerDto);
+            }
+            tourDtoList.add(
+                    new TourDto(tour, user, tourCategories, tourImageUrls, courseDtos, joinerDtos));
+        }
+
+        return new TourListDto.Response(tourDtoList);
+    }
+
 }
