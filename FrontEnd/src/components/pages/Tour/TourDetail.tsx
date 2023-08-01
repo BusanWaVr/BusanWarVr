@@ -4,6 +4,7 @@ import { useParams, Link } from "react-router-dom";
 const TourDetail = () => {
   const { tourId } = useParams();
   const [tourData, setTourData] = useState(null);
+  const currentUser = localStorage.getItem("userId");
 
   function dateFormat(date) {
     let dateFormat2 =
@@ -57,7 +58,7 @@ const TourDetail = () => {
             ))}
           </p>
           <p>
-            모집기간 : {tourData.startDate} ~ {tourData.endDate}
+            투어진행기간 : {tourData.startDate} ~ {tourData.endDate}
           </p>
           <p>
             {" "}
@@ -69,6 +70,8 @@ const TourDetail = () => {
               <img src={url} alt="" />
             ))}
           </div>
+          <hr />
+          {/* TODO - 코스 목록 띄우기 (지도 API를 포함한 코스 컴포넌트 만들기) */}
           <hr />
           <div>
             <p>현재 모집 현황</p>
@@ -110,6 +113,25 @@ const TourDetail = () => {
               <p>참가자가 없습니다.</p>
             )}
           </div>
+          <hr />
+          {/* TODO - 각 버튼이 동작하도록 기능 구현 */}
+          {currentUser == tourData.userId ? (
+            <>
+              <button>수정하기</button>
+              <button>투어 진행 취소하기..:(</button>
+            </>
+          ) : (
+            <>
+              {tourData.canceled ? <button>투어 예약하기</button> : null}
+              {tourData.ended ||
+              (Date(tourData.startDate) < Date() && !tourData.canceled) ? (
+                <button disabled>종료된 투어입니다.</button>
+              ) : null}
+              {!tourData.canceled && !tourData.canceled ? (
+                <button disabled>취소된 투어입니다.</button>
+              ) : null}
+            </>
+          )}
         </div>
       ) : (
         <p>로딩중</p>
