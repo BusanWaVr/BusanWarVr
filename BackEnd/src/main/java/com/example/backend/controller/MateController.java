@@ -49,7 +49,7 @@ public class MateController {
 
     @GetMapping("/mate")
     public Response<MateListDto.Response> getMateList(
-            @PageableDefault(size = 6) Pageable pageable) {
+            @PageableDefault(size = 18) Pageable pageable) {
         MateListDto.Response response = mateService.getMateList(pageable);
         return new Response<>("200", "성공적으로 메이트 리스트를 불러왔습니다.", response);
     }
