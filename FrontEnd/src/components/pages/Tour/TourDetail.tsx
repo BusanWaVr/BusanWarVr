@@ -21,7 +21,7 @@ const TourDetail = () => {
   useEffect(() => {
     const fetchTourData = async () => {
       try {
-        const response = await fetch(`http://52.79.93.203/tour/${tourId}`);
+        const response = await fetch(`tour/${tourId}`);
         if (response.status === 200) {
           const res = await response.json();
           console.log(res);

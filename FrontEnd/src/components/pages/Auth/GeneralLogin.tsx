@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setUserId,
   setEmail,
+  setUserType,
   changeNickname,
   changeProfileImg,
   changeAccessToken,
@@ -82,20 +83,22 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
         throw new Error("Login failed.");
       }
 
-      const JWT_Token = await response.json();
-      const accessToken = JWT_Token.data.access_Token;
-      const refreshToken = JWT_Token.data.refresh_Token;
-      const userId = JWT_Token.data.userId;
-      const email = JWT_Token.data.email;
-      const nickname = JWT_Token.data.nickname;
-      const profileImg = JWT_Token.data.profileImg;
+      const res = await response.json();
+      const accessToken = res.data.access_Token;
+      const refreshToken = res.data.refresh_Token;
+      const userId = res.data.userId;
+      const email = res.data.email;
+      const nickname = res.data.nickname;
+      const profileImg = res.data.profileImg;
+      const userType = res.data.userType;
 
-      console.log(JWT_Token.data);
+      console.log(res.data);
       // 받아온 JWT 토큰들을 로컬 스토리지에 저장
       dispatch(changeAccessToken(accessToken));
       dispatch(changeRefreshToken(refreshToken));
       dispatch(setUserId(userId));
       dispatch(setEmail(email));
+      dispatch(setUserType(userType));
       dispatch(changeNickname(nickname));
       dispatch(changeProfileImg(profileImg));
 
