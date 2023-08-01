@@ -1,7 +1,6 @@
 package com.example.backend.dto.course;
 
 import com.example.backend.model.course.Course;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
