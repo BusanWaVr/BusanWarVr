@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import TourDetailCourse from "./TourDetailCourse";
 
 interface TourData {
   tourId: string;
@@ -18,6 +19,15 @@ interface TourData {
   joiners: Joiner[];
   canceled: boolean;
   ended: boolean;
+  courses: Course[];
+}
+
+interface Course {
+  lon: number;
+  lat: number;
+  title: string;
+  content: string;
+  image: string;
 }
 
 interface Joiner {
@@ -85,6 +95,15 @@ const TourDetail: React.FC = () => {
           </div>
           <hr />
           {/* TODO - 코스 목록 띄우기 (지도 API를 포함한 코스 컴포넌트 만들기) */}
+          {tourData.courses.map((course) => (
+            <TourDetailCourse
+              lon={course.lon}
+              lat={course.lat}
+              title={course.title}
+              content={course.content}
+              image={course.image}
+            />
+          ))}
           <hr />
           <div>
             <p>현재 모집 현황</p>
