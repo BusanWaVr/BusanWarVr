@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setUserId,
   setEmail,
+  setUserType,
   changeNickname,
   changeProfileImg,
   changeAccessToken,
