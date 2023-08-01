@@ -33,35 +33,46 @@ public class TourController {
     }
 
     @GetMapping("/tour/{tourId}")
-    public Response<TourDetailDto.Response> tourDetailApi(@PathVariable Long tourId){
+    public Response<TourDetailDto.Response> tourDetailApi(@PathVariable Long tourId) {
         TourDetailDto.Response response = tourService.tourDetail(tourId);
         return new Response<>("200", "성공적으로 투어 상세 정보를 가져 왔습니다!", response);
     }
 
     @PostMapping("/tour/reservation/{tourId}")
-    public Response tourReservationApi(@PathVariable Long tourId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Response tourReservationApi(@PathVariable Long tourId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tourService.tourReservation(tourId, userDetails.getUser());
         return new Response("200", "성공적으로 투어를 예약 하였습니다!", null);
     }
 
     @PostMapping("/tour/wish/{tourId}")
-    public Response tourWishApi(@PathVariable Long tourId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Response tourWishApi(@PathVariable Long tourId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tourService.tourWish(tourId, userDetails.getUser());
         return new Response("200", "성공적으로 투어를 찜 하였습니다!", null);
     }
 
     @DeleteMapping("/tour/reservation/{tourId}")
-    public Response tourReservationCancelApi(@PathVariable Long tourId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public Response tourReservationCancelApi(@PathVariable Long tourId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tourService.tourReservationCancel(tourId, userDetails.getUser());
         return new Response("200", "성공적으로 투어 예약을 취소 하였습니다!", null);
     }
 
     @DeleteMapping("/tour/wish/{tourId}")
-    public Response tourCancelApi(@PathVariable Long tourId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+    public Response tourCancelApi(@PathVariable Long tourId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails)
             throws IllegalAccessException {
         tourService.tourCancel(tourId, userDetails.getUser());
 
         return new Response("200", "성공적으로 투어 예약을 취소 하였습니다!", null);
+    }
+
+    @DeleteMapping("/tour/end/{tourId}")
+    public Response tourTerminateApi(@PathVariable Long tourId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+            throws IllegalAccessException {
+        tourService.tourTerminate(tourId, userDetails.getUser());
+        return new Response("200", "성공적으로 투어를 종료 하였습니다!", null);
     }
 
 //    @GetMapping("tour")

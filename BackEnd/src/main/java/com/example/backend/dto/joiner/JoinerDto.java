@@ -12,7 +12,7 @@ public class JoinerDto {
     private String nickname;
     private Date joinDate;
 
-    public JoinerDto(String profileImage, String nickname, Date joinDate){
+    public JoinerDto(String profileImage, String nickname, Date joinDate) {
         this.profileImage = profileImage;
         this.nickname = nickname;
         this.joinDate = joinDate;

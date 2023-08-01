@@ -9,6 +9,7 @@ public class MateUpdateDto {
     @Data
     @NoArgsConstructor
     public static class Request {
+
         private String title;
         private String content;
     }

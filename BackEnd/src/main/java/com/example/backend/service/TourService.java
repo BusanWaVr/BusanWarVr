@@ -97,7 +97,7 @@ public class TourService {
             courseRepository.save(course);
 
             // 이미지 등록 부분 조건적으로 처리
-            if (courseDto.getImage() != null ) {
+            if (courseDto.getImage() != null) {
                 Image image = saveImage(courseDto.getImage());
 
                 // CourseImage 객체 생성 및 저장
@@ -175,13 +175,12 @@ public class TourService {
         wishRepository.save(wish);
     }
 
-    public void tourReservationCancel(Long tourId, User user) throws IllegalArgumentException{
+    public void tourReservationCancel(Long tourId, User user) throws IllegalArgumentException {
         List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
         for (Joiner joiner : joiners) {
-            if(joiner.getUser().getId() == user.getId()){
+            if (joiner.getUser().getId() == user.getId()) {
                 joinerRepository.deleteById(joiner.getId());
-            }
-            else {
+            } else {
                 throw new IllegalArgumentException("예약 고객만 예약 취소가 가능합니다.");
             }
         }
@@ -190,8 +189,20 @@ public class TourService {
     public void tourCancel(Long tourId, User user)
             throws IllegalAccessException {
         Tour tour = tourRepository.findById(tourId).get();
-        if((user.getType() == AuthType.GUIDE) && (tour.getUserId() == user.getId())){
+        if ((user.getType() == AuthType.GUIDE) && (tour.getUserId() == user.getId())) {
             tour.setCanceled(true);
+            tourRepository.save(tour);
+        } else if (user.getType() == AuthType.USER) {
+            throw new IllegalAccessException("가이드만 투어 취소 가능합니다.");
+        } else {
+            throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 취소 가능합니다.");
+        }
+    }
+
+    public void tourTerminate(Long tourId, User user) throws IllegalAccessException {
+        Tour tour = tourRepository.findById(tourId).get();
+        if((user.getType() == AuthType.GUIDE) && (tour.getUserId() == user.getId())){
+            tour.setEnded(true);
             tourRepository.save(tour);
         }
         else if(user.getType() == AuthType.USER){
@@ -202,3 +213,4 @@ public class TourService {
         }
     }
 }
+
