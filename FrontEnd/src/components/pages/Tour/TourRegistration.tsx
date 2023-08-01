@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCourses } from "./TourCourseReducer";
 import TourImageUpload from "./TourImageUpload";
 import Editor from "../../blocks/Editor";
+import { useNavigate } from "react-router";
 
 const regionList = [
   "강서구",
@@ -75,6 +76,7 @@ type TourData = {
 const TourRegistration: React.FC = () => {
   const { courses } = useSelector((state: any) => state.tourCourse);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const accessToken = localStorage.getItem("accessToken");
 
