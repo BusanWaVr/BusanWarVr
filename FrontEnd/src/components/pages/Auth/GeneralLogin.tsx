@@ -90,6 +90,7 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
       const email = res.data.email;
       const nickname = res.data.nickname;
       const profileImg = res.data.profileImg;
+
       const userType = res.data.userType;
 
       console.log(res.data);
