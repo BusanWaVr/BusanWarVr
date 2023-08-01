@@ -34,6 +34,7 @@ public class TourDetailDto {
         private String nickname;
         private String profileImg;
         private boolean isCanceled;
+        private boolean isEnded;
 
         public Response(Tour tour, User user, List<String> category,List<String> tourImgs, List<CourseDto.Response> courses, List<JoinerDto> joiners){
             this.region = tour.getRegion();
@@ -52,6 +53,7 @@ public class TourDetailDto {
             this.nickname = user.getNickname();
             this.profileImg = user.getProfileImg();
             this.isCanceled = tour.isCanceled();
+            this.isEnded = tour.isEnded();
         }
     }
 }
