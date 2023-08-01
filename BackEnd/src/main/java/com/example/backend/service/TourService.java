@@ -3,7 +3,6 @@ package com.example.backend.service;
 import com.example.backend.dto.CourseDto;
 import com.example.backend.dto.JoinerDto;
 import com.example.backend.dto.TourDetailDto;
-import com.example.backend.dto.TourListDto.Response;
 import com.example.backend.dto.TourRegistDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
@@ -200,9 +199,14 @@ public class TourService {
         }
     }
 
-    public List<Response> getALLTour() {
-        return null;
-    }
+//    public List<TourListDto.Response> getALLTour() {
+//        List<Tour> tours = tourRepository.findAll();
+//        List<TourListDto.Response> tourList = new ArrayList<>();
+//        for (Tour tour : tours) {
+//            TourListDto.Response tourListDto = new TourListDto.Response(tour);
+//        }
+//        return tourList;
+//    }
 }
 
 

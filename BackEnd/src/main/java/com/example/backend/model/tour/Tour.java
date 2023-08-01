@@ -63,4 +63,5 @@ public class Tour {
         this.maxMember = maxMember;
         this.userId = userId;
     }
+
 }
