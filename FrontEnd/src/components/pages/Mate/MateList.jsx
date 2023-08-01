@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const MateList = () => {
   const [mateListData, setMateListData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [tempPage, setTempPage] = useState(0);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -51,17 +53,17 @@ const MateList = () => {
     setTempPage(2);
   };
 
+
   return (
     <div>
       <h1>메이트 목록 페이지</h1>
       {mateListData.slice(tempPage * 6, (tempPage + 1) * 6).map((mate) => (
         <div key={mate.mateId}>
+          {/* <h3 onClick={navigate(`/matedetail/${mate.mateId}`)}> */}
           <h3>
-            <Link
-              to={`/matedetail/${mate.mateId}`}
-              style={{ fontWeight: "bold" }}
-            >
+            <Link to={`/matedetail/${mate.mateId}`}>
               {mate.title}
+
             </Link>
           </h3>
           <div dangerouslySetInnerHTML={{ __html: mate.content }} />

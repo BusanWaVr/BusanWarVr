@@ -10,6 +10,8 @@ interface Data {
   setIsAudioEnabled: (enabled: boolean) => void;
   isVideoEnabled: boolean;
   setIsVideoEnabled: (enabled: boolean) => void;
+  currentPage: number;
+  tempPage: number;
 }
 
 // DataContext 생성
@@ -25,6 +27,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   );
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
+  const [tempPage, setTempPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const data: Data = {
     youtubeLink,
@@ -35,6 +39,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setIsAudioEnabled,
     isVideoEnabled,
     setIsVideoEnabled,
+    tempPage,
+    currentPage,
   };
 
   return <DataContext.Provider value={data}>{children}</DataContext.Provider>;

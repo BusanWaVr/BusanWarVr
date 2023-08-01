@@ -34,7 +34,7 @@ const MateDetail = () => {
           // joiner정보
           setJoinerData(data.data.joiners);
         } else {
-          // 아마도...
+          console.log(response.message);
           alert("해당 메이트 게시글이 존재하지 않습니다.");
         }
       } catch (error) {
@@ -94,6 +94,25 @@ const MateDetail = () => {
       alert("글 작성자 본인만 수정할 수 있습니다.");
     }
   };
+
+
+
+  // // 이전 페이지 URL 가져오기
+  // const referrer = document.referrer;
+
+  // // 이전 페이지가 글쓰기 페이지였으면 최신 목록으로, 아니라면 이전 페이지로 가게 하고 싶었으나..
+  // const handleList = () => {
+  //   console.log(referrer);
+  //   if (referrer === "/mate/write") {
+  //     navigate("/mate")
+  //   } else {
+  //     navigate(-1)
+  //   }
+  // }
+
+  const handleList = () => {
+    navigate("/mate")
+  }
 
   return (
     <div>
@@ -156,6 +175,7 @@ const MateDetail = () => {
           )}
           <button onClick={() => handleButtonClick({ mateData })}>수정</button>
           <button onClick={handleDelete}>삭제</button>
+          <button onClick={handleList}>목록</button>
         </div>
       ) : (
         <p>로딩중ㅎ</p>
