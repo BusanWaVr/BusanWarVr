@@ -150,6 +150,15 @@ public class TourService {
 
     public void tourReservation(Long tourId, User user) {
         Tour tour = tourRepository.findById(tourId).get();
+        if(tour.getMaxMember() <= tour.getCurrentMember()){
+            throw new IllegalArgumentException("인원이 모두 모여 예약이 불가능 합니다.");
+        }
+        List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
+        for (Joiner joiner : joiners) {
+            if (joiner.getUser().getId() == user.getId()) {
+                throw new IllegalArgumentException("이미 예약된 고객입니다");
+            }
+        }
         Joiner joiner = new Joiner(tour, user, new Date());
         joinerRepository.save(joiner);
     }
