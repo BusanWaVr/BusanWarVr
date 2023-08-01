@@ -29,7 +29,6 @@ const regionList = [
 
 const MaxAllowedcategory = 5;
 const MinRequiredcategory = 3;
-const MaxTourImgs = 3;
 
 const categoryList = [
   { name: "힐링", label: "힐링" },
@@ -119,19 +118,18 @@ const TourRegistration: React.FC = () => {
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    const selectedImages = Array.from(files);
-    setImageFiles(selectedImages.slice(0, MaxTourImgs));
-  };
-
   const increaseCoursesNum = () => {
     if (coursesNum <= 2) {
       setCoursesNum(coursesNum + 1);
       dispatch(
-        setCourses({ lon: 0, lat: 0, title: "", content: "", image: null })
+        setCourses({
+          lon: 0,
+          lat: 0,
+          title: "",
+          content: "",
+          image: null,
+          imageFile: null,
+        })
       );
     } else {
       alert("코스는 최대 3개까지 등록할 수 있습니다.");
@@ -162,7 +160,7 @@ const TourRegistration: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (tourData.category.length < MinRequiredcategory) {
@@ -183,10 +181,10 @@ const TourRegistration: React.FC = () => {
     formData.append("minMember", tourData.minMember.toString());
     formData.append("maxMember", tourData.maxMember.toString());
 
-    let category = '';
-    
+    let category = "";
+
     for (let i = 0; i < tourData.category.length; i++) {
-      category += `${tourData.category[i]},`
+      category += `${tourData.category[i]},`;
     }
 
     category = category.substr(0, category.length - 1);
@@ -197,11 +195,23 @@ const TourRegistration: React.FC = () => {
       formData.append("tourImgs", imageFiles[i]);
     }
 
-    for (let i = 0; i < tourData.courses.length; i++){
-      formData.append(`courses[${i}].lon`, JSON.stringify(tourData.courses[i].lon));
-      formData.append(`courses[${i}].lat`, JSON.stringify(tourData.courses[i].lat));
-      formData.append(`courses[${i}].title`, JSON.stringify(tourData.courses[i].title));
-      formData.append(`courses[${i}].content`, JSON.stringify(tourData.courses[i].content));
+    for (let i = 0; i < tourData.courses.length; i++) {
+      formData.append(
+        `courses[${i}].lon`,
+        JSON.stringify(tourData.courses[i].lon)
+      );
+      formData.append(
+        `courses[${i}].lat`,
+        JSON.stringify(tourData.courses[i].lat)
+      );
+      formData.append(
+        `courses[${i}].title`,
+        JSON.stringify(tourData.courses[i].title)
+      );
+      formData.append(
+        `courses[${i}].content`,
+        JSON.stringify(tourData.courses[i].content)
+      );
       formData.append(`courses[${i}].image`, tourData.courses[i].imageFile);
     }
 
@@ -292,7 +302,13 @@ const TourRegistration: React.FC = () => {
       <div>
         <span>이미지</span>
         {Array.from({ length: imageNum }, (_, index) => (
-          <TourImageUpload imageNum={imageNum} setImageNum={setImageNum} imageFiles={imageFiles} setImageFiles={setImageFiles} />
+          <TourImageUpload
+            key={index}
+            imageNum={imageNum}
+            setImageNum={setImageNum}
+            imageFiles={imageFiles}
+            setImageFiles={setImageFiles}
+          />
         ))}
       </div>
 
@@ -311,9 +327,7 @@ const TourRegistration: React.FC = () => {
           selected={tourData.endDate ? new Date(tourData.endDate) : null}
           dateFormat="MM월 dd일 (eee)"
           locale={ko}
-          onChange={(date: Date) =>
-            setTourData({ ...tourData, endDate: date })
-          }
+          onChange={(date: Date) => setTourData({ ...tourData, endDate: date })}
         />
       </div>
 
@@ -353,16 +367,14 @@ const TourRegistration: React.FC = () => {
 
       {/* 투어 코스 */}
       {Array.from({ length: coursesNum }, (_, index) => (
-        <TourCourseUpload index={index} />
+        <TourCourseUpload key={index} index={index} />
       ))}
 
       <div onClick={increaseCoursesNum}>
         <button>장소 추가</button>
       </div>
 
-      <div onClick={handleSubmit} style={{ cursor: "pointer" }}>
-        <button>투어 등록</button>
-      </div>
+      <button onClick={handleSubmit}>투어 등록</button>
     </div>
   );
 };

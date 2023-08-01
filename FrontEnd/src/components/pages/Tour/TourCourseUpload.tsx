@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setTitle,
   setContent,
-  setImage,
   setLatitude,
   setLongitude,
   setImageFile,
@@ -17,16 +16,16 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({ index }) => {
   const { courses } = useSelector((state: any) => state.tourCourse);
   const dispatch = useDispatch();
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setTitle({ index: index, title: e.target.value }));
     console.log(courses);
   };
 
-  const handleContentChange = (e) => {
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch(setContent({ index: index, content: e.target.value }));
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
@@ -34,12 +33,12 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({ index }) => {
     dispatch(setImageFile({ index: index, imageFile: imageFile }));
   };
 
-  const handleLongitudeChange = (e) => {
-    dispatch(setLongitude({ index: index, lon: e.target.value }));
+  const handleLongitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setLongitude({ index: index, lon: parseFloat(e.target.value) }));
   };
 
-  const handleLatitudeChange = (e) => {
-    dispatch(setLatitude({ index: index, lat: e.target.value }));
+  const handleLatitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setLatitude({ index: index, lat: parseFloat(e.target.value) }));
   };
 
   return (
@@ -52,6 +51,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({ index }) => {
             type="text"
             value={courses[index]?.lon}
             onChange={handleLongitudeChange}
+            disabled
           />
         </label>
         <label>
@@ -60,6 +60,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({ index }) => {
             type="text"
             value={courses[index]?.lat}
             onChange={handleLatitudeChange}
+            disabled
           />
         </label>
         <label>
