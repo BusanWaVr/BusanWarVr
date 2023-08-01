@@ -6,6 +6,7 @@ import { ko } from "date-fns/locale";
 import TourCourseUpload from "./TourCourseUpload";
 import { useSelector, useDispatch } from "react-redux";
 import { setCourses } from "./TourCourseReducer";
+import TourImageUpload from "./TourImageUpload";
 
 const regionList = [
   "강서구",
@@ -91,6 +92,7 @@ const TourRegistration: React.FC = () => {
     courses: [],
   });
 
+  const [imageNum, setImageNum] = useState(1);
   const [coursesNum, setCoursesNum] = useState(1);
   const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
   const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
@@ -289,24 +291,9 @@ const TourRegistration: React.FC = () => {
       {/* 이미지 */}
       <div>
         <span>이미지</span>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleImageChange}
-        />
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleImageChange}
-        />
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleImageChange}
-        />
+        {Array.from({ length: imageNum }, (_, index) => (
+          <TourImageUpload imageNum={imageNum} setImageNum={setImageNum} imageFiles={imageFiles} setImageFiles={setImageFiles} />
+        ))}
       </div>
 
       {/* 여행 날짜 */}
