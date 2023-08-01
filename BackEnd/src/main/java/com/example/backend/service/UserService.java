@@ -10,6 +10,8 @@ import com.example.backend.dto.UserWishDto;
 import com.example.backend.exception.type.DuplicatedValueException;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
+import com.example.backend.model.follower.Follower;
+import com.example.backend.model.follower.FollowerRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tourcategory.TourCategory;
 import com.example.backend.model.tourcategory.TourCategoryRepository;
