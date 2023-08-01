@@ -182,30 +182,4 @@ public class UserService {
             }
         }
     }
-
-    public List<UserWishDto.Response> getUserWishList(Long userId) {
-        List<Wish> userWishLists = wishRepository.findAllByUserId(userId);
-        List<UserWishDto.Response> responseList = new ArrayList<>();
-
-        for (Wish wish : userWishLists) {
-            Tour tour = wish.getTour();
-            List<TourCategory> tourCategories = tourCategoryRepository.findAllByTourId(tour.getId());
-            List<String> categoryList = new ArrayList<>();
-
-            for (TourCategory tourCategory : tourCategories) {
-                categoryList.add(tourCategory.getCategory().getName());
-            }
-
-            User tourGuide = userRepository.findById(tour.getUserId()).get();
-
-            GuideInfoForUserWishDto guide = new GuideInfoForUserWishDto();
-            guide.setId(tourGuide.getId());
-            guide.setName(tourGuide.getNickname());
-            UserWishDto.Response response = new UserWishDto.Response(tour, categoryList, guide);
-            responseList.add(response);
-        }
-
-        return responseList;
-
-    }
 }

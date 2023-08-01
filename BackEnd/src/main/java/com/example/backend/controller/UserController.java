@@ -206,10 +206,4 @@ public class UserController {
 
         return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", null);
     }
-
-    @GetMapping("/user/wish")
-    public Response getUserWishList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<UserWishDto.Response> responseList = userService.getUserWishList(userDetails.getUser().getId());
-        return new Response<>("200", "성공적으로 위시리스트를 가져왔습니다.", responseList);
-    }
 }
