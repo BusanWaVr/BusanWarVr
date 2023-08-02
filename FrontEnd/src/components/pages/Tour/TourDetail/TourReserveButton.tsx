@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 interface Joiner {
-  profileImg: string;
+  profileImage: string;
   nickname: string;
   joinDate: string;
 }
@@ -21,7 +21,7 @@ const TourReserveButton = ({
   joiners: Joiner[];
   setJoiners: (joiners: Joiner[]) => void;
 }) => {
-  const { accessToken, profileImg, nickname } = useSelector(
+  const { accessToken, profileImage, nickname } = useSelector(
     (state: any) => state.userInfo
   );
 
@@ -42,7 +42,7 @@ const TourReserveButton = ({
       setJoiners([
         ...joiners,
         {
-          profileImg: profileImg,
+          profileImage: profileImage,
           nickname: nickname,
           joinDate: new Date().toISOString(),
         },

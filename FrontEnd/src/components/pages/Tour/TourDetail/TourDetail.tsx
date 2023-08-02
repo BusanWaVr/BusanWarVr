@@ -34,7 +34,7 @@ interface Course {
 }
 
 interface Joiner {
-  profileImg: string;
+  profileImage: string;
   nickname: string;
   joinDate: string;
 }
@@ -133,7 +133,7 @@ const TourDetail: React.FC = () => {
                       <li key={index}>
                         <div>
                           <img
-                            src={joiner.profileImg}
+                            src={joiner.profileImage}
                             alt="프로필 이미지"
                             style={{
                               width: "200px",
