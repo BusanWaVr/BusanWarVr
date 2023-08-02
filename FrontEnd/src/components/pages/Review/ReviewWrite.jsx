@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import Responsive from "../../common/Responsive";
 import Editor from "../../blocks/Editor";
 import styled from "styled-components";
@@ -12,6 +12,7 @@ const ReviewWrite = () => {
   const [tourId, setTourId] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [score, setScore] = useState("");
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -23,6 +24,18 @@ const ReviewWrite = () => {
     setTitle(event.target.value);
   };
 
+  // 별점: 추후 수정
+
+  const handleClickScore = (value) => {
+    setScore(value);
+  };
+
+  useEffect(() => {
+    console.log(score);
+  }, [score]);
+
+  // 제출
+
   const handleSubmit = async (e) => {
     console.log("슈웃");
     e.preventDefault();
@@ -33,9 +46,11 @@ const ReviewWrite = () => {
           tourId: tourId,
           title: title,
           content: content,
+          date: new Date().toISOString(),
+          score: score,
         };
 
-        const response = await fetch("http://52.79.93.203/mate", {
+        const response = await fetch("http://52.79.93.203/tour", {
           method: "POST",
           headers: {
             Authorization: accessToken,
@@ -44,12 +59,12 @@ const ReviewWrite = () => {
           body: JSON.stringify(requestBody),
         });
 
+        console.log(requestBody);
+
         const data = await response.json();
 
         if (data.code === "200") {
-          const newMateId = data.data.mateId;
           alert(data.message);
-          window.location.href = `/matedetail/${newMateId}`;
         } else {
           // 에러
           console.log(data.message);
@@ -65,10 +80,9 @@ const ReviewWrite = () => {
     // <Responsive>
     <StyledWritePage>
       <div>
-        <h1>메이트 모집 글쓰기 페이지</h1>
+        <h1>투어 후기 글쓰기 페이지</h1>
         <br />
         <form>
-          {/* 임시 */}
           <label htmlFor="tourId">투어 id :　</label>
           <input
             type="text"
@@ -93,6 +107,14 @@ const ReviewWrite = () => {
         </form>
       </div>
       <br />
+      <p>별점 : {score}</p>
+      <div>
+        {[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value) => (
+          <button key={value} onClick={() => handleClickScore(value)}>
+            {value}
+          </button>
+        ))}
+      </div>
       <button type="submit" onClick={handleSubmit}>
         등록
       </button>
