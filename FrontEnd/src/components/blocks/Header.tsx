@@ -38,6 +38,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
 
   const nickname = localStorage.getItem("nickname");
   const userId = localStorage.getItem("userId");
+  const userType = localStorage.getItem("userType");
 
   return (
     <>
@@ -59,15 +60,21 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             {isLoggedIn ? (
-              <>
-              <Nav.Link href={`/user/${userId}/mypage`}>
-                {nickname}
-              </Nav.Link>
+            <>
+              {userType === 'USER' ? (
+                <Nav.Link href={`/user/${userId}/mypage`}>
+                  {nickname}
+                </Nav.Link>
+              ) : userType === 'GUIDE' ? (
+                <Nav.Link href={`/guide/${userId}/mypage`}>
+                  {nickname}
+                </Nav.Link>
+              ) : null}
               <Button onClick={logout}>로그아웃</Button>
-              </>
-            ) : (
-              <Button onClick={onModalHandler}>로그인</Button>
-            )}
+            </>
+          ) : (
+            <Button onClick={onModalHandler}>로그인</Button>
+          )}
           </Navbar.Collapse>
         </Container>
       </Navbar>
