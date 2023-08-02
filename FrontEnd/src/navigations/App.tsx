@@ -25,6 +25,7 @@ import MateDetail from "../components/pages/Mate/MateDetail";
 import MateList from "../components/pages/Mate/MateList";
 import MateEdit from "../components/pages/Mate/MateEdit";
 import ReviewWrite from "../components/pages/Review/ReviewWrite";
+import UserMyPage from "../components/pages/UserProfile/UserMyPage";
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
           <Route element={<UserRoute />}>
             <Route path="/review/write" element={<ReviewWrite />} />
             <Route path="/mate/write" element={<MateWrite />} />
+            <Route path="/user/:userId/mypage" element={<UserMyPage />} />
           </Route>
 
           <Route path="/matedetail/:mateId" element={<MateDetail />} />
