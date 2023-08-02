@@ -17,7 +17,7 @@ public class ReviewRegistDto {
 
         public Review toReview(Date date, Long userId) {
             double roundedScore = Math.max(0.0, Math.min(5.0, Math.round(this.score * 2) / 2.0));
-            return new Review(tourId, this.title, this.content, date, roundedScore, userId);
+            return new Review(this.tourId, this.title, this.content, date, roundedScore, userId);
         }
     }
 
