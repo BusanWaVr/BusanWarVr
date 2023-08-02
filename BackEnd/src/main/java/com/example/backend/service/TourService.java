@@ -286,8 +286,8 @@ public class TourService {
         return reviewRepository.existsByTourIdAndUserId(tourId, userId);
     }
 
-    public void tourReviewRegist(ReviewRegistDto.Request request, User user, Long tourId) throws IllegalAccessException {
-        Tour tour = tourRepository.findById(tourId).get();
+    public void tourReviewRegist(ReviewRegistDto.Request request, User user) throws IllegalAccessException {
+        Tour tour = tourRepository.findById(request.getTourId()).get();
 
         Date now = new Date();
 
@@ -295,19 +295,15 @@ public class TourService {
             throw new IllegalAccessException("가이드는 리뷰를 등록할 수 없습니다.");
         }
 
-        if (request.getTourId() != tourId) {
-            throw new IllegalAccessException("일치하지 않는 투어 아이디입니다.");
-        }
-
         if (tour.getEndDate().before(now)) {
             throw new IllegalAccessException("아직 끝나지 않은 투어에 리뷰를 등록할 수 없습니다.");
         }
 
-        if (!hasUserJoinedTour(user.getId(), tourId)) {
+        if (!hasUserJoinedTour(user.getId(), request.getTourId())) {
             throw new IllegalAccessException("참가하지 않은 투어에 리뷰를 등록할 수 없습니다.");
         }
 
-        if (isRegistedReview(tourId, user.getId())) {
+        if (isRegistedReview(request.getTourId(), user.getId())) {
             throw new IllegalAccessException("이미 리뷰를 작성한 투어입니다.");
         }
 
