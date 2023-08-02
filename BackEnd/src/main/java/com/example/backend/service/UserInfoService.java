@@ -1,15 +1,27 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.userinfo.GuideEndedToursDto;
+import com.example.backend.dto.userinfo.GuideHomeDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
+import com.example.backend.dto.userinfo.GuideInfoForUserTourDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserWishDto;
+import com.example.backend.dto.userinfo.GuideReviewsDto;
 import com.example.backend.dto.userinfo.GuideScheduledToursDto;
+import com.example.backend.dto.userinfo.ReviewInfoForGuideReviewDto;
+import com.example.backend.dto.userinfo.TourInfoForGuideEndedTours;
 import com.example.backend.dto.userinfo.TourInfoForGuideScheduledToursDto;
+import com.example.backend.dto.userinfo.TourInfoForUserTourDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
+import com.example.backend.dto.userinfo.UserInfoForGuideReviewsDto;
+import com.example.backend.dto.userinfo.UserTourDto;
 import com.example.backend.dto.userinfo.UserWishDto;
 import com.example.backend.dto.userinfo.UserWishTourDto;
 import com.example.backend.model.follower.Follower;
 import com.example.backend.model.follower.FollowerRepository;
+import com.example.backend.model.joiner.Joiner;
+import com.example.backend.model.joiner.JoinerRepository;
+import com.example.backend.model.review.Review;
+import com.example.backend.model.review.ReviewRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.tourcategory.TourCategory;
@@ -42,6 +54,8 @@ public class UserInfoService {
     private final TourImageCustomRepoistory tourImageCustomRepoistory;
     private final WishRepository wishRepository;
     private final FollowerRepository followerRepository;
+    private final ReviewRepository reviewRepository;
+    private final JoinerRepository joinerRepository;
 
 
     public UserWishDto.Response getUserWishList(Long userId, Pageable pageable) {
@@ -169,7 +183,7 @@ public class UserInfoService {
 
     public GuideEndedToursDto.Response getGuideEndedTours(User guide, Pageable pageable) {
         List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId(), pageable);
-        List<TourInfoForGuideScheduledToursDto> responseList = new ArrayList<>();
+        List<TourInfoForGuideEndedTours> responseList = new ArrayList<>();
         List<TourImage> tourImages = tourImageCustomRepoistory.findTourImagesByGuide(guide,
                 pageable);
 
@@ -189,21 +203,119 @@ public class UserInfoService {
         for (Tour tour : tourLists) {
 
             boolean isEnded = tour.isEnded();
-            TourInfoForGuideScheduledToursDto scheduledToursDto = new TourInfoForGuideScheduledToursDto();
+            TourInfoForGuideEndedTours endedToursDto = new TourInfoForGuideEndedTours();
 
             if (isEnded) {
-                scheduledToursDto.setTourId(tour.getId());
-                scheduledToursDto.setTitle(tour.getTitle());
+                endedToursDto.setTourId(tour.getId());
+                endedToursDto.setTitle(tour.getTitle());
 
                 TourImage tourImage = tourIdToImageMap.get(tour.getId());
                 if (tourImage != null) {
-                    scheduledToursDto.setImage(tourImage.getImage().getUrl());
+                    endedToursDto.setImage(tourImage.getImage().getUrl());
                 } else {
-                    scheduledToursDto.setImage(null);
+                    endedToursDto.setImage(null);
                 }
-                responseList.add(scheduledToursDto);
+                responseList.add(endedToursDto);
             }
         }
         return new GuideEndedToursDto.Response(responseList);
+    }
+
+    public GuideReviewsDto.Response getGuideReviews(User guide, Pageable pageable) {
+        List<Tour> tourList = tourRepository.findAllByUserId(guide.getId());
+        List<ReviewInfoForGuideReviewDto> responseList = new ArrayList<>();
+
+        for (Tour tour : tourList) {
+            List<Review> reviewsList = reviewRepository.findAllByTourId(tour.getId(), pageable);
+            for (Review review : reviewsList) {
+                ReviewInfoForGuideReviewDto reviewInfo = new ReviewInfoForGuideReviewDto();
+                reviewInfo.setTourId(tour.getId());
+                reviewInfo.setTourTitle(tour.getTitle());
+                reviewInfo.setDate(review.getDate());
+                reviewInfo.setContent(review.getContent());
+                reviewInfo.setScore(review.getScore());
+
+                User user = userRepository.findById(review.getUserId()).get();
+
+                UserInfoForGuideReviewsDto userInfo = new UserInfoForGuideReviewsDto();
+                userInfo.setId(user.getId());
+                userInfo.setName(user.getNickname());
+                reviewInfo.setUser(userInfo);
+
+                responseList.add(reviewInfo);
+            }
+        }
+        return new GuideReviewsDto.Response(responseList);
+    }
+
+    public GuideHomeDto.Response guideHome(User guide, Pageable pageable) {
+        GuideHomeDto.Response response = new GuideHomeDto.Response();
+        response.setIntroduction(guide.getIntroduction());
+
+        GuideScheduledToursDto.Response scheduledToursResponse = getGuideScheduledTours(guide, pageable);
+        response.setScheduledTours(scheduledToursResponse.getScheduledTours());
+
+        GuideEndedToursDto.Response endedToursResponse = getGuideEndedTours(guide, pageable);
+        response.setEndedTours(endedToursResponse.getEndedTours());
+
+        GuideReviewsDto.Response reviewsResponse = getGuideReviews(guide, pageable);
+        response.setReviews(reviewsResponse.getReviews());
+
+        return response;
+    }
+
+    public UserTourDto.Response getUserTour(User user) {
+        UserTourDto.Response response = new UserTourDto.Response();
+        List<TourInfoForUserTourDto> scheduledTours = new ArrayList<>();
+        List<TourInfoForUserTourDto> endedTours = new ArrayList<>();
+        List<TourInfoForUserTourDto> canceledTours = new ArrayList<>();
+        List<Joiner> joiners = joinerRepository.findAllByUserId(user.getId());
+        Date now = new Date();
+
+        for (Joiner joiner : joiners) {
+            Tour tour = joiner.getTour();
+            TourInfoForUserTourDto tourInfo = createTourInfoForUserTourDto(tour);
+
+            Date startDate = tour.getStartDate();
+            boolean isEnded = tour.isEnded();
+            boolean isCanceled = tour.isCanceled();
+
+            if (startDate.after(now)) {
+                scheduledTours.add(tourInfo);
+            }
+
+            if (isEnded) {
+                endedTours.add(tourInfo);
+            }
+
+            if (isCanceled) {
+                canceledTours.add(tourInfo);
+            }
+        }
+
+        response.setScheduledTours(scheduledTours);
+        response.setEndedTours(endedTours);
+        response.setCanceledTours(canceledTours);
+
+        return response;
+    }
+
+    private TourInfoForUserTourDto createTourInfoForUserTourDto(Tour tour) {
+        TourInfoForUserTourDto tourInfo = new TourInfoForUserTourDto();
+        tourInfo.setTourId(tour.getId());
+        tourInfo.setTitle(tour.getTitle());
+        tourInfo.setStartDate(tour.getStartDate());
+        tourInfo.setCurrentMember(tour.getCurrentMember());
+        tourInfo.setMaxMember(tour.getMaxMember());
+
+        User tourGuide = userRepository.findById(tour.getUserId()).get();
+
+        GuideInfoForUserTourDto guide = new GuideInfoForUserTourDto();
+        guide.setId(tourGuide.getId());
+        guide.setName(tourGuide.getNickname());
+
+        tourInfo.setGuide(guide);
+
+        return tourInfo;
     }
 }
