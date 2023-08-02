@@ -6,6 +6,8 @@ import com.example.backend.dto.tour.TourDetailDto;
 import com.example.backend.dto.tour.TourDto;
 import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
+import com.example.backend.dto.tour.TourReservationCancelDto;
+import com.example.backend.dto.tour.TourReservationDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
 import com.example.backend.model.course.Course;
@@ -150,7 +152,8 @@ public class TourService {
 
     public void tourReservation(Long tourId, User user) {
         Tour tour = tourRepository.findById(tourId).get();
-        if(tour.getMaxMember() <= tour.getCurrentMember()){
+        TourReservationDto tourReservationDto = new TourReservationDto(tour);
+        if (tour.getMaxMember() <= tour.getCurrentMember()) {
             throw new IllegalArgumentException("인원이 모두 모여 예약이 불가능 합니다.");
         }
         List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
@@ -159,8 +162,10 @@ public class TourService {
                 throw new IllegalArgumentException("이미 예약된 고객입니다");
             }
         }
-        Joiner joiner = new Joiner(tour, user, new Date());
-        joinerRepository.save(joiner);
+        Joiner newJoiner = new Joiner(tour, user, new Date());
+        joinerRepository.save(newJoiner);
+        tour = tourReservationDto.upCurrentMember(tour);
+        tourRepository.save(tour);
     }
 
     public void tourWish(Long tourId, User user) {
@@ -170,13 +175,20 @@ public class TourService {
     }
 
     public void tourReservationCancel(Long tourId, User user) throws IllegalArgumentException {
+        Tour tour = tourRepository.findById(tourId).get();
+        TourReservationCancelDto tourReservationCancelDto = new TourReservationCancelDto(tour);
         List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
+        boolean isNotExist = true;
         for (Joiner joiner : joiners) {
             if (joiner.getUser().getId() == user.getId()) {
                 joinerRepository.deleteById(joiner.getId());
-            } else {
-                throw new IllegalArgumentException("예약 고객만 예약 취소가 가능합니다.");
+                tour = tourReservationCancelDto.downCurrentMember(tour);
+                tourRepository.save(tour);
+                isNotExist = false;
             }
+        }
+        if (isNotExist) {
+            throw new IllegalArgumentException("예약 고객만 예약 취소가 가능합니다.");
         }
     }
 

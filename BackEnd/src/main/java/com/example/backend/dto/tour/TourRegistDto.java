@@ -42,5 +42,9 @@ public class TourRegistDto {
         public Category toCategory(String categoryName) {
             return new Category(categoryName);
         }
+
+        public Request(){
+
+        }
     }
 }
