@@ -107,8 +107,10 @@ public class UserInfoService {
         for (Follower followingGuide : followingGuideList) {
 
             GuideInfoForUserFollowDto guide = new GuideInfoForUserFollowDto();
-            List<Follower> followedGuideList = followerRepository.findAllByGuide(followingGuide.getGuide());
-            List<Tour> guideTourList = tourRepository.findAllByUserId(followingGuide.getGuide().getId());
+            List<Follower> followedGuideList = followerRepository.findAllByGuide(
+                    followingGuide.getGuide());
+            List<Tour> guideTourList = tourRepository.findAllByUserId(
+                    followingGuide.getGuide().getId());
             guide.setId(followingGuide.getGuide().getId());
             guide.setNickname(followingGuide.getGuide().getNickname());
             guide.setFollower(followedGuideList.size());

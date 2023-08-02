@@ -10,6 +10,7 @@ public class MateDetailDto {
     @Data
     @NoArgsConstructor
     public static class Response {
+
         private MateInfoDetailDto mate;
         private List<MateJoinerDto> joiners;
     }
