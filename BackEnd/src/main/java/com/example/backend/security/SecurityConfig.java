@@ -130,6 +130,9 @@ public class SecurityConfig {
         // Mate
         skipPathList.add(new Path(HttpMethod.GET, "/mate/**"));
 
+        // QueryDsl Test
+        skipPathList.add(new Path(HttpMethod.GET, "/testQueryDsl"));
+
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPathList, "/**");
         JwtAuthFilter filter = new JwtAuthFilter(matcher, extractor);
         filter.setAuthenticationManager(authenticationManager);
