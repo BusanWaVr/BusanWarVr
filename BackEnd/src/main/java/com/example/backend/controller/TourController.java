@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
+import com.example.backend.dto.tour.ReviewRegistDto;
 import com.example.backend.dto.tour.TourDetailDto;
 import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -84,5 +86,13 @@ public class TourController {
             @PageableDefault(size = 6) Pageable pageable) {
         TourListDto.Response response = tourService.getALLTour(pageable);
         return new Response("200", "성공적으로 투어 목록을 불러왔습니다!", response);
+    }
+
+    @PostMapping("/tour/{tourId}/review")
+    public Response registReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long tourId,
+            @RequestBody ReviewRegistDto.Request request) throws IllegalAccessException {
+        tourService.tourReviewRegist(request, userDetails.getUser(), tourId);
+        return new Response("200", "성공적으로 후기를 등록했습니다.", null);
     }
 }

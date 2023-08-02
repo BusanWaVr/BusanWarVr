@@ -16,7 +16,7 @@ import LiveStream from "../components/pages/LiveStream/LiveStream.jsx";
 import LiveStreamView from "../components/pages/LiveStream/LiveStreamView.jsx";
 import ChatRoom from "../components/pages/LiveStream/ChatRoom.tsx";
 import TourRegistration from "../components/pages/Tour/TourRegistration.tsx";
-import TourDetail from "../components/pages/Tour/TourDetail.tsx";
+import TourDetail from "../components/pages/Tour/TourDetail/TourDetail.tsx";
 import GuideDetail from "../components/pages/GuideProfile/GuideDetail.tsx";
 import GuideMyPage from "../components/pages/GuideProfile/GuideMyPage.tsx";
 import TourUpdate from "../components/pages/Tour/TourUpdate.tsx";
