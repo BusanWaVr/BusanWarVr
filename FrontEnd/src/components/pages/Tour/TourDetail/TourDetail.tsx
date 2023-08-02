@@ -168,7 +168,7 @@ const TourDetail: React.FC = () => {
             </>
           ) : (
             <>
-              {!tourData.canceled && !tourData.ended ? (
+              {userId && !tourData.canceled && !tourData.ended ? (
                 <TourReserveButton tourId={tourId} isJoined={isJoined} />
               ) : null}
               {tourData.ended ||
