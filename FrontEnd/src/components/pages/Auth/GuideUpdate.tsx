@@ -233,7 +233,6 @@ function GuideUpdate(props: EditProfileProps) {
 
   return (
     <div>
-      <h1>가이드업데이트</h1>
       <div>
         <form onSubmit={handleSubmitName}>
           <label>
