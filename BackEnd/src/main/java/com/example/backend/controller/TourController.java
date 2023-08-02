@@ -90,11 +90,10 @@ public class TourController {
         return new Response("200", "성공적으로 투어 목록을 불러왔습니다!", response);
     }
 
-    @PostMapping("/tour/{tourId}/review")
+    @PostMapping("/tour/review")
     public Response registReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long tourId,
             @RequestBody ReviewRegistDto.Request request) throws IllegalAccessException {
-        tourService.tourReviewRegist(request, userDetails.getUser(), tourId);
+        tourService.tourReviewRegist(request, userDetails.getUser());
         return new Response("200", "성공적으로 후기를 등록했습니다.", null);
     }
 }
