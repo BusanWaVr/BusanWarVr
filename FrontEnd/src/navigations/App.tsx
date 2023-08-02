@@ -64,13 +64,10 @@ function App() {
           <Route path="/update" element={<Update />} />
           <Route path="/tour/:tourId/update" element={<TourUpdate />} />
           <Route path="/tour/:tourId" element={<TourDetail />} />
-          <Route path="/guide/:guideId/detail" element={<GuideDetail />} />
+          <Route path="/guide/:userId/detail" element={<GuideDetail />} />
 
           <Route element={<GuideRoute />}>
-            <Route
-              path="/guide/:guideId/mypage"
-              element={<GuideMyPageMain />}
-            />
+            <Route path="/guide/:userId/mypage" element={<GuideMyPageMain />} />
           </Route>
 
           <Route element={<UserRoute />}>

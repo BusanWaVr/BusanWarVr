@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
 import GuideMyPageMini from "./GuideMyPageMini";
 import MyPageRightPanel from "./MyPageRightPanel"; // 아직 작성안함
 import { GuideData } from "./types"; // GuideData 타입 정의한 파일을 import
@@ -69,7 +68,6 @@ const GuideMyPage: React.FC = () => {
     ],
   };
 
-  const { guideId } = useParams<{ guideId: string }>();
   const [guide, setGuide] = useState<GuideData>(guideData);
 
   const handleFollowClick = () => {
@@ -104,7 +102,7 @@ const GuideMyPage: React.FC = () => {
   };
 
   // 가이드 ID에 해당하는 데이터 찾기
-  const currentGuide = guideData.userId === guideId ? guideData : null;
+  const currentGuide = guideData;
 
   if (!currentGuide) {
     return <div>가이드를 찾을 수 없습니다.</div>;
