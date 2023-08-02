@@ -21,6 +21,7 @@ const Signup = () => {
   const [isPassword, setIsPassword] = useState(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
+  const [isEmailConfirm, setIsEmailConfirm] = useState();
   const [showVerificationForm, setShowVerificationForm] = useState(false);
   const [isNickname, setIsNickname] = useState(false);
 
@@ -81,8 +82,10 @@ const Signup = () => {
 
     if (!emailRegExp.test(currentEmail)) {
       setEmailMessage("이메일 형식이 올바르지 않습니다.");
+      setIsEmail(false);
     } else {
       setEmailMessage("");
+      setIsEmail(true);
     }
   };
 
@@ -139,10 +142,11 @@ const Signup = () => {
 
       if (data.code === "200") {
         setEmailVerifyMessage("이메일 인증이 완료되었습니다.");
-        setIsEmail(true);
+        setIsEmailConfirm(true);
       } else {
         // 이때 500 에러뜸
         setEmailVerifyMessage("인증 번호가 일치하지 않습니다.");
+        setIsEmailConfirm(false);
       }
     } catch (error) {
       console.error(error);
@@ -249,7 +253,7 @@ const Signup = () => {
 
     // 상태 값 업데이트 이후 즉시 formData 구성
     if (
-      isEmail &&
+      isEmailConfirm &&
       isName &&
       isPassword &&
       isPasswordConfirm &&
@@ -301,10 +305,12 @@ const Signup = () => {
             name="name"
             value={email}
             onChange={onChangeEmail}
-            disabled={isEmail}
+            disabled={isEmailConfirm}
           />
           <p className="message">{emailMessage}</p>
-          <button onClick={handleVerification}>인증번호받기</button>
+          <button onClick={handleVerification} disabled={!isEmail}>
+            인증번호받기
+          </button>
           <div>
             <p>{codeMessage}</p>
             {showVerificationForm && (
@@ -313,7 +319,7 @@ const Signup = () => {
                   type="text"
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
-                  disabled={isEmail}
+                  disabled={isEmailConfirm}
                 />
                 <button type="submit">인증</button>
               </form>
@@ -362,7 +368,9 @@ const Signup = () => {
               onChange={onChangeName}
               // disabled={isNickname}
             />
-            <button type="submit">중복확인</button>
+            <button type="submit" disabled={!isName}>
+              중복확인
+            </button>
             <p className="message">{nameMessage}</p>
             <p>{nicknameMessage}</p>
           </form>
