@@ -6,15 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-public class GuideEndedToursDto {
+public class GuideHomeDto {
+
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Response {
-
+        private String introduction;
+        private List<TourInfoForGuideScheduledToursDto> scheduledTours;
         private List<TourInfoForGuideEndedTours> endedTours;
-
+        private List<ReviewInfoForGuideReviewDto> reviews;
     }
 
 }
