@@ -163,7 +163,9 @@ const TourDetail: React.FC = () => {
                 <button disabled>취소된 투어입니다.</button>
               ) : (
                 <>
-                  <button>수정하기</button>
+                  <Link to={`/tour/${tourId}/update`}>
+                    <button>수정하기</button>
+                  </Link>
                   <TourCancelButton tourId={tourId} />
                 </>
               )}
