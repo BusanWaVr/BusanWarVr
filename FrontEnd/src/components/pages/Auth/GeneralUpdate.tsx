@@ -297,6 +297,7 @@ function GeneralUpdate(props: EditProfileProps) {
               // onChange={(e) => setName(e.target.value)}
             />
           </label>
+
           <button type="submit">닉네임 확인</button>
           <p className="message">{nameMessage}</p>
           <p>{nicknameMessage}</p>
@@ -316,6 +317,7 @@ function GeneralUpdate(props: EditProfileProps) {
         </form>
       </div>
       <div>
+
         {isPasswordMatch && (
           <form onSubmit={handleSubmitNewPassword}>
             <label>
