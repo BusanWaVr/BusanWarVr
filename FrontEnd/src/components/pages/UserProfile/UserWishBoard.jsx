@@ -7,7 +7,6 @@ function UserWishBoard() {
 
 
   useEffect(() => {
-    console.log("Fetching data...");
     fetchData();
   }, [])
   
@@ -35,7 +34,11 @@ function UserWishBoard() {
   return (
     <div>
       <h1>유저 위시 보드</h1>
-      <WishCard />
+      {wishData ? (
+        <WishCard wishData={wishData} />
+      ) : (
+        <p>로딩중ㅎ</p>
+      )}
     </div>
   );
 }

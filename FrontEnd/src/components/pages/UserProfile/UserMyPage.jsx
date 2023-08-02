@@ -1,13 +1,14 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import UserNavbar from "./UserNavbar";
+import UserMini from "./UserMini";
 import styled from "styled-components";
 
 
 const Wrapper = styled.div`
 display: flex;
 margin: auto;
-  width: 80%;
+  width: 70%;
   // background-color: #343434;
 `;
 
@@ -26,6 +27,7 @@ function UserMyPage() {
   return (
     <Wrapper>
       <NavbarWrapper>
+        <UserMini />
         <UserNavbar />
       </NavbarWrapper>
       <OutletWrapper>
