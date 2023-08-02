@@ -2,6 +2,9 @@ package com.example.backend.service;
 
 import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserWishDto;
+import com.example.backend.dto.userinfo.GuideScheduledToursDto;
+import com.example.backend.dto.userinfo.GuideScheduledToursDto.Response;
+import com.example.backend.dto.userinfo.TourInfoForGuideScheduledToursDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
 import com.example.backend.dto.userinfo.UserWishDto;
 import com.example.backend.dto.userinfo.UserWishTourDto;
@@ -11,11 +14,15 @@ import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.tourcategory.TourCategory;
 import com.example.backend.model.tourcategory.TourCategoryRepository;
+import com.example.backend.model.tourimage.TourImage;
+import com.example.backend.model.tourimage.TourImageRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.wish.Wish;
 import com.example.backend.model.wish.WishRepository;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -29,6 +36,7 @@ public class UserInfoService {
     private final UserRepository userRepository;
     private final TourRepository tourRepository;
     private final TourCategoryRepository tourCategoryRepository;
+    private final TourImageRepository tourImageRepository;
     private final WishRepository wishRepository;
     private final FollowerRepository followerRepository;
 
@@ -112,5 +120,34 @@ public class UserInfoService {
         }
 
         return new UserFollowDto.Response(responseList);
+    }
+
+    public GuideScheduledToursDto.Response getGuideScheduledTours(User guide, Pageable pageable) {
+        List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId(), pageable);
+        List<TourInfoForGuideScheduledToursDto> responseList = new ArrayList<>();
+
+        Date now = new Date();
+
+        for (Tour tour : tourLists) {
+
+            Date startDate = tour.getStartDate();
+            TourInfoForGuideScheduledToursDto scheduledToursDto = new TourInfoForGuideScheduledToursDto();
+
+            if (startDate.after(now)) {
+                scheduledToursDto.setTourId(tour.getId());
+                scheduledToursDto.setTitle(tour.getTitle());
+                List<TourImage> tourImages = tourImageRepository.findAllByTourId(tour.getId());
+                if (!tourImages.isEmpty()) {
+                    scheduledToursDto.setImage(tourImages.get(0).getImage().getUrl());
+                }
+
+                if (tourImages.isEmpty()) {
+                    scheduledToursDto.setImage(null);
+                }
+
+                responseList.add(scheduledToursDto);
+            }
+        }
+        return new GuideScheduledToursDto.Response(responseList);
     }
 }
