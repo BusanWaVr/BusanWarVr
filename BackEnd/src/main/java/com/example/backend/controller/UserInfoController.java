@@ -57,7 +57,7 @@ public class UserInfoController {
 
     @GetMapping("/guide/tour/schedule")
     public Response<GuideScheduledToursDto.Response> getGuidesScheduledTours(@AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PageableDefault(size = 18) Pageable pageable) {
+            @PageableDefault(size = 6) Pageable pageable) {
         GuideScheduledToursDto.Response response = userInfoService.getGuideScheduledTours(userDetails.getUser(), pageable);
         return new Response<>("200", "성공적으로 가이드의 예정된 투어 목록을 가져왔습니다.", response);
     }
