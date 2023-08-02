@@ -6,7 +6,6 @@ import com.example.backend.dto.tour.TourDetailDto;
 import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
 import com.example.backend.dto.tour.TourUpdateDto;
-import com.example.backend.dto.tour.TourUpdateDto.Request;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.TourService;
 import java.io.IOException;
@@ -105,4 +104,12 @@ public class TourController {
         TourUpdateDto.Response response =  tourService.tourUpdate(request, tourId, userDetails.getUser());
         return new Response("200", "성공적으로 투어를 수정 하였습니다!", response);
     }
+
+//    @DeleteMapping("/tour/wish/{tourId}")
+//    public Response tourWishCancelApi(@PathVariable Long tourId,
+//            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        tourService.tourWishCancel(tourId, userDetails.getUser());
+//        return new Response("200", "성공적으로 찜 취소 하였습니다!", null);
+//    }
+
 }

@@ -1,11 +1,14 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.userinfo.GuideEndedToursDto;
+import com.example.backend.dto.userinfo.GuideInfoDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserWishDto;
 import com.example.backend.dto.userinfo.GuideScheduledToursDto;
 import com.example.backend.dto.userinfo.TourInfoForGuideScheduledToursDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
+import com.example.backend.dto.userinfo.UserInfoDto;
+import com.example.backend.dto.userinfo.UserInfoDto.Response;
 import com.example.backend.dto.userinfo.UserWishDto;
 import com.example.backend.dto.userinfo.UserWishTourDto;
 import com.example.backend.model.follower.Follower;
@@ -205,5 +208,23 @@ public class UserInfoService {
             }
         }
         return new GuideEndedToursDto.Response(responseList);
+    }
+
+    public UserInfoDto.Response getUserInfo(Long userId) {
+        User user = userRepository.findById(userId).get();
+        List<Follower> followings = followerRepository.findAllByUserId(userId);
+        int followingNum = followings.size();
+        UserInfoDto.Response response = new UserInfoDto.Response(user, followingNum);
+        return response;
+    }
+
+    public GuideInfoDto.Response getGuideInfo(Long guideId) {
+        User user = userRepository.findById(guideId).get();
+        List<Follower> followers = followerRepository.findAllByGuideId(guideId);
+        int followerNum = followers.size();
+        List<Tour> tours = tourRepository.findAllByUserId(guideId);
+        int tourNumbers = tours.size();
+        GuideInfoDto.Response response = new GuideInfoDto.Response(user, followerNum, tourNumbers);
+        return response;
     }
 }

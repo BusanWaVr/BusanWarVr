@@ -2,8 +2,11 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
 import com.example.backend.dto.userinfo.GuideEndedToursDto;
+import com.example.backend.dto.userinfo.GuideInfoDto;
+import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
 import com.example.backend.dto.userinfo.GuideScheduledToursDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
+import com.example.backend.dto.userinfo.UserInfoDto;
 import com.example.backend.dto.userinfo.UserWishDto;
 import com.example.backend.model.user.User;
 import com.example.backend.security.UserDetailsImpl;
@@ -68,5 +71,17 @@ public class UserInfoController {
             @PageableDefault(size = 6) Pageable pageable) {
         GuideEndedToursDto.Response response = userInfoService.getGuideEndedTours(userDetails.getUser(), pageable);
         return new Response<>("200", "성공적으로 가이드의 종료된 투어 목록을 가져왔습니다.", response);
+    }
+
+    @GetMapping("/user/userInfo/{userId}")
+    public Response<UserInfoDto.Response> getUserInfo(@PathVariable Long userId){
+        UserInfoDto.Response response = userInfoService.getUserInfo(userId);
+        return new Response<>("200", "성공적으로 사용자 정보를 가져왔습니다.", response);
+    }
+
+    @GetMapping("/guide/guideInfo/{guideId}")
+    public Response<GuideInfoDto.Response> getGuideInfo(@PathVariable Long guideId){
+        GuideInfoDto.Response response = userInfoService.getGuideInfo(guideId);
+        return new Response<>("200", "성공적으로 가이드 정보를 가져왔습니다.", response);
     }
 }
