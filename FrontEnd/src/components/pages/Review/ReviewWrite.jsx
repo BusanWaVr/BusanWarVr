@@ -40,17 +40,17 @@ const ReviewWrite = () => {
     console.log("슈웃");
     e.preventDefault();
 
-    if (tourId && title && content) {
+    if (tourId && title && content && score) {
       try {
         const requestBody = {
-          tourId: tourId,
+          tourId: tourId * 1,
           title: title,
           content: content,
-          date: new Date().toISOString(),
+          //   date: new Date().toISOString(),
           score: score,
         };
 
-        const response = await fetch("http://52.79.93.203/tour", {
+        const response = await fetch("http://52.79.93.203/tour/review", {
           method: "POST",
           headers: {
             Authorization: accessToken,
