@@ -1,37 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 // import Responsive from "../../common/Responsive";
 import Editor from "../../blocks/Editor";
 import styled from "styled-components";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 const StyledWritePage = styled.div`
   width: 60%;
   margin: 0 auto;
 `;
 
-const MateEdit = () => {
-  const { mateId } = useParams();
+const MateWrite = () => {
   const [tourId, setTourId] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const accessToken = localStorage.getItem("accessToken");
 
-  useEffect(() => {
-    if (location.state) {
-      const {
-        tourId: initialTourId,
-        title: initialTitle,
-        content: initialContent,
-      } = location.state;
-      setTourId(initialTourId);
-      setTitle(initialTitle);
-      setContent(initialContent);
-    }
-  }, [location.state]);
+  const handleTourIdChange = (event) => {
+    setTourId(event.target.value);
+  };
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -41,15 +27,16 @@ const MateEdit = () => {
     console.log("슈웃");
     e.preventDefault();
 
-    if (title && content) {
+    if (tourId && title && content) {
       try {
         const requestBody = {
+          tourId: tourId,
           title: title,
           content: content,
         };
 
-        const response = await fetch(`http://52.79.93.203/mate/${mateId}`, {
-          method: "PUT",
+        const response = await fetch("http://52.79.93.203/mate", {
+          method: "POST",
           headers: {
             Authorization: accessToken,
             "Content-Type": "application/json",
@@ -60,8 +47,9 @@ const MateEdit = () => {
         const data = await response.json();
 
         if (data.code === "200") {
-          alert("게시글 수정이 완료되었습니다.");
-          navigate(`/matedetail/${mateId}`);
+          const newMateId = data.data.mateId;
+          alert(data.message);
+          window.location.href = `/matedetail/${newMateId}`;
         } else {
           // 에러
           console.log(data.message);
@@ -77,11 +65,18 @@ const MateEdit = () => {
     // <Responsive>
     <StyledWritePage>
       <div>
-        <h1>메이트 모집 수정 페이지</h1>
+        <h1>메이트 모집 글쓰기 페이지</h1>
         <br />
         <form>
+          {/* 임시 */}
           <label htmlFor="tourId">투어 id :　</label>
-          <input type="text" id="tourId" value={tourId} disabled />
+          <input
+            type="text"
+            id="tourId"
+            value={tourId}
+            onChange={handleTourIdChange}
+            placeholder="여기는 나중에 수정합니당"
+          />
           <br />
           <br />
           <label htmlFor="title">제목 :　</label>
@@ -106,4 +101,4 @@ const MateEdit = () => {
   );
 };
 
-export default MateEdit;
+export default MateWrite;
