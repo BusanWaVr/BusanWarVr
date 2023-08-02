@@ -27,14 +27,16 @@ public class TourController {
     private final TourService tourService;
 
     @PostMapping("/tour")
-    public Response<TourRegistDto> tourRegistApi(@ModelAttribute TourRegistDto.Request request,
+    public Response<TourRegistDto.Response> tourRegistApi(
+            @ModelAttribute TourRegistDto.Request request,
             @AuthenticationPrincipal UserDetailsImpl userDetails)
             throws IllegalAccessException, IOException {
         if (request.getCourses().size() > 3) {
             throw new IllegalArgumentException("코스 개수는 4개 미만이여야 합니다.");
         }
-        tourService.tourRegist(request, userDetails.getUser());
-        return new Response<>("200", "성공적으로 투어 등록 되었습니다!", null);
+        TourRegistDto.Response tourRegistDto = tourService.tourRegist(request,
+                userDetails.getUser());
+        return new Response<>("200", "성공적으로 투어 등록 되었습니다!", tourRegistDto);
     }
 
     @GetMapping("/tour/{tourId}")

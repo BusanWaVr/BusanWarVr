@@ -7,6 +7,8 @@ import com.example.backend.dto.tour.TourDetailDto;
 import com.example.backend.dto.tour.TourDto;
 import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
+import com.example.backend.dto.tour.TourReservationCancelDto;
+import com.example.backend.dto.tour.TourReservationDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
 import com.example.backend.model.course.Course;
@@ -59,7 +61,7 @@ public class TourService {
     private final S3Uploader s3Uploader;
 
     @Transactional
-    public void tourRegist(TourRegistDto.Request request, User user)
+    public TourRegistDto.Response tourRegist(TourRegistDto.Request request, User user)
             throws IOException, IllegalAccessException {
 
         if (user.getType() != AuthType.GUIDE) {
@@ -68,6 +70,7 @@ public class TourService {
 
         Tour tour = request.toTour(user);
         tourRepository.save(tour);
+        TourRegistDto.Response response = new TourRegistDto.Response(tour);
 
         // 이미지 등록 부분 조건적으로 처리
         if (request.getTourImgs() != null && !request.getTourImgs().isEmpty()) {
@@ -114,6 +117,7 @@ public class TourService {
                 courseImageRepository.save(courseImage);
             }
         }
+        return response;
     }
 
     // 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
@@ -134,6 +138,7 @@ public class TourService {
 
     public TourDetailDto.Response tourDetail(Long tourId) {
         Tour tour = tourRepository.findById(tourId).get();
+
         User user = userRepository.findById(tour.getUserId()).get();
 
         List<String> tourCategories = new ArrayList<>();
@@ -154,7 +159,8 @@ public class TourService {
 
     public void tourReservation(Long tourId, User user) {
         Tour tour = tourRepository.findById(tourId).get();
-        if(tour.getMaxMember() <= tour.getCurrentMember()){
+        TourReservationDto tourReservationDto = new TourReservationDto(tour);
+        if (tour.getMaxMember() <= tour.getCurrentMember()) {
             throw new IllegalArgumentException("인원이 모두 모여 예약이 불가능 합니다.");
         }
         List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
@@ -163,8 +169,10 @@ public class TourService {
                 throw new IllegalArgumentException("이미 예약된 고객입니다");
             }
         }
-        Joiner joiner = new Joiner(tour, user, new Date());
-        joinerRepository.save(joiner);
+        Joiner newJoiner = new Joiner(tour, user, new Date());
+        joinerRepository.save(newJoiner);
+        tour = tourReservationDto.upCurrentMember(tour);
+        tourRepository.save(tour);
     }
 
     public void tourWish(Long tourId, User user) {
@@ -174,13 +182,20 @@ public class TourService {
     }
 
     public void tourReservationCancel(Long tourId, User user) throws IllegalArgumentException {
+        Tour tour = tourRepository.findById(tourId).get();
+        TourReservationCancelDto tourReservationCancelDto = new TourReservationCancelDto(tour);
         List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
+        boolean isNotExist = true;
         for (Joiner joiner : joiners) {
             if (joiner.getUser().getId() == user.getId()) {
                 joinerRepository.deleteById(joiner.getId());
-            } else {
-                throw new IllegalArgumentException("예약 고객만 예약 취소가 가능합니다.");
+                tour = tourReservationCancelDto.downCurrentMember(tour);
+                tourRepository.save(tour);
+                isNotExist = false;
             }
+        }
+        if (isNotExist) {
+            throw new IllegalArgumentException("예약 고객만 예약 취소가 가능합니다.");
         }
     }
 
