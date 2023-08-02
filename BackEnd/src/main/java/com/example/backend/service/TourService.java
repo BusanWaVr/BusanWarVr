@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.dto.course.CourseDto;
 import com.example.backend.dto.joiner.JoinerDto;
+import com.example.backend.dto.tour.ReviewRegistDto;
 import com.example.backend.dto.tour.TourDetailDto;
 import com.example.backend.dto.tour.TourDto;
 import com.example.backend.dto.tour.TourListDto;
@@ -17,6 +18,8 @@ import com.example.backend.model.image.Image;
 import com.example.backend.model.image.ImageRepository;
 import com.example.backend.model.joiner.Joiner;
 import com.example.backend.model.joiner.JoinerRepository;
+import com.example.backend.model.review.Review;
+import com.example.backend.model.review.ReviewRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.tourcategory.TourCategory;
@@ -52,6 +55,7 @@ public class TourService {
     private final CourseImageRepository courseImageRepository;
     private final JoinerRepository joinerRepository;
     private final WishRepository wishRepository;
+    private final ReviewRepository reviewRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
@@ -272,5 +276,43 @@ public class TourService {
                     joiner.getUser().getNickname(), joiner.getJoinDate());
             joinerDtos.add(joinerDto);
         }
+    }
+
+    public boolean hasUserJoinedTour(Long userId, Long tourId) {
+        return joinerRepository.existsByTourIdAndUserId(tourId, userId);
+    }
+
+    public boolean isRegistedReview(Long tourId, Long userId) {
+        return reviewRepository.existsByTourIdAndUserId(tourId, userId);
+    }
+
+    public void tourReviewRegist(ReviewRegistDto.Request request, User user, Long tourId) throws IllegalAccessException {
+        Tour tour = tourRepository.findById(tourId).get();
+
+        Date now = new Date();
+
+        if (user.getType() != AuthType.USER) {
+            throw new IllegalAccessException("가이드는 리뷰를 등록할 수 없습니다.");
+        }
+
+        if (request.getTourId() != tourId) {
+            throw new IllegalAccessException("일치하지 않는 투어 아이디입니다.");
+        }
+
+        if (tour.getEndDate().before(now)) {
+            throw new IllegalAccessException("아직 끝나지 않은 투어에 리뷰를 등록할 수 없습니다.");
+        }
+
+        if (!hasUserJoinedTour(user.getId(), tourId)) {
+            throw new IllegalAccessException("참가하지 않은 투어에 리뷰를 등록할 수 없습니다.");
+        }
+
+        if (isRegistedReview(tourId, user.getId())) {
+            throw new IllegalAccessException("이미 리뷰를 작성한 투어입니다.");
+        }
+
+        Review review = request.toReview(now, user.getId());
+
+        reviewRepository.save(review);
     }
 }
