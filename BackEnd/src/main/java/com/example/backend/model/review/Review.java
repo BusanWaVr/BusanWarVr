@@ -1,11 +1,13 @@
 package com.example.backend.model.review;
 
+import com.example.backend.model.tour.Tour;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Review {
@@ -23,4 +25,16 @@ public class Review {
     private double score;
     @Column
     private long userId;
+
+    @Column
+    private long tourId;
+
+    public Review(long tourId, String title, String content, Date date, double score, long userId) {
+        this.tourId = tourId;
+        this.title = title;
+        this.content = content;
+        this.date = date;
+        this.score = score;
+        this.userId = userId;
+    }
 }

@@ -11,4 +11,6 @@ public interface JoinerRepository extends JpaRepository<Joiner, Long> {
     Long countByTour(Tour tour);
 
     void deleteAllByTourId(Long tourId);
+
+    boolean existsByTourIdAndUserId(Long tourId, Long userId);
 }
