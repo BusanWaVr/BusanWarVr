@@ -1,10 +1,13 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
+import com.example.backend.dto.userinfo.GuideScheduledToursDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
 import com.example.backend.dto.userinfo.UserWishDto;
+import com.example.backend.model.user.User;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.UserInfoService;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -50,5 +53,12 @@ public class UserInfoController {
                 userDetails.getUser(), pageable);
 
         return new Response<>("200", "성공적으로 팔로잉하는 가이드의 목록을 가져왔습니다.", response);
+    }
+
+    @GetMapping("/guide/tour/schedule")
+    public Response<GuideScheduledToursDto.Response> getGuidesScheduledTours(@AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PageableDefault(size = 18) Pageable pageable) {
+        GuideScheduledToursDto.Response response = userInfoService.getGuideScheduledTours(userDetails.getUser(), pageable);
+        return new Response<>("200", "성공적으로 가이드의 예정된 투어 목록을 가져왔습니다.", response);
     }
 }
