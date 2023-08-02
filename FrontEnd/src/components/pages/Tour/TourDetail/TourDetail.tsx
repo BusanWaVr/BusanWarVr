@@ -44,6 +44,7 @@ const TourDetail: React.FC = () => {
   const [tourData, setTourData] = useState<TourData | null>(null);
   const { userId, nickname } = useSelector((state: any) => state.userInfo);
   const [isJoined, setIsJoined] = useState<boolean>(false);
+  const [joiners, setJoiners] = useState([]);
 
   useEffect(() => {
     const fetchTourData = async () => {
@@ -53,6 +54,7 @@ const TourDetail: React.FC = () => {
           const res = await response.json();
           console.log(res);
           setTourData(res.data);
+          setJoiners(res.data.joiners);
           const isUserJoined = res.data.joiners.some(
             (joiner: Joiner) => joiner.nickname === nickname
           );
@@ -115,19 +117,19 @@ const TourDetail: React.FC = () => {
           <hr />
           <div>
             <p>현재 모집 현황</p>
-            {tourData.joiners.length > 0 ? (
+            {joiners.length > 0 ? (
               <div>
                 <h3>
                   <strong>이 투어에 참여하는 사람들</strong>
                 </h3>
                 <p>
                   총 <strong>{tourData.maxMember}</strong>명 중{" "}
-                  <strong>{tourData.joiners.length}</strong>명이 모였어요.
+                  <strong>{joiners.length}</strong>명이 모였어요.
                 </p>
 
                 <div>
                   <ul>
-                    {tourData.joiners.map((joiner, index) => (
+                    {joiners.map((joiner, index) => (
                       <li key={index}>
                         <div>
                           <img
@@ -169,7 +171,13 @@ const TourDetail: React.FC = () => {
           ) : (
             <>
               {userId && !tourData.canceled && !tourData.ended ? (
-                <TourReserveButton tourId={tourId} isJoined={isJoined} />
+                <TourReserveButton
+                  tourId={tourId}
+                  isJoined={isJoined}
+                  setIsJoined={setIsJoined}
+                  joiners={joiners}
+                  setJoiners={setJoiners}
+                />
               ) : null}
               {tourData.ended ||
               (new Date(tourData.startDate) < new Date() &&
