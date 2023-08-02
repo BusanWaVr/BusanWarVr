@@ -259,7 +259,7 @@ function GeneralUpdate(props: EditProfileProps) {
       const formData = new FormData();
       formData.append("nickname", name);
       formData.append("category", categoriesString);
-      console.log(formData);
+      console.log(selectedImage);
       // 이미지를 선택한 경우에만 FormData에 추가
       if (selectedImageFile) {
         formData.append("profileImg", selectedImageFile);
@@ -389,7 +389,11 @@ function GeneralUpdate(props: EditProfileProps) {
           </div>
         )}
       </div>
-      <div>{isNickname && <button onClick={handleSave}>저장하기</button>}</div>
+      <div>
+        <button onClick={handleSave} disabled={!isNickname || !isCategory}>
+          저장하기
+        </button>
+      </div>
     </div>
   );
 }

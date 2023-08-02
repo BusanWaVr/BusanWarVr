@@ -358,9 +358,9 @@ function GuideUpdate(props: EditProfileProps) {
         </form>
       </div>
       <div>
-        {isNickname && isIntroduction && (
-          <button onClick={handleSave}>저장하기</button>
-        )}
+        <button onClick={handleSave} disabled={!isNickname || !isIntroduction}>
+          저장하기
+        </button>
       </div>
     </div>
   );
