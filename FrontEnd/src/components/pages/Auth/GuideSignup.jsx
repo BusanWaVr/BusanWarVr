@@ -14,12 +14,15 @@ const GuideSignup = () => {
   const [emailVerifyMessage, setEmailVerifyMessage] = useState("");
   const [codeMessage, setCodeMessage] = useState(""); // 인증코드 받기 할시 메세지
   const [verificationCode, setVerificationCode] = useState(""); // 인증코드 입력한것
+  const [nicknameMessage, setNicknameMessage] = useState(""); // 닉네임 중복 메시지
 
   const [isName, setIsName] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
+  const [isEmailConfirm, setIsEmailConfirm] = useState(false);
   const [showVerificationForm, setShowVerificationForm] = useState(false);
+  const [isNickname, setIsNickname] = useState(false);
 
   //   카테고리
 
@@ -31,8 +34,10 @@ const GuideSignup = () => {
 
     if (!emailRegExp.test(currentEmail)) {
       setEmailMessage("이메일 형식이 올바르지 않습니다.");
+      setIsEmail(false);
     } else {
       setEmailMessage("");
+      setIsEmail(true);
     }
   };
 
@@ -89,10 +94,45 @@ const GuideSignup = () => {
 
       if (data.code === "200") {
         setEmailVerifyMessage("이메일 인증이 완료되었습니다.");
-        setIsEmail(true);
+        setIsEmailConfirm(true);
       } else {
         // 이때 500 에러뜸
         setEmailVerifyMessage("인증 번호가 일치하지 않습니다.");
+        setIsEmailConfirm(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // 닉네임 중복 체크
+  const handleSubmitName = async (e) => {
+    e.preventDefault();
+
+    try {
+      const requestBody = {
+        nickname: name,
+      };
+
+      const response = await fetch("http://52.79.93.203/auth/nickname", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();
+
+      if (data.code === "200") {
+        setNicknameMessage("사용 가능한 닉네임입니다.");
+        setIsNickname(true);
+      } else if (data.status === "409") {
+        // 중복
+        setNicknameMessage("중복된 닉네임입니다. 다른 닉네임을 사용해 주세요.");
+      } else {
+        // 에러
+        setNicknameMessage("죄송합니다. 잠시 후 다시 시도해 주세요.");
       }
     } catch (error) {
       console.error(error);
@@ -162,7 +202,7 @@ const GuideSignup = () => {
     console.log("슈웃");
 
     // 상태 값 업데이트 이후 즉시 formData 구성
-    if (isEmail && isName && isPassword && isPasswordConfirm) {
+    if (isEmailConfirm && isNickname && isPassword && isPasswordConfirm) {
       const formData = await createFormData(name, email, password);
 
       console.log(formData);
@@ -206,7 +246,7 @@ const GuideSignup = () => {
             disabled={isEmail}
           />
           <p className="message">{emailMessage}</p>
-          <button onClick={handleVerification}>인증번호받기</button>
+          <button onClick={handleVerification} disabled={!isEmail}>인증번호받기</button>
           <div>
             <p>{codeMessage}</p>
             {showVerificationForm && (
@@ -247,9 +287,21 @@ const GuideSignup = () => {
           <p className="message">{passwordConfirmMessage}</p>
         </div>
         <div className="form-el">
-          <label htmlFor="name">닉네임</label> <br />
-          <input id="name" name="name" value={name} onChange={onChangeName} />
-          <p className="message">{nameMessage}</p>
+          <form onSubmit={handleSubmitName}>
+            <label htmlFor="name">닉네임</label> <br />
+            <input
+              id="name"
+              name="name"
+              type="text"
+              value={name}
+              onChange={onChangeName}
+            />
+            <button type="submit" disabled={!isName}>
+              중복확인
+            </button>
+            <p className="message">{nameMessage}</p>
+            <p>{nicknameMessage}</p>
+          </form>
         </div>
         <br />
         <br />
