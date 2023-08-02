@@ -57,7 +57,7 @@ public class TourService {
     private final S3Uploader s3Uploader;
 
     @Transactional
-    public void tourRegist(TourRegistDto.Request request, User user)
+    public TourRegistDto.Response tourRegist(TourRegistDto.Request request, User user)
             throws IOException, IllegalAccessException {
 
         if (user.getType() != AuthType.GUIDE) {
@@ -66,6 +66,7 @@ public class TourService {
 
         Tour tour = request.toTour(user);
         tourRepository.save(tour);
+        TourRegistDto.Response response = new TourRegistDto.Response(tour);
 
         // 이미지 등록 부분 조건적으로 처리
         if (request.getTourImgs() != null && !request.getTourImgs().isEmpty()) {
@@ -112,6 +113,7 @@ public class TourService {
                 courseImageRepository.save(courseImage);
             }
         }
+        return response;
     }
 
     // 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
@@ -132,6 +134,7 @@ public class TourService {
 
     public TourDetailDto.Response tourDetail(Long tourId) {
         Tour tour = tourRepository.findById(tourId).get();
+
         User user = userRepository.findById(tour.getUserId()).get();
 
         List<String> tourCategories = new ArrayList<>();

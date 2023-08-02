@@ -43,8 +43,15 @@ public class TourRegistDto {
             return new Category(categoryName);
         }
 
-        public Request(){
+    }
 
+    @Data
+    public static class Response {
+
+        private Long tourId;
+
+        public Response(Tour tour) {
+            this.tourId = tour.getId();
         }
     }
 }
