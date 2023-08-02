@@ -2,10 +2,13 @@ package com.example.backend.service;
 
 import com.example.backend.dto.course.CourseDto;
 import com.example.backend.dto.joiner.JoinerDto;
+import com.example.backend.dto.tour.ReviewRegistDto;
 import com.example.backend.dto.tour.TourDetailDto;
 import com.example.backend.dto.tour.TourDto;
 import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
+import com.example.backend.dto.tour.TourReservationCancelDto;
+import com.example.backend.dto.tour.TourReservationDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
 import com.example.backend.model.course.Course;
@@ -17,6 +20,8 @@ import com.example.backend.model.image.Image;
 import com.example.backend.model.image.ImageRepository;
 import com.example.backend.model.joiner.Joiner;
 import com.example.backend.model.joiner.JoinerRepository;
+import com.example.backend.model.review.Review;
+import com.example.backend.model.review.ReviewRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.tourcategory.TourCategory;
@@ -52,10 +57,11 @@ public class TourService {
     private final CourseImageRepository courseImageRepository;
     private final JoinerRepository joinerRepository;
     private final WishRepository wishRepository;
+    private final ReviewRepository reviewRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
-    public void tourRegist(TourRegistDto.Request request, User user)
+    public TourRegistDto.Response tourRegist(TourRegistDto.Request request, User user)
             throws IOException, IllegalAccessException {
 
         if (user.getType() != AuthType.GUIDE) {
@@ -64,6 +70,7 @@ public class TourService {
 
         Tour tour = request.toTour(user);
         tourRepository.save(tour);
+        TourRegistDto.Response response = new TourRegistDto.Response(tour);
 
         // 이미지 등록 부분 조건적으로 처리
         if (request.getTourImgs() != null && !request.getTourImgs().isEmpty()) {
@@ -110,6 +117,7 @@ public class TourService {
                 courseImageRepository.save(courseImage);
             }
         }
+        return response;
     }
 
     // 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
@@ -130,6 +138,7 @@ public class TourService {
 
     public TourDetailDto.Response tourDetail(Long tourId) {
         Tour tour = tourRepository.findById(tourId).get();
+
         User user = userRepository.findById(tour.getUserId()).get();
 
         List<String> tourCategories = new ArrayList<>();
@@ -150,7 +159,8 @@ public class TourService {
 
     public void tourReservation(Long tourId, User user) {
         Tour tour = tourRepository.findById(tourId).get();
-        if(tour.getMaxMember() <= tour.getCurrentMember()){
+        TourReservationDto tourReservationDto = new TourReservationDto(tour);
+        if (tour.getMaxMember() <= tour.getCurrentMember()) {
             throw new IllegalArgumentException("인원이 모두 모여 예약이 불가능 합니다.");
         }
         List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
@@ -159,8 +169,10 @@ public class TourService {
                 throw new IllegalArgumentException("이미 예약된 고객입니다");
             }
         }
-        Joiner joiner = new Joiner(tour, user, new Date());
-        joinerRepository.save(joiner);
+        Joiner newJoiner = new Joiner(tour, user, new Date());
+        joinerRepository.save(newJoiner);
+        tour = tourReservationDto.upCurrentMember(tour);
+        tourRepository.save(tour);
     }
 
     public void tourWish(Long tourId, User user) {
@@ -170,13 +182,20 @@ public class TourService {
     }
 
     public void tourReservationCancel(Long tourId, User user) throws IllegalArgumentException {
+        Tour tour = tourRepository.findById(tourId).get();
+        TourReservationCancelDto tourReservationCancelDto = new TourReservationCancelDto(tour);
         List<Joiner> joiners = joinerRepository.findAllByTourId(tourId);
+        boolean isNotExist = true;
         for (Joiner joiner : joiners) {
             if (joiner.getUser().getId() == user.getId()) {
                 joinerRepository.deleteById(joiner.getId());
-            } else {
-                throw new IllegalArgumentException("예약 고객만 예약 취소가 가능합니다.");
+                tour = tourReservationCancelDto.downCurrentMember(tour);
+                tourRepository.save(tour);
+                isNotExist = false;
             }
+        }
+        if (isNotExist) {
+            throw new IllegalArgumentException("예약 고객만 예약 취소가 가능합니다.");
         }
     }
 
@@ -272,6 +291,44 @@ public class TourService {
                     joiner.getUser().getNickname(), joiner.getJoinDate());
             joinerDtos.add(joinerDto);
         }
+    }
+
+    public boolean hasUserJoinedTour(Long userId, Long tourId) {
+        return joinerRepository.existsByTourIdAndUserId(tourId, userId);
+    }
+
+    public boolean isRegistedReview(Long tourId, Long userId) {
+        return reviewRepository.existsByTourIdAndUserId(tourId, userId);
+    }
+
+    public void tourReviewRegist(ReviewRegistDto.Request request, User user, Long tourId) throws IllegalAccessException {
+        Tour tour = tourRepository.findById(tourId).get();
+
+        Date now = new Date();
+
+        if (user.getType() != AuthType.USER) {
+            throw new IllegalAccessException("가이드는 리뷰를 등록할 수 없습니다.");
+        }
+
+        if (request.getTourId() != tourId) {
+            throw new IllegalAccessException("일치하지 않는 투어 아이디입니다.");
+        }
+
+        if (tour.getEndDate().before(now)) {
+            throw new IllegalAccessException("아직 끝나지 않은 투어에 리뷰를 등록할 수 없습니다.");
+        }
+
+        if (!hasUserJoinedTour(user.getId(), tourId)) {
+            throw new IllegalAccessException("참가하지 않은 투어에 리뷰를 등록할 수 없습니다.");
+        }
+
+        if (isRegistedReview(tourId, user.getId())) {
+            throw new IllegalAccessException("이미 리뷰를 작성한 투어입니다.");
+        }
+
+        Review review = request.toReview(now, user.getId());
+
+        reviewRepository.save(review);
     }
 }
 
