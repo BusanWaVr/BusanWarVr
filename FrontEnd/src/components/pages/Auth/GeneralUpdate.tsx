@@ -307,7 +307,7 @@ function GeneralUpdate(props: EditProfileProps) {
           <div>
             <button
               type="submit"
-              disabled={name === localStorage.getItem("nickname")}
+              disabled={!isName || name === currentNickname}
             >
               닉네임 확인
             </button>
