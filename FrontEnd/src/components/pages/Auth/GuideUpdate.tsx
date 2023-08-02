@@ -17,11 +17,14 @@ function GuideUpdate(props: EditProfileProps) {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
   const [passwordChangeMessage, setPasswordChangeMessage] = useState("");
+  const [introduction, setIntroduction] = useState("");
   // const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const [nameMessage, setNameMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordConfirmMessage, setPasswordConfirmMessage] = useState("");
+  const [introductionMessage, setIntroductionMessage] = useState("");
+  const [isIntroduction, setIsIntroduction] = useState(false);
 
   const [isName, setIsName] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
@@ -81,6 +84,19 @@ function GuideUpdate(props: EditProfileProps) {
     } else {
       setPasswordConfirmMessage("비밀번호가 일치합니다.");
       setIsPasswordConfirm(true);
+    }
+  };
+
+  const onChangeIntroduction = (e) => {
+    const currentIntroduction = e.target.value;
+    setIntroduction(currentIntroduction);
+
+    if (currentIntroduction.length > 150) {
+      setIntroductionMessage("자기소개는 150자 이내로 입력해 주세요.");
+      setIsIntroduction(false);
+    } else {
+      setIntroductionMessage("");
+      setIsIntroduction(true);
     }
   };
 
@@ -206,7 +222,7 @@ function GuideUpdate(props: EditProfileProps) {
     try {
       const formData = new FormData();
       formData.append("nickname", name);
-      console.log(formData);
+      formData.append("introduction", introduction);
       // 이미지를 선택한 경우에만 FormData에 추가
       if (selectedImageFile) {
         formData.append("profileImg", selectedImageFile);
@@ -225,6 +241,9 @@ function GuideUpdate(props: EditProfileProps) {
       localStorage.setItem("nickname", name);
       if (selectedImageFile) {
         localStorage.setItem("profileImg", selectedImageFile);
+      }
+      if (introduction) {
+        localStorage.setItem("introduction", introduction);
       }
     } catch (error) {
       console.error(error);
@@ -326,7 +345,23 @@ function GuideUpdate(props: EditProfileProps) {
           </div>
         )}
       </div>
-      <div>{isNickname && <button onClick={handleSave}>저장하기</button>}</div>
+      <div>
+        <form>
+          <label>자기소개 (최대 150자):</label>
+          <textarea
+            value={introduction}
+            onChange={onChangeIntroduction}
+            rows={4}
+            maxLength={150}
+          />
+          <p className="message">{introductionMessage}</p>
+        </form>
+      </div>
+      <div>
+        {isNickname && isIntroduction && (
+          <button onClick={handleSave}>저장하기</button>
+        )}
+      </div>
     </div>
   );
 }
