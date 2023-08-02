@@ -295,7 +295,7 @@ public class TourService {
             throw new IllegalAccessException("가이드는 리뷰를 등록할 수 없습니다.");
         }
 
-        if (tour.getEndDate().before(now)) {
+        if (tour.getEndDate().after(now)) {
             throw new IllegalAccessException("아직 끝나지 않은 투어에 리뷰를 등록할 수 없습니다.");
         }
 
