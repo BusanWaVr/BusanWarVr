@@ -29,6 +29,9 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
     localStorage.removeItem("nickname");
     localStorage.removeItem("profileImg");
     localStorage.removeItem("userType");
+    if (localStorage) {
+      localStorage.removeItem("introduction");
+    }
     navigate("/");
     setIsLoggedIn(false);
   };
