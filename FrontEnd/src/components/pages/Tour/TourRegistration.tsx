@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { ko } from "date-fns/locale";
 import TourCourseUpload from "./TourCourseUpload";
 import { useSelector, useDispatch } from "react-redux";
 import { setCourses } from "./TourCourseReducer";
 import TourImageUpload from "./TourImageUpload";
+import TourDatePicker from "./TourDatePicker";
 import Editor from "../../blocks/Editor";
-import { useNavigate } from "react-router";
 
 const regionList = [
   "강서구",
@@ -76,7 +73,6 @@ type TourData = {
 const TourRegistration: React.FC = () => {
   const { courses } = useSelector((state: any) => state.tourCourse);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -318,21 +314,8 @@ const TourRegistration: React.FC = () => {
 
       {/* 여행 날짜 */}
       <div>
-        <span>여행날짜</span>
-        <DatePicker
-          selected={tourData.startDate ? new Date(tourData.startDate) : null}
-          dateFormat="MM월 dd일 (eee)"
-          locale={ko}
-          onChange={(date: Date) =>
-            setTourData({ ...tourData, startDate: date })
-          }
-        />
-        <DatePicker
-          selected={tourData.endDate ? new Date(tourData.endDate) : null}
-          dateFormat="MM월 dd일 (eee)"
-          locale={ko}
-          onChange={(date: Date) => setTourData({ ...tourData, endDate: date })}
-        />
+        <p>투어 기간</p>
+        <TourDatePicker setTourData={setTourData} />
       </div>
 
       {/* 최소 인원 */}

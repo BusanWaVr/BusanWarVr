@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
+import com.example.backend.dto.userinfo.GuideEndedToursDto;
 import com.example.backend.dto.userinfo.GuideScheduledToursDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
 import com.example.backend.dto.userinfo.UserWishDto;
@@ -60,5 +61,12 @@ public class UserInfoController {
             @PageableDefault(size = 6) Pageable pageable) {
         GuideScheduledToursDto.Response response = userInfoService.getGuideScheduledTours(userDetails.getUser(), pageable);
         return new Response<>("200", "성공적으로 가이드의 예정된 투어 목록을 가져왔습니다.", response);
+    }
+
+    @GetMapping("/guide/tour/end")
+    public Response<GuideEndedToursDto.Response> getGuidesEndedTours(@AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PageableDefault(size = 6) Pageable pageable) {
+        GuideEndedToursDto.Response response = userInfoService.getGuideEndedTours(userDetails.getUser(), pageable);
+        return new Response<>("200", "성공적으로 가이드의 종료된 투어 목록을 가져왔습니다.", response);
     }
 }
