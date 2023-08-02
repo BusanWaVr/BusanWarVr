@@ -8,4 +8,6 @@ public interface JoinerRepository extends JpaRepository<Joiner, Long> {
   
     List<Joiner> findAllByTourId(Long tourId);
     Long countByTour(Tour tour);
+
+    void deleteAllByTourId(Long tourId);
 }

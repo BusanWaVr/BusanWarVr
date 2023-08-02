@@ -117,7 +117,10 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.POST, "/auth/code"));
         skipPathList.add(new Path(HttpMethod.POST, "/guide"));
         skipPathList.add(new Path(HttpMethod.POST, "/.git/config"));
+
+        // Tour
         skipPathList.add(new Path(HttpMethod.GET, "/tour/{tourId}"));
+        skipPathList.add(new Path(HttpMethod.GET, "/tour"));
 
         // Chatting
         skipPathList.add(new Path(HttpMethod.GET, "/ws-stomp/**"));
