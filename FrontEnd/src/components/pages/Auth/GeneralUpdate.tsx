@@ -17,7 +17,7 @@ function GeneralUpdate(props: EditProfileProps) {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
   const [passwordChangeMessage, setPasswordChangeMessage] = useState("");
-  // const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const [nameMessage, setNameMessage] = useState("");
   const [categoryMessage, setCategoryMessage] = useState(""); // 카테고리 메시지
@@ -259,7 +259,7 @@ function GeneralUpdate(props: EditProfileProps) {
       const formData = new FormData();
       formData.append("nickname", name);
       formData.append("category", categoriesString);
-      console.log(formData);
+      console.log(selectedImage);
       // 이미지를 선택한 경우에만 FormData에 추가
       if (selectedImageFile) {
         formData.append("profileImg", selectedImageFile);
@@ -298,20 +298,9 @@ function GeneralUpdate(props: EditProfileProps) {
             />
           </label>
 
-          <div>
-            <button
-              type="submit"
-              disabled={name === localStorage.getItem("nickname")}
-            >
-              닉네임 확인
-            </button>
-            <p className="message">{nameMessage}</p>
-            <p>{nicknameMessage}</p>
-          </div>
-
-          {name === localStorage.getItem("nickname") && (
-            <p>현재 사용 중인 닉네임과 동일합니다.</p>
-          )}
+          <button type="submit">닉네임 확인</button>
+          <p className="message">{nameMessage}</p>
+          <p>{nicknameMessage}</p>
         </form>
       </div>
       <div>
@@ -328,6 +317,7 @@ function GeneralUpdate(props: EditProfileProps) {
         </form>
       </div>
       <div>
+
         {isPasswordMatch && (
           <form onSubmit={handleSubmitNewPassword}>
             <label>
@@ -399,7 +389,11 @@ function GeneralUpdate(props: EditProfileProps) {
           </div>
         )}
       </div>
-      <div>{isNickname && <button onClick={handleSave}>저장하기</button>}</div>
+      <div>
+        <button onClick={handleSave} disabled={!isNickname || !isCategory}>
+          저장하기
+        </button>
+      </div>
     </div>
   );
 }

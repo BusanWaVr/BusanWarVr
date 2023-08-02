@@ -18,7 +18,7 @@ import ChatRoom from "../components/pages/LiveStream/ChatRoom.tsx";
 import TourRegistration from "../components/pages/Tour/TourRegistration.tsx";
 import TourDetail from "../components/pages/Tour/TourDetail/TourDetail.tsx";
 import GuideDetail from "../components/pages/GuideProfile/GuideDetail.tsx";
-import GuideMyPage from "../components/pages/GuideProfile/GuideMyPage.tsx";
+import GuideMyPageMain from "../components/pages/GuideProfile/GuideMyPageMain.tsx";
 import TourUpdate from "../components/pages/Tour/TourUpdate.tsx";
 import MateWrite from "../components/pages/Mate/MateWrite.jsx";
 import MateDetail from "../components/pages/Mate/MateDetail";
@@ -55,13 +55,14 @@ function App() {
             <Route path="/tour/write" element={<TourRegistration />} />
           </Route>
 
-          <Route path="/update" element={<Update />} />
-          <Route path="/tour/:tourId/update" element={<TourUpdate />} />
           <Route path="/tour/:tourId" element={<TourDetail />} />
           <Route path="/guide/:guideId/detail" element={<GuideDetail />} />
 
           <Route element={<GuideRoute />}>
-            <Route path="/guide/:guideId/mypage" element={<GuideMyPage />} />
+            <Route
+              path="/guide/:guideId/mypage"
+              element={<GuideMyPageMain />}
+            />
           </Route>
 
           <Route element={<UserRoute />}>
