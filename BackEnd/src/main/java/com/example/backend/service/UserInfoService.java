@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.userinfo.GuideEndedToursDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserWishDto;
 import com.example.backend.dto.userinfo.GuideScheduledToursDto;
@@ -164,5 +165,45 @@ public class UserInfoService {
             }
         }
         return new GuideScheduledToursDto.Response(responseList);
+    }
+
+    public GuideEndedToursDto.Response getGuideEndedTours(User guide, Pageable pageable) {
+        List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId(), pageable);
+        List<TourInfoForGuideScheduledToursDto> responseList = new ArrayList<>();
+        List<TourImage> tourImages = tourImageCustomRepoistory.findTourImagesByGuide(guide,
+                pageable);
+
+        Map<Long, TourImage> tourIdToImageMap = new HashMap<>();
+        for (TourImage tourImage : tourImages) {
+            Long tourId = tourImage.getTour().getId();
+            if (!tourIdToImageMap.containsKey(tourId)) {
+                tourIdToImageMap.put(tourId, tourImage);
+            } else {
+                Long existingImageId = tourIdToImageMap.get(tourId).getImage().getId();
+                if (tourImage.getImage().getId() < existingImageId) {
+                    tourIdToImageMap.put(tourId, tourImage);
+                }
+            }
+        }
+
+        for (Tour tour : tourLists) {
+
+            boolean isEnded = tour.isEnded();
+            TourInfoForGuideScheduledToursDto scheduledToursDto = new TourInfoForGuideScheduledToursDto();
+
+            if (isEnded) {
+                scheduledToursDto.setTourId(tour.getId());
+                scheduledToursDto.setTitle(tour.getTitle());
+
+                TourImage tourImage = tourIdToImageMap.get(tour.getId());
+                if (tourImage != null) {
+                    scheduledToursDto.setImage(tourImage.getImage().getUrl());
+                } else {
+                    scheduledToursDto.setImage(null);
+                }
+                responseList.add(scheduledToursDto);
+            }
+        }
+        return new GuideEndedToursDto.Response(responseList);
     }
 }
