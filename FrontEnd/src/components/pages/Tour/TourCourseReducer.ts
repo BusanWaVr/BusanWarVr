@@ -54,6 +54,12 @@ const tourCourseSlice = createSlice({
       const { index, image } = action.payload;
       state.courses[index].image = image;
     },
+    deleteCourse(state, action: PayloadAction<number>) {
+      const indexToDelete = action.payload;
+      state.courses = state.courses.filter(
+        (_, index) => index !== indexToDelete
+      );
+    },
   },
 });
 
@@ -65,5 +71,6 @@ export const {
   setLongitude,
   setCourses,
   addCourse,
+  deleteCourse,
 } = tourCourseSlice.actions;
 export default tourCourseSlice.reducer;

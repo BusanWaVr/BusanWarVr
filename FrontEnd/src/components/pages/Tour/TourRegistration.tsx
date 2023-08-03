@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import TourCourseUpload from "./TourCourseUpload";
 import { useSelector, useDispatch } from "react-redux";
-import { addCourse } from "./TourCourseReducer";
+import { setCourses, addCourse } from "./TourCourseReducer";
 import TourImageUpload from "./TourImageUpload";
 import TourDatePicker from "./TourDatePicker";
 import Editor from "../../blocks/Editor";
@@ -118,8 +118,7 @@ const TourRegistration: React.FC = () => {
   };
 
   const increaseCoursesNum = () => {
-    if (coursesNum <= 2) {
-      setCoursesNum(coursesNum + 1);
+    if (courses.length <= 2) {
       dispatch(
         addCourse({
           lon: 0,
@@ -166,6 +165,12 @@ const TourRegistration: React.FC = () => {
       newImageFiles.splice(index, 1);
     }
     setImageFiles(newImageFiles);
+  };
+
+  const deleteCourse = (index: number) => {
+    const updatedCourses = [...courses];
+    updatedCourses.splice(index, 1);
+    dispatch(setCourses(updatedCourses));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -367,9 +372,13 @@ const TourRegistration: React.FC = () => {
       <hr />
 
       {/* 투어 코스 */}
-      {Array.from({ length: coursesNum }, (_, index) => (
-        <TourCourseUpload key={index} index={index} course={null} />
-      ))}
+      {courses &&
+        courses.map((course: TourCourseInfo, index: number) => (
+          <div key={index}>
+            <TourCourseUpload index={index} course={course} />
+            <button onClick={() => deleteCourse(index)}>투어 삭제</button>
+          </div>
+        ))}
 
       <div onClick={increaseCoursesNum}>
         <button>장소 추가</button>

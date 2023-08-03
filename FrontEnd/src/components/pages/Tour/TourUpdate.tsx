@@ -189,7 +189,7 @@ const TourUpdate: React.FC = () => {
   };
 
   const increaseCoursesNum = () => {
-    if (coursesNum <= 2) {
+    if (courses.length <= 2) {
       dispatch(
         addCourse({
           lon: 0,
@@ -236,6 +236,12 @@ const TourUpdate: React.FC = () => {
       newImageFiles.splice(index, 1);
     }
     setImageFiles(newImageFiles);
+  };
+
+  const deleteCourse = (index: number) => {
+    const updatedCourses = [...courses];
+    updatedCourses.splice(index, 1);
+    dispatch(setCourses(updatedCourses));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -450,13 +456,13 @@ const TourUpdate: React.FC = () => {
           <hr />
 
           {/* 투어 코스 */}
-          {Array.from({ length: tourData.courses.length }, (_, index) => (
-            <TourCourseUpload
-              key={index}
-              index={index}
-              course={tourData.courses[index]}
-            />
-          ))}
+          {courses &&
+            courses.map((course: TourCourseInfo, index: number) => (
+              <div key={index}>
+                <TourCourseUpload index={index} course={course} />
+                <button onClick={() => deleteCourse(index)}>투어 삭제</button>
+              </div>
+            ))}
 
           <div onClick={increaseCoursesNum}>
             <button>장소 추가</button>
