@@ -17,7 +17,7 @@ function GeneralUpdate(props: EditProfileProps) {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
   const [passwordChangeMessage, setPasswordChangeMessage] = useState("");
-  // const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const [nameMessage, setNameMessage] = useState("");
   const [categoryMessage, setCategoryMessage] = useState(""); // 카테고리 메시지
@@ -334,6 +334,7 @@ function GeneralUpdate(props: EditProfileProps) {
         </form>
       </div>
       <div>
+
         {isPasswordMatch && (
           <form onSubmit={handleSubmitNewPassword}>
             <label>
