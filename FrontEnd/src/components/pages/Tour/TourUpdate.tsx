@@ -233,11 +233,11 @@ const TourUpdate: React.FC = () => {
       );
       formData.append(
         `courses[${i}].title`,
-        JSON.stringify(tourData.courses[i].title)
+        JSON.stringify(tourData.courses[i].title).replace(/"/g, "")
       );
       formData.append(
         `courses[${i}].content`,
-        JSON.stringify(tourData.courses[i].content)
+        JSON.stringify(tourData.courses[i].content).replace(/"/g, "")
       );
       if (tourData.courses[i].imageFile) {
         formData.append(`courses[${i}].image`, tourData.courses[i].imageFile);

@@ -52,7 +52,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
           위도:
           <input
             type="text"
-            value={courses ? courses[index]?.lon : course.lon}
+            value={courses[index].lon}
             onChange={handleLongitudeChange}
             disabled
           />
@@ -61,7 +61,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
           경도:
           <input
             type="text"
-            value={courses ? courses[index]?.lat : course.lat}
+            value={courses[index].lat}
             onChange={handleLatitudeChange}
             disabled
           />
@@ -70,7 +70,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
           제목:
           <input
             type="text"
-            value={courses ? courses[index]?.title : course.title}
+            value={courses[index].title}
             onChange={handleTitleChange}
           />
         </label>
@@ -78,7 +78,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
         <label>
           내용:
           <textarea
-            value={courses ? courses[index]?.content : course.content}
+            value={courses[index].content}
             onChange={handleContentChange}
           />
         </label>
