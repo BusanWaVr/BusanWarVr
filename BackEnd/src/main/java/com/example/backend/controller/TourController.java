@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
 import com.example.backend.dto.tour.ReviewRegistDto;
+import com.example.backend.dto.tour.ReviewUpdateDto;
 import com.example.backend.dto.tour.TourDetailDto;
 import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
@@ -59,7 +60,7 @@ public class TourController {
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         boolean isWished = tourService.tourWish(tourId, userDetails.getUser());
 
-        if(isWished){
+        if (isWished) {
             return new Response("200", "성공적으로 투어를 찜 하였습니다!", null);
         }
         return new Response("200", "성공적으로 찜 취소 하였습니다!", null);
@@ -103,17 +104,19 @@ public class TourController {
     }
 
     @PutMapping("/tour/{tourId}")
-    public Response<TourUpdateDto.Response> tourUpdateApi(@ModelAttribute TourUpdateDto.Request request ,@PathVariable Long tourId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+    public Response<TourUpdateDto.Response> tourUpdateApi(
+            @ModelAttribute TourUpdateDto.Request request, @PathVariable Long tourId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails)
             throws IllegalAccessException, IOException {
-        TourUpdateDto.Response response =  tourService.tourUpdate(request, tourId, userDetails.getUser());
+        TourUpdateDto.Response response = tourService.tourUpdate(request, tourId,
+                userDetails.getUser());
         return new Response("200", "성공적으로 투어를 수정 하였습니다!", response);
     }
 
-//    @DeleteMapping("/tour/wish/{tourId}")
-//    public Response tourWishCancelApi(@PathVariable Long tourId,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        tourService.tourWishCancel(tourId, userDetails.getUser());
-//        return new Response("200", "성공적으로 찜 취소 하였습니다!", null);
-//    }
-
+    @PutMapping("/tour/review/{reviewId}")
+    public Response<ReviewUpdateDto.Request> reviewUpdateApi(@RequestBody ReviewUpdateDto.Request request, @PathVariable Long reviewId ,@AuthenticationPrincipal UserDetailsImpl userDetails)
+            throws IllegalAccessException {
+        tourService.reviewUpdate(request, reviewId, userDetails.getUser());
+        return new Response("200", "성공적으로 후기를 수정했습니다.", null);
+    }
 }

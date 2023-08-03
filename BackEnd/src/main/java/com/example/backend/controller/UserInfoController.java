@@ -2,21 +2,16 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
 import com.example.backend.dto.userinfo.GuideEndedToursDto;
-import com.example.backend.dto.userinfo.GuideInfoDto;
-import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
-import com.example.backend.dto.userinfo.GuideScheduledToursDto;
-import com.example.backend.dto.userinfo.UserFollowDto;
-import com.example.backend.dto.userinfo.UserInfoDto;
 import com.example.backend.dto.userinfo.GuideHomeDto;
+import com.example.backend.dto.userinfo.GuideInfoDto;
 import com.example.backend.dto.userinfo.GuideReviewsDto;
 import com.example.backend.dto.userinfo.GuideScheduledToursDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
+import com.example.backend.dto.userinfo.UserInfoDto;
 import com.example.backend.dto.userinfo.UserTourDto;
 import com.example.backend.dto.userinfo.UserWishDto;
-import com.example.backend.model.user.User;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.UserInfoService;
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -65,21 +60,25 @@ public class UserInfoController {
     }
 
     @GetMapping("/guide/tour/schedule")
-    public Response<GuideScheduledToursDto.Response> getGuidesScheduledTours(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public Response<GuideScheduledToursDto.Response> getGuidesScheduledTours(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PageableDefault(size = 6) Pageable pageable) {
-        GuideScheduledToursDto.Response response = userInfoService.getGuideScheduledTours(userDetails.getUser(), pageable);
+        GuideScheduledToursDto.Response response = userInfoService.getGuideScheduledTours(
+                userDetails.getUser(), pageable);
         return new Response<>("200", "성공적으로 가이드의 예정된 투어 목록을 가져왔습니다.", response);
     }
 
     @GetMapping("/guide/tour/end")
-    public Response<GuideEndedToursDto.Response> getGuidesEndedTours(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public Response<GuideEndedToursDto.Response> getGuidesEndedTours(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PageableDefault(size = 6) Pageable pageable) {
-        GuideEndedToursDto.Response response = userInfoService.getGuideEndedTours(userDetails.getUser(), pageable);
+        GuideEndedToursDto.Response response = userInfoService.getGuideEndedTours(
+                userDetails.getUser(), pageable);
         return new Response<>("200", "성공적으로 가이드의 종료된 투어 목록을 가져왔습니다.", response);
     }
 
     @GetMapping("/user/userInfo/{userId}")
-    public Response<UserInfoDto.Response> getUserInfo(@PathVariable Long userId){
+    public Response<UserInfoDto.Response> getUserInfo(@PathVariable Long userId) {
         UserInfoDto.Response response = userInfoService.getUserInfo(userId);
         return new Response<>("200", "성공적으로 사용자 정보를 가져왔습니다.", response);
     }
@@ -91,21 +90,25 @@ public class UserInfoController {
     }
 
     @GetMapping("/guide/tour/review")
-    public Response<GuideReviewsDto.Response> getGuidesReviews(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public Response<GuideReviewsDto.Response> getGuidesReviews(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PageableDefault(size = 6) Pageable pageable) {
-        GuideReviewsDto.Response response = userInfoService.getGuideReviews(userDetails.getUser(), pageable);
+        GuideReviewsDto.Response response = userInfoService.getGuideReviews(userDetails.getUser(),
+                pageable);
         return new Response<>("200", "성공적으로 가이드의 리뷰 목록을 가져왔습니다.", response);
     }
 
     @GetMapping("/guide/home")
-    public Response<GuideHomeDto.Response> getGuideHome(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public Response<GuideHomeDto.Response> getGuideHome(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PageableDefault(size = 6) Pageable pageable) {
         GuideHomeDto.Response response = userInfoService.guideHome(userDetails.getUser(), pageable);
         return new Response<>("200", "성공적으로 가이드 홈 정보를 불러왔습니다", response);
     }
 
     @GetMapping("/user/tour")
-    public Response<UserTourDto.Response> getUserTours(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public Response<UserTourDto.Response> getUserTours(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         UserTourDto.Response response = userInfoService.getUserTour(userDetails.getUser());
         return new Response<>("200", "성공적으로 유저의 투어 정보를 불러왔습니다", response);
     }
