@@ -20,7 +20,9 @@ const GuideMyPageMain = () => {
   return (
     <div>
       <h1>업데이트페이지</h1>
+
       {/* userId와 urlUserId 비교하여 페이지 표시 */}
+
       {userId === urlUserId ? <GuideMyPage /> : <GuideMyPageRestriction />}
     </div>
   );

@@ -26,6 +26,11 @@ import MateList from "../components/pages/Mate/MateList";
 import MateEdit from "../components/pages/Mate/MateEdit";
 import ReviewWrite from "../components/pages/Review/ReviewWrite";
 import UserMyPage from "../components/pages/UserProfile/UserMyPage";
+import UserMain from "../components/pages/UserProfile/UserMain";
+// import UserNavbar from "../components/pages/UserProfile/UserNavbar";
+import UserTourBoard from "../components/pages/UserProfile/UserTourBoard";
+import UserWishBoard from "../components/pages/UserProfile/UserWishBoard";
+import UserFollowingBoard from "../components/pages/UserProfile/UserFollowingBoard";
 
 function App() {
   return (
@@ -57,19 +62,24 @@ function App() {
           </Route>
 
           <Route path="/tour/:tourId" element={<TourDetail />} />
-          <Route path="/guide/:guideId/detail" element={<GuideDetail />} />
+          <Route path="/guide/:userId/detail" element={<GuideDetail />} />
 
           <Route element={<GuideRoute />}>
-            <Route
-              path="/guide/:guideId/mypage"
-              element={<GuideMyPageMain />}
-            />
+
+            <Route path="/guide/:userId/mypage" element={<GuideMyPageMain />} />
           </Route>
 
           <Route element={<UserRoute />}>
             <Route path="/review/write" element={<ReviewWrite />} />
             <Route path="/mate/write" element={<MateWrite />} />
-            <Route path="/user/:userId/mypage" element={<UserMyPage />} />
+
+            {/* 마이페이지 */}
+            <Route path="/user/:userId/mypage" element={<UserMyPage />}>
+              <Route path="" element={<UserMain />} />
+              <Route path="tour" element={<UserTourBoard />} />
+              <Route path="wish" element={<UserWishBoard />} />
+              <Route path="following" element={<UserFollowingBoard />} />
+            </Route>
           </Route>
 
           <Route path="/matedetail/:mateId" element={<MateDetail />} />

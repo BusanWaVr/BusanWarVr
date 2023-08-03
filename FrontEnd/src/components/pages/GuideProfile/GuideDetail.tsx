@@ -71,7 +71,7 @@ const GuideDetail: React.FC = () => {
     ],
   };
 
-  const { guideId } = useParams<{ guideId: string }>();
+  const { userId } = useParams<{ userId: string }>();
   const [guide, setGuide] = useState<GuideData>(guideData);
 
   const handleFollowClick = () => {
@@ -106,7 +106,7 @@ const GuideDetail: React.FC = () => {
   };
 
   // 가이드 ID에 해당하는 데이터 찾기
-  const currentGuide = guideData.userId === guideId ? guideData : null;
+  const currentGuide = guideData.userId === userId ? guideData : null;
 
   if (!currentGuide) {
     return <div>가이드를 찾을 수 없습니다.</div>;

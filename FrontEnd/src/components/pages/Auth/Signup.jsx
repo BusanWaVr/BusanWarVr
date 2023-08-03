@@ -21,7 +21,7 @@ const Signup = () => {
   const [isPassword, setIsPassword] = useState(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
-  const [isEmailConfirm, setIsEmailConfirm] = useState();
+  const [isEmailConfirm, setIsEmailConfirm] = useState(false);
   const [showVerificationForm, setShowVerificationForm] = useState(false);
   const [isNickname, setIsNickname] = useState(false);
 
@@ -350,23 +350,16 @@ const Signup = () => {
           />
           <p className="message">{passwordConfirmMessage}</p>
         </div>
-        {/* <div className="form-el">
-          <label htmlFor="name">닉네임</label> <br />
-          <input id="name" name="name" value={name} onChange={onChangeName} />
-          <p className="message">{nameMessage}</p>
-        </div> */}
 
         <div className="form-el">
           <form onSubmit={handleSubmitName}>
             <label htmlFor="name">닉네임</label> <br />
-            {/* <input id="name" name="name" value={name} onChange={onChangeName} /> */}
             <input
               id="name"
               name="name"
               type="text"
               value={name}
               onChange={onChangeName}
-              // disabled={isNickname}
             />
             <button type="submit" disabled={!isName}>
               중복확인
