@@ -15,8 +15,8 @@ const TourAddressSearch = ({ index, course }: TourAddressSearchProps) => {
   const dispatch = useDispatch();
   const [fullAddress, setFullAddress] = useState("부산와Vr");
   const [center, setCenter] = useState({
-    lat: course ? course.lat : courses[index]?.lat || 0,
-    lng: course ? course.lon : courses[index]?.lon || 0,
+    lat: course ? course.lat : 0,
+    lng: course ? course.lon : 0,
   });
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const TourAddressSearch = ({ index, course }: TourAddressSearchProps) => {
             readOnly
           />
         </div>
-        {(center.lat != 0 && center.lng) != 0 ? (
+        {center.lat != 0 || center.lng != 0 ? (
           <Map
             center={center}
             style={{

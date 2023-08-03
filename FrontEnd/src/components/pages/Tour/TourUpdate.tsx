@@ -139,10 +139,8 @@ const TourUpdate: React.FC = () => {
             };
             newCourses[index] = newCourse;
             res.data.courses = newCourses;
-            setCoursesNum(res.data.courses.length);
           });
           dispatch(setCourses(res.data.courses));
-          setCoursesNum(res.data.courses.length);
           setTourData(res.data);
           console.log(res.data);
         } else {
@@ -160,9 +158,6 @@ const TourUpdate: React.FC = () => {
     setTourData({ ...tourData, courses: courses });
   }, [courses]);
 
-  const [coursesNum, setCoursesNum] = useState(
-    tourData ? tourData.courses.length : 1
-  );
   const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
   const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
   const [imageFiles, setImageFiles] = useState<File[]>([]);

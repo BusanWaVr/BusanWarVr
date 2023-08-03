@@ -91,7 +91,6 @@ const TourRegistration: React.FC = () => {
     courses: [],
   });
 
-  const [coursesNum, setCoursesNum] = useState(1);
   const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
   const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
