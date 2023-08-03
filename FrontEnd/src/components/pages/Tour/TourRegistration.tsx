@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import TourCourseUpload from "./TourCourseUpload";
 import { useSelector, useDispatch } from "react-redux";
-import { setCourses } from "./TourCourseReducer";
+import { addCourse } from "./TourCourseReducer";
 import TourImageUpload from "./TourImageUpload";
 import TourDatePicker from "./TourDatePicker";
 import Editor from "../../blocks/Editor";
@@ -121,7 +121,7 @@ const TourRegistration: React.FC = () => {
     if (coursesNum <= 2) {
       setCoursesNum(coursesNum + 1);
       dispatch(
-        setCourses({
+        addCourse({
           lon: 0,
           lat: 0,
           title: "",
@@ -315,7 +315,7 @@ const TourRegistration: React.FC = () => {
       {/* 여행 날짜 */}
       <div>
         <p>투어 기간</p>
-        <TourDatePicker setTourData={setTourData} />
+        <TourDatePicker setTourData={setTourData} tourData={null} />
       </div>
 
       {/* 최소 인원 */}
@@ -354,7 +354,7 @@ const TourRegistration: React.FC = () => {
 
       {/* 투어 코스 */}
       {Array.from({ length: coursesNum }, (_, index) => (
-        <TourCourseUpload key={index} index={index} />
+        <TourCourseUpload key={index} index={index} course={null} />
       ))}
 
       <div onClick={increaseCoursesNum}>

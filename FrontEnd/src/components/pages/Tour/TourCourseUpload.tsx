@@ -10,15 +10,18 @@ import {
 
 type TourCourseUploadProps = {
   index: number;
+  course: any;
 };
 
-const TourCourseUpload: React.FC<TourCourseUploadProps> = ({ index }) => {
+const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
+  index,
+  course,
+}) => {
   const { courses } = useSelector((state: any) => state.tourCourse);
   const dispatch = useDispatch();
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setTitle({ index: index, title: e.target.value }));
-    console.log(courses);
   };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -43,13 +46,13 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({ index }) => {
 
   return (
     <>
-      <TourAddressSearch index={index} />
+      <TourAddressSearch index={index} course={course} />
       <div>
         <label>
           위도:
           <input
             type="text"
-            value={courses[index]?.lon}
+            value={course ? course.lon : courses[index]?.lon}
             onChange={handleLongitudeChange}
             disabled
           />
@@ -58,7 +61,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({ index }) => {
           경도:
           <input
             type="text"
-            value={courses[index]?.lat}
+            value={course ? course.lat : courses[index]?.lat}
             onChange={handleLatitudeChange}
             disabled
           />
@@ -67,7 +70,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({ index }) => {
           제목:
           <input
             type="text"
-            value={courses[index]?.title}
+            value={course ? course.title : courses[index]?.title}
             onChange={handleTitleChange}
           />
         </label>
@@ -75,7 +78,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({ index }) => {
         <label>
           내용:
           <textarea
-            value={courses[index]?.content}
+            value={course ? course.content : courses[index]?.content}
             onChange={handleContentChange}
           />
         </label>

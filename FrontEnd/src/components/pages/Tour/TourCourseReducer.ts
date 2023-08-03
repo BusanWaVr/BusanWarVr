@@ -6,7 +6,7 @@ type TourCourseInfo = {
   title: string;
   content: string;
   image: any;
-  imageFile: File | null,
+  imageFile: File | null;
 };
 
 interface TourCourseState {
@@ -14,13 +14,19 @@ interface TourCourseState {
 }
 
 const initialState: TourCourseState = {
-  courses: [{ lon: 0, lat: 0, title: "", content: "", image: null, imageFile: null}],
+  courses: [
+    { lon: 0, lat: 0, title: "", content: "", image: null, imageFile: null },
+  ],
 };
 
 const tourCourseSlice = createSlice({
   name: "tourCourse",
   initialState,
   reducers: {
+    setCourses(state, action: PayloadAction<TourCourseInfo[]>) {
+      const courses = action.payload;
+      state.courses = courses;
+    },
     setTitle(state, action: PayloadAction<{ index: number; title: string }>) {
       const { index, title } = action.payload;
       state.courses[index].title = title;
@@ -44,11 +50,14 @@ const tourCourseSlice = createSlice({
       const { index, image } = action.payload;
       state.courses[index].image = image;
     },
-    setCourses(state, action: PayloadAction<TourCourseInfo>) {
+    addCourse(state, action: PayloadAction<TourCourseInfo>) {
       const course = action.payload;
       state.courses = [...state.courses, course];
     },
-    setImageFile(state, action: PayloadAction<{ index: number; imageFile: File | null }>) {
+    setImageFile(
+      state,
+      action: PayloadAction<{ index: number; imageFile: File | null }>
+    ) {
       const { index, imageFile } = action.payload;
       state.courses[index].imageFile = imageFile;
     },
@@ -63,5 +72,6 @@ export const {
   setLongitude,
   setCourses,
   setImageFile,
+  addCourse,
 } = tourCourseSlice.actions;
 export default tourCourseSlice.reducer;

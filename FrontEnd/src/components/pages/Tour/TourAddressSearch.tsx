@@ -7,17 +7,18 @@ import { setLatitude, setLongitude } from "./TourCourseReducer";
 
 type TourAddressSearchProps = {
   index: number;
+  course: any;
 };
 
-const TourAddressSearch = ({ index }: TourAddressSearchProps) => {
+const TourAddressSearch = ({ index, course }: TourAddressSearchProps) => {
   const { courses } = useSelector((state: any) => state.tourCourse);
   const dispatch = useDispatch();
   const [fullAddress, setFullAddress] = useState("부산와Vr");
   const [center, setCenter] = useState({
-    lat: courses[index]?.lat || 0,
-    lng: courses[index]?.lon || 0,
+    lat: course ? course.lat : courses[index]?.lat || 0,
+    lng: course ? course.lon : courses[index]?.lon || 0,
   });
-  const [searchCompleted, setSearchCompleted] = useState(false);
+  const [searchCompleted, setSearchCompleted] = useState(course ? true : false);
   const [mapRenderCount, setMapRenderCount] = useState(0);
 
   useEffect(() => {
@@ -54,6 +55,7 @@ const TourAddressSearch = ({ index }: TourAddressSearchProps) => {
   const postConfig = {
     onComplete: async (data: any) => {
       setFullAddress(data.address);
+      console.log(fullAddress, index, courses);
       setSearchCompleted(true);
     },
   };
@@ -72,7 +74,7 @@ const TourAddressSearch = ({ index }: TourAddressSearchProps) => {
             readOnly
           />
         </div>
-        {searchCompleted && mapRenderCount < 2 ? (
+        {searchCompleted ? (
           <Map
             center={center}
             style={{
@@ -80,14 +82,8 @@ const TourAddressSearch = ({ index }: TourAddressSearchProps) => {
               height: "450px",
             }}
             level={3}
-            key={mapRenderCount}
           >
-            <MapMarker position={center}>
-              <div style={{ padding: "5px", color: "#000" }}>
-                {fullAddress}
-                <br />
-              </div>
-            </MapMarker>
+            <MapMarker position={center}></MapMarker>
           </Map>
         ) : (
           <>
