@@ -276,7 +276,7 @@ function GuideUpdate(props: EditProfileProps) {
           <div>
             <button
               type="submit"
-              disabled={name === localStorage.getItem("nickname")}
+              disabled={!isName || name === localStorage.getItem("nickname")}
             >
               닉네임 확인
             </button>
