@@ -8,9 +8,27 @@ function GuideMain() {
     console.log("가이드 내 정보에서 받고 있음", guideInfoData);
   }, []);
 
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/update");
+  };
+
   return (
     <div>
       <h1>가이드 마이페이지 메인</h1>
+      {guideInfoData ? (
+        <div>
+          <p>이메일 : {guideInfoData.email}</p>
+          <p>닉네임 : {guideInfoData.nickname}</p>
+          <p>가이드 평점 : {guideInfoData.averageScore}</p>
+          <p>투어 수 : {guideInfoData.tourNumbers}</p>
+
+          <button onClick={handleClick}>내 정보 수정</button>
+        </div>
+      ) : (
+        <p>loading...</p>
+      )}
     </div>
   );
 }
