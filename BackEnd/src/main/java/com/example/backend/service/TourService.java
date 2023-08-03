@@ -179,7 +179,7 @@ public class TourService {
         tourRepository.save(tour);
     }
 
-    public void tourWish(Long tourId, User user) {
+    public boolean tourWish(Long tourId, User user) {
         List<Wish> wishList = wishRepository.findAllByUserId(user.getId());
         boolean isUnWished = true;
         for (Wish wish : wishList) {
@@ -187,6 +187,7 @@ public class TourService {
             if(wish.getTour().getId() == tourId){
                 wishRepository.delete(wish);
                 isUnWished = false;
+                return false;
             }
         }
         // 찜하기 안 되어 있으면 찜
@@ -195,6 +196,7 @@ public class TourService {
             Wish wish = new Wish(tour, user.getId());
             wishRepository.save(wish);
         }
+        return true;
     }
 
     public void tourReservationCancel(Long tourId, User user) throws IllegalArgumentException {

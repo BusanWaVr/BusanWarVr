@@ -57,8 +57,12 @@ public class TourController {
     @PostMapping("/tour/wish/{tourId}")
     public Response tourWishApi(@PathVariable Long tourId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        tourService.tourWish(tourId, userDetails.getUser());
-        return new Response("200", "성공적으로 투어를 찜 하였습니다!", null);
+        boolean isWished = tourService.tourWish(tourId, userDetails.getUser());
+
+        if(isWished){
+            return new Response("200", "성공적으로 투어를 찜 하였습니다!", null);
+        }
+        return new Response("200", "성공적으로 찜 취소 하였습니다!", null);
     }
 
     @DeleteMapping("/tour/reservation/{tourId}")
