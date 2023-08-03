@@ -115,9 +115,6 @@ const TourUpdate: React.FC = () => {
           res.data.startDate = new Date(res.data.startDate);
           res.data.endDate = new Date(res.data.endDate);
 
-          setCoursesNum(res.data.courses.length);
-          dispatch(setCourses(res.data.courses));
-
           const currentImageFiles = await Promise.all(
             res.data.tourImgs.map((imageURL: string) =>
               convertURLtoFile(imageURL)
@@ -126,7 +123,28 @@ const TourUpdate: React.FC = () => {
           setImageFiles(currentImageFiles);
           res.data.tourImgs = imageFiles;
 
+          const newCourses = [...res.data.courses];
+          console.log(newCourses);
+          const newCourseImages = await Promise.all(
+            res.data.courses.map((course) => {
+              return convertURLtoFile(course.image);
+            })
+          );
+
+          Array.from({ length: courses.length }, (_, index) => {
+            const course = res.data.courses[index];
+            const newCourse = {
+              ...course,
+              image: newCourseImages[index],
+            };
+            newCourses[index] = newCourse;
+            res.data.courses = newCourses;
+            setCoursesNum(res.data.courses.length);
+          });
+          dispatch(setCourses(res.data.courses));
+          setCoursesNum(res.data.courses.length);
           setTourData(res.data);
+          console.log(res.data);
         } else {
           alert("해당 투어가 존재하지 않습니다.");
         }
@@ -137,6 +155,10 @@ const TourUpdate: React.FC = () => {
 
     fetchTourData();
   }, []);
+
+  useEffect(() => {
+    setTourData({ ...tourData, courses: courses });
+  }, [courses]);
 
   const [coursesNum, setCoursesNum] = useState(
     tourData ? tourData.courses.length : 1
@@ -168,7 +190,6 @@ const TourUpdate: React.FC = () => {
 
   const increaseCoursesNum = () => {
     if (coursesNum <= 2) {
-      setCoursesNum(coursesNum + 1);
       dispatch(
         addCourse({
           lon: 0,
@@ -176,7 +197,6 @@ const TourUpdate: React.FC = () => {
           title: "",
           content: "",
           image: null,
-          imageFile: null,
         })
       );
     } else {
@@ -270,8 +290,9 @@ const TourUpdate: React.FC = () => {
         `courses[${i}].content`,
         JSON.stringify(tourData.courses[i].content).replace(/"/g, "")
       );
-      if (tourData.courses[i].imageFile) {
-        formData.append(`courses[${i}].image`, tourData.courses[i].imageFile);
+      if (tourData.courses[i].image) {
+        console.log(tourData.courses[i].image);
+        formData.append(`courses[${i}].image`, tourData.courses[i].image);
       }
     }
 
@@ -429,7 +450,7 @@ const TourUpdate: React.FC = () => {
           <hr />
 
           {/* 투어 코스 */}
-          {Array.from({ length: coursesNum }, (_, index) => (
+          {Array.from({ length: tourData.courses.length }, (_, index) => (
             <TourCourseUpload
               key={index}
               index={index}

@@ -53,8 +53,7 @@ type TourCourseInfo = {
   lat: number;
   title: string;
   content: string;
-  image: any;
-  imageFile: File;
+  image: File;
 };
 
 type TourData = {
@@ -128,7 +127,6 @@ const TourRegistration: React.FC = () => {
           title: "",
           content: "",
           image: null,
-          imageFile: null,
         })
       );
     } else {
@@ -222,8 +220,8 @@ const TourRegistration: React.FC = () => {
         `courses[${i}].content`,
         JSON.stringify(tourData.courses[i].content)
       );
-      if (tourData.courses[i].imageFile) {
-        formData.append(`courses[${i}].image`, tourData.courses[i].imageFile);
+      if (tourData.courses[i].image) {
+        formData.append(`courses[${i}].image`, tourData.courses[i].image);
       }
     }
 

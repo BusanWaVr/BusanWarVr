@@ -18,8 +18,6 @@ const TourAddressSearch = ({ index, course }: TourAddressSearchProps) => {
     lat: course ? course.lat : courses[index]?.lat || 0,
     lng: course ? course.lon : courses[index]?.lon || 0,
   });
-  const [searchCompleted, setSearchCompleted] = useState(course ? true : false);
-  const [mapRenderCount, setMapRenderCount] = useState(0);
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -38,7 +36,6 @@ const TourAddressSearch = ({ index, course }: TourAddressSearchProps) => {
           dispatch(setLatitude({ index: index, lat: parseFloat(location.y) }));
           dispatch(setLongitude({ index: index, lon: parseFloat(location.x) }));
           setCenter({ lat: location.y, lng: location.x });
-          setMapRenderCount((prev) => prev + 1); // Map 컴포넌트 렌더링 횟수 증가
         } else {
           console.error("해당 주소를 찾을 수 없습니다.");
         }
@@ -47,16 +44,13 @@ const TourAddressSearch = ({ index, course }: TourAddressSearchProps) => {
       }
     };
 
-    if (searchCompleted) {
-      fetchCoordinates();
-    }
-  }, [fullAddress, searchCompleted]);
+    fetchCoordinates();
+  }, [fullAddress]);
 
   const postConfig = {
     onComplete: async (data: any) => {
       setFullAddress(data.address);
       console.log(fullAddress, index, courses);
-      setSearchCompleted(true);
     },
   };
 
@@ -74,7 +68,7 @@ const TourAddressSearch = ({ index, course }: TourAddressSearchProps) => {
             readOnly
           />
         </div>
-        {searchCompleted ? (
+        {(center.lat != 0 && center.lng) != 0 ? (
           <Map
             center={center}
             style={{
