@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useOutletContext } from "react-router-dom";
-import UserNavbar from "./UserNavbar";
-import UserMini from "./UserMini";
+import GuideNavbar from "./GuideNavbar";
+import GuideMini from "./GuideMini";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -21,29 +22,27 @@ const OutletWrapper = styled.div`
   // background-color: #808080;
 `;
 
-function UserMyPage() {
-  // 내 정보 가져오기
-
+function GuideMyPage() {
+  // redux에서 userId 가져오기
+  const { userId } = useSelector((state) => state.userInfo);
+  const url = `http://52.79.93.203/guide/guideInfo/${userId}`;
+  const [guideInfoData, setGuideInfoData] = useState(null);
   const [userInfoData, setUserInfoData] = useState(null);
-  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `http://52.79.93.203/user/userInfo/${userId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         if (response.status === 200) {
-          console.log("유저데이터 받았어요");
+          console.log("유저정보 GET");
           const data = await response.json();
-          setUserInfoData(data.data);
-          console.log("부모에서 넘겨주고 있음", data.data);
+          setGuideInfoData(data.data);
+          console.log("부모에서 자식으로 넘김", data.data);
         } else {
           alert("유저데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요.");
         }
@@ -58,14 +57,14 @@ function UserMyPage() {
   return (
     <Wrapper>
       <NavbarWrapper>
-        <UserMini userInfoData={userInfoData} />
-        <UserNavbar />
+        <GuideMini guideInfoData={guideInfoData} />
+        <GuideNavbar />
       </NavbarWrapper>
       <OutletWrapper>
-        <Outlet context={{ userInfoData }} />
+        <Outlet context={{ guideInfoData }} />
       </OutletWrapper>
     </Wrapper>
   );
 }
 
-export default UserMyPage;
+export default GuideMyPage;

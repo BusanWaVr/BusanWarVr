@@ -2,7 +2,9 @@ package com.example.backend.service;
 
 import com.example.backend.dto.course.CourseDto;
 import com.example.backend.dto.joiner.JoinerDto;
+import com.example.backend.dto.tour.ReviewDetailDto;
 import com.example.backend.dto.tour.ReviewRegistDto;
+import com.example.backend.dto.tour.ReviewUpdateDto;
 import com.example.backend.dto.tour.TourDetailDto;
 import com.example.backend.dto.tour.TourDto;
 import com.example.backend.dto.tour.TourListDto;
@@ -10,8 +12,6 @@ import com.example.backend.dto.tour.TourRegistDto;
 import com.example.backend.dto.tour.TourReservationCancelDto;
 import com.example.backend.dto.tour.TourReservationDto;
 import com.example.backend.dto.tour.TourUpdateDto;
-import com.example.backend.dto.tour.TourUpdateDto.Request;
-import com.example.backend.dto.tour.TourUpdateDto.Response;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
 import com.example.backend.model.course.Course;
@@ -184,14 +184,14 @@ public class TourService {
         boolean isUnWished = true;
         for (Wish wish : wishList) {
             // 이미 찜 되어있으면 찜 취소
-            if(wish.getTour().getId() == tourId){
+            if (wish.getTour().getId() == tourId) {
                 wishRepository.delete(wish);
                 isUnWished = false;
                 return false;
             }
         }
         // 찜하기 안 되어 있으면 찜
-        if(isUnWished){
+        if (isUnWished) {
             Tour tour = tourRepository.findById(tourId).get();
             Wish wish = new Wish(tour, user.getId());
             wishRepository.save(wish);
@@ -445,5 +445,37 @@ public class TourService {
                 tourImageUrls, courseDtos);
 
         return response;
+    }
+
+    public void reviewUpdate(ReviewUpdateDto.Request request, Long reviewId, User user)
+            throws IllegalAccessException {
+        Review review = reviewRepository.findById(reviewId).get();
+
+        Date now = new Date();
+
+        if (user.getType() != AuthType.USER) {
+            throw new IllegalAccessException("가이드는 리뷰를 등록할 수 없습니다.");
+        }
+
+        if (review.getUserId() != user.getId()) {
+            throw new IllegalAccessException("해당 리뷰의 작성자만 수정 가능합니다");
+        }
+
+        review = request.toUpdate(review, now);
+        reviewRepository.save(review);
+    }
+
+    public ReviewDetailDto.Response reviewDetail(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).get();
+        ReviewDetailDto.Response response = new ReviewDetailDto.Response(review);
+        return response;
+    }
+
+    public void reviewDelete(Long reviewId, User user) {
+        Review review = reviewRepository.findById(reviewId).get();
+        if (review.getUserId() != user.getId()) {
+            throw new IllegalArgumentException("해당 리뷰의 작성자만 삭제 가능합니다");
+        }
+        reviewRepository.deleteById(reviewId);
     }
 }

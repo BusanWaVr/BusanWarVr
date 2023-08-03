@@ -243,10 +243,12 @@ const GuideSignup = () => {
             name="name"
             value={email}
             onChange={onChangeEmail}
-            disabled={isEmail}
+            disabled={isEmailConfirm}
           />
           <p className="message">{emailMessage}</p>
-          <button onClick={handleVerification} disabled={!isEmail}>인증번호받기</button>
+          <button onClick={handleVerification} disabled={!isEmail}>
+            인증번호받기
+          </button>
           <div>
             <p>{codeMessage}</p>
             {showVerificationForm && (
@@ -255,7 +257,7 @@ const GuideSignup = () => {
                   type="text"
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
-                  disabled={isEmail}
+                  disabled={isEmailConfirm}
                 />
                 <button type="submit">인증</button>
               </form>

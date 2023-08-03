@@ -9,13 +9,28 @@ const CardContainer = styled.div`
 function FollowingCard({ followingData }) {
   return (
     <div>
-      <p>
-        총 <strong>{followingData.length}</strong>명의 가이드를 팔로우하고
-        있어요.
-      </p>
+      {followingData.length === 0 ? (
+        <p>로딩중ㅎ(에러 아님.. 느린거임..ㅠ)</p>
+      ) : (
+        <p>
+          총 <strong>{followingData.length}</strong>명의 가이드를 팔로우하고
+          있어요.
+        </p>
+      )}
+
       {followingData.map((Following) => (
-        <CardContainer key={Following.Id}>
-          <Link to={`/guide/${Following.Id}/detail`}>
+        <CardContainer key={Following.id}>
+          <img
+            src={Following.imageUrl}
+            alt="프로필 이미지"
+            style={{
+              width: "200px",
+              height: "200px",
+              borderRadius: "50%",
+            }}
+          />
+          <br />
+          <Link to={`/guide/${Following.id}/detail`}>
             <span> {Following.nickname}</span>
           </Link>
           <p>팔로워 : {Following.follower}</p>

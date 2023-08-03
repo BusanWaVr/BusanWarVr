@@ -1,12 +1,10 @@
-import react from "react";
-
-function UserMini({ userInfoData }) {
+function GuideMini({ guideInfoData }) {
   return (
     <div>
-      {userInfoData ? (
+      {guideInfoData ? (
         <div>
           <img
-            src={userInfoData.profileImg}
+            src={guideInfoData.profileImg}
             alt="프로필 이미지"
             style={{
               width: "200px",
@@ -15,15 +13,15 @@ function UserMini({ userInfoData }) {
             }}
           />
           <h3>
-            <strong>{userInfoData.nickname}</strong>
+            <strong>{guideInfoData.nickname}</strong>
           </h3>
-          <p>팔로잉 : {userInfoData.followingNum}</p>
+          <p>팔로워 : {guideInfoData.followerNum}</p>
         </div>
       ) : (
-        <p>로딩중ㅎ</p>
+        <p>loading...</p>
       )}
     </div>
   );
 }
 
-export default UserMini;
+export default GuideMini;

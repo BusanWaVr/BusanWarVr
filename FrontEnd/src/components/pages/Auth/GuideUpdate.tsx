@@ -6,7 +6,7 @@ interface EditProfileProps {
 }
 
 function GuideUpdate(props: EditProfileProps) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(`${localStorage.getItem("nickname")}`);
   const [nicknameMessage, setNicknameMessage] = useState("");
   const [isNickname, setIsNickname] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -17,7 +17,9 @@ function GuideUpdate(props: EditProfileProps) {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
   const [passwordChangeMessage, setPasswordChangeMessage] = useState("");
-  const [introduction, setIntroduction] = useState("");
+  const [introduction, setIntroduction] = useState(
+    `${localStorage.getItem("introduce")}`
+  );
   // const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const [nameMessage, setNameMessage] = useState("");
@@ -98,6 +100,7 @@ function GuideUpdate(props: EditProfileProps) {
       setIntroductionMessage("");
       setIsIntroduction(true);
     }
+    localStorage.setItem("introduction", currentIntroduction);
   };
 
   async function handleSubmitName(e: React.FormEvent<HTMLFormElement>) {
@@ -252,7 +255,7 @@ function GuideUpdate(props: EditProfileProps) {
         localStorage.setItem("profileImg", selectedImageFile);
       }
       if (introduction) {
-        localStorage.setItem("introduction", introduction);
+        localStorage.setItem("introduce", introduction);
       }
     } catch (error) {
       console.error(error);
@@ -369,7 +372,12 @@ function GuideUpdate(props: EditProfileProps) {
       <div>
         <button
           onClick={handleSave}
-          disabled={(!isName && name !== currentNickname) || !isIntroduction}
+          disabled={
+            !isName &&
+            !isIntroduction &&
+            name !== currentNickname &&
+            introductionMessage === ""
+          }
         >
           저장하기
         </button>

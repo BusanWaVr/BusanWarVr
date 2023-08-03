@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.user.AuthCodeDto;
+import com.example.backend.dto.user.AuthPasswordDto;
 import com.example.backend.dto.user.GuideSignUpDto;
 import com.example.backend.dto.user.GuideUpdateDto;
 import com.example.backend.dto.user.UserSignUpDto;
@@ -22,6 +23,7 @@ import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,9 +34,12 @@ public class UserService {
     private final CategoryRepository categoryRepository;
     private final UserCategoryRepository userCategoryRepository;
     private final RedisTemplate<String, String> redisTemplate;
-
-    private final static String DEFAULT_PROFILE_IMAGE = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
     private final S3Uploader s3Uploader;
+
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    private final static String DEFAULT_PROFILE_IMAGE = "https://busanwavr.s3.ap-northeast-2.amazonaws.com/%EB%B6%80%EA%B8%B0.png";
+
 
     @Transactional
     public void signup(UserSignUpDto.Request request, String encodedPassword)
@@ -71,10 +76,18 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(Long id, String encodedPassword) {
-        User user = userRepository.findById(id).get();
-        user.setPassword(encodedPassword);
-        userRepository.save(user);
+    public void updatePassword(User user, AuthPasswordDto.Request request) {
+        boolean isSamePassword = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+        if(isSamePassword){
+            throw new IllegalArgumentException("변경할 비밀번호가 현재의 비밀번호와 같습니다.");
+        }
+
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        User findUser = userRepository.findById(user.getId()).get();
+
+        findUser.setPassword(encodedPassword);
+        userRepository.save(findUser);
     }
 
     public void saveEmailAuth(String email, String code) throws IllegalAccessException {

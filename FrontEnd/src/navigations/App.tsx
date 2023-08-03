@@ -18,7 +18,12 @@ import ChatRoom from "../components/pages/LiveStream/ChatRoom.tsx";
 import TourRegistration from "../components/pages/Tour/TourRegistration.tsx";
 import TourDetail from "../components/pages/Tour/TourDetail/TourDetail.tsx";
 import GuideDetail from "../components/pages/GuideProfile/GuideDetail.tsx";
-import GuideMyPageMain from "../components/pages/GuideProfile/GuideMyPageMain.tsx";
+// import GuideMyPageMain from "../components/pages/GuideProfile/GuideMyPageMain.tsx";
+import GuideMyPage from "../components/pages/GuideProfile/GuideMyPage.jsx";
+import GuideMain from "../components/pages/GuideProfile/GuideMain.jsx";
+import GuideFollower from "../components/pages/GuideProfile/GuideFollower.jsx";
+import GuideTourBoard from "../components/pages/GuideProfile/GuideTourBoard.jsx";
+
 import TourUpdate from "../components/pages/Tour/TourUpdate.tsx";
 import MateWrite from "../components/pages/Mate/MateWrite.jsx";
 import MateDetail from "../components/pages/Mate/MateDetail";
@@ -31,6 +36,9 @@ import UserMain from "../components/pages/UserProfile/UserMain";
 import UserTourBoard from "../components/pages/UserProfile/UserTourBoard";
 import UserWishBoard from "../components/pages/UserProfile/UserWishBoard";
 import UserFollowingBoard from "../components/pages/UserProfile/UserFollowingBoard";
+import UserScheduledBoard from "../components/pages/UserProfile/UserScheduledBoard";
+import UserEndedBoard from "../components/pages/UserProfile/UserEndedBoard";
+import UserCanceledBoard from "../components/pages/UserProfile/UserCanceledBoard";
 
 function App() {
   return (
@@ -64,10 +72,13 @@ function App() {
           <Route path="/update" element={<Update />} />
           <Route path="/tour/:tourId/update" element={<TourUpdate />} />
           <Route path="/tour/:tourId" element={<TourDetail />} />
-          <Route path="/guide/:userId/detail" element={<GuideDetail />} />
+          {/* <Route path="/guide/:userId/detail" element={<GuideDetail />} /> */}
 
-          <Route element={<GuideRoute />}>
-            <Route path="/guide/:userId/mypage" element={<GuideMyPageMain />} />
+          {/* 가이드페이지 */}
+          <Route path="/guide/:userId/mypage" element={<GuideMyPage />}>
+            <Route path="" element={<GuideMain />} />
+            <Route path="follower" element={<GuideFollower />} />
+            <Route path="tour" element={<GuideTourBoard />} />
           </Route>
 
           <Route element={<UserRoute />}>
@@ -77,7 +88,11 @@ function App() {
             {/* 마이페이지 */}
             <Route path="/user/:userId/mypage" element={<UserMyPage />}>
               <Route path="" element={<UserMain />} />
-              <Route path="tour" element={<UserTourBoard />} />
+              <Route path="tour" element={<UserTourBoard />}>
+                <Route path="" element={<UserScheduledBoard />} />
+                <Route path="ended" element={<UserEndedBoard />} />
+                <Route path="canceled" element={<UserCanceledBoard />} />
+              </Route>
               <Route path="wish" element={<UserWishBoard />} />
               <Route path="following" element={<UserFollowingBoard />} />
             </Route>

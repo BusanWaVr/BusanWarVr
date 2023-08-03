@@ -11,6 +11,8 @@ import {
   changeProfileImg,
   changeAccessToken,
   changeRefreshToken,
+  changeCategory,
+  changeIntroduce,
 } from "../../../store/reducers/UserInfoReducer";
 
 const GeneralLoginWrapper = styled.div`
@@ -92,8 +94,10 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
       const nickname = res.data.nickname;
       const profileImg = res.data.profileImg;
       const userType = res.data.type;
+      const introduce = res.data.introduce;
+      const category = res.data.category;
 
-      console.log(res.data);
+      console.log("res.data", res.data);
       // 받아온 JWT 토큰들을 로컬 스토리지에 저장
       dispatch(changeAccessToken(accessToken));
       dispatch(changeRefreshToken(refreshToken));
@@ -102,6 +106,8 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
       dispatch(setUserType(userType));
       dispatch(changeNickname(nickname));
       dispatch(changeProfileImg(profileImg));
+      dispatch(changeCategory(category));
+      dispatch(changeIntroduce(introduce));
 
       console.log(localStorage);
 
