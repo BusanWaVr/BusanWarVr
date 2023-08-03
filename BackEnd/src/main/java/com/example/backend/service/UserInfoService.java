@@ -280,7 +280,8 @@ public class UserInfoService {
         GuideHomeDto.Response response = new GuideHomeDto.Response();
         response.setIntroduction(guide.getIntroduction());
 
-        GuideScheduledToursDto.Response scheduledToursResponse = getGuideScheduledTours(guide, pageable);
+        GuideScheduledToursDto.Response scheduledToursResponse = getGuideScheduledTours(guide,
+                pageable);
         response.setScheduledTours(scheduledToursResponse.getScheduledTours());
 
         GuideEndedToursDto.Response endedToursResponse = getGuideEndedTours(guide, pageable);

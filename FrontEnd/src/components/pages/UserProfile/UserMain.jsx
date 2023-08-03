@@ -2,8 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import UserData from "../../blocks/UserData";
 
-
-
 function UserMain() {
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");

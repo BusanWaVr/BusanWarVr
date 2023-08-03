@@ -33,7 +33,7 @@ public class UserService {
     private final UserCategoryRepository userCategoryRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
-    private final static String DEFAULT_PROFILE_IMAGE = "https://newsimg.sedaily.com/2023/04/26/29OGB49IKR_1.jpg";
+    private final static String DEFAULT_PROFILE_IMAGE = "https://busanwavr.s3.ap-northeast-2.amazonaws.com/%EB%B6%80%EA%B8%B0.png";
     private final S3Uploader s3Uploader;
 
     @Transactional
