@@ -123,6 +123,7 @@ public class SecurityConfig {
         // Tour
         skipPathList.add(new Path(HttpMethod.GET, "/tour/{tourId}"));
         skipPathList.add(new Path(HttpMethod.GET, "/tour"));
+        skipPathList.add(new Path(HttpMethod.GET, "/tour/review/{reviewId}"));
 
         // Chatting
         skipPathList.add(new Path(HttpMethod.GET, "/ws-stomp/**"));
