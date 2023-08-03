@@ -5,27 +5,36 @@ interface UserInfoState {
   nickname: string;
   email: string;
   profileImg: string;
+  category: string | null;
+  introduce: string | null;
   accessToken: string | null;
   refreshToken: string | null;
   userType: string | null;
+  wishTour: string | null;
 }
 
 const userId = localStorage.getItem("userId");
 const nickname = localStorage.getItem("nickname");
 const email = localStorage.getItem("email");
 const profileImg = localStorage.getItem("profileImg");
+const category = localStorage.getItem("category");
+const introduce = localStorage.getItem("introduce");
 const accessToken = localStorage.getItem("accessToken");
 const refreshToken = localStorage.getItem("refreshToken");
 const userType = localStorage.getItem("userType");
+const wishTour = localStorage.getItem("wishTour");
 
 const initialState: UserInfoState = {
   userId: userId ? userId : "",
   nickname: nickname ? nickname : `부기${Math.floor(Math.random() * 100)}`,
   email: email ? email : "",
   profileImg: profileImg ? profileImg : "",
+  category: category ? category : "",
+  introduce: introduce ? introduce : "",
   accessToken: accessToken ? accessToken : null,
   refreshToken: refreshToken ? refreshToken : null,
   userType: userType ? userType : null,
+  wishTour: wishTour ? wishTour : null,
 };
 
 const userInfoSlice = createSlice({
@@ -52,6 +61,14 @@ const userInfoSlice = createSlice({
       state.profileImg = action.payload;
       localStorage.setItem("profileImg", state.profileImg);
     },
+    changeCategory(state, action: PayloadAction<string>) {
+      state.category = action.payload;
+      localStorage.setItem("category", state.category);
+    },
+    changeIntroduce(state, action: PayloadAction<string>) {
+      state.introduce = action.payload;
+      localStorage.setItem("introduce", state.introduce);
+    },
     changeAccessToken(state, action: PayloadAction<string>) {
       state.accessToken = action.payload;
       localStorage.setItem("accessToken", state.accessToken);
@@ -60,6 +77,10 @@ const userInfoSlice = createSlice({
       state.refreshToken = action.payload;
       localStorage.setItem("refreshToken", state.refreshToken);
     },
+    setWishTour(state, action: PayloadAction<string>) {
+      state.wishTour = action.payload;
+      localStorage.setItem("wishTour", state.wishTour);
+    },
   },
 });
 
@@ -67,8 +88,11 @@ export const {
   setUserId,
   setEmail,
   setUserType,
+  setWishTour,
   changeNickname,
   changeProfileImg,
+  changeCategory,
+  changeIntroduce,
   changeAccessToken,
   changeRefreshToken,
 } = userInfoSlice.actions;

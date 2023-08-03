@@ -98,7 +98,7 @@ const TourDetail: React.FC = () => {
               {" "}
               투어 인원 : {tourData.minMember}명 ~ {tourData.maxMember}명
             </p>
-            <TourWishButton tour={tourData} tourId={tourId} />
+            <TourWishButton tourId={tourId} />
           </div>
 
           <div dangerouslySetInnerHTML={{ __html: tourData.content }} />

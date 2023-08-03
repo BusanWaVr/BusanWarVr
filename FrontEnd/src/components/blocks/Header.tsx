@@ -29,9 +29,14 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
     localStorage.removeItem("nickname");
     localStorage.removeItem("profileImg");
     localStorage.removeItem("userType");
+    localStorage.removeItem("category");
+    localStorage.removeItem("introduce");
+
+    localStorage.removeItem("wishTour");
     if (localStorage) {
       localStorage.removeItem("introduction");
     }
+
     navigate("/");
     setIsLoggedIn(false);
   };
@@ -60,21 +65,21 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             {isLoggedIn ? (
-            <>
-              {userType === 'USER' ? (
-                <Nav.Link href={`/user/${userId}/mypage`}>
-                  {nickname}
-                </Nav.Link>
-              ) : userType === 'GUIDE' ? (
-                <Nav.Link href={`/guide/${userId}/mypage`}>
-                  {nickname}
-                </Nav.Link>
-              ) : null}
-              <Button onClick={logout}>로그아웃</Button>
-            </>
-          ) : (
-            <Button onClick={onModalHandler}>로그인</Button>
-          )}
+              <>
+                {userType === "USER" ? (
+                  <Nav.Link href={`/user/${userId}/mypage`}>
+                    {nickname}
+                  </Nav.Link>
+                ) : userType === "GUIDE" ? (
+                  <Nav.Link href={`/guide/${userId}/mypage`}>
+                    {nickname}
+                  </Nav.Link>
+                ) : null}
+                <Button onClick={logout}>로그아웃</Button>
+              </>
+            ) : (
+              <Button onClick={onModalHandler}>로그인</Button>
+            )}
           </Navbar.Collapse>
         </Container>
       </Navbar>

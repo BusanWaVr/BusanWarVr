@@ -6,10 +6,12 @@ interface EditProfileProps {
 }
 
 function GeneralUpdate(props: EditProfileProps) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(`${localStorage.getItem("nickname")}`);
   const [nicknameMessage, setNicknameMessage] = useState("");
   const [isNickname, setIsNickname] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(
+    `${localStorage.getItem("profileImg")}`
+  );
   const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -255,6 +257,7 @@ function GeneralUpdate(props: EditProfileProps) {
   const handleSave = async () => {
     try {
       const categoriesString = selectedCategories.join(",");
+      localStorage.setItem("category", categoriesString);
 
       const formData = new FormData();
 
