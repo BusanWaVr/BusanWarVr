@@ -31,6 +31,9 @@ import UserMain from "../components/pages/UserProfile/UserMain";
 import UserTourBoard from "../components/pages/UserProfile/UserTourBoard";
 import UserWishBoard from "../components/pages/UserProfile/UserWishBoard";
 import UserFollowingBoard from "../components/pages/UserProfile/UserFollowingBoard";
+import UserScheduledBoard from "../components/pages/UserProfile/UserScheduledBoard";
+import UserEndedBoard from "../components/pages/UserProfile/UserEndedBoard";
+import UserCanceledBoard from "../components/pages/UserProfile/UserCanceledBoard";
 
 function App() {
   return (
@@ -77,7 +80,11 @@ function App() {
             {/* 마이페이지 */}
             <Route path="/user/:userId/mypage" element={<UserMyPage />}>
               <Route path="" element={<UserMain />} />
-              <Route path="tour" element={<UserTourBoard />} />
+              <Route path="tour" element={<UserTourBoard />}>
+                <Route path="" element={<UserScheduledBoard />} />
+                <Route path="ended" element={<UserEndedBoard />} />
+                <Route path="canceled" element={<UserCanceledBoard />} />
+              </Route>
               <Route path="wish" element={<UserWishBoard />} />
               <Route path="following" element={<UserFollowingBoard />} />
             </Route>
