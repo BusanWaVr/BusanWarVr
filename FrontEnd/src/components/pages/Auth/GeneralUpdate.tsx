@@ -17,7 +17,7 @@ function GeneralUpdate(props: EditProfileProps) {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
   const [passwordChangeMessage, setPasswordChangeMessage] = useState("");
-  // const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const [nameMessage, setNameMessage] = useState("");
   const [categoryMessage, setCategoryMessage] = useState(""); // 카테고리 메시지
@@ -304,20 +304,9 @@ function GeneralUpdate(props: EditProfileProps) {
             />
           </label>
 
-          <div>
-            <button
-              type="submit"
-              disabled={name === localStorage.getItem("nickname")}
-            >
-              닉네임 확인
-            </button>
-            <p className="message">{nameMessage}</p>
-            <p>{nicknameMessage}</p>
-          </div>
-
-          {name === localStorage.getItem("nickname") && (
-            <p>현재 사용 중인 닉네임과 동일합니다.</p>
-          )}
+          <button type="submit">닉네임 확인</button>
+          <p className="message">{nameMessage}</p>
+          <p>{nicknameMessage}</p>
         </form>
       </div>
       <div>
@@ -334,6 +323,7 @@ function GeneralUpdate(props: EditProfileProps) {
         </form>
       </div>
       <div>
+
         {isPasswordMatch && (
           <form onSubmit={handleSubmitNewPassword}>
             <label>
