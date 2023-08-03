@@ -90,7 +90,6 @@ const TourUpdate: React.FC = () => {
     maxMember: 2,
     courses: [],
   });
-  const [tourImgUrls, setTourImgUrls] = useState<string[] | null>(null);
   const { accessToken } = useSelector((state: any) => state.userInfo);
 
   const convertURLtoFile = async (url: string) => {
@@ -124,7 +123,6 @@ const TourUpdate: React.FC = () => {
               convertURLtoFile(imageURL)
             )
           );
-          setTourImgUrls(res.data.tourImgs);
           setImageFiles(currentImageFiles);
           res.data.tourImgs = imageFiles;
 
@@ -210,18 +208,15 @@ const TourUpdate: React.FC = () => {
     }
   };
 
-  function handleDeleteImage(index: number): void {
-    const newImageFiles = imageFiles.filter(
-      (file) => file.name != imageFiles[index].name
-    );
-    const newImgUrls = tourImgUrls
-      ? tourImgUrls.filter((url) => url != tourImgUrls[index])
-      : [];
-    setTourData({ ...tourData, tourImgs: newImageFiles });
-    setTourImgUrls(newImgUrls);
-    console.log(tourData);
-    console.log(tourImgUrls);
-  }
+  const handleImageFileChange = (file: File | null, index: number) => {
+    const newImageFiles = [...imageFiles];
+    if (file) {
+      newImageFiles[index] = file;
+    } else {
+      newImageFiles.splice(index, 1);
+    }
+    setImageFiles(newImageFiles);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -305,7 +300,7 @@ const TourUpdate: React.FC = () => {
 
   return (
     <>
-      {tourImgUrls ? (
+      {tourData ? (
         <div>
           {/* 지역 */}
           <div>
@@ -381,24 +376,16 @@ const TourUpdate: React.FC = () => {
           {/* 이미지 */}
           <div>
             <span>이미지</span>
-            <>
-              {Array.from({ length: tourImgUrls.length }, (_, index) => (
-                <div>
-                  <img src={tourImgUrls[index]} alt="" />
-                  <button onClick={() => handleDeleteImage(index)}>
-                    이미지 삭제
-                  </button>
-                </div>
-              ))}
-            </>
-
-            {Array.from({ length: 3 - tourImgUrls.length }, (_, index) => (
-              <TourImageUpload
-                key={index}
-                imageFiles={imageFiles}
-                setImageFiles={setImageFiles}
-              />
-            ))}
+            {Array.from(
+              { length: imageFiles.length < 3 ? imageFiles.length + 1 : 3 },
+              (_, index) => (
+                <TourImageUpload
+                  key={index}
+                  imageFile={imageFiles[index] || null}
+                  setImageFile={(file) => handleImageFileChange(file, index)}
+                />
+              )
+            )}
           </div>
 
           {/* 여행 날짜 */}

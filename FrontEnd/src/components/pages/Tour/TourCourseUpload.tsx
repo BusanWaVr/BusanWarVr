@@ -1,4 +1,5 @@
 import TourAddressSearch from "./TourAddressSearch";
+import TourImageUpload from "./TourImageUpload";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setTitle,
@@ -26,6 +27,10 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch(setContent({ index: index, content: e.target.value }));
+  };
+
+  const handleImageFileChange = (file: File | null) => {
+    dispatch(setImageFile({ index: index, imageFile: file }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,11 +87,9 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
             onChange={handleContentChange}
           />
         </label>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleImageChange}
+        <TourImageUpload
+          imageFile={courses[index].imageFile}
+          setImageFile={(file) => handleImageFileChange(file)}
         />
       </div>
     </>
