@@ -138,8 +138,7 @@ public class UserController {
             throw new BindException(bindingResult);
         }
 
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-        userService.updatePassword(userDetails.getUser().getId(), encodedPassword);
+        userService.updatePassword(userDetails.getUser(), request);
 
         return new Response<>("200", "비밀번호를 변경했습니다.", null);
     }
