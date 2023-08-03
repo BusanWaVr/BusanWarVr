@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.dto.course.CourseDto;
 import com.example.backend.dto.joiner.JoinerDto;
+import com.example.backend.dto.tour.ReviewDetailDto;
 import com.example.backend.dto.tour.ReviewRegistDto;
 import com.example.backend.dto.tour.ReviewUpdateDto;
 import com.example.backend.dto.tour.TourDetailDto;
@@ -464,5 +465,11 @@ public class TourService {
 
         review = request.toUpdate(review, now);
         reviewRepository.save(review);
+    }
+
+    public ReviewDetailDto.Response reviewDetail(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).get();
+        ReviewDetailDto.Response response = new ReviewDetailDto.Response(review);
+        return response;
     }
 }

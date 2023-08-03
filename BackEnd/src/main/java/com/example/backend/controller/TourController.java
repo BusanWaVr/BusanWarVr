@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
+import com.example.backend.dto.tour.ReviewDetailDto;
 import com.example.backend.dto.tour.ReviewRegistDto;
 import com.example.backend.dto.tour.ReviewUpdateDto;
 import com.example.backend.dto.tour.TourDetailDto;
@@ -119,4 +120,12 @@ public class TourController {
         tourService.reviewUpdate(request, reviewId, userDetails.getUser());
         return new Response("200", "성공적으로 후기를 수정했습니다.", null);
     }
+
+    @GetMapping("/tour/review/{reviewId}")
+    public Response<ReviewDetailDto.Response> reviewDetailApi(@PathVariable Long reviewId) {
+        ReviewDetailDto.Response response = tourService.reviewDetail(reviewId);
+        return new Response<>("200", "성공적으로 후기 상세 정보를 수정했습니다.", response);
+    }
+
+    
 }
