@@ -90,6 +90,7 @@ const TourUpdate: React.FC = () => {
     maxMember: 2,
     courses: [],
   });
+  const [tourImgUrls, setTourImgUrls] = useState<string[] | null>(null);
   const { accessToken } = useSelector((state: any) => state.userInfo);
 
   const convertURLtoFile = async (url: string) => {
@@ -126,6 +127,7 @@ const TourUpdate: React.FC = () => {
               convertURLtoFile(imageURL)
             )
           );
+          setTourImgUrls(res.data.tourImgs);
           setImageFiles(currentImageFiles);
           res.data.tourImgs = imageFiles;
 
@@ -216,6 +218,14 @@ const TourUpdate: React.FC = () => {
     const newImageFiles = imageFiles.filter(
       (file) => file.name != imageFiles[index].name
     );
+    const newImgUrls = tourImgUrls
+      ? tourImgUrls.filter((url) => url != tourImgUrls[index])
+      : [];
+    setTourData({ ...tourData, tourImgs: newImageFiles });
+    setTourImgUrls(newImgUrls);
+    console.log(tourData);
+    console.log(tourImgUrls);
+    setImageNum(imageNum - 1);
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -300,7 +310,7 @@ const TourUpdate: React.FC = () => {
 
   return (
     <>
-      {tourData.title ? (
+      {tourImgUrls ? (
         <div>
           {/* 지역 */}
           <div>
@@ -377,9 +387,9 @@ const TourUpdate: React.FC = () => {
           <div>
             <span>이미지</span>
             <>
-              {Array.from({ length: tourData.tourImgs.length }, (_, index) => (
+              {Array.from({ length: tourImgUrls.length }, (_, index) => (
                 <div>
-                  <img src={tourData.tourImgs[index]} alt="" />
+                  <img src={tourImgUrls[index]} alt="" />
                   <button onClick={() => handleDeleteImage(index)}>
                     이미지 삭제
                   </button>
@@ -388,7 +398,7 @@ const TourUpdate: React.FC = () => {
             </>
 
             {Array.from(
-              { length: imageNum - tourData.tourImgs.length },
+              { length: imageNum - tourImgUrls.length },
               (_, index) => (
                 <TourImageUpload
                   key={index}
