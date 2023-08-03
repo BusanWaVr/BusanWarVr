@@ -119,9 +119,6 @@ const TourUpdate: React.FC = () => {
           setCoursesNum(res.data.courses.length);
           dispatch(setCourses(res.data.courses));
 
-          const currentImageNum = res.data.tourImgs.length;
-          setImageNum(currentImageNum === 3 ? 3 : currentImageNum + 1);
-
           const currentImageFiles = await Promise.all(
             res.data.tourImgs.map((imageURL: string) =>
               convertURLtoFile(imageURL)
@@ -143,7 +140,6 @@ const TourUpdate: React.FC = () => {
     fetchTourData();
   }, []);
 
-  const [imageNum, setImageNum] = useState(1);
   const [coursesNum, setCoursesNum] = useState(
     tourData ? tourData.courses.length : 1
   );
@@ -225,7 +221,6 @@ const TourUpdate: React.FC = () => {
     setTourImgUrls(newImgUrls);
     console.log(tourData);
     console.log(tourImgUrls);
-    setImageNum(imageNum - 1);
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -397,18 +392,13 @@ const TourUpdate: React.FC = () => {
               ))}
             </>
 
-            {Array.from(
-              { length: imageNum - tourImgUrls.length },
-              (_, index) => (
-                <TourImageUpload
-                  key={index}
-                  imageNum={imageNum}
-                  setImageNum={setImageNum}
-                  imageFiles={imageFiles}
-                  setImageFiles={setImageFiles}
-                />
-              )
-            )}
+            {Array.from({ length: 3 - tourImgUrls.length }, (_, index) => (
+              <TourImageUpload
+                key={index}
+                imageFiles={imageFiles}
+                setImageFiles={setImageFiles}
+              />
+            ))}
           </div>
 
           {/* 여행 날짜 */}

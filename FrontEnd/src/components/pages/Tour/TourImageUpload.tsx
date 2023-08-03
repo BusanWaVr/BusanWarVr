@@ -1,13 +1,9 @@
 type TourImageUploadProps = {
-  imageNum: number;
-  setImageNum: (value: number) => void;
   imageFiles: File[];
   setImageFiles: (value: File[]) => void;
 };
 
 const TourImageUpload: React.FC<TourImageUploadProps> = ({
-  imageNum,
-  setImageNum,
   imageFiles,
   setImageFiles,
 }) => {
@@ -17,10 +13,6 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
 
     const selectedImages = Array.from(files)[0];
     setImageFiles([...imageFiles, selectedImages]);
-    console.log(imageFiles);
-    if (imageNum < 3) {
-      setImageNum(imageNum + 1);
-    }
   };
 
   return (

@@ -91,7 +91,6 @@ const TourRegistration: React.FC = () => {
     courses: [],
   });
 
-  const [imageNum, setImageNum] = useState(1);
   const [coursesNum, setCoursesNum] = useState(1);
   const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
   const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
@@ -302,15 +301,16 @@ const TourRegistration: React.FC = () => {
       {/* 이미지 */}
       <div>
         <span>이미지</span>
-        {Array.from({ length: imageNum }, (_, index) => (
-          <TourImageUpload
-            key={index}
-            imageNum={imageNum}
-            setImageNum={setImageNum}
-            imageFiles={imageFiles}
-            setImageFiles={setImageFiles}
-          />
-        ))}
+        {Array.from(
+          { length: imageFiles.length < 3 ? imageFiles.length + 1 : 3 },
+          (_, index) => (
+            <TourImageUpload
+              key={index}
+              imageFiles={imageFiles}
+              setImageFiles={setImageFiles}
+            />
+          )
+        )}
       </div>
 
       {/* 여행 날짜 */}
