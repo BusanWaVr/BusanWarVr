@@ -6,7 +6,7 @@ import { addCourse } from "./TourCourseReducer";
 import TourImageUpload from "./TourImageUpload";
 import TourDatePicker from "./TourDatePicker";
 import Editor from "../../blocks/Editor";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const regionList = [
   "강서구",
@@ -74,6 +74,7 @@ type TourData = {
 const TourRegistration: React.FC = () => {
   const { courses } = useSelector((state: any) => state.tourCourse);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -233,7 +234,11 @@ const TourRegistration: React.FC = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res.data);
+      if (res.data.code == 200) {
+        navigate(`../tour/${res.data.data.tourId}`);
+      } else {
+        alert("죄송합니다. 잠시후 다시 시도 해주세요.");
+      }
     } catch (error) {
       console.error(error);
     }
