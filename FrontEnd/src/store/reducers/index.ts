@@ -6,14 +6,12 @@ import counterReducer from "../../components/pages/Home/counterReducer";
 import liveStreamReducer from "../../components/pages/LiveStream/LiveStreamReducer";
 import userInfoReducer from "./UserInfoReducer";
 import TourCourseReducer from "../../components/pages/Tour/TourCourseReducer";
-import wishlistReducer from "./wishlistReducer";
 
 const rootReducer = combineReducers({
   counter: counterReducer,
   liveStream: liveStreamReducer,
   userInfo: userInfoReducer,
   tourCourse: TourCourseReducer,
-  wishlist: wishlistReducer,
 });
 
 export default rootReducer;

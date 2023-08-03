@@ -6,6 +6,7 @@ import {
   setUserId,
   setEmail,
   setUserType,
+  setWishTour,
   changeNickname,
   changeProfileImg,
   changeAccessToken,
@@ -109,7 +110,21 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
       setOnLoginModal(false);
       setIsLoggedIn(true);
 
-      navigate("/dashboard"); // 성공시 Dashboard 페이지로 이동
+      try {
+        const response = await fetch("http://52.79.93.203/user/wish", {
+          method: "GET",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        const wishTour = data.data.wishTours.map((tour) => tour.tourId);
+        dispatch(setWishTour(JSON.stringify(wishTour)));
+        navigate("/dashboard"); // 성공시 Dashboard 페이지로 이동
+      } catch (error) {
+        console.error(error);
+      }
     } catch (error) {
       console.error("Error during login:", error);
     }

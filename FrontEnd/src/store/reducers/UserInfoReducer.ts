@@ -8,6 +8,7 @@ interface UserInfoState {
   accessToken: string | null;
   refreshToken: string | null;
   userType: string | null;
+  wishTour: string | null;
 }
 
 const userId = localStorage.getItem("userId");
@@ -17,6 +18,7 @@ const profileImg = localStorage.getItem("profileImg");
 const accessToken = localStorage.getItem("accessToken");
 const refreshToken = localStorage.getItem("refreshToken");
 const userType = localStorage.getItem("userType");
+const wishTour = localStorage.getItem("wishTour");
 
 const initialState: UserInfoState = {
   userId: userId ? userId : "",
@@ -26,6 +28,7 @@ const initialState: UserInfoState = {
   accessToken: accessToken ? accessToken : null,
   refreshToken: refreshToken ? refreshToken : null,
   userType: userType ? userType : null,
+  wishTour: wishTour ? wishTour : null,
 };
 
 const userInfoSlice = createSlice({
@@ -60,6 +63,10 @@ const userInfoSlice = createSlice({
       state.refreshToken = action.payload;
       localStorage.setItem("refreshToken", state.refreshToken);
     },
+    setWishTour(state, action: PayloadAction<string>) {
+      state.wishTour = action.payload;
+      localStorage.setItem("wishTour", state.wishTour);
+    },
   },
 });
 
@@ -67,6 +74,7 @@ export const {
   setUserId,
   setEmail,
   setUserType,
+  setWishTour,
   changeNickname,
   changeProfileImg,
   changeAccessToken,

@@ -1,78 +1,47 @@
-import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import {
-  addToWishlist,
-  removeFromWishlist,
-} from "../../../../store/reducers/wishlistReducer";
-
-type wishTour = {
-  category: string[];
-  currentMember: Number;
-  guide: { id: Number; name: string };
-  maxMember: Number;
-  startDate: string;
-  title: string;
-  tourId: string;
-};
+import { setWishTour } from "../../../../store/reducers/UserInfoReducer";
 
 const TourWishButton: React.FC<{
   tour: any;
   tourId: string;
-}> = ({ tour, tourId }) => {
-  const currentTour = {
-    tourId: tourId,
-    category: tour.category,
-    currentMember: tour.currentMember,
-    guide: {
-      id: tour.userId,
-      name: tour.nickname,
-    },
-    maxMember: tour.maxMember,
-    startDate: tour.startDate,
-    title: tour.title,
-  };
-
+}> = ({ tourId }) => {
   const dispatch = useDispatch();
-  const wishList = useSelector((state: any) => state.wishlist);
-  const { accessToken } = useSelector((state: any) => state.userInfo);
-  const [isInWishlist, setIsInWishlist] = useState<boolean>(false);
 
-  useEffect(() => {
-    setIsInWishlist(
-      wishList.some(
-        (tour: wishTour) => JSON.stringify(tour) === JSON.stringify(currentTour)
-      )
-    );
-  }, [wishList]);
+  const { accessToken, wishTour } = useSelector((state: any) => state.userInfo);
+  const [isInWishlist, setIsInWishlist] = useState<boolean>(
+    JSON.parse(wishTour).some((tour: string) => tour == tourId)
+  );
 
   const btnClickHandler = () => {
-    console.log(tour);
-
+    const add = async () => {
+      try {
+        const res = await axios.post(
+          `http://52.79.93.203/tour/wish/${tourId}`,
+          {},
+          {
+            headers: {
+              Authorization: accessToken,
+            },
+          }
+        );
+        console.log(res.data);
+        return res.data;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    add();
+    setIsInWishlist(!isInWishlist);
     if (isInWishlist) {
-      dispatch(removeFromWishlist(currentTour));
+      const newWishTour = JSON.parse(wishTour).concat(parseInt(tourId));
+      dispatch(setWishTour(JSON.stringify(newWishTour)));
     } else {
-      const add = async () => {
-        try {
-          const res = await axios.post(
-            `http://52.79.93.203/tour/wish/${tourId}`,
-            {},
-            {
-              headers: {
-                Authorization: accessToken,
-              },
-            }
-          );
-          console.log(res.data);
-          return res.data;
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      add();
-
-      dispatch(addToWishlist(currentTour));
+      const newWishTour = JSON.parse(wishTour).filter(
+        (tour: string) => tour != tourId
+      );
+      dispatch(setWishTour(JSON.stringify(newWishTour)));
     }
   };
 
