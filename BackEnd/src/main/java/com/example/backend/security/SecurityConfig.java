@@ -1,5 +1,6 @@
 package com.example.backend.security;
 
+import com.example.backend.model.user.UserCustomRepository;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.security.filter.ExceptionHandlerFilter;
 import com.example.backend.security.filter.FormLoginFilter;
@@ -41,6 +42,7 @@ public class SecurityConfig {
     private final JwtTokenUtils jwtTokenUtils;
     private final HeaderTokenExtractor extractor;
     private final NotificationManager notificationManager;
+    private final UserCustomRepository userCustomRepository;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -80,7 +82,7 @@ public class SecurityConfig {
     FormLoginFilter formLoginFilter(AuthenticationManager authenticationManager) {
         FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager);
         formLoginFilter.setFilterProcessesUrl("/user/login");
-        formLoginFilter.setAuthenticationSuccessHandler(new FormLoginSuccessHandler(jwtTokenUtils));
+        formLoginFilter.setAuthenticationSuccessHandler(new FormLoginSuccessHandler(jwtTokenUtils, userCustomRepository));
         formLoginFilter.afterPropertiesSet();
         return formLoginFilter;
     }
