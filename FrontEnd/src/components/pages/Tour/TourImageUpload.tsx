@@ -17,6 +17,7 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
 
     const selectedImages = Array.from(files)[0];
     setImageFiles([...imageFiles, selectedImages]);
+    console.log(imageFiles);
     if (imageNum < 3) {
       setImageNum(imageNum + 1);
     }

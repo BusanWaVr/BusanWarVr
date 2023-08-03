@@ -92,6 +92,20 @@ const TourUpdate: React.FC = () => {
   });
   const { accessToken } = useSelector((state: any) => state.userInfo);
 
+  const convertURLtoFile = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      const data = await response.blob();
+      const ext = url.split(".").pop();
+      const metadata = { type: `image/${ext}` };
+      const filename = url.split("/").pop();
+      return new File([data], filename!, metadata);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const fetchTourData = async () => {
       try {
@@ -100,11 +114,22 @@ const TourUpdate: React.FC = () => {
           const res = await response.json();
           res.data.startDate = new Date(res.data.startDate);
           res.data.endDate = new Date(res.data.endDate);
-          setTourData(res.data);
+
           setCoursesNum(res.data.courses.length);
           dispatch(setCourses(res.data.courses));
+
           const currentImageNum = res.data.tourImgs.length;
-          setImageNum(currentImageNum == 3 ? 3 : currentImageNum + 1);
+          setImageNum(currentImageNum === 3 ? 3 : currentImageNum + 1);
+
+          const currentImageFiles = await Promise.all(
+            res.data.tourImgs.map((imageURL: string) =>
+              convertURLtoFile(imageURL)
+            )
+          );
+          setImageFiles(currentImageFiles);
+          res.data.tourImgs = imageFiles;
+
+          setTourData(res.data);
         } else {
           alert("해당 투어가 존재하지 않습니다.");
         }
@@ -114,7 +139,7 @@ const TourUpdate: React.FC = () => {
     };
 
     fetchTourData();
-  }, [tourId]);
+  }, []);
 
   const [imageNum, setImageNum] = useState(1);
   const [coursesNum, setCoursesNum] = useState(
@@ -186,6 +211,12 @@ const TourUpdate: React.FC = () => {
       alert("최소인원보다 크거나 같아야 합니다.");
     }
   };
+
+  function handleDeleteImage(index: number): void {
+    const newImageFiles = imageFiles.filter(
+      (file) => file.name != imageFiles[index].name
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -346,8 +377,13 @@ const TourUpdate: React.FC = () => {
           <div>
             <span>이미지</span>
             <>
-              {tourData.tourImgs.map((url) => (
-                <img src={url} alt="" />
+              {Array.from({ length: tourData.tourImgs.length }, (_, index) => (
+                <div>
+                  <img src={tourData.tourImgs[index]} alt="" />
+                  <button onClick={() => handleDeleteImage(index)}>
+                    이미지 삭제
+                  </button>
+                </div>
               ))}
             </>
 
