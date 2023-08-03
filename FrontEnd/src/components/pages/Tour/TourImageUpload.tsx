@@ -1,28 +1,40 @@
+import React from "react";
+
 type TourImageUploadProps = {
-  imageFiles: File[];
-  setImageFiles: (value: File[]) => void;
+  imageFile: File | null;
+  setImageFile: (file: File | null) => void;
 };
 
 const TourImageUpload: React.FC<TourImageUploadProps> = ({
-  imageFiles,
-  setImageFiles,
+  imageFile,
+  setImageFile,
 }) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
-    const selectedImages = Array.from(files)[0];
-    setImageFiles([...imageFiles, selectedImages]);
+    const selectedImage = files[0];
+    setImageFile(selectedImage);
+  };
+
+  const handleImageDelete = () => {
+    setImageFile(null);
   };
 
   return (
     <>
-      <input
-        type="file"
-        multiple
-        accept="image/*"
-        onChange={handleImageChange}
-      />
+      {imageFile ? (
+        <div>
+          <img
+            src={URL.createObjectURL(imageFile)}
+            alt="Tour Image"
+            style={{ maxWidth: "200px" }}
+          />
+          <button onClick={handleImageDelete}>Delete</button>
+        </div>
+      ) : (
+        <input type="file" accept="image/*" onChange={handleImageChange} />
+      )}
     </>
   );
 };

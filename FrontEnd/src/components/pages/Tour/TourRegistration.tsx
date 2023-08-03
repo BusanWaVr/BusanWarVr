@@ -94,6 +94,7 @@ const TourRegistration: React.FC = () => {
   const [coursesNum, setCoursesNum] = useState(1);
   const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
   const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,6 +158,16 @@ const TourRegistration: React.FC = () => {
     } else {
       alert("최소인원보다 크거나 같아야 합니다.");
     }
+  };
+
+  const handleImageFileChange = (file: File | null, index: number) => {
+    const newImageFiles = [...imageFiles];
+    if (file) {
+      newImageFiles[index] = file;
+    } else {
+      newImageFiles.splice(index, 1);
+    }
+    setImageFiles(newImageFiles);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -306,8 +317,8 @@ const TourRegistration: React.FC = () => {
           (_, index) => (
             <TourImageUpload
               key={index}
-              imageFiles={imageFiles}
-              setImageFiles={setImageFiles}
+              imageFile={imageFiles[index] || null}
+              setImageFile={(file) => handleImageFileChange(file, index)}
             />
           )
         )}
