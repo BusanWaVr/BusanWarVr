@@ -108,9 +108,9 @@ public class UserService {
         String newNickname = request.getNickname();
         String fileUrl;
 
-        // 파일이 없을 경우 기본 프로필 이미지 URL을 지정
-        if (request.getProfileImg().isEmpty()) {
-            fileUrl = DEFAULT_PROFILE_IMAGE;
+        // 파일이 없을 경우 기존의 이미지를 유지
+        if (request.getProfileImg() == null) {
+            fileUrl = user.getProfileImg();
         } else {
             fileUrl = s3Uploader.upload(request.getProfileImg());
         }
@@ -149,9 +149,9 @@ public class UserService {
         String newNickname = request.getNickname();
         String fileUrl;
 
-        // 파일이 없을 경우 기본 프로필 이미지 URL을 지정
-        if (request.getProfileImg().isEmpty()) {
-            fileUrl = DEFAULT_PROFILE_IMAGE;
+        // 파일이 없을 경우 기존의 이미지를 유지
+        if (request.getProfileImg() == null) {
+            fileUrl = user.getProfileImg();
         } else {
             fileUrl = s3Uploader.upload(request.getProfileImg());
         }

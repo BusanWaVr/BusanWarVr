@@ -13,7 +13,7 @@ public class GuideScheduledToursDto {
     @NoArgsConstructor
     public static class Response {
 
-        private List<TourInfoForGuideScheduledToursDto> wishTours;
+        private List<TourInfoForGuideScheduledToursDto> scheduledTours;
 
     }
 

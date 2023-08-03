@@ -28,9 +28,17 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
     localStorage.removeItem("email");
     localStorage.removeItem("nickname");
     localStorage.removeItem("profileImg");
+    localStorage.removeItem("userType");
+    if (localStorage) {
+      localStorage.removeItem("introduction");
+    }
     navigate("/");
     setIsLoggedIn(false);
   };
+
+  const nickname = localStorage.getItem("nickname");
+  const userId = localStorage.getItem("userId");
+  const userType = localStorage.getItem("userType");
 
   return (
     <>
@@ -52,10 +60,21 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             {isLoggedIn ? (
+            <>
+              {userType === 'USER' ? (
+                <Nav.Link href={`/user/${userId}/mypage`}>
+                  {nickname}
+                </Nav.Link>
+              ) : userType === 'GUIDE' ? (
+                <Nav.Link href={`/guide/${userId}/mypage`}>
+                  {nickname}
+                </Nav.Link>
+              ) : null}
               <Button onClick={logout}>로그아웃</Button>
-            ) : (
-              <Button onClick={onModalHandler}>로그인</Button>
-            )}
+            </>
+          ) : (
+            <Button onClick={onModalHandler}>로그인</Button>
+          )}
           </Navbar.Collapse>
         </Container>
       </Navbar>

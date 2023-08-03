@@ -141,7 +141,6 @@ function GeneralUpdate(props: EditProfileProps) {
       const requestBody = {
         nickname: name,
       };
-      console.log(requestBody);
       const response = await fetch("http://52.79.93.203/auth/nickname", {
         method: "POST",
         headers: {
@@ -149,7 +148,7 @@ function GeneralUpdate(props: EditProfileProps) {
         },
         body: JSON.stringify(requestBody),
       });
-      console.log(response);
+
       const data = await response.json();
 
       if (data.code === "200" || name === localStorage.getItem("nickname")) {
@@ -251,15 +250,23 @@ function GeneralUpdate(props: EditProfileProps) {
       setPasswordMatch(false);
     }
   };
+  const currentNickname = localStorage.getItem("nickname");
 
   const handleSave = async () => {
     try {
       const categoriesString = selectedCategories.join(",");
 
       const formData = new FormData();
-      formData.append("nickname", name);
+
+      if (name !== currentNickname) {
+        formData.append("nickname", name);
+        localStorage.setItem("nickname", name);
+      } else {
+        formData.append("nickname", currentNickname);
+      }
+
       formData.append("category", categoriesString);
-      console.log(formData);
+      console.log(selectedImage);
       // 이미지를 선택한 경우에만 FormData에 추가
       if (selectedImageFile) {
         formData.append("profileImg", selectedImageFile);
@@ -275,7 +282,6 @@ function GeneralUpdate(props: EditProfileProps) {
 
       console.log("response", response.data);
       console.log("저장되었습니다!");
-      localStorage.setItem("nickname", name);
       if (selectedImageFile) {
         localStorage.setItem("profileImg", selectedImageFile);
       }
@@ -297,6 +303,7 @@ function GeneralUpdate(props: EditProfileProps) {
               // onChange={(e) => setName(e.target.value)}
             />
           </label>
+
           <button type="submit">닉네임 확인</button>
           <p className="message">{nameMessage}</p>
           <p>{nicknameMessage}</p>
@@ -316,6 +323,7 @@ function GeneralUpdate(props: EditProfileProps) {
         </form>
       </div>
       <div>
+
         {isPasswordMatch && (
           <form onSubmit={handleSubmitNewPassword}>
             <label>
@@ -387,7 +395,14 @@ function GeneralUpdate(props: EditProfileProps) {
           </div>
         )}
       </div>
-      <div>{isNickname && <button onClick={handleSave}>저장하기</button>}</div>
+      <div>
+        <button
+          onClick={handleSave}
+          disabled={(!isNickname && name !== currentNickname) || !isCategory}
+        >
+          저장하기
+        </button>
+      </div>
     </div>
   );
 }
