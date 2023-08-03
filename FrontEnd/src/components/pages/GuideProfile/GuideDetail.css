@@ -13,13 +13,6 @@
 }
 
 /* 가이드 프로필 이미지 */
-img {
-  width: 100%;
-  max-width: 200px;
-  height: auto;
-  display: block;
-  margin-bottom: 10px;
-}
 
 /* 팔로워, 투어 수 가로 배치를 위한 스타일 */
 .guidemini p {
