@@ -79,7 +79,8 @@ public class TourController {
             @AuthenticationPrincipal UserDetailsImpl userDetails)
             throws IllegalAccessException {
         tourService.tourCancel(tourId, userDetails.getUser());
-        return new Response("200", "성공적으로 투어를 취소 하였습니다!", null);
+
+        return new Response("200", "성공적으로 투어 예약을 취소 하였습니다!", null);
     }
 
     @DeleteMapping("/tour/end/{tourId}")
@@ -132,5 +133,4 @@ public class TourController {
         tourService.reviewDelete(reviewId, userDetails.getUser());
         return new Response<>("200", "성공적으로 후기를 삭제했습니다.", null);
     }
-
 }

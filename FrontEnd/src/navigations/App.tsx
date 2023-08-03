@@ -61,12 +61,11 @@ function App() {
             <Route path="/tour/write" element={<TourRegistration />} />
           </Route>
 
-          <Route path="/update" element={<Update />} />
-          <Route path="/tour/:tourId/update" element={<TourUpdate />} />
           <Route path="/tour/:tourId" element={<TourDetail />} />
           <Route path="/guide/:userId/detail" element={<GuideDetail />} />
 
           <Route element={<GuideRoute />}>
+
             <Route path="/guide/:userId/mypage" element={<GuideMyPageMain />} />
           </Route>
 
