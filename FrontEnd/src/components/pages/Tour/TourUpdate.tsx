@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { setCourses, addCourse } from "./TourCourseReducer";
 import TourCourseUpload from "./TourCourseUpload";
 import TourImageUpload from "./TourImageUpload";
@@ -73,6 +74,7 @@ const categoryList = [
 
 const TourUpdate: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { courses } = useSelector((state: any) => state.tourCourse);
   const { tourId } = useParams<{ tourId: string }>();
   const [tourData, setTourData] = useState<TourData>({
@@ -98,7 +100,6 @@ const TourUpdate: React.FC = () => {
           const res = await response.json();
           res.data.startDate = new Date(res.data.startDate);
           res.data.endDate = new Date(res.data.endDate);
-          console.log(res.data);
           setTourData(res.data);
           setCoursesNum(res.data.courses.length);
           dispatch(setCourses(res.data.courses));
@@ -254,7 +255,13 @@ const TourUpdate: React.FC = () => {
           },
         }
       );
-      console.log(res.data);
+      if (res.data.code === "200") {
+        alert("게시글 수정이 완료되었습니다.");
+        navigate(`/tour/${tourId}`);
+      } else {
+        console.log(res.data.message);
+        alert("죄송합니다. 잠시후 다시 시도해 주세요.");
+      }
     } catch (error) {
       console.error(error);
     }

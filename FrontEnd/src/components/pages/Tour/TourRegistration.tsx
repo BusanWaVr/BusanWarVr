@@ -6,6 +6,7 @@ import { addCourse } from "./TourCourseReducer";
 import TourImageUpload from "./TourImageUpload";
 import TourDatePicker from "./TourDatePicker";
 import Editor from "../../blocks/Editor";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 const regionList = [
   "강서구",
