@@ -242,7 +242,8 @@ public class UserInfoService {
         User user = userRepository.findById(userId).get();
         List<Follower> followings = followerRepository.findAllByUserId(userId);
         int followingNum = followings.size();
-        UserInfoDto.Response response = new UserInfoDto.Response(user, followingNum);
+        List<Review> reviews = reviewRepository.findAllByUserId(userId);
+        UserInfoDto.Response response = new UserInfoDto.Response(user, followingNum, reviews);
         return response;
     }
 
@@ -252,7 +253,19 @@ public class UserInfoService {
         int followerNum = followers.size();
         List<Tour> tours = tourRepository.findAllByUserId(guideId);
         int tourNumbers = tours.size();
-        GuideInfoDto.Response response = new GuideInfoDto.Response(user, followerNum, tourNumbers);
+
+        double totalScore = 0;
+        int reviewSize = 0;
+        for (Tour tour : tours) {
+            List<Review> reviewList = reviewRepository.findAllByTourId(tour.getId());
+            for (Review review : reviewList) {
+                totalScore += review.getScore();
+                reviewSize++;
+            }
+        }
+        double averageScore = totalScore / reviewSize;
+
+        GuideInfoDto.Response response = new GuideInfoDto.Response(user, followerNum, tourNumbers, averageScore);
         return response;
     }
 

@@ -115,7 +115,9 @@ public class TourController {
     }
 
     @PutMapping("/tour/review/{reviewId}")
-    public Response<ReviewUpdateDto.Request> reviewUpdateApi(@RequestBody ReviewUpdateDto.Request request, @PathVariable Long reviewId ,@AuthenticationPrincipal UserDetailsImpl userDetails)
+    public Response<ReviewUpdateDto.Request> reviewUpdateApi(
+            @RequestBody ReviewUpdateDto.Request request, @PathVariable Long reviewId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails)
             throws IllegalAccessException {
         tourService.reviewUpdate(request, reviewId, userDetails.getUser());
         return new Response("200", "성공적으로 후기를 수정했습니다.", null);
@@ -128,7 +130,8 @@ public class TourController {
     }
 
     @DeleteMapping("/tour/review/{reviewId}")
-    public Response reviewDeleteApi(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Response reviewDeleteApi(@PathVariable Long reviewId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tourService.reviewDelete(reviewId, userDetails.getUser());
         return new Response<>("200", "성공적으로 후기를 삭제했습니다.", null);
     }
