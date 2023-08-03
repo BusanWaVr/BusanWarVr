@@ -218,10 +218,19 @@ function GuideUpdate(props: EditProfileProps) {
     }
   };
 
+  const currentNickname = localStorage.getItem("nickname");
+
   const handleSave = async () => {
     try {
       const formData = new FormData();
-      formData.append("nickname", name);
+
+      if (name !== currentNickname) {
+        formData.append("nickname", name);
+        localStorage.setItem("nickname", name);
+      } else {
+        formData.append("nickname", currentNickname);
+      }
+
       formData.append("introduction", introduction);
       // 이미지를 선택한 경우에만 FormData에 추가
       if (selectedImageFile) {
@@ -267,7 +276,7 @@ function GuideUpdate(props: EditProfileProps) {
           <div>
             <button
               type="submit"
-              disabled={name === localStorage.getItem("nickname")}
+              disabled={!isName || name === localStorage.getItem("nickname")}
             >
               닉네임 확인
             </button>
@@ -358,9 +367,12 @@ function GuideUpdate(props: EditProfileProps) {
         </form>
       </div>
       <div>
-        {isNickname && isIntroduction && (
-          <button onClick={handleSave}>저장하기</button>
-        )}
+        <button
+          onClick={handleSave}
+          disabled={(!isName && name !== currentNickname) || !isIntroduction}
+        >
+          저장하기
+        </button>
       </div>
     </div>
   );

@@ -6,15 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-public class GuideEndedToursDto {
+public class UserTourDto {
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Response {
-
-        private List<TourInfoForGuideEndedTours> endedTours;
-
+        private List<TourInfoForUserTourDto> scheduledTours;
+        private List<TourInfoForUserTourDto> endedTours;
+        private List<TourInfoForUserTourDto> canceledTours;
     }
 
 }
