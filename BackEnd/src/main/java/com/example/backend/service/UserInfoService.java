@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.userinfo.GuideEndedToursDto;
+import com.example.backend.dto.userinfo.GuideInfoDto;
 import com.example.backend.dto.userinfo.GuideHomeDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserTourDto;
@@ -12,6 +13,8 @@ import com.example.backend.dto.userinfo.TourInfoForGuideEndedTours;
 import com.example.backend.dto.userinfo.TourInfoForGuideScheduledToursDto;
 import com.example.backend.dto.userinfo.TourInfoForUserTourDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
+import com.example.backend.dto.userinfo.UserInfoDto;
+import com.example.backend.dto.userinfo.UserInfoDto.Response;
 import com.example.backend.dto.userinfo.UserInfoForGuideReviewsDto;
 import com.example.backend.dto.userinfo.UserTourDto;
 import com.example.backend.dto.userinfo.UserWishDto;
@@ -219,6 +222,24 @@ public class UserInfoService {
             }
         }
         return new GuideEndedToursDto.Response(responseList);
+    }
+
+    public UserInfoDto.Response getUserInfo(Long userId) {
+        User user = userRepository.findById(userId).get();
+        List<Follower> followings = followerRepository.findAllByUserId(userId);
+        int followingNum = followings.size();
+        UserInfoDto.Response response = new UserInfoDto.Response(user, followingNum);
+        return response;
+    }
+
+    public GuideInfoDto.Response getGuideInfo(Long guideId) {
+        User user = userRepository.findById(guideId).get();
+        List<Follower> followers = followerRepository.findAllByGuideId(guideId);
+        int followerNum = followers.size();
+        List<Tour> tours = tourRepository.findAllByUserId(guideId);
+        int tourNumbers = tours.size();
+        GuideInfoDto.Response response = new GuideInfoDto.Response(user, followerNum, tourNumbers);
+        return response;
     }
 
     public GuideReviewsDto.Response getGuideReviews(User guide, Pageable pageable) {

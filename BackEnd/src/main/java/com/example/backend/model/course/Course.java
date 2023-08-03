@@ -1,5 +1,7 @@
 package com.example.backend.model.course;
 
+import com.example.backend.dto.course.CourseDto;
+import com.example.backend.model.tour.Tour;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,5 +40,13 @@ public class Course {
         this.title = title;
         this.content = content;
         this.tourId = tourId;
+    }
+
+    public Course(CourseDto.Request request, Tour tour){
+        this.lon = request.getLon();
+        this.lat = request.getLat();
+        this.title = request.getTitle();
+        this.content = request.getContent();
+        this.tourId = tour.getId();
     }
 }
