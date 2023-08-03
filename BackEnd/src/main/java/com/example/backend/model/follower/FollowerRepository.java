@@ -11,4 +11,8 @@ public interface FollowerRepository extends JpaRepository<Follower, Long> {
     boolean existsByUserAndGuide(User user, User guide);
     List<Follower> findAllByUser(User user, Pageable pageable);
     List<Follower> findAllByGuide(User guide);
+
+    List<Follower> findAllByUserId(Long userId);
+
+    List<Follower> findAllByGuideId(Long guideId);
 }

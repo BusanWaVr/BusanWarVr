@@ -10,4 +10,5 @@ import java.util.List;
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
     List<Wish> findAllByUserId(Long userId, Pageable pageable);
+    List<Wish> findAllByUserId(Long userId);
 }

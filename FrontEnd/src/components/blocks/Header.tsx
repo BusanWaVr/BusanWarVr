@@ -31,6 +31,12 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
     localStorage.removeItem("userType");
     localStorage.removeItem("category");
     localStorage.removeItem("introduce");
+
+    localStorage.removeItem("wishTour");
+    if (localStorage) {
+      localStorage.removeItem("introduction");
+    }
+
     navigate("/");
     setIsLoggedIn(false);
   };
