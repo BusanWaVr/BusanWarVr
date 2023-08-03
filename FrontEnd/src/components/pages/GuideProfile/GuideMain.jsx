@@ -16,7 +16,12 @@ function GuideMain() {
 
   return (
     <div>
-      <h1>가이드 마이페이지 메인</h1>
+      {guideInfoData.introduction ? (
+        <h1>{guideInfoData.introduction}</h1>
+      ) : (
+        <h1>{guideInfoData.nickname}의 마이페이지!</h1>
+      )}
+
       {guideInfoData ? (
         <div>
           <p>이메일 : {guideInfoData.email}</p>
