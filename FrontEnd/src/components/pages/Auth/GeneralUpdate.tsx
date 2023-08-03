@@ -304,9 +304,20 @@ function GeneralUpdate(props: EditProfileProps) {
             />
           </label>
 
-          <button type="submit">닉네임 확인</button>
-          <p className="message">{nameMessage}</p>
-          <p>{nicknameMessage}</p>
+          <div>
+            <button
+              type="submit"
+              disabled={!isName || name === currentNickname}
+            >
+              닉네임 확인
+            </button>
+            <p className="message">{nameMessage}</p>
+            <p>{nicknameMessage}</p>
+          </div>
+
+          {name === localStorage.getItem("nickname") && (
+            <p>현재 사용 중인 닉네임과 동일합니다.</p>
+          )}
         </form>
       </div>
       <div>
