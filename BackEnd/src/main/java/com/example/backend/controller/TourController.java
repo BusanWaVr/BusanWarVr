@@ -124,8 +124,13 @@ public class TourController {
     @GetMapping("/tour/review/{reviewId}")
     public Response<ReviewDetailDto.Response> reviewDetailApi(@PathVariable Long reviewId) {
         ReviewDetailDto.Response response = tourService.reviewDetail(reviewId);
-        return new Response<>("200", "성공적으로 후기 상세 정보를 수정했습니다.", response);
+        return new Response<>("200", "성공적으로 후기 상세 정보를 가져왔습니다.", response);
     }
 
-    
+    @DeleteMapping("/tour/review/{reviewId}")
+    public Response reviewDeleteApi(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        tourService.reviewDelete(reviewId, userDetails.getUser());
+        return new Response<>("200", "성공적으로 후기를 삭제했습니다.", null);
+    }
+
 }
