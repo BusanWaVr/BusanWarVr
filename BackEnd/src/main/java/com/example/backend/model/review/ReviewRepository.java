@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     boolean existsByTourIdAndUserId(Long tourId, Long userId);
     List<Review> findAllByTourId(Long tourId, Pageable pageable);
+    List<Review> findAllByTourId(Long tourId);
+    List<Review> findAllByUserId(Long userId);
 }

@@ -126,17 +126,31 @@ public class UserInfoService {
 
         for (Follower followingGuide : followingGuideList) {
 
-            GuideInfoForUserFollowDto guide = new GuideInfoForUserFollowDto();
-            List<Follower> followedGuideList = followerRepository.findAllByGuide(
-                    followingGuide.getGuide());
-            List<Tour> guideTourList = tourRepository.findAllByUserId(
-                    followingGuide.getGuide().getId());
-            guide.setId(followingGuide.getGuide().getId());
-            guide.setNickname(followingGuide.getGuide().getNickname());
-            guide.setFollower(followedGuideList.size());
-            guide.setTourNumbers(guideTourList.size());
+            User guide = followingGuide.getGuide();
 
-            responseList.add(guide);
+            List<Follower> followedGuideList = followerRepository.findAllByGuide(
+                    guide);
+            List<Tour> guideTourList = tourRepository.findAllByUserId(
+                    guide.getId());
+            double totalScore = 0;
+            int reviewSize = 0;
+            for (Tour tour : guideTourList) {
+                List<Review> reviewList = reviewRepository.findAllByTourId(tour.getId());
+                for (Review review : reviewList) {
+                    totalScore += review.getScore();
+                    reviewSize++;
+                }
+            }
+            double averageScore = totalScore / reviewSize;
+
+            GuideInfoForUserFollowDto guideInfo = new GuideInfoForUserFollowDto(
+                    guide,
+                    followedGuideList.size(),
+                    guideTourList.size(),
+                    averageScore
+            );
+
+            responseList.add(guideInfo);
         }
 
         return new UserFollowDto.Response(responseList);
@@ -249,19 +263,12 @@ public class UserInfoService {
         for (Tour tour : tourList) {
             List<Review> reviewsList = reviewRepository.findAllByTourId(tour.getId(), pageable);
             for (Review review : reviewsList) {
-                ReviewInfoForGuideReviewDto reviewInfo = new ReviewInfoForGuideReviewDto();
-                reviewInfo.setTourId(tour.getId());
-                reviewInfo.setTourTitle(tour.getTitle());
-                reviewInfo.setDate(review.getDate());
-                reviewInfo.setContent(review.getContent());
-                reviewInfo.setScore(review.getScore());
 
                 User user = userRepository.findById(review.getUserId()).get();
 
-                UserInfoForGuideReviewsDto userInfo = new UserInfoForGuideReviewsDto();
-                userInfo.setId(user.getId());
-                userInfo.setName(user.getNickname());
-                reviewInfo.setUser(userInfo);
+                UserInfoForGuideReviewsDto userInfo = new UserInfoForGuideReviewsDto(user);
+
+                ReviewInfoForGuideReviewDto reviewInfo = new ReviewInfoForGuideReviewDto(tour, review, userInfo);
 
                 responseList.add(reviewInfo);
             }
@@ -322,20 +329,11 @@ public class UserInfoService {
     }
 
     private TourInfoForUserTourDto createTourInfoForUserTourDto(Tour tour) {
-        TourInfoForUserTourDto tourInfo = new TourInfoForUserTourDto();
-        tourInfo.setTourId(tour.getId());
-        tourInfo.setTitle(tour.getTitle());
-        tourInfo.setStartDate(tour.getStartDate());
-        tourInfo.setCurrentMember(tour.getCurrentMember());
-        tourInfo.setMaxMember(tour.getMaxMember());
 
-        User tourGuide = userRepository.findById(tour.getUserId()).get();
+        User guide = userRepository.findById(tour.getUserId()).get();
 
-        GuideInfoForUserTourDto guide = new GuideInfoForUserTourDto();
-        guide.setId(tourGuide.getId());
-        guide.setName(tourGuide.getNickname());
-
-        tourInfo.setGuide(guide);
+        GuideInfoForUserTourDto guideInfo = new GuideInfoForUserTourDto(guide);
+        TourInfoForUserTourDto tourInfo = new TourInfoForUserTourDto(tour, guideInfo);
 
         return tourInfo;
     }
