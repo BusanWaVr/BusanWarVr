@@ -9,6 +9,11 @@ const CardContainer = styled.div`
 function WishCard({ wishData }) {
   return (
     <div>
+      {wishData.length === 0 ? (
+        <p>로딩중ㅎ(에러 아님.. 느린거임..ㅠ)</p>
+      ) : (
+        <span></span>
+      )}
       {wishData.map((wish) => (
         <CardContainer key={wish.tourId}>
           <Link to={`/tour/${wish.tourId}`}>
