@@ -10,7 +10,7 @@ function WishCard({ wishData }) {
   return (
     <div>
       {wishData.length === 0 ? (
-        <p>로딩중ㅎ(에러 아님.. 느린거임..ㅠ)</p>
+        <p>로딩중ㅎ(느림ㅎ 데이터 없을수도 있음)</p>
       ) : (
         <span></span>
       )}

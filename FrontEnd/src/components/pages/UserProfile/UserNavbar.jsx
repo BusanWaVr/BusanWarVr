@@ -17,6 +17,9 @@ function UserNavbar() {
         <li>
           <Link to="/user/:userId/mypage/following">팔로잉 가이드</Link>
         </li>
+        <li>
+          <Link to="/user/:userId/mypage/review">작성한 리뷰</Link>
+        </li>
       </ul>
     </nav>
   );

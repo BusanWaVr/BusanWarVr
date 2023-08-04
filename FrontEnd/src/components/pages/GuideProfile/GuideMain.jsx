@@ -21,7 +21,7 @@ function GuideMain() {
           {guideInfoData.introduction ? (
             <h1>{guideInfoData.introduction}</h1>
           ) : (
-            <h1>{guideInfoData.nickname}의 마이페이지!</h1>
+            <h1>등록된 한 줄 소개가 없습니다.</h1>
           )}
 
           <div>
@@ -29,7 +29,6 @@ function GuideMain() {
             <p>닉네임 : {guideInfoData.nickname}</p>
             <p>가이드 평점 : {guideInfoData.averageScore}</p>
             <p>투어 수 : {guideInfoData.tourNumbers}</p>
-            <p>투어 수 : {guideInfoData.introduction}</p>
 
             <button onClick={handleClick}>내 정보 수정</button>
           </div>
