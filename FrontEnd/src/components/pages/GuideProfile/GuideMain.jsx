@@ -29,7 +29,6 @@ function GuideMain() {
             <p>닉네임 : {guideInfoData.nickname}</p>
             <p>가이드 평점 : {guideInfoData.averageScore}</p>
             <p>투어 수 : {guideInfoData.tourNumbers}</p>
-            <p>투어 수 : {guideInfoData.introduction}</p>
 
             <button onClick={handleClick}>내 정보 수정</button>
           </div>
