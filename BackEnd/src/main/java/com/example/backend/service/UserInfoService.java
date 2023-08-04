@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.userinfo.GuideEndedToursDto;
+import com.example.backend.dto.userinfo.GuideFollowerDto;
 import com.example.backend.dto.userinfo.GuideInfoDto;
 import com.example.backend.dto.userinfo.GuideHomeDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
@@ -128,10 +129,8 @@ public class UserInfoService {
 
             User guide = followingGuide.getGuide();
 
-            List<Follower> followedGuideList = followerRepository.findAllByGuide(
-                    guide);
-            List<Tour> guideTourList = tourRepository.findAllByUserId(
-                    guide.getId());
+            List<Follower> followedGuideList = followerRepository.findAllByGuide(guide);
+            List<Tour> guideTourList = tourRepository.findAllByUserId(guide.getId());
             double totalScore = 0;
             int reviewSize = 0;
             for (Tour tour : guideTourList) {
@@ -143,12 +142,8 @@ public class UserInfoService {
             }
             double averageScore = totalScore / reviewSize;
 
-            GuideInfoForUserFollowDto guideInfo = new GuideInfoForUserFollowDto(
-                    guide,
-                    followedGuideList.size(),
-                    guideTourList.size(),
-                    averageScore
-            );
+            GuideInfoForUserFollowDto guideInfo = new GuideInfoForUserFollowDto(guide,
+                    followedGuideList.size(), guideTourList.size(), averageScore);
 
             responseList.add(guideInfo);
         }
@@ -265,7 +260,8 @@ public class UserInfoService {
         }
         double averageScore = totalScore / reviewSize;
 
-        GuideInfoDto.Response response = new GuideInfoDto.Response(user, followerNum, tourNumbers, averageScore);
+        GuideInfoDto.Response response = new GuideInfoDto.Response(user, followerNum, tourNumbers,
+                averageScore);
         return response;
     }
 
@@ -281,7 +277,8 @@ public class UserInfoService {
 
                 UserInfoForGuideReviewsDto userInfo = new UserInfoForGuideReviewsDto(user);
 
-                ReviewInfoForGuideReviewDto reviewInfo = new ReviewInfoForGuideReviewDto(tour, review, userInfo);
+                ReviewInfoForGuideReviewDto reviewInfo = new ReviewInfoForGuideReviewDto(tour,
+                        review, userInfo);
 
                 responseList.add(reviewInfo);
             }
@@ -350,5 +347,15 @@ public class UserInfoService {
         TourInfoForUserTourDto tourInfo = new TourInfoForUserTourDto(tour, guideInfo);
 
         return tourInfo;
+    }
+
+    public List<GuideFollowerDto> getGuideFollowerList(Long guideId) {
+        List<Follower> followers = followerRepository.findAllByGuideId(guideId);
+        List<GuideFollowerDto> response = new ArrayList<>();
+        for (Follower follower : followers) {
+            GuideFollowerDto guideFollower = new GuideFollowerDto(follower);
+            response.add(guideFollower);
+        }
+        return response;
     }
 }
