@@ -43,7 +43,9 @@ interface Joiner {
 const TourDetail: React.FC = () => {
   const { tourId } = useParams<{ tourId: string }>();
   const [tourData, setTourData] = useState<TourData | null>(null);
-  const { userId, nickname } = useSelector((state: any) => state.userInfo);
+  const { userId, nickname, userType } = useSelector(
+    (state: any) => state.userInfo
+  );
   const [isJoined, setIsJoined] = useState<boolean>(false);
   const [joiners, setJoiners] = useState([]);
 
@@ -98,7 +100,9 @@ const TourDetail: React.FC = () => {
               {" "}
               투어 인원 : {tourData.minMember}명 ~ {tourData.maxMember}명
             </p>
-            <TourWishButton tourId={tourId} />
+            {userId && userType == "USER" ? (
+              <TourWishButton tourId={tourId} />
+            ) : null}
           </div>
 
           <div dangerouslySetInnerHTML={{ __html: tourData.content }} />
