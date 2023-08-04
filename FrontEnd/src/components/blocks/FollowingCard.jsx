@@ -10,7 +10,7 @@ function FollowingCard({ followingData }) {
   return (
     <div>
       {followingData.length === 0 ? (
-        <p>로딩중ㅎ(에러 아님.. 느린거임..ㅠ)</p>
+        <p>로딩중ㅎ(느림ㅎ 데이터 없을수도 있음)</p>
       ) : (
         <p>
           총 <strong>{followingData.length}</strong>명의 가이드를 팔로우하고

@@ -1,21 +1,61 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import styled from "styled-components";
+
+const NavContainer = styled.nav`
+  // background-color: #454545;
+
+  ul {
+    list-style: none;
+  }
+
+  li {
+    display: inline;
+    margin-right: 20px;
+  }
+`;
+
+const StyledLink = styled(NavLink)`
+  text-decoration: none;
+  color: #333;
+  font-weight: ${(props) => (props.active ? "bold" : "normal")};
+
+  &.active {
+    font-weight: bold;
+  }
+`;
 
 function UserTourNavbar() {
   return (
-    <nav>
+    <NavContainer>
       <ul>
         <li>
-          <Link to="/user/:userId/mypage/tour/">예정된 투어</Link>
+          <StyledLink
+            exact
+            to="/user/:userId/mypage/tour/"
+            activeClassName="active"
+          >
+            예정된 투어
+          </StyledLink>
         </li>
         <li>
-          <Link to="/user/:userId/mypage/tour/ended">지난 투어</Link>
+          <StyledLink
+            to="/user/:userId/mypage/tour/ended"
+            activeClassName="active"
+          >
+            지난 투어
+          </StyledLink>
         </li>
         <li>
-          <Link to="/user/:userId/mypage/tour/canceled">취소된 투어</Link>
+          <StyledLink
+            to="/user/:userId/mypage/tour/canceled"
+            activeClassName="active"
+          >
+            취소된 투어
+          </StyledLink>
         </li>
       </ul>
-    </nav>
+    </NavContainer>
   );
 }
 
