@@ -39,6 +39,7 @@ import UserFollowingBoard from "../components/pages/UserProfile/UserFollowingBoa
 import UserScheduledBoard from "../components/pages/UserProfile/UserScheduledBoard";
 import UserEndedBoard from "../components/pages/UserProfile/UserEndedBoard";
 import UserCanceledBoard from "../components/pages/UserProfile/UserCanceledBoard";
+import UserReviewBoard from "../components/pages/UserProfile/UserReviewBoard";
 
 function App() {
   return (
@@ -94,6 +95,7 @@ function App() {
               </Route>
               <Route path="wish" element={<UserWishBoard />} />
               <Route path="following" element={<UserFollowingBoard />} />
+              <Route path="review" element={<UserReviewBoard />} />
             </Route>
           </Route>
 
