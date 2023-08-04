@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, useOutletContext } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import UserNavbar from "./UserNavbar";
 import UserMini from "./UserMini";
 import styled from "styled-components";
@@ -25,7 +25,8 @@ function UserMyPage() {
   // 내 정보 가져오기
 
   const [userInfoData, setUserInfoData] = useState(null);
-  const userId = localStorage.getItem("userId");
+
+  const { userId } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
