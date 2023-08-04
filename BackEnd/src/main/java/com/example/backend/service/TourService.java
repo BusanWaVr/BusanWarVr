@@ -179,8 +179,11 @@ public class TourService {
         tourRepository.save(tour);
     }
 
-    public boolean tourWish(Long tourId, User user) {
+    public boolean tourWish(Long tourId, User user) throws IllegalAccessException {
         List<Wish> wishList = wishRepository.findAllByUserId(user.getId());
+        if (user.getType() != AuthType.USER) {
+            throw new IllegalAccessException("가이드는 찜하기를 할 수 없습니다.");
+        }
         boolean isUnWished = true;
         for (Wish wish : wishList) {
             // 이미 찜 되어있으면 찜 취소
