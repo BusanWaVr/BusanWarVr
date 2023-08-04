@@ -5,13 +5,11 @@ import { combineReducers } from "redux";
 import counterReducer from "../../components/pages/Home/counterReducer";
 import liveStreamReducer from "../../components/pages/LiveStream/LiveStreamReducer";
 import userInfoReducer from "./UserInfoReducer";
-import TourCourseReducer from "../../components/pages/Tour/TourCourseReducer";
 
 const rootReducer = combineReducers({
   counter: counterReducer,
   liveStream: liveStreamReducer,
   userInfo: userInfoReducer,
-  tourCourse: TourCourseReducer,
 });
 
 export default rootReducer;

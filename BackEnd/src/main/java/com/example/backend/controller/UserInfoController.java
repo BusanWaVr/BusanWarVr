@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
 import com.example.backend.dto.userinfo.GuideEndedToursDto;
+import com.example.backend.dto.userinfo.GuideFollowerDto;
 import com.example.backend.dto.userinfo.GuideHomeDto;
 import com.example.backend.dto.userinfo.GuideInfoDto;
 import com.example.backend.dto.userinfo.GuideReviewsDto;
@@ -12,6 +13,7 @@ import com.example.backend.dto.userinfo.UserTourDto;
 import com.example.backend.dto.userinfo.UserWishDto;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.UserInfoService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -111,5 +113,11 @@ public class UserInfoController {
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         UserTourDto.Response response = userInfoService.getUserTour(userDetails.getUser());
         return new Response<>("200", "성공적으로 유저의 투어 정보를 불러왔습니다", response);
+    }
+
+    @GetMapping("/guide/follower/{guideId}")
+    public Response<List<GuideFollowerDto>> getGuideFollower(@PathVariable Long guideId){
+        List<GuideFollowerDto> response = userInfoService.getGuideFollowerList(guideId);
+        return new Response<>("200", "성공적으로 가이드의 팔로워 정보를 불러왔습니다", response);
     }
 }
