@@ -58,7 +58,7 @@ public class TourController {
 
     @PostMapping("/tour/wish/{tourId}")
     public Response tourWishApi(@PathVariable Long tourId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) throws IllegalAccessException {
         boolean isWished = tourService.tourWish(tourId, userDetails.getUser());
 
         if (isWished) {
