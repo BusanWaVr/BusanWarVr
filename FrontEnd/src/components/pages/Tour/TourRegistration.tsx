@@ -52,6 +52,7 @@ type TourCourseInfo = {
   title: string;
   content: string;
   image: File | null;
+  courseKey: number;
 };
 
 type TourData = {
@@ -117,15 +118,17 @@ const TourRegistration: React.FC = () => {
   };
 
   const increaseCoursesNum = () => {
-    if (coursesData.length <= 2) {
+    if (tourData.courses.length <= 2) {
       const newCourse: TourCourseInfo = {
         lon: 0,
         lat: 0,
         title: "",
         content: "",
         image: null,
+        courseKey: tourData.courses[tourData.courses.length - 1].courseKey + 1,
       };
-      setCoursesData([...coursesData, newCourse]);
+      const newCourses = [...tourData.courses, newCourse];
+      setTourData({ ...tourData, courses: newCourses });
     } else {
       alert("코스는 최대 3개까지 등록할 수 있습니다.");
     }
@@ -165,11 +168,12 @@ const TourRegistration: React.FC = () => {
     setImageFiles(newImageFiles);
   };
 
-  const deleteCourse = (index: number) => {
-    const updatedCourses = [...tourData.courses];
-    updatedCourses.splice(index, 1);
-    setCoursesData(updatedCourses);
-    setTourData({ ...tourData, courses: coursesData });
+  // TODO 수정
+  const deleteCourse = (courseKey: number) => {
+    const updatedCourses = tourData.courses.filter(
+      (course) => course.courseKey !== courseKey
+    );
+    setTourData({ ...tourData, courses: updatedCourses });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -206,24 +210,26 @@ const TourRegistration: React.FC = () => {
     }
 
     for (let i = 0; i < tourData.courses.length; i++) {
-      formData.append(
-        `courses[${i}].lon`,
-        JSON.stringify(tourData.courses[i].lon)
-      );
-      formData.append(
-        `courses[${i}].lat`,
-        JSON.stringify(tourData.courses[i].lat)
-      );
-      formData.append(
-        `courses[${i}].title`,
-        JSON.stringify(tourData.courses[i].title)
-      );
-      formData.append(
-        `courses[${i}].content`,
-        JSON.stringify(tourData.courses[i].content)
-      );
-      if (tourData.courses[i].image) {
-        formData.append(`courses[${i}].image`, tourData.courses[i].image);
+      if (tourData.courses[i].lon != 0 || tourData.courses[i].lat != 0) {
+        formData.append(
+          `courses[${i}].lon`,
+          JSON.stringify(tourData.courses[i].lon)
+        );
+        formData.append(
+          `courses[${i}].lat`,
+          JSON.stringify(tourData.courses[i].lat)
+        );
+        formData.append(
+          `courses[${i}].title`,
+          JSON.stringify(tourData.courses[i].title).replace(/"/g, "")
+        );
+        formData.append(
+          `courses[${i}].content`,
+          JSON.stringify(tourData.courses[i].content).replace(/"/g, "")
+        );
+        if (tourData.courses[i].image) {
+          formData.append(`courses[${i}].image`, tourData.courses[i].image);
+        }
       }
     }
 
@@ -374,10 +380,15 @@ const TourRegistration: React.FC = () => {
           <div key={index}>
             <TourCourseUpload
               index={index}
-              courses={coursesData}
-              setCoursesData={setCoursesData}
+              courseKey={tourData.courses[index].courseKey}
+              tourData={tourData}
+              setTourData={setTourData}
             />
-            <button onClick={() => deleteCourse(index)}>투어 삭제</button>
+            <button
+              onClick={() => deleteCourse(tourData.courses[index].courseKey)}
+            >
+              투어 삭제
+            </button>
           </div>
         ))}
 

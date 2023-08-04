@@ -1,60 +1,92 @@
+import { useEffect } from "react";
 import TourAddressSearch from "./TourAddressSearch";
 import TourImageUpload from "./TourImageUpload";
 
 type TourCourseUploadProps = {
   index: number;
-  courses: any;
-  setCoursesData: any;
+  courseKey: number;
+  tourData: any;
+  setTourData: any;
 };
 
 const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
   index,
-  courses,
-  setCoursesData,
+  courseKey,
+  tourData,
+  setTourData,
 }) => {
+  useEffect(() => {
+    console.log(courseKey);
+  }, []);
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCourses = [...courses];
-    newCourses[index].title = e.target.value;
-    setCoursesData(newCourses);
+    const newCourses = [...tourData.courses];
+    newCourses.forEach((course, i) => {
+      if (course.courseKey === courseKey) {
+        newCourses[i].title = e.target.value;
+      }
+    });
+    setTourData({ ...tourData, courses: newCourses });
   };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newCourses = [...courses];
-    newCourses[index].content = e.target.value;
-    setCoursesData(newCourses);
+    const newCourses = [...tourData.courses];
+    newCourses.forEach((course, i) => {
+      if (course.courseKey === courseKey) {
+        newCourses[i].content = e.target.value;
+      }
+    });
+    setTourData({ ...tourData, courses: newCourses });
   };
 
   const handleImageFileChange = (file: File | null) => {
-    const newCourses = [...courses];
-    newCourses[index].image = file;
-    setCoursesData(newCourses);
+    const newCourses = [...tourData.courses];
+    newCourses.forEach((course, i) => {
+      if (course.courseKey === courseKey) {
+        newCourses[i].image = file;
+      }
+    });
+    setTourData({ ...tourData, courses: newCourses });
   };
 
   const handleLongitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCourses = [...courses];
-    newCourses[index].lon = e.target.value;
-    setCoursesData(newCourses);
+    const newCourses = [...tourData.courses];
+    newCourses.forEach((course, i) => {
+      if (course.courseKey === courseKey) {
+        newCourses[i].lon = e.target.value;
+      }
+    });
+    setTourData({ ...tourData, courses: newCourses });
   };
 
   const handleLatitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCourses = [...courses];
-    newCourses[index].lat = e.target.value;
-    setCoursesData(newCourses);
+    const newCourses = [...tourData.courses];
+    newCourses.forEach((course, i) => {
+      if (course.courseKey === courseKey) {
+        newCourses[i].lat = e.target.value;
+      }
+    });
+    setTourData({ ...tourData, courses: newCourses });
   };
 
   return (
     <>
       <TourAddressSearch
         index={index}
-        courses={courses}
-        setCoursesData={setCoursesData}
+        courseKey={courseKey}
+        tourData={tourData}
+        setTourData={setTourData}
       />
       <div>
         <label>
           위도:
           <input
             type="text"
-            value={courses[index].lon}
+            value={
+              tourData.courses.filter(
+                (course: any) => course.courseKey == courseKey
+              )[0].lon
+            }
             onChange={handleLongitudeChange}
             disabled
           />
@@ -63,7 +95,11 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
           경도:
           <input
             type="text"
-            value={courses[index].lat}
+            value={
+              tourData.courses.filter(
+                (course: any) => course.courseKey == courseKey
+              )[0].lat
+            }
             onChange={handleLatitudeChange}
             disabled
           />
@@ -72,7 +108,11 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
           제목:
           <input
             type="text"
-            value={courses[index].title}
+            value={
+              tourData.courses.filter(
+                (course: any) => course.courseKey == courseKey
+              )[0].title
+            }
             onChange={handleTitleChange}
           />
         </label>
@@ -80,12 +120,20 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
         <label>
           내용:
           <textarea
-            value={courses[index].content}
+            value={
+              tourData.courses.filter(
+                (course: any) => course.courseKey == courseKey
+              )[0].content
+            }
             onChange={handleContentChange}
           />
         </label>
         <TourImageUpload
-          imageFile={courses[index].image}
+          imageFile={
+            tourData.courses.filter(
+              (course: any) => course.courseKey == courseKey
+            )[0].image
+          }
           setImageFile={(file) => handleImageFileChange(file)}
         />
       </div>

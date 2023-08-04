@@ -5,14 +5,16 @@ import { Map, MapMarker } from "react-kakao-maps-sdk";
 
 type TourAddressSearchProps = {
   index: number;
-  courses: any;
-  setCoursesData: any;
+  courseKey: number;
+  tourData: any;
+  setTourData: any;
 };
 
 const TourAddressSearch = ({
   index,
-  courses,
-  setCoursesData,
+  courseKey,
+  tourData,
+  setTourData,
 }: TourAddressSearchProps) => {
   const [fullAddress, setFullAddress] = useState("부산와Vr");
 
@@ -30,19 +32,30 @@ const TourAddressSearch = ({
 
         if (response.data.documents && response.data.documents.length > 0) {
           const location = response.data.documents[0];
-          const newCourses = [...courses];
-          newCourses[index].lat = parseFloat(location.y);
-          newCourses[index].lon = parseFloat(location.x);
-          setCoursesData(newCourses);
+          const newCourses = [...tourData.courses];
+          console.log(newCourses);
+          newCourses.forEach((course, i) => {
+            if (course.courseKey === courseKey) {
+              newCourses[i].lat = parseFloat(location.y);
+            }
+          });
+          newCourses.forEach((course, i) => {
+            if (course.courseKey === courseKey) {
+              newCourses[i].lon = parseFloat(location.x);
+            }
+          });
+          setTourData({ ...tourData, courses: newCourses });
         } else {
+          console.log(fullAddress);
           console.error("해당 주소를 찾을 수 없습니다.");
         }
       } catch (error) {
         console.error(error);
       }
     };
-
-    fetchCoordinates();
+    if (fullAddress != "부산와Vr") {
+      fetchCoordinates();
+    }
   }, [fullAddress]);
 
   const postConfig = {
@@ -60,9 +73,19 @@ const TourAddressSearch = ({
           우편번호찾기
           <input type="text" onClick={postCode} defaultValue={""} readOnly />
         </div>
-        {courses[index].lat != 0 || courses[index].lon != 0 ? (
+        {tourData.courses.filter((course: any) => course.courseKey == courseKey)[0]
+          .lat != 0 ||
+        tourData.courses.filter((course: any) => course.courseKey == courseKey)[0]
+          .lon != 0 ? (
           <Map
-            center={{ lat: courses[index].lat, lng: courses[index].lon }}
+            center={{
+              lat: tourData.courses.filter(
+                (course: any) => course.courseKey == courseKey
+              )[0].lat,
+              lng: tourData.courses.filter(
+                (course: any) => course.courseKey == courseKey
+              )[0].lon,
+            }}
             style={{
               width: "100%",
               height: "450px",
@@ -70,7 +93,14 @@ const TourAddressSearch = ({
             level={3}
           >
             <MapMarker
-              position={{ lat: courses[index].lat, lng: courses[index].lon }}
+              position={{
+                lat: tourData.courses.filter(
+                  (course: any) => course.courseKey == courseKey
+                )[0].lat,
+                lng: tourData.courses.filter(
+                  (course: any) => course.courseKey == courseKey
+                )[0].lon,
+              }}
             ></MapMarker>
           </Map>
         ) : (

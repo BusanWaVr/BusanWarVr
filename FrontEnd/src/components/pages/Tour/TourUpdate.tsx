@@ -28,6 +28,7 @@ type TourCourseInfo = {
   title: string;
   content: string;
   image: File | null | string;
+  courseKey: number;
 };
 
 const MaxAllowedcategory = 5;
@@ -86,10 +87,10 @@ const TourUpdate: React.FC = () => {
     maxMember: 2,
     courses: [],
   });
-  const [coursesData, setCoursesData] = useState<TourCourseInfo[]>([]);
   const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
   const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [courseKeySetting, setCourseKeySetting] = useState<number>(0);
 
   const { accessToken } = useSelector((state: any) => state.userInfo);
 
@@ -114,45 +115,40 @@ const TourUpdate: React.FC = () => {
         if (response.status === 200) {
           const res = await response.json();
 
-          setTourData(res.data);
-          setCoursesData(res.data.courses);
+          let updatedTourData = {
+            ...res.data,
+            startDate: new Date(res.data.startDate),
+            endDate: new Date(res.data.endDate),
+          };
 
           const currentImageFiles = await Promise.all(
-            res.data.tourImgs.map((imageURL: string) =>
-              convertURLtoFile(imageURL)
-            )
+            res.data.tourImgs.map((imageURL) => convertURLtoFile(imageURL))
           );
-          setImageFiles(currentImageFiles);
 
-          const newCourses = [...res.data.courses];
-          console.log(newCourses);
-          const newCourseImages = await Promise.all(
-            res.data.courses.map((course) => {
-              console.log(course);
+          updatedTourData = { ...updatedTourData, tourImgs: currentImageFiles };
+
+          const updatedCourses = await Promise.all(
+            res.data.courses.map(async (course, index) => {
               if (course.image) {
-                return convertURLtoFile(course.image);
+                const imageFile = await convertURLtoFile(course.image);
+                return {
+                  ...course,
+                  image: imageFile,
+                  courseKey: index,
+                };
               }
-              return null;
+              return {
+                ...course,
+                courseKey: index,
+              };
             })
           );
 
-          Array.from({ length: res.data.courses.length }, (_, index) => {
-            const course = res.data.courses[index];
-            const newCourse = {
-              ...course,
-              image: newCourseImages[index],
-            };
-            newCourses[index] = newCourse;
-            setCoursesData(newCourses);
+          updatedTourData = { ...updatedTourData, courses: updatedCourses };
 
-            setTourData({
-              ...tourData,
-              startDate: res.data.startDate,
-              endDate: res.data.endDate,
-              tourImgs: imageFiles,
-              courses: coursesData,
-            });
-          });
+          setTourData(updatedTourData);
+          setImageFiles(currentImageFiles);
+          setCourseKeySetting(res.data.courses.length);
         } else {
           alert("해당 투어가 존재하지 않습니다.");
         }
@@ -186,15 +182,18 @@ const TourUpdate: React.FC = () => {
   };
 
   const increaseCoursesNum = () => {
-    if (coursesData.length <= 2) {
+    if (tourData.courses.length <= 2) {
       const newCourse: TourCourseInfo = {
         lon: 0,
         lat: 0,
         title: "",
         content: "",
         image: null,
+        courseKey: courseKeySetting,
       };
-      setCoursesData([...coursesData, newCourse]);
+      setCourseKeySetting(courseKeySetting + 1);
+      const newCourses = [...tourData.courses, newCourse];
+      setTourData({ ...tourData, courses: newCourses });
     } else {
       alert("코스는 최대 3개까지 등록할 수 있습니다.");
     }
@@ -234,11 +233,11 @@ const TourUpdate: React.FC = () => {
     setImageFiles(newImageFiles);
   };
 
-  const deleteCourse = (index: number) => {
-    const updatedCourses = [...tourData.courses];
-    updatedCourses.splice(index, 1);
-    setCoursesData(updatedCourses);
-    setTourData({ ...tourData, courses: coursesData });
+  const deleteCourse = (courseKey: number) => {
+    const updatedCourses = tourData.courses.filter(
+      (course) => course.courseKey !== courseKey
+    );
+    setTourData({ ...tourData, courses: updatedCourses });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -274,27 +273,24 @@ const TourUpdate: React.FC = () => {
       formData.append("tourImgs", imageFiles[i]);
     }
 
-    for (let i = 0; i < tourData.courses.length; i++) {
-      formData.append(
-        `courses[${i}].lon`,
-        JSON.stringify(tourData.courses[i].lon)
-      );
-      formData.append(
-        `courses[${i}].lat`,
-        JSON.stringify(tourData.courses[i].lat)
-      );
-      formData.append(
-        `courses[${i}].title`,
-        JSON.stringify(tourData.courses[i].title).replace(/"/g, "")
-      );
-      formData.append(
-        `courses[${i}].content`,
-        JSON.stringify(tourData.courses[i].content).replace(/"/g, "")
-      );
-      if (tourData.courses[i].image) {
-        formData.append(`courses[${i}].image`, tourData.courses[i].image);
+    console.log(tourData.courses);
+    tourData.courses.forEach((course, i: number) => {
+      if (course.lon != 0 || course.lat != 0) {
+        formData.append(`courses[${i}].lon`, JSON.stringify(course.lon));
+        formData.append(`courses[${i}].lat`, JSON.stringify(course.lat));
+        formData.append(
+          `courses[${i}].title`,
+          JSON.stringify(course.title).replace(/"/g, "")
+        );
+        formData.append(
+          `courses[${i}].content`,
+          JSON.stringify(course.content).replace(/"/g, "")
+        );
+        if (tourData.courses[i].image) {
+          formData.append(`courses[${i}].image`, course.image);
+        }
       }
-    }
+    });
 
     try {
       const res = await axios.put(
@@ -450,15 +446,22 @@ const TourUpdate: React.FC = () => {
           <hr />
 
           {/* 투어 코스 */}
-          {coursesData &&
-            coursesData.map((_, index: number) => (
+          {tourData.courses &&
+            tourData.courses.map((_, index: number) => (
               <div key={index}>
                 <TourCourseUpload
                   index={index}
-                  courses={coursesData}
-                  setCoursesData={setCoursesData}
+                  courseKey={tourData.courses[index].courseKey}
+                  tourData={tourData}
+                  setTourData={setTourData}
                 />
-                <button onClick={() => deleteCourse(index)}>투어 삭제</button>
+                <button
+                  onClick={() =>
+                    deleteCourse(tourData.courses[index].courseKey)
+                  }
+                >
+                  투어 삭제
+                </button>
               </div>
             ))}
 
