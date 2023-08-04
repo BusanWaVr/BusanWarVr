@@ -11,11 +11,14 @@ import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
 import com.example.backend.dto.tour.TourReservationCancelDto;
 import com.example.backend.dto.tour.TourReservationDto;
+import com.example.backend.dto.tour.TourSearchInfoDto;
 import com.example.backend.dto.tour.TourUpdateDto;
 import com.example.backend.model.category.Category;
 import com.example.backend.model.category.CategoryRepository;
 import com.example.backend.model.course.Course;
+import com.example.backend.model.course.CourseCustomRepository;
 import com.example.backend.model.course.CourseRepository;
+import com.example.backend.model.course.qdto.CourseCustomDto;
 import com.example.backend.model.courseimage.CourseImage;
 import com.example.backend.model.courseimage.CourseImageRepository;
 import com.example.backend.model.enums.AuthType;
@@ -26,7 +29,9 @@ import com.example.backend.model.joiner.JoinerRepository;
 import com.example.backend.model.review.Review;
 import com.example.backend.model.review.ReviewRepository;
 import com.example.backend.model.tour.Tour;
+import com.example.backend.model.tour.TourCustomRepository;
 import com.example.backend.model.tour.TourRepository;
+import com.example.backend.model.tour.qdto.SearchTourDto;
 import com.example.backend.model.tourcategory.TourCategory;
 import com.example.backend.model.tourcategory.TourCategoryRepository;
 import com.example.backend.model.tourimage.TourImage;
@@ -40,6 +45,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -62,6 +69,8 @@ public class TourService {
     private final WishRepository wishRepository;
     private final ReviewRepository reviewRepository;
     private final S3Uploader s3Uploader;
+    private final TourCustomRepository tourCustomRepository;
+    private final CourseCustomRepository courseCustomRepository;
 
     @Transactional
     public TourRegistDto.Response tourRegist(TourRegistDto.Request request, User user)
@@ -480,5 +489,142 @@ public class TourService {
             throw new IllegalArgumentException("해당 리뷰의 작성자만 삭제 가능합니다");
         }
         reviewRepository.deleteById(reviewId);
+    }
+
+    public List<SearchTourDto> searchTour(TourSearchInfoDto.Request request, Pageable pageable) {
+        String type = request.getType();
+
+        if (type.equals("CATEGORY")){
+            return getSearchCategoryRelative(request, pageable);
+        }
+        else if(type.equals("COURSE")){
+            return getSearchCourseRelative(request, pageable);
+        }
+        else{
+            return getSearchTourRelative(request, pageable);
+        }
+    }
+
+    public List<SearchTourDto> getSearchTourRelative(TourSearchInfoDto.Request request, Pageable pageable){
+        Map<Long, SearchTourDto> tours = tourCustomRepository.findBySearchTourColumn(request.getType(), request.getKeyword(), pageable);
+        List<Long> tourIds = new ArrayList<>();
+
+        for (Long tourId : tours.keySet()) {
+            tourIds.add(tourId);
+        }
+
+        Map<Long, List<String>> images = tourCustomRepository.getRelativeImage(tourIds);
+        Map<Long, List<String>> categorys = tourCustomRepository.getRelativeCategory(tourIds);
+
+        for(Long tourId : images.keySet()){
+            if(tours.containsKey(tourId)){
+                SearchTourDto searchTourDto = tours.get(tourId);
+                searchTourDto.setImages(images.get(tourId));
+                tours.put(tourId, searchTourDto);
+            }
+        }
+
+        for(Long tourId : categorys.keySet()){
+            if(tours.containsKey(tourId)){
+                SearchTourDto searchTourDto = tours.get(tourId);
+                searchTourDto.setCategorys(categorys.get(tourId));
+                tours.put(tourId, searchTourDto);
+            }
+        }
+
+        Map<Long, List<CourseCustomDto>> courses = courseCustomRepository.findByTourIdToCourse(tourIds);
+
+        System.out.println(courses);
+
+        for(Long tourId : courses.keySet()){
+            if(tours.containsKey(tourId)){
+                SearchTourDto searchTourDto = tours.get(tourId);
+                searchTourDto.setCourses(courses.get(tourId));
+                tours.put(tourId, searchTourDto);
+            }
+        }
+
+        System.out.println(tours);
+
+        return  tours.values().stream()
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public List<SearchTourDto> getSearchCategoryRelative(TourSearchInfoDto.Request request, Pageable pageable){
+        List<Long> tourIds = tourCustomRepository.getTourIdToTourCategory(request.getKeyword());
+
+        Map<Long, List<String>> images = tourCustomRepository.getRelativeImage(tourIds);
+        Map<Long, List<String>> categorys = tourCustomRepository.getRelativeCategory(tourIds);
+        Map<Long, SearchTourDto> tours = tourCustomRepository.findAllSearchByTourWithCategory(tourIds, pageable);
+
+        for(Long tourId : images.keySet()){
+            if(tours.containsKey(tourId)){
+                SearchTourDto searchTourDto = tours.get(tourId);
+                searchTourDto.setImages(images.get(tourId));
+                tours.put(tourId, searchTourDto);
+            }
+        }
+
+        for(Long tourId : categorys.keySet()){
+            if(tours.containsKey(tourId)){
+                SearchTourDto searchTourDto = tours.get(tourId);
+                searchTourDto.setCategorys(categorys.get(tourId));
+                tours.put(tourId, searchTourDto);
+            }
+        }
+
+        // course 붙히기
+        Map<Long, List<CourseCustomDto>> courses = courseCustomRepository.findByTourIdToCourse(tourIds);
+
+        for(Long tourId : courses.keySet()){
+            if(tours.containsKey(tourId)){
+                SearchTourDto searchTourDto = tours.get(tourId);
+                searchTourDto.setCourses(courses.get(tourId));
+                tours.put(tourId, searchTourDto);
+            }
+        }
+
+        System.out.println(tours);
+        return  tours.values().stream()
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public List<SearchTourDto> getSearchCourseRelative(TourSearchInfoDto.Request request, Pageable pageable) {
+        List<Long> tourIds = courseCustomRepository.getTourIdToTourCourseTitle(request.getKeyword());
+
+        Map<Long, List<String>> images = tourCustomRepository.getRelativeImage(tourIds);
+        Map<Long, List<String>> categorys = tourCustomRepository.getRelativeCategory(tourIds);
+        Map<Long, SearchTourDto> tours = tourCustomRepository.findAllSearchByTourWithCategory(tourIds, pageable);
+
+        for(Long tourId : images.keySet()){
+            if(tours.containsKey(tourId)){
+                SearchTourDto searchTourDto = tours.get(tourId);
+                searchTourDto.setImages(images.get(tourId));
+                tours.put(tourId, searchTourDto);
+            }
+        }
+
+        for(Long tourId : categorys.keySet()){
+            if(tours.containsKey(tourId)){
+                SearchTourDto searchTourDto = tours.get(tourId);
+                searchTourDto.setCategorys(categorys.get(tourId));
+                tours.put(tourId, searchTourDto);
+            }
+        }
+
+        // course 붙히기
+        Map<Long, List<CourseCustomDto>> courses = courseCustomRepository.findByTourIdToCourse(tourIds);
+
+        for(Long tourId : courses.keySet()){
+            if(tours.containsKey(tourId)){
+                SearchTourDto searchTourDto = tours.get(tourId);
+                searchTourDto.setCourses(courses.get(tourId));
+                tours.put(tourId, searchTourDto);
+            }
+        }
+
+        System.out.println(tours);
+        return  tours.values().stream()
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
