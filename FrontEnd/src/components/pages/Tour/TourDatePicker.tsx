@@ -5,9 +5,13 @@ import setHours from "date-fns/setHours";
 import setMinutes from "date-fns/setMinutes";
 import { ko } from "date-fns/locale";
 
-const TourDatePicker = ({ setTourData }) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+const TourDatePicker = ({ setTourData, tourData }) => {
+  const [startDate, setStartDate] = useState(
+    tourData ? tourData.startDate : new Date()
+  );
+  const [endDate, setEndDate] = useState(
+    tourData ? tourData.endDate : new Date()
+  );
   const [limitStartMin, setLimitStartMin] = useState(45);
   const [limitStartHour, setLimitStartHour] = useState(23);
   const [limitEndMin, setLimitEndMin] = useState(15);
