@@ -21,7 +21,7 @@ function GuideMain() {
           {guideInfoData.introduction ? (
             <h1>{guideInfoData.introduction}</h1>
           ) : (
-            <h1>{guideInfoData.nickname}의 마이페이지!</h1>
+            <h1>등록된 한 줄 소개가 없습니다.</h1>
           )}
 
           <div>
