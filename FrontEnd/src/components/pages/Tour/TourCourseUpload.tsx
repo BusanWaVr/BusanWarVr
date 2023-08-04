@@ -1,49 +1,54 @@
 import TourAddressSearch from "./TourAddressSearch";
 import TourImageUpload from "./TourImageUpload";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  setTitle,
-  setContent,
-  setLatitude,
-  setLongitude,
-  setImage,
-} from "./TourCourseReducer";
 
 type TourCourseUploadProps = {
   index: number;
-  course: any;
+  courses: any;
+  setCoursesData: any;
 };
 
 const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
   index,
-  course,
+  courses,
+  setCoursesData,
 }) => {
-  const { courses } = useSelector((state: any) => state.tourCourse);
-  const dispatch = useDispatch();
-
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setTitle({ index: index, title: e.target.value }));
+    const newCourses = [...courses];
+    newCourses[index].title = e.target.value;
+    setCoursesData(newCourses);
   };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    dispatch(setContent({ index: index, content: e.target.value }));
+    const newCourses = [...courses];
+    newCourses[index].content = e.target.value;
+    setCoursesData(newCourses);
   };
 
   const handleImageFileChange = (file: File | null) => {
-    dispatch(setImage({ index: index, image: file }));
+    const newCourses = [...courses];
+    newCourses[index].image = file;
+    setCoursesData(newCourses);
   };
 
   const handleLongitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setLongitude({ index: index, lon: parseFloat(e.target.value) }));
+    const newCourses = [...courses];
+    newCourses[index].lon = e.target.value;
+    setCoursesData(newCourses);
   };
 
   const handleLatitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setLatitude({ index: index, lat: parseFloat(e.target.value) }));
+    const newCourses = [...courses];
+    newCourses[index].lat = e.target.value;
+    setCoursesData(newCourses);
   };
 
   return (
     <>
-      <TourAddressSearch index={index} course={course} />
+      <TourAddressSearch
+        index={index}
+        courses={courses}
+        setCoursesData={setCoursesData}
+      />
       <div>
         <label>
           위도:

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setCourses, addCourse } from "./TourCourseReducer";
 import TourCourseUpload from "./TourCourseUpload";
 import TourImageUpload from "./TourImageUpload";
 import TourDatePicker from "./TourDatePicker";
@@ -28,8 +27,7 @@ type TourCourseInfo = {
   lat: number;
   title: string;
   content: string;
-  image: any;
-  imageFile: File;
+  image: File | null | string;
 };
 
 const MaxAllowedcategory = 5;
@@ -73,9 +71,7 @@ const categoryList = [
 ];
 
 const TourUpdate: React.FC = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { courses } = useSelector((state: any) => state.tourCourse);
   const { tourId } = useParams<{ tourId: string }>();
   const [tourData, setTourData] = useState<TourData>({
     region: "",
@@ -90,6 +86,11 @@ const TourUpdate: React.FC = () => {
     maxMember: 2,
     courses: [],
   });
+  const [coursesData, setCoursesData] = useState<TourCourseInfo[]>([]);
+  const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
+  const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+
   const { accessToken } = useSelector((state: any) => state.userInfo);
 
   const convertURLtoFile = async (url: string) => {
@@ -112,8 +113,9 @@ const TourUpdate: React.FC = () => {
         const response = await fetch(`http://52.79.93.203/tour/${tourId}`);
         if (response.status === 200) {
           const res = await response.json();
-          res.data.startDate = new Date(res.data.startDate);
-          res.data.endDate = new Date(res.data.endDate);
+
+          setTourData(res.data);
+          setCoursesData(res.data.courses);
 
           const currentImageFiles = await Promise.all(
             res.data.tourImgs.map((imageURL: string) =>
@@ -121,28 +123,36 @@ const TourUpdate: React.FC = () => {
             )
           );
           setImageFiles(currentImageFiles);
-          res.data.tourImgs = imageFiles;
 
           const newCourses = [...res.data.courses];
           console.log(newCourses);
           const newCourseImages = await Promise.all(
             res.data.courses.map((course) => {
-              return convertURLtoFile(course.image);
+              console.log(course);
+              if (course.image) {
+                return convertURLtoFile(course.image);
+              }
+              return null;
             })
           );
 
-          Array.from({ length: courses.length }, (_, index) => {
+          Array.from({ length: res.data.courses.length }, (_, index) => {
             const course = res.data.courses[index];
             const newCourse = {
               ...course,
               image: newCourseImages[index],
             };
             newCourses[index] = newCourse;
-            res.data.courses = newCourses;
+            setCoursesData(newCourses);
+
+            setTourData({
+              ...tourData,
+              startDate: res.data.startDate,
+              endDate: res.data.endDate,
+              tourImgs: imageFiles,
+              courses: coursesData,
+            });
           });
-          dispatch(setCourses(res.data.courses));
-          setTourData(res.data);
-          console.log(res.data);
         } else {
           alert("해당 투어가 존재하지 않습니다.");
         }
@@ -153,14 +163,6 @@ const TourUpdate: React.FC = () => {
 
     fetchTourData();
   }, []);
-
-  useEffect(() => {
-    setTourData({ ...tourData, courses: courses });
-  }, [courses]);
-
-  const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
-  const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
@@ -184,16 +186,15 @@ const TourUpdate: React.FC = () => {
   };
 
   const increaseCoursesNum = () => {
-    if (courses.length <= 2) {
-      dispatch(
-        addCourse({
-          lon: 0,
-          lat: 0,
-          title: "",
-          content: "",
-          image: null,
-        })
-      );
+    if (coursesData.length <= 2) {
+      const newCourse: TourCourseInfo = {
+        lon: 0,
+        lat: 0,
+        title: "",
+        content: "",
+        image: null,
+      };
+      setCoursesData([...coursesData, newCourse]);
     } else {
       alert("코스는 최대 3개까지 등록할 수 있습니다.");
     }
@@ -234,9 +235,10 @@ const TourUpdate: React.FC = () => {
   };
 
   const deleteCourse = (index: number) => {
-    const updatedCourses = [...courses];
+    const updatedCourses = [...tourData.courses];
     updatedCourses.splice(index, 1);
-    dispatch(setCourses(updatedCourses));
+    setCoursesData(updatedCourses);
+    setTourData({ ...tourData, courses: coursesData });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -246,8 +248,6 @@ const TourUpdate: React.FC = () => {
       alert(`최소 ${MinRequiredcategory}개의 카테고리를 선택해 주세요.`);
       return;
     }
-
-    tourData.courses = courses;
 
     const formData = new FormData();
 
@@ -292,7 +292,6 @@ const TourUpdate: React.FC = () => {
         JSON.stringify(tourData.courses[i].content).replace(/"/g, "")
       );
       if (tourData.courses[i].image) {
-        console.log(tourData.courses[i].image);
         formData.append(`courses[${i}].image`, tourData.courses[i].image);
       }
     }
@@ -451,10 +450,14 @@ const TourUpdate: React.FC = () => {
           <hr />
 
           {/* 투어 코스 */}
-          {courses &&
-            courses.map((course: TourCourseInfo, index: number) => (
+          {coursesData &&
+            coursesData.map((_, index: number) => (
               <div key={index}>
-                <TourCourseUpload index={index} course={course} />
+                <TourCourseUpload
+                  index={index}
+                  courses={coursesData}
+                  setCoursesData={setCoursesData}
+                />
                 <button onClick={() => deleteCourse(index)}>투어 삭제</button>
               </div>
             ))}

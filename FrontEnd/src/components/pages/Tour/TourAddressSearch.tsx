@@ -2,22 +2,19 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import ReactDaumPost from "react-daumpost-hook";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
-import { useSelector, useDispatch } from "react-redux";
-import { setLatitude, setLongitude } from "./TourCourseReducer";
 
 type TourAddressSearchProps = {
   index: number;
-  course: any;
+  courses: any;
+  setCoursesData: any;
 };
 
-const TourAddressSearch = ({ index, course }: TourAddressSearchProps) => {
-  const { courses } = useSelector((state: any) => state.tourCourse);
-  const dispatch = useDispatch();
+const TourAddressSearch = ({
+  index,
+  courses,
+  setCoursesData,
+}: TourAddressSearchProps) => {
   const [fullAddress, setFullAddress] = useState("부산와Vr");
-  const [center, setCenter] = useState({
-    lat: course ? course.lat : 0,
-    lng: course ? course.lon : 0,
-  });
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -33,9 +30,10 @@ const TourAddressSearch = ({ index, course }: TourAddressSearchProps) => {
 
         if (response.data.documents && response.data.documents.length > 0) {
           const location = response.data.documents[0];
-          dispatch(setLatitude({ index: index, lat: parseFloat(location.y) }));
-          dispatch(setLongitude({ index: index, lon: parseFloat(location.x) }));
-          setCenter({ lat: location.y, lng: location.x });
+          const newCourses = [...courses];
+          newCourses[index].lat = parseFloat(location.y);
+          newCourses[index].lon = parseFloat(location.x);
+          setCoursesData(newCourses);
         } else {
           console.error("해당 주소를 찾을 수 없습니다.");
         }
@@ -50,7 +48,6 @@ const TourAddressSearch = ({ index, course }: TourAddressSearchProps) => {
   const postConfig = {
     onComplete: async (data: any) => {
       setFullAddress(data.address);
-      console.log(fullAddress, index, courses);
     },
   };
 
@@ -61,23 +58,20 @@ const TourAddressSearch = ({ index, course }: TourAddressSearchProps) => {
       <main>
         <div>
           우편번호찾기
-          <input
-            type="text"
-            onClick={postCode}
-            defaultValue={fullAddress != "부산와Vr" ? fullAddress : ""}
-            readOnly
-          />
+          <input type="text" onClick={postCode} defaultValue={""} readOnly />
         </div>
-        {center.lat != 0 || center.lng != 0 ? (
+        {courses[index].lat != 0 || courses[index].lon != 0 ? (
           <Map
-            center={center}
+            center={{ lat: courses[index].lat, lng: courses[index].lon }}
             style={{
               width: "100%",
               height: "450px",
             }}
             level={3}
           >
-            <MapMarker position={center}></MapMarker>
+            <MapMarker
+              position={{ lat: courses[index].lat, lng: courses[index].lon }}
+            ></MapMarker>
           </Map>
         ) : (
           <>

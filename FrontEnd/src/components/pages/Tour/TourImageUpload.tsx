@@ -23,7 +23,7 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
 
   return (
     <>
-      {imageFile ? (
+      {typeof imageFile != "string" && imageFile ? (
         <div>
           <img
             src={URL.createObjectURL(imageFile)}

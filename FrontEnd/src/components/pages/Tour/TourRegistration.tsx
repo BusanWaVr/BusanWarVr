@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TourCourseUpload from "./TourCourseUpload";
-import { useSelector, useDispatch } from "react-redux";
-import { setCourses, addCourse } from "./TourCourseReducer";
 import TourImageUpload from "./TourImageUpload";
 import TourDatePicker from "./TourDatePicker";
 import Editor from "../../blocks/Editor";
@@ -53,7 +51,7 @@ type TourCourseInfo = {
   lat: number;
   title: string;
   content: string;
-  image: File;
+  image: File | null;
 };
 
 type TourData = {
@@ -71,8 +69,6 @@ type TourData = {
 };
 
 const TourRegistration: React.FC = () => {
-  const { courses } = useSelector((state: any) => state.tourCourse);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const accessToken = localStorage.getItem("accessToken");
@@ -90,10 +86,14 @@ const TourRegistration: React.FC = () => {
     maxMember: 2,
     courses: [],
   });
-
+  const [coursesData, setCoursesData] = useState<TourCourseInfo[]>([]);
   const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
   const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+
+  useEffect(() => {
+    setTourData({ ...tourData, courses: coursesData });
+  }, [coursesData]);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
@@ -117,16 +117,15 @@ const TourRegistration: React.FC = () => {
   };
 
   const increaseCoursesNum = () => {
-    if (courses.length <= 2) {
-      dispatch(
-        addCourse({
-          lon: 0,
-          lat: 0,
-          title: "",
-          content: "",
-          image: null,
-        })
-      );
+    if (coursesData.length <= 2) {
+      const newCourse: TourCourseInfo = {
+        lon: 0,
+        lat: 0,
+        title: "",
+        content: "",
+        image: null,
+      };
+      setCoursesData([...coursesData, newCourse]);
     } else {
       alert("코스는 최대 3개까지 등록할 수 있습니다.");
     }
@@ -167,9 +166,10 @@ const TourRegistration: React.FC = () => {
   };
 
   const deleteCourse = (index: number) => {
-    const updatedCourses = [...courses];
+    const updatedCourses = [...tourData.courses];
     updatedCourses.splice(index, 1);
-    dispatch(setCourses(updatedCourses));
+    setCoursesData(updatedCourses);
+    setTourData({ ...tourData, courses: coursesData });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -179,8 +179,6 @@ const TourRegistration: React.FC = () => {
       alert(`최소 ${MinRequiredcategory}개의 카테고리를 선택해 주세요.`);
       return;
     }
-
-    tourData.courses = courses;
 
     const formData = new FormData();
 
@@ -371,10 +369,14 @@ const TourRegistration: React.FC = () => {
       <hr />
 
       {/* 투어 코스 */}
-      {courses &&
-        courses.map((course: TourCourseInfo, index: number) => (
+      {coursesData &&
+        coursesData.map((_, index: number) => (
           <div key={index}>
-            <TourCourseUpload index={index} course={course} />
+            <TourCourseUpload
+              index={index}
+              courses={coursesData}
+              setCoursesData={setCoursesData}
+            />
             <button onClick={() => deleteCourse(index)}>투어 삭제</button>
           </div>
         ))}
