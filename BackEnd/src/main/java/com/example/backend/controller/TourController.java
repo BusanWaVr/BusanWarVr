@@ -7,10 +7,13 @@ import com.example.backend.dto.tour.ReviewUpdateDto;
 import com.example.backend.dto.tour.TourDetailDto;
 import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
+import com.example.backend.dto.tour.TourSearchInfoDto;
 import com.example.backend.dto.tour.TourUpdateDto;
+import com.example.backend.model.tour.qdto.SearchTourDto;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.TourService;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -135,5 +138,12 @@ public class TourController {
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tourService.reviewDelete(reviewId, userDetails.getUser());
         return new Response<>("200", "성공적으로 후기를 삭제했습니다.", null);
+    }
+
+    @GetMapping("/tour/search")
+    public Response<List<SearchTourDto>> searchTour(@PageableDefault(size = 6) Pageable pageable, @RequestBody
+            TourSearchInfoDto.Request request){
+        List<SearchTourDto> searchTourDtos =  tourService.searchTour(request, pageable);
+        return new Response<>("200", "성공적으로 후기를 삭제했습니다.", searchTourDtos);
     }
 }
