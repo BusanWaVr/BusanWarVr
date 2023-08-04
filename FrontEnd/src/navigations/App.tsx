@@ -39,6 +39,7 @@ import UserFollowingBoard from "../components/pages/UserProfile/UserFollowingBoa
 import UserScheduledBoard from "../components/pages/UserProfile/UserScheduledBoard";
 import UserEndedBoard from "../components/pages/UserProfile/UserEndedBoard";
 import UserCanceledBoard from "../components/pages/UserProfile/UserCanceledBoard";
+import UserReviewBoard from "../components/pages/UserProfile/UserReviewBoard";
 
 function App() {
   return (
@@ -67,18 +68,17 @@ function App() {
 
           <Route element={<GuideRoute />}>
             <Route path="/tour/write" element={<TourRegistration />} />
+            <Route path="/tour/:tourId/update" element={<TourUpdate />} />
           </Route>
 
           <Route path="/tour/:tourId" element={<TourDetail />} />
           {/* <Route path="/guide/:userId/detail" element={<GuideDetail />} /> */}
-
 
           {/* 가이드페이지 */}
           <Route path="/guide/:userId/mypage" element={<GuideMyPage />}>
             <Route path="" element={<GuideMain />} />
             <Route path="follower" element={<GuideFollower />} />
             <Route path="tour" element={<GuideTourBoard />} />
-
           </Route>
 
           <Route element={<UserRoute />}>
@@ -95,6 +95,7 @@ function App() {
               </Route>
               <Route path="wish" element={<UserWishBoard />} />
               <Route path="following" element={<UserFollowingBoard />} />
+              <Route path="review" element={<UserReviewBoard />} />
             </Route>
           </Route>
 
