@@ -67,18 +67,17 @@ function App() {
 
           <Route element={<GuideRoute />}>
             <Route path="/tour/write" element={<TourRegistration />} />
+            <Route path="/tour/:tourId/update" element={<TourUpdate />} />
           </Route>
 
           <Route path="/tour/:tourId" element={<TourDetail />} />
           {/* <Route path="/guide/:userId/detail" element={<GuideDetail />} /> */}
-
 
           {/* 가이드페이지 */}
           <Route path="/guide/:userId/mypage" element={<GuideMyPage />}>
             <Route path="" element={<GuideMain />} />
             <Route path="follower" element={<GuideFollower />} />
             <Route path="tour" element={<GuideTourBoard />} />
-
           </Route>
 
           <Route element={<UserRoute />}>

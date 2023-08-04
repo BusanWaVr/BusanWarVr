@@ -273,7 +273,6 @@ const TourUpdate: React.FC = () => {
       formData.append("tourImgs", imageFiles[i]);
     }
 
-    console.log(tourData.courses);
     tourData.courses.forEach((course, i: number) => {
       if (course.lon != 0 || course.lat != 0) {
         formData.append(`courses[${i}].lon`, JSON.stringify(course.lon));

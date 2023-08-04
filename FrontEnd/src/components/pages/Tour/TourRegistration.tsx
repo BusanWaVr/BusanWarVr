@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 import TourCourseUpload from "./TourCourseUpload";
 import TourImageUpload from "./TourImageUpload";
 import TourDatePicker from "./TourDatePicker";
@@ -46,15 +47,6 @@ const categoryList = [
   { name: "카페", label: "카페" },
 ];
 
-type TourCourseInfo = {
-  lon: number;
-  lat: number;
-  title: string;
-  content: string;
-  image: File | null;
-  courseKey: number;
-};
-
 type TourData = {
   region: string;
   category: string[];
@@ -69,10 +61,17 @@ type TourData = {
   courses: TourCourseInfo[];
 };
 
+type TourCourseInfo = {
+  lon: number;
+  lat: number;
+  title: string;
+  content: string;
+  image: File | null;
+  courseKey: number;
+};
+
 const TourRegistration: React.FC = () => {
   const navigate = useNavigate();
-
-  const accessToken = localStorage.getItem("accessToken");
 
   const [tourData, setTourData] = useState<TourData>({
     region: "",
@@ -87,14 +86,12 @@ const TourRegistration: React.FC = () => {
     maxMember: 2,
     courses: [],
   });
-  const [coursesData, setCoursesData] = useState<TourCourseInfo[]>([]);
   const [selectedMinMember, setSelectedMinMember] = useState<number>(1);
   const [selectedMaxMember, setSelectedMaxMember] = useState<number>(2);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [courseKeySetting, setCourseKeySetting] = useState<number>(0);
 
-  useEffect(() => {
-    setTourData({ ...tourData, courses: coursesData });
-  }, [coursesData]);
+  const { accessToken } = useSelector((state: any) => state.userInfo);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
@@ -125,8 +122,9 @@ const TourRegistration: React.FC = () => {
         title: "",
         content: "",
         image: null,
-        courseKey: tourData.courses[tourData.courses.length - 1].courseKey + 1,
+        courseKey: courseKeySetting,
       };
+      setCourseKeySetting(courseKeySetting + 1);
       const newCourses = [...tourData.courses, newCourse];
       setTourData({ ...tourData, courses: newCourses });
     } else {
@@ -209,29 +207,23 @@ const TourRegistration: React.FC = () => {
       formData.append("tourImgs", imageFiles[i]);
     }
 
-    for (let i = 0; i < tourData.courses.length; i++) {
-      if (tourData.courses[i].lon != 0 || tourData.courses[i].lat != 0) {
-        formData.append(
-          `courses[${i}].lon`,
-          JSON.stringify(tourData.courses[i].lon)
-        );
-        formData.append(
-          `courses[${i}].lat`,
-          JSON.stringify(tourData.courses[i].lat)
-        );
+    tourData.courses.forEach((course, i: number) => {
+      if (course.lon != 0 || course.lat != 0) {
+        formData.append(`courses[${i}].lon`, JSON.stringify(course.lon));
+        formData.append(`courses[${i}].lat`, JSON.stringify(course.lat));
         formData.append(
           `courses[${i}].title`,
-          JSON.stringify(tourData.courses[i].title).replace(/"/g, "")
+          JSON.stringify(course.title).replace(/"/g, "")
         );
         formData.append(
           `courses[${i}].content`,
-          JSON.stringify(tourData.courses[i].content).replace(/"/g, "")
+          JSON.stringify(course.content).replace(/"/g, "")
         );
         if (tourData.courses[i].image) {
-          formData.append(`courses[${i}].image`, tourData.courses[i].image);
+          formData.append(`courses[${i}].image`, course.image);
         }
       }
-    }
+    });
 
     try {
       const res = await axios.post("http://52.79.93.203/tour", formData, {
@@ -375,8 +367,8 @@ const TourRegistration: React.FC = () => {
       <hr />
 
       {/* 투어 코스 */}
-      {coursesData &&
-        coursesData.map((_, index: number) => (
+      {tourData.courses &&
+        tourData.courses.map((_, index: number) => (
           <div key={index}>
             <TourCourseUpload
               index={index}
