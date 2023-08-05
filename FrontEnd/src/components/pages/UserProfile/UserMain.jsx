@@ -4,9 +4,6 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 function UserMain() {
   const { userInfoData } = useOutletContext();
 
-  // 일단 로컬에서 꺼내옴. 추후 수정
-  const email = localStorage.getItem("email");
-
   useEffect(() => {
     console.log("자식이 받고 있음", userInfoData);
   }, []);
@@ -23,7 +20,7 @@ function UserMain() {
       <h1>유저 마이페이지 메인</h1>
       {userInfoData ? (
         <div>
-          <p>이메일 : {email}</p>
+          <p>이메일 : {userInfoData.email}</p>
           <p>닉네임 : {userInfoData.nickname}</p>
 
           <button onClick={handleClick}>내 정보 수정</button>

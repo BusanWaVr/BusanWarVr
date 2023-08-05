@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const NavContainer = styled.nav`
@@ -26,13 +26,16 @@ const StyledLink = styled(NavLink)`
 `;
 
 function UserTourNavbar() {
+
+  const { userId } = useParams();
+
   return (
     <NavContainer>
       <ul>
         <li>
           <StyledLink
             exact
-            to="/user/:userId/mypage/tour/"
+            to={`/user/${userId}/mypage/tour/`}
             activeClassName="active"
           >
             예정된 투어
@@ -40,7 +43,7 @@ function UserTourNavbar() {
         </li>
         <li>
           <StyledLink
-            to="/user/:userId/mypage/tour/ended"
+            to={`/user/${userId}/mypage/tour/ended/`}
             activeClassName="active"
           >
             지난 투어
@@ -48,7 +51,7 @@ function UserTourNavbar() {
         </li>
         <li>
           <StyledLink
-            to="/user/:userId/mypage/tour/canceled"
+            to={`/user/${userId}/mypage/tour/canceled/`}
             activeClassName="active"
           >
             취소된 투어

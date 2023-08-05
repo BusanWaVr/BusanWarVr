@@ -54,7 +54,7 @@ function UserMyPage() {
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
   return (
     <Wrapper>
