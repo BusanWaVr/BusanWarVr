@@ -1,3 +1,4 @@
+import { buttonBaseClasses } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -7,6 +8,10 @@ const CardContainer = styled.div`
 `;
 
 function ReviewCard({ ReviewData }) {
+
+  // localUserId는 srting이고, ReviewData의 userId는 number라서 바꿔줌
+  const localUserId = 1*localStorage.getItem('userId');
+  
   return (
     <div>
       {ReviewData ? (
@@ -21,6 +26,12 @@ function ReviewCard({ ReviewData }) {
               <h3>별점 : {review.score}</h3>
               <div dangerouslySetInnerHTML={{ __html: review.content }} />
               <p> 작성 날짜 : {review.date}</p>
+              {localUserId === review.userId &&
+              <div>
+                <button>수정</button>
+                <button>삭제</button>
+              </div>
+              }
             </CardContainer>
           ))
         ) : (

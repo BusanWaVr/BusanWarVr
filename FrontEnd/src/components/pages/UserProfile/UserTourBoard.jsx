@@ -7,6 +7,8 @@ function UserTourBoard() {
 
   const accessToken = localStorage.getItem("accessToken");
 
+
+  // 토큰 말고 userId받게 수정해야함
   useEffect(() => {
     const fetchData = async () => {
       try {

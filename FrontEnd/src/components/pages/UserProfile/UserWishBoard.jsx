@@ -9,7 +9,9 @@ function UserWishBoard() {
   useEffect(() => {
     fetchData();
   }, [])
-  
+
+
+  // 토큰 말고 userId받게 수정해야함
   const fetchData = async () => {
       try {
         const response = await fetch("http://52.79.93.203/user/wish", {
