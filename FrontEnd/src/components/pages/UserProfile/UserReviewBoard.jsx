@@ -14,7 +14,7 @@ function UserReviewBoard() {
   return (
     <div>
       <h1>리뷰보드</h1>
-      <ReviewCard ReviewData={ReviewData} />
+      <ReviewCard ReviewData={ReviewData}/>
     </div>
   );
 }

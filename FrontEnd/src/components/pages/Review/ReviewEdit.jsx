@@ -21,6 +21,7 @@ const ReviewEdit = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const userId = localStorage.getItem("userId");
   const accessToken = localStorage.getItem("accessToken");
 
 
@@ -81,6 +82,7 @@ const ReviewEdit = () => {
 
         if (data.code === "200") {
           alert(data.message);
+          navigate(`/user/${userId}/mypage/review`);
         } else {
           // 에러
           console.log(data.message);

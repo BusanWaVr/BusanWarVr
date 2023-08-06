@@ -1,5 +1,5 @@
 import { buttonBaseClasses } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ReviewDelete from "../pages/Review/ReviewDelete";
@@ -9,9 +9,12 @@ const CardContainer = styled.div`
 `;
 
 function ReviewCard({ ReviewData }) {
-
-
+  const [reviews, setReviews] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setReviews(ReviewData);
+  }, []);
 
   // 수정하기로 데이터 넘겨주기
   const handleEditClick = (review) => {
@@ -25,15 +28,20 @@ function ReviewCard({ ReviewData }) {
       });
     }
 
+  function reviewDelete(id){
+    const updatedReviews = reviews.filter((review) => review.id !== id);
+    setReviews(updatedReviews);
+  }
+
 
   // localUserId는 srting이고, ReviewData의 userId는 number라서 바꿔줌
   const localUserId = 1*localStorage.getItem('userId');
   
   return (
     <div>
-      {ReviewData ? (
-        ReviewData.length > 0 ? (
-          ReviewData.map((review) => (
+      {reviews ? (
+        reviews.length > 0 ? (
+          reviews.map((review) => (
             <CardContainer key={review.id}>
               {/* 투어명도 받아와야 하나?.. */}
               <Link to={`/tour/${review.tourId}`}>
@@ -48,6 +56,8 @@ function ReviewCard({ ReviewData }) {
                 <button onClick={() => handleEditClick(review)}>수정</button>
                 <ReviewDelete
                   reviewId = {review.id}
+                  userId = {review.userId}
+                  reviewDelete = {reviewDelete}
                 />
               </div>
               }
