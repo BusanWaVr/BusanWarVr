@@ -6,17 +6,23 @@ const CardContainer = styled.div`
   margin: 50px;
 `;
 
-function TourListCard({ TourData }) {
+function TourListCard({ TourData, tempPage }) {
+
+
+  useEffect(() => {
+    console.log(tempPage)
+  }, [tempPage]);
+
 
   return (
     <div>
       {TourData ? (
         TourData.length > 0 ? (
-          TourData.map((tour, index) => (
-            <CardContainer key={tour.tourId}>
-              {tour.tourImgs.length > 0 ? (
+          TourData.slice(tempPage * 6, (tempPage + 1) * 6).map((tour) => (
+            <CardContainer key={tour.id}>
+              {tour.images.length > 0 ? (
                 <img
-                src={tour.tourImgs[0]}
+                src={tour.images[0]}
                 alt="투어 이미지"
                 style={{
                   width: "200px",
@@ -27,7 +33,7 @@ function TourListCard({ TourData }) {
               ) : (
                 <p>등록된 투어 이미지가 없습니다.</p>
               )}
-              <Link to={`/tour/${tour.tourId}`}>
+              <Link to={`/tour/${tour.id}`}>
                 <h2>{tour.title}</h2>
               </Link>
 
@@ -35,13 +41,13 @@ function TourListCard({ TourData }) {
               <p>지역 : {tour.region}</p>
 
               <Link to={`/guide/${tour.userId}/detail`}>
-                <span> {tour.nickname}</span>
+                <span> {tour.guide.nickname}</span>
               </Link>
               <p>시작 날짜 : {tour.startDate}</p>
-              <p>카테고리 : #{tour.category.join(" #")}</p>
+              <p>카테고리 : #{tour.categorys.join(" #")}</p>
               <p>
                 <strong>
-                  {tour.joiners.length}/{tour.maxMember}
+                  {tour.currentMember}/{tour.maxMember}
                 </strong>
               </p>
             </CardContainer>
