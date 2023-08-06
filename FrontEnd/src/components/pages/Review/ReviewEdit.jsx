@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 // import Responsive from "../../common/Responsive";
 import Editor from "../../blocks/Editor";
 import styled from "styled-components";
@@ -9,33 +10,48 @@ const StyledWritePage = styled.div`
 `;
 
 const ReviewEdit = () => {
+
+  const { reviewId } = useParams();
+
   const [tourId, setTourId] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [score, setScore] = useState("");
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const accessToken = localStorage.getItem("accessToken");
 
-  const handleTourIdChange = (event) => {
-    setTourId(event.target.value);
-  };
+
+  useEffect(() => {
+    if (location.state) {
+      const {
+        tourId: initialTourId,
+        title: initialTitle,
+        content: initialContent,
+        score: initialScore,
+      } = location.state;
+      setTourId(initialTourId);
+      setTitle(initialTitle);
+      setContent(initialContent);
+      setScore(initialScore);
+    }
+  }, [location.state]);
+
+
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
 
   // 별점: 추후 수정
-
   const handleClickScore = (value) => {
     setScore(value);
   };
 
-  useEffect(() => {
-    console.log(score);
-  }, [score]);
 
   // 제출
-
   const handleSubmit = async (e) => {
     console.log("슈웃");
     e.preventDefault();
@@ -50,8 +66,8 @@ const ReviewEdit = () => {
           score: score,
         };
 
-        const response = await fetch("http://52.79.93.203/tour/review", {
-          method: "POST",
+        const response = await fetch(`http://52.79.93.203/tour/review/${reviewId}`, {
+          method: "PUT",
           headers: {
             Authorization: accessToken,
             "Content-Type": "application/json",
@@ -68,7 +84,7 @@ const ReviewEdit = () => {
         } else {
           // 에러
           console.log(data.message);
-          alert("죄송합니다. 잠시후 다시 시도해 주세요.");
+          alert(data.message);
         }
       } catch (error) {
         console.error(error);
@@ -88,8 +104,7 @@ const ReviewEdit = () => {
             type="text"
             id="tourId"
             value={tourId}
-            onChange={handleTourIdChange}
-            placeholder="여기는 나중에 수정합니당"
+            disabled
           />
           <br />
           <br />

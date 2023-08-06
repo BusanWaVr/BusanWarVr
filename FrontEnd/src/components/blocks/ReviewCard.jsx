@@ -1,6 +1,6 @@
 import { buttonBaseClasses } from "@mui/material";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const CardContainer = styled.div`
@@ -8,6 +8,21 @@ const CardContainer = styled.div`
 `;
 
 function ReviewCard({ ReviewData }) {
+
+
+  const navigate = useNavigate();
+
+  // 수정하기로 데이터 넘겨주기
+  const handleEditClick = (review) => {
+      navigate(`/review/${review.id}/edit`, {
+        state: {
+          tourId: review.tourId,
+          title: review.title,
+          content: review.content,
+          score: review.score,
+        },
+      });
+    }
 
   // localUserId는 srting이고, ReviewData의 userId는 number라서 바꿔줌
   const localUserId = 1*localStorage.getItem('userId');
@@ -28,7 +43,7 @@ function ReviewCard({ ReviewData }) {
               <p> 작성 날짜 : {review.date}</p>
               {localUserId === review.userId &&
               <div>
-                <button>수정</button>
+                <button onClick={() => handleEditClick(review)}>수정</button>
                 <button>삭제</button>
               </div>
               }

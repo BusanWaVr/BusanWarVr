@@ -66,7 +66,7 @@ const ReviewWrite = () => {
         } else {
           // 에러
           console.log(data.message);
-          alert("죄송합니다. 잠시후 다시 시도해 주세요.");
+          alert(data.message);
         }
       } catch (error) {
         console.error(error);
