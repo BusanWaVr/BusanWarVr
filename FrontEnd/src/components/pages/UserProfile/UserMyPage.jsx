@@ -25,10 +25,19 @@ function UserMyPage() {
   // 내 정보 가져오기
 
   const [userInfoData, setUserInfoData] = useState(null);
+  const [isMe, setIsMe] = useState(false);
 
   const { userId } = useParams();
 
   useEffect(() => {
+
+    const localUserId = localStorage.getItem('userId');
+
+    if (userId === localUserId) {
+      setIsMe(true);
+    }
+
+
     const fetchData = async () => {
       try {
         const response = await fetch(
@@ -54,16 +63,18 @@ function UserMyPage() {
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
   return (
     <Wrapper>
       <NavbarWrapper>
-        <UserMini userInfoData={userInfoData} />
+        <UserMini
+          userInfoData={userInfoData}
+          isMe={isMe} />
         <UserNavbar />
       </NavbarWrapper>
       <OutletWrapper>
-        <Outlet context={{ userInfoData }} />
+        <Outlet context={{ userInfoData, isMe }}/>
       </OutletWrapper>
     </Wrapper>
   );

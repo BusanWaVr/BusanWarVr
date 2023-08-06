@@ -11,10 +11,6 @@ function UserCanceledBoard() {
 
   const userCanceledData = userTourData.canceledTours;
 
-  useEffect(() => {
-    console.log("취소보드에서 받고 있음", userCanceledData);
-  }, [userCanceledData]);
-
   const TourData = userCanceledData;
 
   return (

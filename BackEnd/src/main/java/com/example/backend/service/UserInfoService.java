@@ -152,6 +152,16 @@ public class UserInfoService {
         return new UserFollowDto.Response(responseList);
     }
 
+    public GuideScheduledToursDto.Response guideScheduledToursService(Long guideId, Pageable pageable) {
+        User guide = userRepository.findById(guideId).get();
+        return getGuideScheduledTours(guide, pageable);
+    }
+
+    public GuideEndedToursDto.Response guideEndedToursService(Long guideId,  Pageable pageable){
+        User guide = userRepository.findById(guideId).get();
+        return getGuideEndedTours(guide, pageable);
+    }
+
     public GuideScheduledToursDto.Response getGuideScheduledTours(User guide, Pageable pageable) {
         List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId(), pageable);
         List<TourInfoForGuideScheduledToursDto> responseList = new ArrayList<>();
@@ -266,6 +276,11 @@ public class UserInfoService {
         return response;
     }
 
+    public GuideReviewsDto.Response guideReviewsService(Long guideId, Pageable pageable){
+        User guide = userRepository.findById(guideId).get();
+        return getGuideReviews(guide, pageable);
+    }
+
     public GuideReviewsDto.Response getGuideReviews(User guide, Pageable pageable) {
         List<Tour> tourList = tourRepository.findAllByUserId(guide.getId());
         List<ReviewInfoForGuideReviewDto> responseList = new ArrayList<>();
@@ -287,8 +302,9 @@ public class UserInfoService {
         return new GuideReviewsDto.Response(responseList);
     }
 
-    public GuideHomeDto.Response guideHome(User guide, Pageable pageable) {
+    public GuideHomeDto.Response guideHome(Long guideId, Pageable pageable) {
         GuideHomeDto.Response response = new GuideHomeDto.Response();
+        User guide = userRepository.findById(guideId).get();
         response.setIntroduction(guide.getIntroduction());
 
         GuideScheduledToursDto.Response scheduledToursResponse = getGuideScheduledTours(guide,

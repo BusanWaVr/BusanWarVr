@@ -24,12 +24,14 @@ import GuideMain from "../components/pages/GuideProfile/GuideMain.jsx";
 import GuideFollower from "../components/pages/GuideProfile/GuideFollower.jsx";
 import GuideTourBoard from "../components/pages/GuideProfile/GuideTourBoard.jsx";
 
+import TourBoard from "../components/pages/Tour/TourBoard";
 import TourUpdate from "../components/pages/Tour/TourUpdate.tsx";
 import MateWrite from "../components/pages/Mate/MateWrite.jsx";
 import MateDetail from "../components/pages/Mate/MateDetail";
 import MateList from "../components/pages/Mate/MateList";
 import MateEdit from "../components/pages/Mate/MateEdit";
 import ReviewWrite from "../components/pages/Review/ReviewWrite";
+import ReviewEdit from "../components/pages/Review/ReviewEdit";
 import UserMyPage from "../components/pages/UserProfile/UserMyPage";
 import UserMain from "../components/pages/UserProfile/UserMain";
 // import UserNavbar from "../components/pages/UserProfile/UserNavbar";
@@ -61,31 +63,13 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/update" element={<Update />} />
             <Route path="/livestream" element={<LiveStream />} />
+            <Route path="/update" element={<Update />} />
           </Route>
 
           <Route element={<PrivateRoute />}>
             <Route path="/chatroom" element={<ChatRoom />} />
-          </Route>
 
-          <Route element={<GuideRoute />}>
-            <Route path="/tour/write" element={<TourRegistration />} />
-            <Route path="/tour/:tourId/update" element={<TourUpdate />} />
-          </Route>
-
-          <Route path="/tour/:tourId" element={<TourDetail />} />
-          {/* <Route path="/guide/:userId/detail" element={<GuideDetail />} /> */}
-
-          {/* 가이드페이지 */}
-          <Route path="/guide/:userId/mypage" element={<GuideMyPage />}>
-            <Route path="" element={<GuideMain />} />
-            <Route path="follower" element={<GuideFollower />} />
-            <Route path="tour" element={<GuideTourBoard />} />
-          </Route>
-
-          <Route element={<UserRoute />}>
-            <Route path="/review/write" element={<ReviewWrite />} />
-            <Route path="/mate/write" element={<MateWrite />} />
-
+            
             {/* 마이페이지 */}
             <Route path="/user/:userId/mypage" element={<UserMyPage />}>
               <Route path="" element={<UserMain />} />
@@ -98,6 +82,30 @@ function App() {
               <Route path="following" element={<UserFollowingBoard />} />
               <Route path="review" element={<UserReviewBoard />} />
             </Route>
+          </Route>
+
+          <Route element={<GuideRoute />}>
+            <Route path="/tour/write" element={<TourRegistration />} />
+            <Route path="/tour/:tourId/update" element={<TourUpdate />} />
+          </Route>
+
+
+          <Route path="/tour" element={<TourBoard />} />
+          <Route path="/tour/:tourId" element={<TourDetail />} />
+          {/* <Route path="/guide/:userId/detail" element={<GuideDetail />} /> */}
+
+          {/* 가이드페이지 */}
+          <Route path="/guide/:userId/mypage" element={<GuideMyPage />}>
+            <Route path="" element={<GuideMain />} />
+            <Route path="follower" element={<GuideFollower />} />
+            <Route path="tour" element={<GuideTourBoard />} />
+          </Route>
+
+          <Route element={<UserRoute />}>
+            <Route path="/review/:tourId/write" element={<ReviewWrite />} />
+            <Route path="/review/:reviewId/edit" element={<ReviewEdit />} />
+            <Route path="/mate/:tourId/write" element={<MateWrite />} />
+
           </Route>
 
           <Route path="/matedetail/:mateId" element={<MateDetail />} />

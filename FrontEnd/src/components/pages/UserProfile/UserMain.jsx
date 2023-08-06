@@ -2,10 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
 function UserMain() {
-  const { userInfoData } = useOutletContext();
-
-  // 일단 로컬에서 꺼내옴. 추후 수정
-  const email = localStorage.getItem("email");
+  const { userInfoData, isMe } = useOutletContext();
 
   useEffect(() => {
     console.log("자식이 받고 있음", userInfoData);
@@ -21,15 +18,19 @@ function UserMain() {
   return (
     <div>
       <h1>유저 마이페이지 메인</h1>
-      {userInfoData ? (
-        <div>
-          <p>이메일 : {email}</p>
-          <p>닉네임 : {userInfoData.nickname}</p>
+      {isMe ? (
+        userInfoData ? (
+          <div>
+            <p>이메일: {userInfoData.email}</p>
+            <p>닉네임: {userInfoData.nickname}</p>
 
-          <button onClick={handleClick}>내 정보 수정</button>
-        </div>
+            <button onClick={handleClick}>내 정보 수정</button>
+          </div>
+        ) : (
+          <p>로딩중ㅎ</p>
+        )
       ) : (
-        <p>로딩중ㅎ</p>
+        <p>다른 유저의 상세정보는 비공개입니다.</p>
       )}
     </div>
   );
