@@ -82,7 +82,8 @@ public class SecurityConfig {
     FormLoginFilter formLoginFilter(AuthenticationManager authenticationManager) {
         FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager);
         formLoginFilter.setFilterProcessesUrl("/user/login");
-        formLoginFilter.setAuthenticationSuccessHandler(new FormLoginSuccessHandler(jwtTokenUtils, userCustomRepository));
+        formLoginFilter.setAuthenticationSuccessHandler(
+                new FormLoginSuccessHandler(jwtTokenUtils, userCustomRepository));
         formLoginFilter.afterPropertiesSet();
         return formLoginFilter;
     }
@@ -143,6 +144,7 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.GET, "/user/userInfo/{userId}"));
         skipPathList.add(new Path(HttpMethod.GET, "/guide/guideInfo/{guideId}"));
         skipPathList.add(new Path(HttpMethod.GET, "/guide/follower/{guideId}"));
+        skipPathList.add(new Path(HttpMethod.GET, "/guide/{guideId}/tour/canceled"));
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPathList, "/**");
         JwtAuthFilter filter = new JwtAuthFilter(matcher, extractor);
