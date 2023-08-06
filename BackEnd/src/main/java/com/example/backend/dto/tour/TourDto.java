@@ -56,4 +56,22 @@ public class TourDto {
         this.isCanceled = tour.isCanceled();
         this.isEnded = tour.isEnded();
     }
+    public TourDto(Tour tour, List<String> category, List<String> tourImgs,
+            List<CourseDto.Response> courses, List<JoinerDto> joiners) {
+        this.tourId = tour.getId();
+        this.region = tour.getRegion();
+        this.category = category;
+        this.title = tour.getTitle();
+        this.subTitle = tour.getSubTitle();
+        this.content = tour.getContent();
+        this.startDate = tour.getStartDate();
+        this.endDate = tour.getEndDate();
+        this.minMember = tour.getMinMember();
+        this.maxMember = tour.getMaxMember();
+        this.tourImgs = tourImgs;
+        this.courses = courses;
+        this.joiners = joiners;
+        this.isCanceled = tour.isCanceled();
+        this.isEnded = tour.isEnded();
+    }
 }
