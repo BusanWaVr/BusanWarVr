@@ -2,6 +2,7 @@ import { buttonBaseClasses } from "@mui/material";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import ReviewDelete from "../pages/Review/ReviewDelete";
 
 const CardContainer = styled.div`
   margin: 50px;
@@ -24,6 +25,7 @@ function ReviewCard({ ReviewData }) {
       });
     }
 
+
   // localUserId는 srting이고, ReviewData의 userId는 number라서 바꿔줌
   const localUserId = 1*localStorage.getItem('userId');
   
@@ -44,7 +46,9 @@ function ReviewCard({ ReviewData }) {
               {localUserId === review.userId &&
               <div>
                 <button onClick={() => handleEditClick(review)}>수정</button>
-                <button>삭제</button>
+                <ReviewDelete
+                  reviewId = {review.id}
+                />
               </div>
               }
             </CardContainer>
