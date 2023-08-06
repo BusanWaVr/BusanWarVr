@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 // import Responsive from "../../common/Responsive";
+import { useParams } from "react-router-dom";
 import Editor from "../../blocks/Editor";
 import styled from "styled-components";
 
@@ -9,17 +10,14 @@ const StyledWritePage = styled.div`
 `;
 
 const ReviewWrite = () => {
-  const [tourId, setTourId] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [score, setScore] = useState("");
 
   const accessToken = localStorage.getItem("accessToken");
 
-  const handleTourIdChange = (event) => {
-    setTourId(event.target.value);
-  };
-
+  const { tourId } = useParams();
+  
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -88,8 +86,7 @@ const ReviewWrite = () => {
             type="text"
             id="tourId"
             value={tourId}
-            onChange={handleTourIdChange}
-            placeholder="여기는 나중에 수정합니당"
+            disabled
           />
           <br />
           <br />

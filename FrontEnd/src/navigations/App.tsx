@@ -82,7 +82,7 @@ function App() {
           </Route>
 
           <Route element={<UserRoute />}>
-            <Route path="/review/write" element={<ReviewWrite />} />
+            <Route path="/review/:tourId/write" element={<ReviewWrite />} />
             <Route path="/mate/write" element={<MateWrite />} />
 
             {/* 마이페이지 */}

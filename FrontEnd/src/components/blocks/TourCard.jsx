@@ -45,9 +45,9 @@ function TourCard({ TourData }) {
                 {tour.currentMember}/{tour.maxMember}
               </strong></p>
               {showReviewButton && (
-                // <Link to={`/tour/${tour.tourId}/writeReview`}>
+                <Link to={`/review/${tour.tourId}/write`}>
                   <button>리뷰 쓰기</button>
-                // </Link>
+                </Link>
               )}
             </CardContainer>
           ))
