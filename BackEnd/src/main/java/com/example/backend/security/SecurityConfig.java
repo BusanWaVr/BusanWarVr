@@ -143,6 +143,10 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.GET, "/user/userInfo/{userId}"));
         skipPathList.add(new Path(HttpMethod.GET, "/guide/guideInfo/{guideId}"));
         skipPathList.add(new Path(HttpMethod.GET, "/guide/follower/{guideId}"));
+        skipPathList.add(new Path(HttpMethod.GET, "/guide/{guideId}/tour/schedule"));
+        skipPathList.add(new Path(HttpMethod.GET, "/guide/{guideId}/tour/end"));
+        skipPathList.add(new Path(HttpMethod.GET, "/guide/{guideId}/home"));
+        skipPathList.add(new Path(HttpMethod.GET, "/guide/{guideId}/tour/review"));
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPathList, "/**");
         JwtAuthFilter filter = new JwtAuthFilter(matcher, extractor);
