@@ -62,21 +62,21 @@ public class UserInfoController {
         return new Response<>("200", "성공적으로 팔로잉하는 가이드의 목록을 가져왔습니다.", response);
     }
 
-    @GetMapping("/guide/tour/schedule")
+    @GetMapping("/guide/{guideId}/tour/schedule")
     public Response<GuideScheduledToursDto.Response> getGuidesScheduledTours(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long guideId,
             @PageableDefault(size = 6) Pageable pageable) {
-        GuideScheduledToursDto.Response response = userInfoService.getGuideScheduledTours(
-                userDetails.getUser(), pageable);
+        GuideScheduledToursDto.Response response = userInfoService.guideScheduledToursService(guideId,
+                pageable);
         return new Response<>("200", "성공적으로 가이드의 예정된 투어 목록을 가져왔습니다.", response);
     }
 
-    @GetMapping("/guide/tour/end")
+    @GetMapping("/guide/{guideId}/tour/end")
     public Response<GuideEndedToursDto.Response> getGuidesEndedTours(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long guideId,
             @PageableDefault(size = 6) Pageable pageable) {
-        GuideEndedToursDto.Response response = userInfoService.getGuideEndedTours(
-                userDetails.getUser(), pageable);
+        GuideEndedToursDto.Response response = userInfoService.guideEndedToursService(
+                guideId, pageable);
         return new Response<>("200", "성공적으로 가이드의 종료된 투어 목록을 가져왔습니다.", response);
     }
 
@@ -92,20 +92,20 @@ public class UserInfoController {
         return new Response<>("200", "성공적으로 가이드 정보를 가져왔습니다.", response);
     }
 
-    @GetMapping("/guide/tour/review")
+    @GetMapping("/guide/{guideId}/tour/review")
     public Response<GuideReviewsDto.Response> getGuidesReviews(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long guideId,
             @PageableDefault(size = 6) Pageable pageable) {
-        GuideReviewsDto.Response response = userInfoService.getGuideReviews(userDetails.getUser(),
+        GuideReviewsDto.Response response = userInfoService.guideReviewsService(guideId,
                 pageable);
         return new Response<>("200", "성공적으로 가이드의 리뷰 목록을 가져왔습니다.", response);
     }
 
-    @GetMapping("/guide/home")
+    @GetMapping("/guide/{guideId}/home")
     public Response<GuideHomeDto.Response> getGuideHome(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long guideId,
             @PageableDefault(size = 6) Pageable pageable) {
-        GuideHomeDto.Response response = userInfoService.guideHome(userDetails.getUser(), pageable);
+        GuideHomeDto.Response response = userInfoService.guideHome(guideId, pageable);
         return new Response<>("200", "성공적으로 가이드 홈 정보를 불러왔습니다", response);
     }
 
