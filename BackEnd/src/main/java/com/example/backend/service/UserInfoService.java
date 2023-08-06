@@ -2,13 +2,12 @@ package com.example.backend.service;
 
 import com.example.backend.dto.course.CourseDto;
 import com.example.backend.dto.joiner.JoinerDto;
-import com.example.backend.dto.tour.TourDto;
-import com.example.backend.dto.tour.TourListDto;
+import com.example.backend.dto.tour.CanceledTourDto;
 import com.example.backend.dto.userinfo.GuideCanceledToursDto;
 import com.example.backend.dto.userinfo.GuideEndedToursDto;
 import com.example.backend.dto.userinfo.GuideFollowerDto;
-import com.example.backend.dto.userinfo.GuideInfoDto;
 import com.example.backend.dto.userinfo.GuideHomeDto;
+import com.example.backend.dto.userinfo.GuideInfoDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserTourDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserWishDto;
@@ -20,7 +19,6 @@ import com.example.backend.dto.userinfo.TourInfoForGuideScheduledToursDto;
 import com.example.backend.dto.userinfo.TourInfoForUserTourDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
 import com.example.backend.dto.userinfo.UserInfoDto;
-import com.example.backend.dto.userinfo.UserInfoDto.Response;
 import com.example.backend.dto.userinfo.UserInfoForGuideReviewsDto;
 import com.example.backend.dto.userinfo.UserTourDto;
 import com.example.backend.dto.userinfo.UserWishDto;
@@ -392,7 +390,7 @@ public class UserInfoService {
     public GuideCanceledToursDto.Response getGuideCanceledTourList(Long guideId,
             Pageable pageable) {
         List<Tour> tours = tourRepository.findAllByUserId(guideId, pageable);
-        List<TourDto> tourDtoList = new ArrayList<>();
+        List<CanceledTourDto> tourDtoList = new ArrayList<>();
 
         for (Tour tour : tours) {
             if (!tour.isCanceled() || tour.isEnded()) {
@@ -413,7 +411,7 @@ public class UserInfoService {
             joinerDtoList(tourId, joinerDtos);
 
             tourDtoList.add(
-                    new TourDto(tour, tourCategories, tourImageUrls, courseDtos, joinerDtos));
+                    new CanceledTourDto(tour, tourCategories, tourImageUrls, courseDtos, joinerDtos));
         }
 
         return new GuideCanceledToursDto.Response(tourDtoList);
