@@ -17,9 +17,10 @@ function TourBoard() {
     // 검색어 (Searchbar에서 받아옴)
     const [searchValue, setSearchValue] = useState("");
     
-    const handleSearchValue = (searchValue) => {
-        console.log("검색창에서 받은 검색어:", searchValue);
+    const handleSearchValue = (searchValue, type) => {
+        console.log("검색창에서 받은 검색어:", searchValue, type);
         setSearchValue(searchValue); // 검색어 상태값 업데이트
+        setType(type);
       };
 
     // 초기값 통신
@@ -54,7 +55,7 @@ function TourBoard() {
       };
 
       fetchData();
-    }, [currentPage, searchValue])
+    }, [currentPage, searchValue, type])
 
 
     const handlePrevClick = () => {
