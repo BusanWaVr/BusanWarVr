@@ -421,7 +421,7 @@ public class TourService {
                 CourseImage courseImage = courseImageRepository.findByCourseId(course.getId());
                 if (courseImage != null) {
                     courseImageRepository.delete(courseImage);
-                    continue;
+                    courseRepository.delete(course);
                 }
                 courseRepository.delete(course);
             }
