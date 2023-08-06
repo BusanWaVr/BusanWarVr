@@ -4,13 +4,11 @@ import UserTourNavbar from "./UserTourNavbar";
 
 function UserTourBoard() {
   const [userTourData, setUserTourData] = useState(null);
-
-  const accessToken = localStorage.getItem("accessToken");
   const { userId } = useParams();
+  const { isMe } = useOutletContext();
 
-
-  // 토큰 말고 userId받게 수정해야함
   useEffect(() => {
+
     const fetchData = async () => {
       try {
         const response = await fetch(`http://52.79.93.203/user/tour/${userId}`, {
@@ -39,7 +37,7 @@ function UserTourBoard() {
     <div>
       <h1>유저 투어 보드</h1>
       <UserTourNavbar />
-      <Outlet context={{ userTourData }} />
+      <Outlet context={{ userTourData, isMe }} />
     </div>
   );
 }
