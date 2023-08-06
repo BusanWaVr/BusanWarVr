@@ -25,33 +25,32 @@ const StyledNavLink = styled(NavLink)`
   }
 `;
 
-function UserTourNavbar() {
-  const { userId } = useParams();
-
+function GuideTourNavbar() {
+  const { urlId } = useParams();
   return (
     <NavContainer>
       <ul>
         <li>
           <StyledNavLink
             exact="true"
-            to={`/user/${userId}/mypage/tour`}
-            activeclassname="active"
+            to={`/guide/${urlId}/mypage/tour/`}
+            activeClassName="active"
           >
             예정된 투어
           </StyledNavLink>
         </li>
         <li>
           <StyledNavLink
-            to={`/user/${userId}/mypage/tour/ended`}
-            activeclassname="active"
+            to={`/guide/${urlId}/mypage/tour/ended`}
+            activeClassName="active"
           >
             지난 투어
           </StyledNavLink>
         </li>
         <li>
           <StyledNavLink
-            to={`/user/${userId}/mypage/tour/canceled`}
-            activeclassname="active"
+            to={`/guide/${urlId}/mypage/tour/canceled`}
+            activeClassName="active"
           >
             취소된 투어
           </StyledNavLink>
@@ -61,4 +60,4 @@ function UserTourNavbar() {
   );
 }
 
-export default UserTourNavbar;
+export default GuideTourNavbar;

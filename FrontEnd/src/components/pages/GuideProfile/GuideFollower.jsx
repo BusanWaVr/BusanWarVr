@@ -18,7 +18,8 @@ function GuideFollower() {
       if (response.status === 200) {
         console.log("가이드 팔로워목록 받음");
         const data = await response.json();
-        setFollowerData(data.data.guides);
+        console.log(data);
+        setFollowerData(data.data);
       }
     } catch (error) {
       console.error(error);
@@ -34,7 +35,9 @@ function GuideFollower() {
     <div>
       <h1>가이드 팔로워 목록</h1>
       {followerData ? (
-        <FollowerCard followerData={followerData} />
+        <div>
+          <FollowerCard followerData={followerData} />
+        </div>
       ) : (
         <p>Loading...</p>
       )}
