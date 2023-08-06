@@ -61,6 +61,7 @@ function App() {
 
           <Route element={<PrivateRoute />}>
             <Route path="/livestream" element={<LiveStream />} />
+            <Route path="/update" element={<Update />} />
           </Route>
 
           <Route element={<PrivateRoute />}>
@@ -85,7 +86,7 @@ function App() {
           <Route element={<UserRoute />}>
             <Route path="/review/:tourId/write" element={<ReviewWrite />} />
             <Route path="/review/:reviewId/edit" element={<ReviewEdit />} />
-            <Route path="/mate/write" element={<MateWrite />} />
+            <Route path="/mate/:tourId/write" element={<MateWrite />} />
 
             {/* 마이페이지 */}
             <Route path="/user/:userId/mypage" element={<UserMyPage />}>

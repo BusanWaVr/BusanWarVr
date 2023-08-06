@@ -15,7 +15,7 @@ const NavContainer = styled.nav`
   }
 `;
 
-const StyledLink = styled(NavLink)`
+const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   color: #333;
   font-weight: ${(props) => (props.active ? "bold" : "normal")};
@@ -33,29 +33,29 @@ function UserTourNavbar() {
     <NavContainer>
       <ul>
         <li>
-          <StyledLink
-            exact
-            to={`/user/${userId}/mypage/tour/`}
-            activeClassName="active"
+          <StyledNavLink
+            exact="true"
+            to={`/user/${userId}/mypage/tour`}
+            activeclassname="active"
           >
             예정된 투어
-          </StyledLink>
+          </StyledNavLink>
         </li>
         <li>
-          <StyledLink
-            to={`/user/${userId}/mypage/tour/ended/`}
-            activeClassName="active"
+          <StyledNavLink
+            to={`/user/${userId}/mypage/tour/ended`}
+            activeclassname="active"
           >
             지난 투어
-          </StyledLink>
+          </StyledNavLink>
         </li>
         <li>
-          <StyledLink
-            to={`/user/${userId}/mypage/tour/canceled/`}
-            activeClassName="active"
+          <StyledNavLink
+            to={`/user/${userId}/mypage/tour/canceled`}
+            activeclassname="active"
           >
             취소된 투어
-          </StyledLink>
+          </StyledNavLink>
         </li>
       </ul>
     </NavContainer>
