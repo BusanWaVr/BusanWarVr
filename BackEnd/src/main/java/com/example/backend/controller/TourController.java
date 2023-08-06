@@ -146,5 +146,4 @@ public class TourController {
         List<SearchTourDto> searchTourDtos =  tourService.searchTour(request, pageable);
         return new Response<>("200", "성공적으로 투어를 찾았습니다.", searchTourDtos);
     }
-
 }
