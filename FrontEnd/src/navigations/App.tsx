@@ -59,6 +59,7 @@ function App() {
           </Route>
 
           <Route element={<PrivateRoute />}>
+            <Route path="/update" element={<Update />} />
             <Route path="/livestream" element={<LiveStream />} />
           </Route>
 
