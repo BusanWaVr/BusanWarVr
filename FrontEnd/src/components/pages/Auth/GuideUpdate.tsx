@@ -15,6 +15,7 @@ function GuideUpdate(props: EditProfileProps) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
+  const [passwordDBCheck, setpasswordDBCheck] = useState(false);
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
   const [passwordChangeMessage, setPasswordChangeMessage] = useState("");
   const [introduction, setIntroduction] = useState(
@@ -209,8 +210,12 @@ function GuideUpdate(props: EditProfileProps) {
           }
         );
 
-        if (response.data.message === "비밀번호를 변경했습니다.") {
+        if (response.status === 500) {
+          console.log(response);
+          setpasswordDBCheck(true);
+        } else if (response.data.message === "비밀번호를 변경했습니다.") {
           console.log(response.data);
+          setpasswordDBCheck(false);
           setPasswordChangeMessage("비밀번호가 변경되었습니다!");
         }
       } catch (error) {
@@ -330,9 +335,15 @@ function GuideUpdate(props: EditProfileProps) {
             {!passwordMatch && !passwordChangeMessage && (
               <p style={{ color: "red" }}>새 비밀번호가 일치하지 않습니다.</p>
             )}
-            {!passwordChangeMessage && passwordMatch && (
+            {!passwordChangeMessage && passwordMatch && passwordDBCheck && (
               <p style={{ color: "green" }}>비밀번호가 확인되었습니다.</p>
             )}
+            {!passwordChangeMessage &&
+              passwordMatch &&
+              !passwordDBCheck &&
+              newPassword === password && (
+                <p style={{ color: "red" }}>기존 비밀번호와 동일합니다.</p>
+              )}
             <br />
             <button type="submit">비밀번호 변경</button>
             {passwordChangeMessage && newPassword === confirmPassword && (
