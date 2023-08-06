@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 // import Responsive from "../../common/Responsive";
+import { useParams, useNavigate } from "react-router-dom";
 import Editor from "../../blocks/Editor";
 import styled from "styled-components";
 
@@ -9,16 +10,18 @@ const StyledWritePage = styled.div`
 `;
 
 const ReviewWrite = () => {
-  const [tourId, setTourId] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [score, setScore] = useState("");
 
+  const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
 
-  const handleTourIdChange = (event) => {
-    setTourId(event.target.value);
-  };
+  const { tourId } = useParams();
+
+  
+  // 로컬이 아니라, 종료 보드에서 userId를 가져와야 하는데..
+  const userId = localStorage.getItem("userId");
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -65,10 +68,12 @@ const ReviewWrite = () => {
 
         if (data.code === "200") {
           alert(data.message);
+          // 리뷰 쓰기 완료하면 마이페이지의 리뷰보드로 이동하게 해뒀는데 더 좋은 아이디어 있으면 공유
+          navigate(`/user/${userId}/mypage/review`);
         } else {
           // 에러
           console.log(data.message);
-          alert("죄송합니다. 잠시후 다시 시도해 주세요.");
+          alert(data.message);
         }
       } catch (error) {
         console.error(error);
@@ -88,8 +93,7 @@ const ReviewWrite = () => {
             type="text"
             id="tourId"
             value={tourId}
-            onChange={handleTourIdChange}
-            placeholder="여기는 나중에 수정합니당"
+            disabled
           />
           <br />
           <br />

@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Nav, Navbar, Container, Button } from "react-bootstrap";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import LoginModal from "../pages/Auth/LoginModal";
 import Logo from "../../assets/logo.svg";
@@ -59,19 +59,19 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
             />{" "}
           </Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="/test">부산 여행지</Nav.Link>
-            <Nav.Link href="/test">투어 메이트</Nav.Link>
-            <Nav.Link href="/livestream">스트리밍 테스트</Nav.Link>
+            <Nav.Link as={Link} to="/test">부산 여행지</Nav.Link>
+            <Nav.Link as={Link} to="/test">투어 메이트</Nav.Link>
+            <Nav.Link as={Link} to="/livestream">스트리밍 테스트</Nav.Link>
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             {isLoggedIn ? (
               <>
                 {userType === "USER" ? (
-                  <Nav.Link href={`/user/${userId}/mypage`}>
+                  <Nav.Link as={Link} to={`/user/${userId}/mypage`}>
                     {nickname}
                   </Nav.Link>
                 ) : userType === "GUIDE" ? (
-                  <Nav.Link href={`/guide/${userId}/mypage`}>
+                  <Nav.Link as={Link} to={`/guide/${userId}/mypage`}>
                     {nickname}
                   </Nav.Link>
                 ) : null}

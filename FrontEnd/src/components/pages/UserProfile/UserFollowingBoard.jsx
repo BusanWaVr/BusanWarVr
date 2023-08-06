@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom"; 
 import FollowingCard from "../../blocks/FollowingCard";
 
 function UserFollowingBoard() {
   const [followingData, setFollowingData] = useState([]);
   const accessToken = localStorage.getItem("accessToken");
+  const { userId } = useParams();
 
   useEffect(() => {
     fetchData();
   }, []);
 
+
+  // 토큰 말고 userId받게 수정해야함
   const fetchData = async () => {
     try {
-      const response = await fetch("http://52.79.93.203/user/following", {
+      const response = await fetch(`http://52.79.93.203/user/following/${userId}`, {
         method: "GET",
         headers: {
-          Authorization: accessToken,
           "Content-Type": "application/json",
         },
       });
