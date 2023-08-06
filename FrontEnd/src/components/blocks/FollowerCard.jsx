@@ -13,8 +13,7 @@ function FollowerCard({ followerData }) {
         <p>로딩중ㅎ</p>
       ) : (
         <p>
-          총 <strong>{followerData.length}</strong>명의 가이드를 팔로우하고
-          있어요.
+          총 <strong>{followerData.length}</strong>명의 팔로워가 있어요.
         </p>
       )}
 
@@ -30,7 +29,7 @@ function FollowerCard({ followerData }) {
             }}
           />
           <br />
-          <Link to={`/guide/${follower.userId}/detail`}>
+          <Link to={`/user/${follower.userId}/detail`}>
             <span> {follower.nickname}</span>
           </Link>
         </CardContainer>
