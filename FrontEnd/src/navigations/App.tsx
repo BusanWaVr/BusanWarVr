@@ -30,6 +30,7 @@ import MateDetail from "../components/pages/Mate/MateDetail";
 import MateList from "../components/pages/Mate/MateList";
 import MateEdit from "../components/pages/Mate/MateEdit";
 import ReviewWrite from "../components/pages/Review/ReviewWrite";
+import ReviewEdit from "../components/pages/Review/ReviewEdit";
 import UserMyPage from "../components/pages/UserProfile/UserMyPage";
 import UserMain from "../components/pages/UserProfile/UserMain";
 // import UserNavbar from "../components/pages/UserProfile/UserNavbar";
@@ -83,7 +84,8 @@ function App() {
           </Route>
 
           <Route element={<UserRoute />}>
-            <Route path="/review/write" element={<ReviewWrite />} />
+            <Route path="/review/:tourId/write" element={<ReviewWrite />} />
+            <Route path="/review/:reviewId/edit" element={<ReviewEdit />} />
             <Route path="/mate/write" element={<MateWrite />} />
 
             {/* 마이페이지 */}

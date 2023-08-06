@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Outlet, useOutletContext } from "react-router-dom";
+import { Outlet, useOutletContext, useParams } from "react-router-dom";
 import UserTourNavbar from "./UserTourNavbar";
 
 function UserTourBoard() {
   const [userTourData, setUserTourData] = useState(null);
 
   const accessToken = localStorage.getItem("accessToken");
+  const { userId } = useParams();
 
+
+  // 토큰 말고 userId받게 수정해야함
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://52.79.93.203/user/tour", {
+        const response = await fetch(`http://52.79.93.203/user/tour/${userId}`, {
           method: "GET",
           headers: {
-            Authorization: accessToken,
             "Content-Type": "application/json",
           },
         });

@@ -54,7 +54,7 @@ function UserMyPage() {
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
   return (
     <Wrapper>
@@ -63,7 +63,7 @@ function UserMyPage() {
         <UserNavbar />
       </NavbarWrapper>
       <OutletWrapper>
-        <Outlet context={{ userInfoData }} />
+        <Outlet context={{ userInfoData }}/>
       </OutletWrapper>
     </Wrapper>
   );
