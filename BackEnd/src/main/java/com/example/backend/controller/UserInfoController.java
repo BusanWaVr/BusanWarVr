@@ -29,11 +29,11 @@ public class UserInfoController {
 
     private final UserInfoService userInfoService;
 
-    @GetMapping("/user/wish")
-    public Response getUserWishList(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    @GetMapping("/user/wish/{userId}")
+    public Response getUserWishList(@PathVariable Long userId,
             @PageableDefault(size = 6) Pageable pageable) {
         UserWishDto.Response response = userInfoService.getUserWishList(
-                userDetails.getUser().getId(), pageable);
+                userId, pageable);
 
         return new Response<>("200", "성공적으로 위시리스트를 가져왔습니다.", response);
     }
@@ -51,12 +51,12 @@ public class UserInfoController {
         }
     }
 
-    @GetMapping("/user/following")
+    @GetMapping("/user/following/{userId}")
     public Response<UserFollowDto.Response> getFollowingGuides(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long userId,
             @PageableDefault(size = 6) Pageable pageable) {
         UserFollowDto.Response response = userInfoService.getFollowingGuideList(
-                userDetails.getUser(), pageable);
+                userId, pageable);
 
         return new Response<>("200", "성공적으로 팔로잉하는 가이드의 목록을 가져왔습니다.", response);
     }
@@ -108,10 +108,9 @@ public class UserInfoController {
         return new Response<>("200", "성공적으로 가이드 홈 정보를 불러왔습니다", response);
     }
 
-    @GetMapping("/user/tour")
-    public Response<UserTourDto.Response> getUserTours(
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        UserTourDto.Response response = userInfoService.getUserTour(userDetails.getUser());
+    @GetMapping("/user/tour/{userId}")
+    public Response<UserTourDto.Response> getUserTours(@PathVariable Long userId) {
+        UserTourDto.Response response = userInfoService.getUserTour(userId);
         return new Response<>("200", "성공적으로 유저의 투어 정보를 불러왔습니다", response);
     }
 
