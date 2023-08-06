@@ -82,7 +82,8 @@ public class SecurityConfig {
     FormLoginFilter formLoginFilter(AuthenticationManager authenticationManager) {
         FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager);
         formLoginFilter.setFilterProcessesUrl("/user/login");
-        formLoginFilter.setAuthenticationSuccessHandler(new FormLoginSuccessHandler(jwtTokenUtils, userCustomRepository));
+        formLoginFilter.setAuthenticationSuccessHandler(
+                new FormLoginSuccessHandler(jwtTokenUtils, userCustomRepository));
         formLoginFilter.afterPropertiesSet();
         return formLoginFilter;
     }
@@ -124,6 +125,7 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.GET, "/tour/{tourId}"));
         skipPathList.add(new Path(HttpMethod.GET, "/tour"));
         skipPathList.add(new Path(HttpMethod.GET, "/tour/review/{reviewId}"));
+        skipPathList.add(new Path(HttpMethod.POST, "/tour/search"));
 
         // Chatting
         skipPathList.add(new Path(HttpMethod.GET, "/ws-stomp/**"));
@@ -143,6 +145,11 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.GET, "/user/userInfo/{userId}"));
         skipPathList.add(new Path(HttpMethod.GET, "/guide/guideInfo/{guideId}"));
         skipPathList.add(new Path(HttpMethod.GET, "/guide/follower/{guideId}"));
+        skipPathList.add(new Path(HttpMethod.GET, "/guide/{guideId}/tour/canceled"));
+        skipPathList.add(new Path(HttpMethod.GET, "/guide/{guideId}/tour/schedule"));
+        skipPathList.add(new Path(HttpMethod.GET, "/guide/{guideId}/tour/end"));
+        skipPathList.add(new Path(HttpMethod.GET, "/guide/{guideId}/home"));
+        skipPathList.add(new Path(HttpMethod.GET, "/guide/{guideId}/tour/review"));
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPathList, "/**");
         JwtAuthFilter filter = new JwtAuthFilter(matcher, extractor);

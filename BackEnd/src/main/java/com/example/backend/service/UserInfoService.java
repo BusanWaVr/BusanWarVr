@@ -1,9 +1,13 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.course.CourseDto;
+import com.example.backend.dto.joiner.JoinerDto;
+import com.example.backend.dto.tour.CanceledTourDto;
+import com.example.backend.dto.userinfo.GuideCanceledToursDto;
 import com.example.backend.dto.userinfo.GuideEndedToursDto;
 import com.example.backend.dto.userinfo.GuideFollowerDto;
-import com.example.backend.dto.userinfo.GuideInfoDto;
 import com.example.backend.dto.userinfo.GuideHomeDto;
+import com.example.backend.dto.userinfo.GuideInfoDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserTourDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserWishDto;
@@ -15,11 +19,15 @@ import com.example.backend.dto.userinfo.TourInfoForGuideScheduledToursDto;
 import com.example.backend.dto.userinfo.TourInfoForUserTourDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
 import com.example.backend.dto.userinfo.UserInfoDto;
-import com.example.backend.dto.userinfo.UserInfoDto.Response;
 import com.example.backend.dto.userinfo.UserInfoForGuideReviewsDto;
 import com.example.backend.dto.userinfo.UserTourDto;
 import com.example.backend.dto.userinfo.UserWishDto;
 import com.example.backend.dto.userinfo.UserWishTourDto;
+import com.example.backend.model.category.Category;
+import com.example.backend.model.course.Course;
+import com.example.backend.model.course.CourseRepository;
+import com.example.backend.model.courseimage.CourseImage;
+import com.example.backend.model.courseimage.CourseImageRepository;
 import com.example.backend.model.follower.Follower;
 import com.example.backend.model.follower.FollowerRepository;
 import com.example.backend.model.joiner.Joiner;
@@ -60,6 +68,8 @@ public class UserInfoService {
     private final FollowerRepository followerRepository;
     private final ReviewRepository reviewRepository;
     private final JoinerRepository joinerRepository;
+    private final CourseRepository courseRepository;
+    private final CourseImageRepository courseImageRepository;
 
 
     public UserWishDto.Response getUserWishList(Long userId, Pageable pageable) {
@@ -150,6 +160,16 @@ public class UserInfoService {
         }
 
         return new UserFollowDto.Response(responseList);
+    }
+
+    public GuideScheduledToursDto.Response guideScheduledToursService(Long guideId, Pageable pageable) {
+        User guide = userRepository.findById(guideId).get();
+        return getGuideScheduledTours(guide, pageable);
+    }
+
+    public GuideEndedToursDto.Response guideEndedToursService(Long guideId,  Pageable pageable){
+        User guide = userRepository.findById(guideId).get();
+        return getGuideEndedTours(guide, pageable);
     }
 
     public GuideScheduledToursDto.Response getGuideScheduledTours(User guide, Pageable pageable) {
@@ -266,6 +286,11 @@ public class UserInfoService {
         return response;
     }
 
+    public GuideReviewsDto.Response guideReviewsService(Long guideId, Pageable pageable){
+        User guide = userRepository.findById(guideId).get();
+        return getGuideReviews(guide, pageable);
+    }
+
     public GuideReviewsDto.Response getGuideReviews(User guide, Pageable pageable) {
         List<Tour> tourList = tourRepository.findAllByUserId(guide.getId());
         List<ReviewInfoForGuideReviewDto> responseList = new ArrayList<>();
@@ -287,8 +312,9 @@ public class UserInfoService {
         return new GuideReviewsDto.Response(responseList);
     }
 
-    public GuideHomeDto.Response guideHome(User guide, Pageable pageable) {
+    public GuideHomeDto.Response guideHome(Long guideId, Pageable pageable) {
         GuideHomeDto.Response response = new GuideHomeDto.Response();
+        User guide = userRepository.findById(guideId).get();
         response.setIntroduction(guide.getIntroduction());
 
         GuideScheduledToursDto.Response scheduledToursResponse = getGuideScheduledTours(guide,
@@ -359,5 +385,78 @@ public class UserInfoService {
             response.add(guideFollower);
         }
         return response;
+    }
+
+    public GuideCanceledToursDto.Response getGuideCanceledTourList(Long guideId,
+            Pageable pageable) {
+        List<Tour> tours = tourRepository.findAllByUserId(guideId, pageable);
+        List<CanceledTourDto> tourDtoList = new ArrayList<>();
+
+        for (Tour tour : tours) {
+            if (!tour.isCanceled() || tour.isEnded()) {
+                continue;
+            }
+            Long tourId = tour.getId();
+
+            List<String> tourCategories = new ArrayList<>();
+            tourCategoryList(tourId, tourCategories);
+
+            List<String> tourImageUrls = new ArrayList<>();
+            tourImageUrlList(tourId, tourImageUrls);
+
+            List<CourseDto.Response> courseDtos = new ArrayList<>();
+            courseDtoList(tourId, courseDtos);
+
+            List<JoinerDto> joinerDtos = new ArrayList<>();
+            joinerDtoList(tourId, joinerDtos);
+
+            tourDtoList.add(
+                    new CanceledTourDto(tour, tourCategories, tourImageUrls, courseDtos, joinerDtos));
+        }
+
+        return new GuideCanceledToursDto.Response(tourDtoList);
+    }
+
+    // 투어 카테고리 목록 가져오기
+    public void tourCategoryList(Long tourId, List<String> tourCategories) {
+        List<TourCategory> categories = tourCategoryRepository.findAllByTourId(tourId);
+        for (TourCategory tourCategory : categories) {
+            Category category = tourCategory.getCategory();
+            tourCategories.add(category.getName());
+        }
+    }
+
+    // 투어 이미지 목록 가져오기
+    public void tourImageUrlList(Long tourId, List<String> tourImageUrls) {
+        List<TourImage> tourImages = tourImageRepository.findAllByTourId(tourId);
+        if (tourImages != null) {
+            for (TourImage tourImage : tourImages) {
+                tourImageUrls.add(tourImage.getImage().getUrl());
+            }
+        }
+    }
+
+    // 투어 코스, 코스 이미지 목록 가져오기
+    public void courseDtoList(Long tourId, List<CourseDto.Response> courseDtos) {
+        List<Course> courses = courseRepository.findAllByTourId(tourId);
+        for (Course course : courses) {
+            CourseImage courseImage = courseImageRepository.findByCourseId(course.getId());
+            String imageUrl = "";
+            if (courseImage != null) {
+                imageUrl = courseImage.getImage().getUrl();
+            }
+            CourseDto.Response courseDto = new CourseDto.Response(course, imageUrl);
+            courseDtos.add(courseDto);
+        }
+    }
+
+    // 투어 예약자 목록 가져오기
+    public void joinerDtoList(Long tourId, List<JoinerDto> joinerDtos) {
+        List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
+        for (Joiner joiner : joinerList) {
+            JoinerDto joinerDto = new JoinerDto(joiner.getUser().getProfileImg(),
+                    joiner.getUser().getNickname(), joiner.getJoinDate());
+            joinerDtos.add(joinerDto);
+        }
     }
 }

@@ -27,6 +27,7 @@ import GuideScheduledBoard from "../components/pages/GuideProfile/GuideScheduled
 import GuideEndedBoard from "../components/pages/GuideProfile/GuideEndedBoard.jsx";
 import GuideCanceledBoard from "../components/pages/GuideProfile/GuideCanceledBoard.jsx";
 
+import TourBoard from "../components/pages/Tour/TourBoard";
 import TourUpdate from "../components/pages/Tour/TourUpdate.tsx";
 import MateWrite from "../components/pages/Mate/MateWrite.jsx";
 import MateDetail from "../components/pages/Mate/MateDetail";
@@ -89,6 +90,8 @@ function App() {
             <Route path="/tour/:tourId/update" element={<TourUpdate />} />
           </Route>
 
+
+          <Route path="/tour" element={<TourBoard />} />
           <Route path="/tour/:tourId" element={<TourDetail />} />
           {/* <Route path="/guide/:userId/detail" element={<GuideDetail />} /> */}
 

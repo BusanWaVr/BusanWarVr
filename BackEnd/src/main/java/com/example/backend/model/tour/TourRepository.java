@@ -7,8 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TourRepository extends JpaRepository<Tour, Long> {
 
     List<Tour> findAllByUserId(Long userId);
+
     List<Tour> findAllByUserId(Long userId, Pageable pageable);
+
     List<Tour> findByIsEndedFalseOrderByStartDateDesc(Pageable pageable);
+
     Tour findByUid(String uid);
 
+    List<Tour> findByUserIdFalseOrderByIdDesc(Long guideId, Pageable pageable);
 }
