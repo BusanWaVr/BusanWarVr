@@ -121,7 +121,8 @@ public class UserInfoService {
         followerRepository.deleteByUserAndGuide(user, guide);
     }
 
-    public UserFollowDto.Response getFollowingGuideList(User user, Pageable pageable) {
+    public UserFollowDto.Response getFollowingGuideList(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId).get();
         List<Follower> followingGuideList = followerRepository.findAllByUser(user, pageable);
         List<GuideInfoForUserFollowDto> responseList = new ArrayList<>();
 
@@ -303,7 +304,8 @@ public class UserInfoService {
         return response;
     }
 
-    public UserTourDto.Response getUserTour(User user) {
+    public UserTourDto.Response getUserTour(Long userId) {
+        User user = userRepository.findById(userId).get();
         UserTourDto.Response response = new UserTourDto.Response();
         List<TourInfoForUserTourDto> scheduledTours = new ArrayList<>();
         List<TourInfoForUserTourDto> endedTours = new ArrayList<>();

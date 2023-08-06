@@ -137,6 +137,9 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.GET, "/testQueryDsl"));
 
         // userInfo
+        skipPathList.add(new Path(HttpMethod.GET, "/user/tour/{userId}"));
+        skipPathList.add(new Path(HttpMethod.GET, "/user/following/**"));
+        skipPathList.add(new Path(HttpMethod.GET, "/user/wish/**"));
         skipPathList.add(new Path(HttpMethod.GET, "/user/userInfo/{userId}"));
         skipPathList.add(new Path(HttpMethod.GET, "/guide/guideInfo/{guideId}"));
         skipPathList.add(new Path(HttpMethod.GET, "/guide/follower/{guideId}"));
