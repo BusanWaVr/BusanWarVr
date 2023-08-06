@@ -6,19 +6,13 @@ const CardContainer = styled.div`
   margin: 50px;
 `;
 
-function TourListCard({ TourData, tempPage }) {
-
-
-  useEffect(() => {
-    console.log(tempPage)
-  }, [tempPage]);
-
+function TourListCard({ TourData }) {
 
   return (
     <div>
       {TourData ? (
         TourData.length > 0 ? (
-          TourData.slice(tempPage * 6, (tempPage + 1) * 6).map((tour) => (
+          TourData.map((tour, index) => (
             <CardContainer key={tour.id}>
               {tour.images.length > 0 ? (
                 <img
