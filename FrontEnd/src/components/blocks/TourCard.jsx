@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -7,6 +7,24 @@ const CardContainer = styled.div`
 `;
 
 function TourCard({ TourData }) {
+  const [showReviewButton, setShowReviewButton] = useState(false);
+
+  // 페이지 URL에서 엔드포인트 추출
+  const url = window.location.href;
+  const parts = url.split("/");
+  const ended = parts[parts.length - 2];
+
+  // console.log(url);
+  // console.log(parts);
+  // console.log(ended);
+
+
+  useEffect(() => {
+    // 엔드포인트가 "ended"인 경우 "리뷰 쓰기" 버튼을 보여주도록 설정
+    setShowReviewButton(ended === "ended");
+  }, [ended]);
+
+
   return (
     <div>
       {TourData ? (
@@ -23,9 +41,14 @@ function TourCard({ TourData }) {
               <p>시작 날짜 : {tour.startDate}</p>
               {/* 카테고리가 없네.. */}
               {/* <p>카테고리 : #{tour.category.join(" #")}</p> */}
-              <strong>
+              <p><strong>
                 {tour.currentMember}/{tour.maxMember}
-              </strong>
+              </strong></p>
+              {showReviewButton && (
+                // <Link to={`/tour/${tour.tourId}/writeReview`}>
+                  <button>리뷰 쓰기</button>
+                // </Link>
+              )}
             </CardContainer>
           ))
         ) : (

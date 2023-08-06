@@ -15,6 +15,9 @@ function UserEndedBoard() {
     console.log("종료보드에서 받고 있음", userEndedData);
   }, [userEndedData]);
 
+
+  // userEndedData.isended = 1;
+
   const TourData = userEndedData;
 
   return (
