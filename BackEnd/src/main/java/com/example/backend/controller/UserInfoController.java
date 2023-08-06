@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
+import com.example.backend.dto.userinfo.GuideCanceledToursDto;
 import com.example.backend.dto.userinfo.GuideEndedToursDto;
 import com.example.backend.dto.userinfo.GuideFollowerDto;
 import com.example.backend.dto.userinfo.GuideHomeDto;
@@ -118,5 +119,14 @@ public class UserInfoController {
     public Response<List<GuideFollowerDto>> getGuideFollower(@PathVariable Long guideId) {
         List<GuideFollowerDto> response = userInfoService.getGuideFollowerList(guideId);
         return new Response<>("200", "성공적으로 가이드의 팔로워 정보를 불러왔습니다", response);
+    }
+
+    @GetMapping("/guide/{guideId}/tour/canceled")
+    public Response<GuideCanceledToursDto.Response> getGuideCanceledTours(
+            @PathVariable Long guideId,
+            @PageableDefault(size = 6) Pageable pageable) {
+        GuideCanceledToursDto.Response response = userInfoService.getGuideCanceledTourList(
+                guideId, pageable);
+        return new Response<>("200", "성공적으로 가이드의 취소된 투어 목록을 가져왔습니다.", response);
     }
 }
