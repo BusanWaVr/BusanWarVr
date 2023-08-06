@@ -1,6 +1,6 @@
 package com.example.backend.dto.userinfo;
 
-import com.example.backend.dto.tour.TourDto;
+import com.example.backend.dto.tour.CanceledTourDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +13,6 @@ public class GuideCanceledToursDto {
     @AllArgsConstructor
     public static class Response {
 
-        private List<TourDto> tourDtoList;
+        private List<CanceledTourDto> tourDtoList;
     }
 }
