@@ -140,11 +140,11 @@ public class TourController {
         return new Response<>("200", "성공적으로 후기를 삭제했습니다.", null);
     }
 
-    @GetMapping("/tour/search")
+    @PostMapping("/tour/search")
     public Response<List<SearchTourDto>> searchTour(@PageableDefault(size = 6) Pageable pageable, @RequestBody
             TourSearchInfoDto.Request request){
         List<SearchTourDto> searchTourDtos =  tourService.searchTour(request, pageable);
-        return new Response<>("200", "성공적으로 후기를 삭제했습니다.", searchTourDtos);
+        return new Response<>("200", "성공적으로 투어를 찾았습니다.", searchTourDtos);
     }
 
 }

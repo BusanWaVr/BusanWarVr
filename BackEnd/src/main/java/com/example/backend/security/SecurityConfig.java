@@ -124,6 +124,7 @@ public class SecurityConfig {
         skipPathList.add(new Path(HttpMethod.GET, "/tour/{tourId}"));
         skipPathList.add(new Path(HttpMethod.GET, "/tour"));
         skipPathList.add(new Path(HttpMethod.GET, "/tour/review/{reviewId}"));
+        skipPathList.add(new Path(HttpMethod.POST, "/tour/search"));
 
         // Chatting
         skipPathList.add(new Path(HttpMethod.GET, "/ws-stomp/**"));
