@@ -24,6 +24,7 @@ import GuideMain from "../components/pages/GuideProfile/GuideMain.jsx";
 import GuideFollower from "../components/pages/GuideProfile/GuideFollower.jsx";
 import GuideTourBoard from "../components/pages/GuideProfile/GuideTourBoard.jsx";
 
+import TourBoard from "../components/pages/Tour/TourBoard";
 import TourUpdate from "../components/pages/Tour/TourUpdate.tsx";
 import MateWrite from "../components/pages/Mate/MateWrite.jsx";
 import MateDetail from "../components/pages/Mate/MateDetail";
@@ -67,6 +68,20 @@ function App() {
 
           <Route element={<PrivateRoute />}>
             <Route path="/chatroom" element={<ChatRoom />} />
+
+            
+            {/* 마이페이지 */}
+            <Route path="/user/:userId/mypage" element={<UserMyPage />}>
+              <Route path="" element={<UserMain />} />
+              <Route path="tour" element={<UserTourBoard />}>
+                <Route path="" element={<UserScheduledBoard />} />
+                <Route path="ended" element={<UserEndedBoard />} />
+                <Route path="canceled" element={<UserCanceledBoard />} />
+              </Route>
+              <Route path="wish" element={<UserWishBoard />} />
+              <Route path="following" element={<UserFollowingBoard />} />
+              <Route path="review" element={<UserReviewBoard />} />
+            </Route>
           </Route>
 
           <Route element={<GuideRoute />}>
@@ -74,6 +89,8 @@ function App() {
             <Route path="/tour/:tourId/update" element={<TourUpdate />} />
           </Route>
 
+
+          <Route path="/tour" element={<TourBoard />} />
           <Route path="/tour/:tourId" element={<TourDetail />} />
           {/* <Route path="/guide/:userId/detail" element={<GuideDetail />} /> */}
 
@@ -89,18 +106,6 @@ function App() {
             <Route path="/review/:reviewId/edit" element={<ReviewEdit />} />
             <Route path="/mate/:tourId/write" element={<MateWrite />} />
 
-            {/* 마이페이지 */}
-            <Route path="/user/:userId/mypage" element={<UserMyPage />}>
-              <Route path="" element={<UserMain />} />
-              <Route path="tour" element={<UserTourBoard />}>
-                <Route path="" element={<UserScheduledBoard />} />
-                <Route path="ended" element={<UserEndedBoard />} />
-                <Route path="canceled" element={<UserCanceledBoard />} />
-              </Route>
-              <Route path="wish" element={<UserWishBoard />} />
-              <Route path="following" element={<UserFollowingBoard />} />
-              <Route path="review" element={<UserReviewBoard />} />
-            </Route>
           </Route>
 
           <Route path="/matedetail/:mateId" element={<MateDetail />} />
