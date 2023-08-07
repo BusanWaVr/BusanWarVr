@@ -7,7 +7,6 @@ const CardContainer = styled.div`
 `;
 
 function TourListCard({ TourData }) {
-
   return (
     <div>
       {TourData ? (
@@ -16,14 +15,14 @@ function TourListCard({ TourData }) {
             <CardContainer key={tour.id}>
               {tour.images.length > 0 ? (
                 <img
-                src={tour.images[0]}
-                alt="투어 이미지"
-                style={{
-                  width: "200px",
-                  height: "200px",
-                  borderRadius: "50%",
-                }}
-              />
+                  src={tour.images[0]}
+                  alt="투어 이미지"
+                  style={{
+                    width: "200px",
+                    height: "200px",
+                    borderRadius: "50%",
+                  }}
+                />
               ) : (
                 <p>등록된 투어 이미지가 없습니다.</p>
               )}
@@ -34,7 +33,7 @@ function TourListCard({ TourData }) {
               <span>{tour.subTitle}</span>
               <p>지역 : {tour.region}</p>
 
-              <Link to={`/guide/${tour.userId}/detail`}>
+              <Link to={`/guide/${tour.userId}/mypage`}>
                 <span> {tour.guide.nickname}</span>
               </Link>
               <p>시작 날짜 : {tour.startDate}</p>
