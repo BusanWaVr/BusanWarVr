@@ -55,6 +55,14 @@ function GuideTourNavbar() {
             취소된 투어
           </StyledNavLink>
         </li>
+        <li>
+          <StyledNavLink
+            to={`/guide/${urlId}/mypage/tour/test`}
+            activeClassName="active"
+          >
+            채팅 시작
+          </StyledNavLink>
+        </li>
       </ul>
     </NavContainer>
   );
