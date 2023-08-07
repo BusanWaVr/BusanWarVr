@@ -8,14 +8,11 @@ const TourCancelButton = ({ tourId }: { tourId: string | undefined }) => {
   const cancelHandler = async () => {
     try {
       console.log(accessToken);
-      const res = await axios.delete(
-        `http://52.79.93.203/tour/wish/${tourId}`,
-        {
-          headers: {
-            Authorization: accessToken,
-          },
-        }
-      );
+      const res = await axios.delete(`/api/tour/wish/${tourId}`, {
+        headers: {
+          Authorization: accessToken,
+        },
+      });
       console.log(res.data);
     } catch (error) {
       console.error(error);

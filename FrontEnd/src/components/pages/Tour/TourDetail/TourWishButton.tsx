@@ -4,8 +4,7 @@ import axios from "axios";
 import { setWishTour } from "../../../../store/reducers/UserInfoReducer";
 
 const TourWishButton: React.FC<{
-  tour: any;
-  tourId: string;
+  tourId: string | undefined;
 }> = ({ tourId }) => {
   const dispatch = useDispatch();
 
@@ -15,7 +14,6 @@ const TourWishButton: React.FC<{
   );
 
   useEffect(() => {
-    console.log("초기 세팅");
     console.log(JSON.parse(wishTour).some((tour: string) => tour == tourId));
     setIsInWishlist(
       JSON.parse(wishTour).some((tour: string) => tour == tourId)
@@ -26,7 +24,7 @@ const TourWishButton: React.FC<{
     const add = async () => {
       try {
         const res = await axios.post(
-          `http://52.79.93.203/tour/wish/${tourId}`,
+          `/api/tour/wish/${tourId}`,
           {},
           {
             headers: {

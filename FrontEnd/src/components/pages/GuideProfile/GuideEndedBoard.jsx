@@ -16,15 +16,12 @@ function GuideEndedBoard() {
 
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `http://52.79.93.203/guide/${urlId}/tour/end`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`/api/guide/${urlId}/tour/end`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         console.log(response);
         if (response.status === 200) {
           console.log("가이드 지난정보를 받았어요");

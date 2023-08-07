@@ -114,7 +114,7 @@ function GuideUpdate(props: EditProfileProps) {
         nickname: name,
       };
       console.log(requestBody);
-      const response = await fetch("http://52.79.93.203/auth/nickname", {
+      const response = await fetch("/api/auth/nickname", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -150,7 +150,7 @@ function GuideUpdate(props: EditProfileProps) {
 
       const accessToken = localStorage.getItem("accessToken");
 
-      const response = await fetch("http://52.79.93.203/auth/password", {
+      const response = await fetch("/api/auth/password", {
         method: "POST",
         headers: {
           Authorization: accessToken,
@@ -201,16 +201,12 @@ function GuideUpdate(props: EditProfileProps) {
 
         const accessToken = localStorage.getItem("accessToken");
 
-        const response = await axios.put(
-          "http://52.79.93.203/user/password",
-          requestBody,
-          {
-            headers: {
-              Authorization: accessToken,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await axios.put("/api/user/password", requestBody, {
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+        });
 
         if (response.status === 500) {
           console.log(response);
@@ -248,7 +244,7 @@ function GuideUpdate(props: EditProfileProps) {
       }
       const accessToken = localStorage.getItem("accessToken");
 
-      const response = await axios.put("http://52.79.93.203/guide", formData, {
+      const response = await axios.put("/api/guide", formData, {
         headers: {
           Authorization: accessToken,
           "Content-Type": "multipart/form-data",
