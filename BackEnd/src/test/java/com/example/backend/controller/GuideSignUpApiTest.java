@@ -4,7 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.example.backend.dto.Response;
 import com.example.backend.exception.ErrorResponse;
-import com.example.backend.service.UserService;
+import com.example.backend.service.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

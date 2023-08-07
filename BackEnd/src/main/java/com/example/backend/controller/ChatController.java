@@ -3,7 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.document.EventRepository;
 import com.example.backend.dto.chat.LeaveMessageDto;
 import com.example.backend.dto.chat.NormalMessageDto;
-import com.example.backend.service.ChatMessageService;
+import com.example.backend.service.chat.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.PostMapping;

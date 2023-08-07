@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.example.backend.dto.user.LoginRequestDto;
 import com.example.backend.dto.Response;
-import com.example.backend.service.TourService;
+import com.example.backend.service.tour.TourService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
