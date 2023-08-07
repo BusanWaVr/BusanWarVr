@@ -226,7 +226,7 @@ const TourRegistration: React.FC = () => {
     });
 
     try {
-      const res = await axios.post("http://52.79.93.203/tour", formData, {
+      const res = await axios.post("/api/tour", formData, {
         headers: {
           Authorization: accessToken,
           "Content-Type": "multipart/form-data",

@@ -8,10 +8,9 @@ function UserTourBoard() {
   const { isMe } = useOutletContext();
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://52.79.93.203/user/tour/${userId}`, {
+        const response = await fetch(`/api/user/tour/${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

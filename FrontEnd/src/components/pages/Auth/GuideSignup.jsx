@@ -45,7 +45,7 @@ const GuideSignup = () => {
 
   const handleVerification = async () => {
     try {
-      const response = await fetch("http://52.79.93.203/auth/email", {
+      const response = await fetch("/api/auth/email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +82,7 @@ const GuideSignup = () => {
         code: verificationCode,
       };
 
-      const response = await fetch("http://52.79.93.203/auth/code", {
+      const response = await fetch("/api/auth/code", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -114,7 +114,7 @@ const GuideSignup = () => {
         nickname: name,
       };
 
-      const response = await fetch("http://52.79.93.203/auth/nickname", {
+      const response = await fetch("/api/auth/nickname", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -206,7 +206,7 @@ const GuideSignup = () => {
       const formData = await createFormData(name, email, password);
 
       console.log(formData);
-      const apiUrl = "http://52.79.93.203/guide";
+      const apiUrl = "/api/guide";
 
       try {
         const response = await axios.post(apiUrl, formData);

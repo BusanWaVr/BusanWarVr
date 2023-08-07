@@ -145,7 +145,7 @@ function GeneralUpdate(props: EditProfileProps) {
       const requestBody = {
         nickname: name,
       };
-      const response = await fetch("http://52.79.93.203/auth/nickname", {
+      const response = await fetch("/api/auth/nickname", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -181,7 +181,7 @@ function GeneralUpdate(props: EditProfileProps) {
 
       const accessToken = localStorage.getItem("accessToken");
 
-      const response = await fetch("http://52.79.93.203/auth/password", {
+      const response = await fetch("/api/auth/password", {
         method: "POST",
         headers: {
           Authorization: accessToken,
@@ -232,16 +232,12 @@ function GeneralUpdate(props: EditProfileProps) {
 
         const accessToken = localStorage.getItem("accessToken");
 
-        const response = await axios.put(
-          "http://52.79.93.203/user/password",
-          requestBody,
-          {
-            headers: {
-              Authorization: accessToken,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await axios.put("/api/user/password", requestBody, {
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+        });
         if (response.status === 500) {
           console.log(response);
           setPasswordDBCheck(true);
@@ -281,7 +277,7 @@ function GeneralUpdate(props: EditProfileProps) {
       }
       const accessToken = localStorage.getItem("accessToken");
 
-      const response = await axios.put("http://52.79.93.203/user", formData, {
+      const response = await axios.put("/api/user", formData, {
         headers: {
           Authorization: accessToken,
           "Content-Type": "multipart/form-data",

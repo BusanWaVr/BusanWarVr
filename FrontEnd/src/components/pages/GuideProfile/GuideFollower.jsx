@@ -8,7 +8,7 @@ function GuideFollower() {
   const [followerData, setFollowerData] = useState([]);
   const guideId = guideInfoData.userId;
 
-  const url = `http://52.79.93.203/guide/follower/${guideId}`;
+  const url = `/api/guide/follower/${guideId}`;
 
   const fetchData = async () => {
     try {
