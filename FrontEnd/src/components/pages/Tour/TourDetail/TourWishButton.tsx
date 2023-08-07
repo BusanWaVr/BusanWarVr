@@ -24,7 +24,7 @@ const TourWishButton: React.FC<{
     const add = async () => {
       try {
         const res = await axios.post(
-          `/api/tour/wish/${tourId}`,
+          `https://busanwavrserver.store/tour/wish/${tourId}`,
           {},
           {
             headers: {

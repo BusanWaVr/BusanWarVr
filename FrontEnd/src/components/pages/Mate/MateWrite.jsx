@@ -32,7 +32,7 @@ const MateWrite = () => {
           content: content,
         };
 
-        const response = await fetch("/api/mate", {
+        const response = await fetch("https://busanwavrserver.store/mate", {
           method: "POST",
           headers: {
             Authorization: accessToken,

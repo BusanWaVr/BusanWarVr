@@ -45,7 +45,7 @@ const GuideSignup = () => {
 
   const handleVerification = async () => {
     try {
-      const response = await fetch("/api/auth/email", {
+      const response = await fetch("https://busanwavrserver.store/auth/email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +82,7 @@ const GuideSignup = () => {
         code: verificationCode,
       };
 
-      const response = await fetch("/api/auth/code", {
+      const response = await fetch("https://busanwavrserver.store/auth/code", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -114,13 +114,16 @@ const GuideSignup = () => {
         nickname: name,
       };
 
-      const response = await fetch("/api/auth/nickname", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await fetch(
+        "https://busanwavrserver.store/auth/nickname",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
 
       const data = await response.json();
 
@@ -206,7 +209,7 @@ const GuideSignup = () => {
       const formData = await createFormData(name, email, password);
 
       console.log(formData);
-      const apiUrl = "/api/guide";
+      const apiUrl = "https://busanwavrserver.store/guide";
 
       try {
         const response = await axios.post(apiUrl, formData);

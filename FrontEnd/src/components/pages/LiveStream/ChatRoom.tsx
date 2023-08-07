@@ -13,7 +13,7 @@ function ChatRoom() {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [stompClient, setStompClient] = useState(
-    Stomp.over(new SockJS("/api/ws-stomp"))
+    Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
   );
 
   const { nickname, accessToken, userId } = useSelector(

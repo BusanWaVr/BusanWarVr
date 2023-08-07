@@ -18,7 +18,9 @@ const MateList = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`/api/mate?page=${currentPage}`);
+      const response = await fetch(
+        `https://busanwavrserver.store/mate?page=${currentPage}`
+      );
       if (response.status === 200) {
         console.log("데이터18개받았어용");
         const data = await response.json();

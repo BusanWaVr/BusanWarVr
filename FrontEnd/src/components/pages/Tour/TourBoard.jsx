@@ -46,13 +46,16 @@ function TourBoard() {
           type: type,
           keyword: searchValue,
         };
-        const response = await fetch(`/api/tour/search?page=${tempPage}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
+        const response = await fetch(
+          `https://busanwavrserver.store/tour/search?page=${tempPage}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
         if (response.status === 200) {
           console.log("투어데이터 받았어요");
           const data = await response.json();

@@ -23,7 +23,9 @@ const MateDetail = () => {
   useEffect(() => {
     const fetchMateData = async () => {
       try {
-        const response = await fetch(`/api/mate/${mateId}`);
+        const response = await fetch(
+          `https://busanwavrserver.store/mate/${mateId}`
+        );
         // console.log(response)
         if (response.status === 200) {
           const data = await response.json();
@@ -50,7 +52,7 @@ const MateDetail = () => {
   const accessToken = localStorage.getItem("accessToken");
   const userId = parseInt(localStorage.getItem("userId"), 10);
 
-  const url = `/api/mate/${mateId}`;
+  const url = `https://busanwavrserver.store/mate/${mateId}`;
 
   const handleDelete = async () => {
     try {
