@@ -7,7 +7,7 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   display: flex;
   margin: auto;
-  width: 70%;
+  width: 70%;w
   // background-color: #343434;
 `;
 
@@ -30,13 +30,11 @@ function UserMyPage() {
   const { userId } = useParams();
 
   useEffect(() => {
-
-    const localUserId = localStorage.getItem('userId');
+    const localUserId = localStorage.getItem("userId");
 
     if (userId === localUserId) {
       setIsMe(true);
     }
-
 
     const fetchData = async () => {
       try {
@@ -68,13 +66,11 @@ function UserMyPage() {
   return (
     <Wrapper>
       <NavbarWrapper>
-        <UserMini
-          userInfoData={userInfoData}
-          isMe={isMe} />
+        <UserMini userInfoData={userInfoData} isMe={isMe} />
         <UserNavbar />
       </NavbarWrapper>
       <OutletWrapper>
-        <Outlet context={{ userInfoData, isMe }}/>
+        <Outlet context={{ userInfoData, isMe }} />
       </OutletWrapper>
     </Wrapper>
   );
