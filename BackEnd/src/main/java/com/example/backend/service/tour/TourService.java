@@ -69,6 +69,9 @@ public class TourService {
     public void tourReservation(Long tourId, User user) {
         Tour tour = tourRepository.findById(tourId).get();
         TourReservationDto tourReservationDto = new TourReservationDto(tour);
+        if(tour.isCanceled() || tour.isEnded()){
+            throw new IllegalArgumentException("이미 종료되었거나 취소된 투어입니다.");
+        }
         if (tour.getMaxMember() <= tour.getCurrentMember()) {
             throw new IllegalArgumentException("인원이 모두 모여 예약이 불가능 합니다.");
         }
