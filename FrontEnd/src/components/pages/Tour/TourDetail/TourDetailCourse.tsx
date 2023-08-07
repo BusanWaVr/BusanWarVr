@@ -21,7 +21,7 @@ const TourDetailCourse = ({ lon, lat, title, content, image }: Course) => {
         <MapMarker position={{ lat: lat, lng: lon }}></MapMarker>
       </Map>
       <p>제목 : {title}</p>
-      <p>내용 : {content}</p>
+      <div dangerouslySetInnerHTML={{ __html: content }} />
       <img src={image} alt="" />
       <hr />
     </>
