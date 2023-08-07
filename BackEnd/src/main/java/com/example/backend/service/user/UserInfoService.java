@@ -459,4 +459,14 @@ public class UserInfoService {
             joinerDtos.add(joinerDto);
         }
     }
+
+    public boolean checkIsFollowed(User user, Long guideId) {
+        List<Follower> followerList = followerRepository.findAllByGuideId(guideId);
+        for (Follower follower : followerList) {
+            if(follower.getUser().getId() == user.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
 }
