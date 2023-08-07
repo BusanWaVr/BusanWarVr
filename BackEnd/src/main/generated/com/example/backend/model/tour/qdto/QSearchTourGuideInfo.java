@@ -3,7 +3,7 @@ package com.example.backend.model.tour.qdto;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.ConstructorExpression;
-import javax.annotation.processing.Generated;
+import javax.annotation.Generated;
 
 /**
  * com.example.backend.model.tour.qdto.QSearchTourGuideInfo is a Querydsl Projection type for SearchTourGuideInfo
