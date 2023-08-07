@@ -74,8 +74,6 @@ const TourDetail: React.FC = () => {
 
   return (
     <>
-      <h1>{tourId}</h1>
-
       {tourData ? (
         <div>
           <p>제목 : {tourData.title}</p>
