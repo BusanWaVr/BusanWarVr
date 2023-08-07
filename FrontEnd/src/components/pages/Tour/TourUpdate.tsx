@@ -112,7 +112,9 @@ const TourUpdate: React.FC = () => {
   useEffect(() => {
     const fetchTourData = async () => {
       try {
-        const response = await fetch(`/api/tour/${tourId}`);
+        const response = await fetch(
+          `https://busanwavrserver.store/tour/${tourId}`
+        );
         if (response.status === 200) {
           const res = await response.json();
 
@@ -292,12 +294,16 @@ const TourUpdate: React.FC = () => {
     });
 
     try {
-      const res = await axios.put(`/api/tour/${tourId}`, formData, {
-        headers: {
-          Authorization: accessToken,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await axios.put(
+        `https://busanwavrserver.store/tour/${tourId}`,
+        formData,
+        {
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       if (res.data.code === "200") {
         toast.success("게시글 수정이 완료되었습니다.");
         navigate(`/tour/${tourId}`);

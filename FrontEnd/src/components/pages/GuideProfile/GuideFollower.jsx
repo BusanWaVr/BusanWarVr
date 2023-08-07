@@ -8,7 +8,7 @@ function GuideFollower() {
   const [followerData, setFollowerData] = useState([]);
   const guideId = guideInfoData.userId;
 
-  const url = `/api/guide/follower/${guideId}`;
+  const url = `https://busanwavrserver.store/guide/follower/${guideId}`;
 
   const fetchData = async () => {
     try {

@@ -14,12 +14,15 @@ function UserWishBoard() {
   // 토큰 말고 userId받게 수정해야함
   const fetchData = async () => {
     try {
-      const response = await fetch(`/api/user/wish/${userId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `https://busanwavrserver.store/user/wish/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (response.status === 200) {
         console.log("위시데이터 받았어요");
         const data = await response.json();

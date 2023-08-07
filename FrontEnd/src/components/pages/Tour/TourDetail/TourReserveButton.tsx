@@ -29,7 +29,7 @@ const TourReserveButton = ({
     try {
       console.log(accessToken);
       const res = await axios.post(
-        `/api/tour/reservation/${tourId}`,
+        `https://busanwavrserver.store/tour/reservation/${tourId}`,
         {},
         {
           headers: {
@@ -55,11 +55,14 @@ const TourReserveButton = ({
   const cancelHandler = async () => {
     try {
       console.log(accessToken);
-      const res = await axios.delete(`/api/tour/reservation/${tourId}`, {
-        headers: {
-          Authorization: accessToken,
-        },
-      });
+      const res = await axios.delete(
+        `https://busanwavrserver.store/tour/reservation/${tourId}`,
+        {
+          headers: {
+            Authorization: accessToken,
+          },
+        }
+      );
       console.log(res.data);
       setIsJoined(false);
       const updatedJoiners = joiners.filter(
