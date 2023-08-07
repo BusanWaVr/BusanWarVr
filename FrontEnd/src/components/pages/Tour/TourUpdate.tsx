@@ -5,8 +5,10 @@ import { useNavigate } from "react-router-dom";
 import TourCourseUpload from "./TourCourseUpload";
 import TourImageUpload from "./TourImageUpload";
 import TourDatePicker from "./TourDatePicker";
+import { TourGuidelineCheck } from "./TourGuildelineCheck";
 import Editor from "../../blocks/Editor";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 type TourData = {
   region: string;
@@ -32,7 +34,6 @@ type TourCourseInfo = {
 };
 
 const MaxAllowedcategory = 5;
-const MinRequiredcategory = 3;
 
 const regionList = [
   "강서구",
@@ -111,7 +112,9 @@ const TourUpdate: React.FC = () => {
   useEffect(() => {
     const fetchTourData = async () => {
       try {
-        const response = await fetch(`http://52.79.93.203/tour/${tourId}`);
+        const response = await fetch(
+          `https://busanwavrserver.store/tour/${tourId}`
+        );
         if (response.status === 200) {
           const res = await response.json();
 
@@ -150,10 +153,10 @@ const TourUpdate: React.FC = () => {
           setImageFiles(currentImageFiles);
           setCourseKeySetting(res.data.courses.length);
         } else {
-          alert("해당 투어가 존재하지 않습니다.");
+          toast.error("해당 투어가 존재하지 않습니다.");
         }
       } catch (error) {
-        console.error(error);
+        toast.error(error);
       }
     };
 
@@ -169,7 +172,7 @@ const TourUpdate: React.FC = () => {
           category: [...prevData.category, value],
         }));
       } else {
-        alert(
+        toast.warning(
           `카테고리는 최대 ${MaxAllowedcategory}개까지 선택할 수 있습니다.`
         );
       }
@@ -195,7 +198,7 @@ const TourUpdate: React.FC = () => {
       const newCourses = [...tourData.courses, newCourse];
       setTourData({ ...tourData, courses: newCourses });
     } else {
-      alert("코스는 최대 3개까지 등록할 수 있습니다.");
+      toast.warning("코스는 최대 3개까지 등록할 수 있습니다.");
     }
   };
 
@@ -207,7 +210,7 @@ const TourUpdate: React.FC = () => {
         minMember: value,
       }));
     } else {
-      alert("최대인원보다 작거나 같아야 합니다.");
+      toast.warning("최대인원보다 작거나 같아야 합니다.");
     }
   };
 
@@ -219,7 +222,7 @@ const TourUpdate: React.FC = () => {
         maxMember: value,
       }));
     } else {
-      alert("최소인원보다 크거나 같아야 합니다.");
+      toast.warning("최소인원보다 크거나 같아야 합니다.");
     }
   };
 
@@ -243,8 +246,7 @@ const TourUpdate: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (tourData.category.length < MinRequiredcategory) {
-      alert(`최소 ${MinRequiredcategory}개의 카테고리를 선택해 주세요.`);
+    if (!TourGuidelineCheck(tourData)) {
       return;
     }
 
@@ -293,7 +295,7 @@ const TourUpdate: React.FC = () => {
 
     try {
       const res = await axios.put(
-        `http://52.79.93.203/tour/${tourId}`,
+        `https://busanwavrserver.store/tour/${tourId}`,
         formData,
         {
           headers: {
@@ -303,14 +305,14 @@ const TourUpdate: React.FC = () => {
         }
       );
       if (res.data.code === "200") {
-        alert("게시글 수정이 완료되었습니다.");
+        toast.success("게시글 수정이 완료되었습니다.");
         navigate(`/tour/${tourId}`);
       } else {
         console.log(res.data.message);
-        alert("죄송합니다. 잠시후 다시 시도해 주세요.");
+        toast.error("죄송합니다. 잠시후 다시 시도해 주세요.");
       }
     } catch (error) {
-      console.error(error);
+      toast.error(error);
     }
   };
 

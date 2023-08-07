@@ -52,7 +52,9 @@ const TourDetail: React.FC = () => {
   useEffect(() => {
     const fetchTourData = async () => {
       try {
-        const response = await fetch(`http://52.79.93.203/tour/${tourId}`);
+        const response = await fetch(
+          `https://busanwavrserver.store/tour/${tourId}`
+        );
         if (response.status === 200) {
           const res = await response.json();
           setTourData(res.data);

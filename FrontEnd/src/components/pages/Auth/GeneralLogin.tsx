@@ -74,7 +74,7 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
 
     try {
       // 로그인 요청을 서버에 보내고 JWT 토큰을 받아옴
-      const response = await fetch("http://52.79.93.203/user/login", {
+      const response = await fetch("https://busanwavrserver.store/user/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -117,13 +117,16 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
       setIsLoggedIn(true);
 
       try {
-        const response = await fetch("http://52.79.93.203/user/wish", {
-          method: "GET",
-          headers: {
-            Authorization: accessToken,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://busanwavrserver.store/user/wish/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: accessToken,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const data = await response.json();
         const wishTour = data.data.wishTours.map((tour) => tour.tourId);
         dispatch(setWishTour(JSON.stringify(wishTour)));

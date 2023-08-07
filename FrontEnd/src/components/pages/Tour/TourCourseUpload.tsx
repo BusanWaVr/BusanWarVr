@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import TourAddressSearch from "./TourAddressSearch";
 import TourImageUpload from "./TourImageUpload";
+import Editor from "../../blocks/Editor";
 
 type TourCourseUploadProps = {
   index: number;
@@ -29,11 +30,11 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
     setTourData({ ...tourData, courses: newCourses });
   };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleContentChange = (content: string) => {
     const newCourses = [...tourData.courses];
     newCourses.forEach((course, i) => {
       if (course.courseKey === courseKey) {
-        newCourses[i].content = e.target.value;
+        newCourses[i].content = content;
       }
     });
     setTourData({ ...tourData, courses: newCourses });
@@ -117,7 +118,15 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
           />
         </label>
         <br />
-        <label>
+        <Editor
+          value={
+            tourData.courses.filter(
+              (course: any) => course.courseKey == courseKey
+            )[0].content
+          }
+          onChange={handleContentChange}
+        />
+        {/* <label>
           내용:
           <textarea
             value={
@@ -127,7 +136,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
             }
             onChange={handleContentChange}
           />
-        </label>
+        </label> */}
         <TourImageUpload
           imageFile={
             tourData.courses.filter(

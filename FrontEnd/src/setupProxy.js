@@ -3,7 +3,7 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 module.exports = function (app) {
   app.use(
     createProxyMiddleware("/user", {
-      target: "http://52.79.93.203/",
+      target: "https://busanwavrserver.store/",
       changeOrigin: true,
     }),
     createProxyMiddleware("/users", {

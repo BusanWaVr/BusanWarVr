@@ -25,11 +25,14 @@ const useAuthAutoLogin = () => {
 
   const validateToken = async (accessToken: string) => {
     try {
-      const response = await axios.get("http://52.79.93.203/refresh", {
-        headers: {
-          Authorization: `${accessToken}`,
-        },
-      });
+      const response = await axios.get(
+        "https://busanwavrserver.store/refresh",
+        {
+          headers: {
+            Authorization: `${accessToken}`,
+          },
+        }
+      );
       console.log(response);
 
       const newAccessToken = response.headers["access_token"];

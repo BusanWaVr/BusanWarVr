@@ -17,7 +17,7 @@ function GuideEndedBoard() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://52.79.93.203/guide/${urlId}/tour/end`,
+          `https://busanwavrserver.store/guide/${urlId}/tour/end`,
           {
             method: "GET",
             headers: {

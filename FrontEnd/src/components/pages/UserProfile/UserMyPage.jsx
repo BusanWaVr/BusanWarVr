@@ -39,7 +39,7 @@ function UserMyPage() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://52.79.93.203/user/userInfo/${userId}`,
+          `https://busanwavrserver.store/user/userInfo/${userId}`,
           {
             method: "GET",
             headers: {

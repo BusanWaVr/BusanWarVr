@@ -29,7 +29,7 @@ const TourReserveButton = ({
     try {
       console.log(accessToken);
       const res = await axios.post(
-        `http://52.79.93.203/tour/reservation/${tourId}`,
+        `https://busanwavrserver.store/tour/reservation/${tourId}`,
         {},
         {
           headers: {
@@ -56,7 +56,7 @@ const TourReserveButton = ({
     try {
       console.log(accessToken);
       const res = await axios.delete(
-        `http://52.79.93.203/tour/reservation/${tourId}`,
+        `https://busanwavrserver.store/tour/reservation/${tourId}`,
         {
           headers: {
             Authorization: accessToken,

@@ -32,7 +32,7 @@ const MateWrite = () => {
           content: content,
         };
 
-        const response = await fetch("http://52.79.93.203/mate", {
+        const response = await fetch("https://busanwavrserver.store/mate", {
           method: "POST",
           headers: {
             Authorization: accessToken,
@@ -67,12 +67,7 @@ const MateWrite = () => {
         <form>
           {/* 임시 */}
           <label htmlFor="tourId">투어 id :　</label>
-          <input
-            type="text"
-            id="tourId"
-            value={tourId}
-            disabled
-          />
+          <input type="text" id="tourId" value={tourId} disabled />
           <br />
           <br />
           <label htmlFor="title">제목 :　</label>

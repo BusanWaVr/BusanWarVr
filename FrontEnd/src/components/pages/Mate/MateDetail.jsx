@@ -23,7 +23,9 @@ const MateDetail = () => {
   useEffect(() => {
     const fetchMateData = async () => {
       try {
-        const response = await fetch(`http://52.79.93.203/mate/${mateId}`);
+        const response = await fetch(
+          `https://busanwavrserver.store/mate/${mateId}`
+        );
         // console.log(response)
         if (response.status === 200) {
           const data = await response.json();
@@ -50,7 +52,7 @@ const MateDetail = () => {
   const accessToken = localStorage.getItem("accessToken");
   const userId = parseInt(localStorage.getItem("userId"), 10);
 
-  const url = `http://52.79.93.203/mate/${mateId}`;
+  const url = `https://busanwavrserver.store/mate/${mateId}`;
 
   const handleDelete = async () => {
     try {
@@ -95,8 +97,6 @@ const MateDetail = () => {
     }
   };
 
-
-
   // // 이전 페이지 URL 가져오기
   // const referrer = document.referrer;
 
@@ -111,8 +111,8 @@ const MateDetail = () => {
   // }
 
   const handleList = () => {
-    navigate("/mate")
-  }
+    navigate("/mate");
+  };
 
   return (
     <div>

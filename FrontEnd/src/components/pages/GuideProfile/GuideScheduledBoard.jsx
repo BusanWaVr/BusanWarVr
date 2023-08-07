@@ -17,7 +17,7 @@ function GuideScheduledBoard() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://52.79.93.203/guide/${urlId}/tour/schedule`,
+          `https://busanwavrserver.store/guide/${urlId}/tour/schedule`,
           {
             method: "GET",
             headers: {

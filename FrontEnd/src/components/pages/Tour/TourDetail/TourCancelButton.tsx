@@ -9,7 +9,7 @@ const TourCancelButton = ({ tourId }: { tourId: string | undefined }) => {
     try {
       console.log(accessToken);
       const res = await axios.delete(
-        `http://52.79.93.203/tour/wish/${tourId}`,
+        `https://busanwavrserver.store/tour/wish/${tourId}`,
         {
           headers: {
             Authorization: accessToken,

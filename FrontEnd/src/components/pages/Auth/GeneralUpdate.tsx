@@ -145,13 +145,16 @@ function GeneralUpdate(props: EditProfileProps) {
       const requestBody = {
         nickname: name,
       };
-      const response = await fetch("http://52.79.93.203/auth/nickname", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await fetch(
+        "https://busanwavrserver.store/auth/nickname",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
 
       const data = await response.json();
 
@@ -181,14 +184,17 @@ function GeneralUpdate(props: EditProfileProps) {
 
       const accessToken = localStorage.getItem("accessToken");
 
-      const response = await fetch("http://52.79.93.203/auth/password", {
-        method: "POST",
-        headers: {
-          Authorization: accessToken,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await fetch(
+        "https://busanwavrserver.store/auth/password",
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
 
       console.log(response);
       const data = await response.json();
@@ -233,7 +239,7 @@ function GeneralUpdate(props: EditProfileProps) {
         const accessToken = localStorage.getItem("accessToken");
 
         const response = await axios.put(
-          "http://52.79.93.203/user/password",
+          "https://busanwavrserver.store/user/password",
           requestBody,
           {
             headers: {
@@ -281,12 +287,16 @@ function GeneralUpdate(props: EditProfileProps) {
       }
       const accessToken = localStorage.getItem("accessToken");
 
-      const response = await axios.put("http://52.79.93.203/user", formData, {
-        headers: {
-          Authorization: accessToken,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.put(
+        "https://busanwavrserver.store/user",
+        formData,
+        {
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       console.log("response", response.data);
       console.log("저장되었습니다!");

@@ -27,7 +27,7 @@ function GuideMyPage() {
   const { userId } = useSelector((state) => state.userInfo);
   const { urlId } = useParams();
   const localId = localStorage.getItem("userId");
-  const url = `http://52.79.93.203/guide/guideInfo/${urlId}`;
+  const url = `https://busanwavrserver.store/guide/guideInfo/${urlId}`;
   const [guideInfoData, setGuideInfoData] = useState(null);
   const [isMe, setIsMe] = useState(false);
 
