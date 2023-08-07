@@ -31,6 +31,7 @@ function GeneralUpdate(props: EditProfileProps) {
   const [isPassword, setIsPassword] = useState(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
 
+  const userId = localStorage.getItem("userId");
   // 카테고리
   const MaxAllowedCategories = 5;
   const MinRequiredCategories = 3;
@@ -292,6 +293,7 @@ function GeneralUpdate(props: EditProfileProps) {
       if (selectedImageFile) {
         localStorage.setItem("profileImg", selectedImageFile);
       }
+      window.location.href = `http://127.0.0.1:5173/user/${userId}/mypage/`;
     } catch (error) {
       console.error(error);
     }
