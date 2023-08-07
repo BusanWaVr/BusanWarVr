@@ -83,7 +83,7 @@ const TourDetail: React.FC = () => {
           <div>
             <p>
               가이드 :
-              <Link to={`/guide/${tourData.userId}/detail`}>
+              <Link to={`/guide/${tourData.userId}/mypage`}>
                 <img src={tourData.profileImg} alt="" />
                 {tourData.nickname}
               </Link>

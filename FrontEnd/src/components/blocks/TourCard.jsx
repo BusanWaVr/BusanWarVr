@@ -33,15 +33,17 @@ function TourCard({ TourData, isMe }) {
                 <h2>{tour.title}</h2>
               </Link>
               <span>가이드 :</span>
-              <Link to={`/guide/${tour.guide.id}/detail`}>
+              <Link to={`/guide/${tour.guide.id}/mypage`}>
                 <span> {tour.guide.name}</span>
               </Link>
               <p>시작 날짜 : {tour.startDate}</p>
               {/* 카테고리가 없네.. */}
               {/* <p>카테고리 : #{tour.category.join(" #")}</p> */}
-              <p><strong>
-                {tour.currentMember}/{tour.maxMember}
-              </strong></p>
+              <p>
+                <strong>
+                  {tour.currentMember}/{tour.maxMember}
+                </strong>
+              </p>
               {isMe && showEditButton && (
                 <Link to={`/review/${tour.tourId}/write`}>
                   <button>리뷰 쓰기</button>
@@ -49,8 +51,8 @@ function TourCard({ TourData, isMe }) {
               )}
               {isMe && showMateButton && (
                 <Link to={`/mate/${tour.tourId}/write`}>
-                <button>메이트 모집</button>
-              </Link>
+                  <button>메이트 모집</button>
+                </Link>
               )}
             </CardContainer>
           ))
