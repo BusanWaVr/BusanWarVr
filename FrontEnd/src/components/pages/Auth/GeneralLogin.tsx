@@ -127,7 +127,7 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
         const data = await response.json();
         const wishTour = data.data.wishTours.map((tour) => tour.tourId);
         dispatch(setWishTour(JSON.stringify(wishTour)));
-        navigate("/dashboard"); // 성공시 Dashboard 페이지로 이동
+        navigate("/");
       } catch (error) {
         console.error(error);
       }
