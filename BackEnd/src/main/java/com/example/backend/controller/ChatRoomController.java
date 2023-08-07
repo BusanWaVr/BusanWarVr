@@ -3,7 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.Response;
 import com.example.backend.dto.chat.ChatRoomRegistDto;
 import com.example.backend.security.UserDetailsImpl;
-import com.example.backend.service.ChatRoomService;
+import com.example.backend.service.chat.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;

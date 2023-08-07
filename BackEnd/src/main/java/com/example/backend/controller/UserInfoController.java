@@ -13,7 +13,7 @@ import com.example.backend.dto.userinfo.UserInfoDto;
 import com.example.backend.dto.userinfo.UserTourDto;
 import com.example.backend.dto.userinfo.UserWishDto;
 import com.example.backend.security.UserDetailsImpl;
-import com.example.backend.service.UserInfoService;
+import com.example.backend.service.user.UserInfoService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

@@ -1,9 +1,6 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
-import com.example.backend.dto.tour.ReviewDetailDto;
-import com.example.backend.dto.tour.ReviewRegistDto;
-import com.example.backend.dto.tour.ReviewUpdateDto;
 import com.example.backend.dto.tour.TourDetailDto;
 import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
@@ -11,7 +8,11 @@ import com.example.backend.dto.tour.TourSearchInfoDto;
 import com.example.backend.dto.tour.TourUpdateDto;
 import com.example.backend.model.tour.qdto.SearchTourDto;
 import com.example.backend.security.UserDetailsImpl;
-import com.example.backend.service.TourService;
+import com.example.backend.service.tour.TourService;
+import com.example.backend.service.tour.TourGetService;
+import com.example.backend.service.tour.TourRegistService;
+import com.example.backend.service.tour.TourSearchService;
+import com.example.backend.service.tour.TourUpdateService;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class TourController {
 
     private final TourService tourService;
+    private final TourRegistService tourRegistService;
+    private final TourGetService tourGetService;
+    private final TourUpdateService tourUpdateService;
+    private final TourSearchService tourSearchService;
 
     @PostMapping("/tour")
     public Response<TourRegistDto.Response> tourRegistApi(
@@ -41,14 +46,14 @@ public class TourController {
         if (request.getCourses().size() > 3) {
             throw new IllegalArgumentException("코스 개수는 4개 미만이여야 합니다.");
         }
-        TourRegistDto.Response tourRegistDto = tourService.tourRegist(request,
+        TourRegistDto.Response tourRegistDto = tourRegistService.tourRegist(request,
                 userDetails.getUser());
         return new Response<>("200", "성공적으로 투어 등록 되었습니다!", tourRegistDto);
     }
 
     @GetMapping("/tour/{tourId}")
     public Response<TourDetailDto.Response> tourDetailApi(@PathVariable Long tourId) {
-        TourDetailDto.Response response = tourService.tourDetail(tourId);
+        TourDetailDto.Response response = tourGetService.tourDetail(tourId);
         return new Response<>("200", "성공적으로 투어 상세 정보를 가져 왔습니다!", response);
     }
 
@@ -97,15 +102,8 @@ public class TourController {
     @GetMapping("/tour")
     public Response<TourListDto.Response> getALLTourApi(
             @PageableDefault(size = 6) Pageable pageable) {
-        TourListDto.Response response = tourService.getALLTour(pageable);
+        TourListDto.Response response = tourGetService.getALLTour(pageable);
         return new Response("200", "성공적으로 투어 목록을 불러왔습니다!", response);
-    }
-
-    @PostMapping("/tour/review")
-    public Response registReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody ReviewRegistDto.Request request) throws IllegalAccessException {
-        tourService.tourReviewRegist(request, userDetails.getUser());
-        return new Response("200", "성공적으로 후기를 등록했습니다.", null);
     }
 
     @PutMapping("/tour/{tourId}")
@@ -113,37 +111,15 @@ public class TourController {
             @ModelAttribute TourUpdateDto.Request request, @PathVariable Long tourId,
             @AuthenticationPrincipal UserDetailsImpl userDetails)
             throws IllegalAccessException, IOException {
-        TourUpdateDto.Response response = tourService.tourUpdate(request, tourId,
+        TourUpdateDto.Response response = tourUpdateService.tourUpdate(request, tourId,
                 userDetails.getUser());
         return new Response("200", "성공적으로 투어를 수정 하였습니다!", response);
-    }
-
-    @PutMapping("/tour/review/{reviewId}")
-    public Response<ReviewUpdateDto.Request> reviewUpdateApi(
-            @RequestBody ReviewUpdateDto.Request request, @PathVariable Long reviewId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails)
-            throws IllegalAccessException {
-        tourService.reviewUpdate(request, reviewId, userDetails.getUser());
-        return new Response("200", "성공적으로 후기를 수정했습니다.", null);
-    }
-
-    @GetMapping("/tour/review/{reviewId}")
-    public Response<ReviewDetailDto.Response> reviewDetailApi(@PathVariable Long reviewId) {
-        ReviewDetailDto.Response response = tourService.reviewDetail(reviewId);
-        return new Response<>("200", "성공적으로 후기 상세 정보를 가져왔습니다.", response);
-    }
-
-    @DeleteMapping("/tour/review/{reviewId}")
-    public Response reviewDeleteApi(@PathVariable Long reviewId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        tourService.reviewDelete(reviewId, userDetails.getUser());
-        return new Response<>("200", "성공적으로 후기를 삭제했습니다.", null);
     }
 
     @PostMapping("/tour/search")
     public Response<List<SearchTourDto>> searchTour(@PageableDefault(size = 6) Pageable pageable, @RequestBody
             TourSearchInfoDto.Request request){
-        List<SearchTourDto> searchTourDtos =  tourService.searchTour(request, pageable);
+        List<SearchTourDto> searchTourDtos =  tourSearchService.searchTour(request, pageable);
         return new Response<>("200", "성공적으로 투어를 찾았습니다.", searchTourDtos);
     }
 }
