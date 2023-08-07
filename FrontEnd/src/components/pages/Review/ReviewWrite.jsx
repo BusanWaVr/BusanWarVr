@@ -19,7 +19,6 @@ const ReviewWrite = () => {
 
   const { tourId } = useParams();
 
-  
   // 로컬이 아니라, 종료 보드에서 userId를 가져와야 하는데..
   const userId = localStorage.getItem("userId");
 
@@ -53,7 +52,7 @@ const ReviewWrite = () => {
           score: score,
         };
 
-        const response = await fetch("http://52.79.93.203/tour/review", {
+        const response = await fetch("/api/tour/review", {
           method: "POST",
           headers: {
             Authorization: accessToken,
@@ -89,12 +88,7 @@ const ReviewWrite = () => {
         <br />
         <form>
           <label htmlFor="tourId">투어 id :　</label>
-          <input
-            type="text"
-            id="tourId"
-            value={tourId}
-            disabled
-          />
+          <input type="text" id="tourId" value={tourId} disabled />
           <br />
           <br />
           <label htmlFor="title">제목 :　</label>

@@ -29,7 +29,7 @@ const TourReserveButton = ({
     try {
       console.log(accessToken);
       const res = await axios.post(
-        `http://52.79.93.203/tour/reservation/${tourId}`,
+        `/api/tour/reservation/${tourId}`,
         {},
         {
           headers: {
@@ -55,14 +55,11 @@ const TourReserveButton = ({
   const cancelHandler = async () => {
     try {
       console.log(accessToken);
-      const res = await axios.delete(
-        `http://52.79.93.203/tour/reservation/${tourId}`,
-        {
-          headers: {
-            Authorization: accessToken,
-          },
-        }
-      );
+      const res = await axios.delete(`/api/tour/reservation/${tourId}`, {
+        headers: {
+          Authorization: accessToken,
+        },
+      });
       console.log(res.data);
       setIsJoined(false);
       const updatedJoiners = joiners.filter(

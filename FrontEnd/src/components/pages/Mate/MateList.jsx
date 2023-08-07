@@ -18,9 +18,7 @@ const MateList = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(
-        `http://52.79.93.203/mate?page=${currentPage}`
-      );
+      const response = await fetch(`/api/mate?page=${currentPage}`);
       if (response.status === 200) {
         console.log("데이터18개받았어용");
         const data = await response.json();
@@ -53,7 +51,6 @@ const MateList = () => {
     setTempPage(2);
   };
 
-
   return (
     <div>
       <h1>메이트 목록 페이지</h1>
@@ -61,10 +58,7 @@ const MateList = () => {
         <div key={mate.mateId}>
           {/* <h3 onClick={navigate(`/matedetail/${mate.mateId}`)}> */}
           <h3>
-            <Link to={`/matedetail/${mate.mateId}`}>
-              {mate.title}
-
-            </Link>
+            <Link to={`/matedetail/${mate.mateId}`}>{mate.title}</Link>
           </h3>
           <div dangerouslySetInnerHTML={{ __html: mate.content }} />
           <p>

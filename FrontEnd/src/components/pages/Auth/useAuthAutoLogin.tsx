@@ -25,7 +25,7 @@ const useAuthAutoLogin = () => {
 
   const validateToken = async (accessToken: string) => {
     try {
-      const response = await axios.get("http://52.79.93.203/refresh", {
+      const response = await axios.get("/api/refresh", {
         headers: {
           Authorization: `${accessToken}`,
         },

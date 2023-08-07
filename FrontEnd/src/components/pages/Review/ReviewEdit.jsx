@@ -10,7 +10,6 @@ const StyledWritePage = styled.div`
 `;
 
 const ReviewEdit = () => {
-
   const { reviewId } = useParams();
 
   const [tourId, setTourId] = useState("");
@@ -23,7 +22,6 @@ const ReviewEdit = () => {
 
   const userId = localStorage.getItem("userId");
   const accessToken = localStorage.getItem("accessToken");
-
 
   useEffect(() => {
     if (location.state) {
@@ -40,8 +38,6 @@ const ReviewEdit = () => {
     }
   }, [location.state]);
 
-
-
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -50,7 +46,6 @@ const ReviewEdit = () => {
   const handleClickScore = (value) => {
     setScore(value);
   };
-
 
   // 제출
   const handleSubmit = async (e) => {
@@ -67,7 +62,7 @@ const ReviewEdit = () => {
           score: score,
         };
 
-        const response = await fetch(`http://52.79.93.203/tour/review/${reviewId}`, {
+        const response = await fetch(`/api/tour/review/${reviewId}`, {
           method: "PUT",
           headers: {
             Authorization: accessToken,
@@ -102,12 +97,7 @@ const ReviewEdit = () => {
         <br />
         <form>
           <label htmlFor="tourId">투어 id :　</label>
-          <input
-            type="text"
-            id="tourId"
-            value={tourId}
-            disabled
-          />
+          <input type="text" id="tourId" value={tourId} disabled />
           <br />
           <br />
           <label htmlFor="title">제목 :　</label>

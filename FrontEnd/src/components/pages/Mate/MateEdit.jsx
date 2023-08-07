@@ -48,7 +48,7 @@ const MateEdit = () => {
           content: content,
         };
 
-        const response = await fetch(`http://52.79.93.203/mate/${mateId}`, {
+        const response = await fetch(`/api/mate/${mateId}`, {
           method: "PUT",
           headers: {
             Authorization: accessToken,

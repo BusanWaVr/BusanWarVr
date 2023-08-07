@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
-const ReviewDelete = ({ reviewId, userId, reviewDelete}) => {
+const ReviewDelete = ({ reviewId, userId, reviewDelete }) => {
   const accessToken = localStorage.getItem("accessToken");
 
   const handleDelete = async () => {
     console.log(reviewId);
     console.log(typeof reviewId);
     try {
-      const response = await fetch(`http://52.79.93.203/tour/review/${reviewId}`, {
+      const response = await fetch(`/api/tour/review/${reviewId}`, {
         method: "DELETE",
         headers: {
           Authorization: accessToken,

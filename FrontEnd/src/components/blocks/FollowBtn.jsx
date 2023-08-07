@@ -15,7 +15,7 @@ function FollowBtn(guideInfoData) {
   //           return;
   //         }
 
-  //         const response = await fetch(`http://52.79.93.203/user/${userId}`, {
+  //         const response = await fetch(`/api/user/${userId}`, {
   //           method: "POST",
   //           headers: {
   //             Authorization: accessToken,
@@ -43,11 +43,11 @@ function FollowBtn(guideInfoData) {
 
       if (!accessToken) {
         alert("로그인이 필요한 서비스입니다.");
-        window.location.href = "http://52.79.93.203";
+        window.location.href = "/api";
         return;
       }
 
-      const response = await fetch(`http://52.79.93.203/user/${userId}`, {
+      const response = await fetch(`/api/user/${userId}`, {
         method: "POST",
         headers: {
           Authorization: accessToken,
