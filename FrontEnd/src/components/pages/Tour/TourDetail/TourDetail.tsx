@@ -178,7 +178,10 @@ const TourDetail: React.FC = () => {
             </>
           ) : (
             <>
-              {userId && !tourData.canceled && !tourData.ended ? (
+              {userId &&
+              !tourData.canceled &&
+              !tourData.ended &&
+              new Date(tourData.startDate) > new Date() ? (
                 <TourReserveButton
                   tourId={tourId}
                   isJoined={isJoined}
