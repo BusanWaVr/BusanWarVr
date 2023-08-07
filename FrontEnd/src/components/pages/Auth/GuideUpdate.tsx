@@ -33,6 +33,8 @@ function GuideUpdate(props: EditProfileProps) {
   const [isPassword, setIsPassword] = useState(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
 
+  const userId = localStorage.getItem("userId");
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const imageFile = e.target.files?.[0];
     if (imageFile) {
@@ -262,6 +264,7 @@ function GuideUpdate(props: EditProfileProps) {
       if (introduction) {
         localStorage.setItem("introduce", introduction);
       }
+      window.location.href = `http://127.0.0.1:5173/guide/${userId}/mypage/`;
     } catch (error) {
       console.error(error);
     }
