@@ -7,8 +7,8 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { DataProvider } from "./store/DataContext.tsx";
 
-import { Provider } from 'react-redux';
-import store from './store'
+import { Provider } from "react-redux";
+import store from "./store";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>

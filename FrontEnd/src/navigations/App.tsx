@@ -46,9 +46,24 @@ import UserEndedBoard from "../components/pages/UserProfile/UserEndedBoard";
 import UserCanceledBoard from "../components/pages/UserProfile/UserCanceledBoard";
 import UserReviewBoard from "../components/pages/UserProfile/UserReviewBoard";
 
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (
     <>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        draggable
+        theme="light"
+      />
+
       <Routes>
         <Route element={<RootLayout />}>
           <Route path="/" element={<Home />} />
