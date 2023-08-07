@@ -34,11 +34,14 @@ function ChatRoom() {
       stompClient.connect({}, () => {
         console.log("연결됨");
         stompClient.subscribe("/sub/chat/message/room/1", (data) => {
+          console.log("--------------------------------")
           const receivedMessage = JSON.parse(data.body);
           const newChatMessage = {
-            senderId: receivedMessage.sender.userId,
+            msgType: receivedMessage.type,
+            userType: receivedMessage.sender.type,
+            senderId: receivedMessage.sender.id,
             username: receivedMessage.sender.nickname,
-            content: receivedMessage.message,
+            content: receivedMessage.body,
           };
 
           // 일단 넣어두기
@@ -59,14 +62,11 @@ function ChatRoom() {
   }, []);
 
   const handleEnter = () => {
-    console.log("슈우웃");
-    console.log(accessToken);
-
     // 단 넣어두기22
     scrollToBottom();
 
     const newMessage = {
-      roomId: 1,
+      roomUid: 1,
       token: accessToken,
       message: inputMessage,
     };
@@ -79,7 +79,7 @@ function ChatRoom() {
 
     setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
 
-    stompClient.send("/pub/chat/message", {}, JSON.stringify(newMessage));
+    stompClient.send("/pub/chat/message/normal", {}, JSON.stringify(newMessage));
     console.log(chatMessages);
     setInputMessage("");
   };

@@ -27,6 +27,7 @@ function TestPage() {
               const data = await response.json();
               console.log("요청", requestBody);
               console.log("응답", data);
+              alert(data.message);
             } else {
               console.log(data.message);
               alert(data.message);
