@@ -90,7 +90,6 @@ function App() {
             <Route path="/tour/:tourId/update" element={<TourUpdate />} />
           </Route>
 
-
           <Route path="/tour" element={<TourBoard />} />
           <Route path="/tour/:tourId" element={<TourDetail />} />
           {/* <Route path="/guide/:userId/detail" element={<GuideDetail />} /> */}

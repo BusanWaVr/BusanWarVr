@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import TourCourseUpload from "./TourCourseUpload";
 import TourImageUpload from "./TourImageUpload";
 import TourDatePicker from "./TourDatePicker";
+import { TourGuidelineCheck } from "./TourGuildelineCheck";
 import Editor from "../../blocks/Editor";
 import axios from "axios";
 
@@ -243,8 +244,7 @@ const TourUpdate: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (tourData.category.length < MinRequiredcategory) {
-      alert(`최소 ${MinRequiredcategory}개의 카테고리를 선택해 주세요.`);
+    if (!TourGuidelineCheck(tourData)) {
       return;
     }
 

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import TourCourseUpload from "./TourCourseUpload";
 import TourImageUpload from "./TourImageUpload";
 import TourDatePicker from "./TourDatePicker";
+import { TourGuidelineCheck } from "./TourGuildelineCheck";
 import Editor from "../../blocks/Editor";
 import { useNavigate } from "react-router-dom";
 
@@ -166,7 +167,6 @@ const TourRegistration: React.FC = () => {
     setImageFiles(newImageFiles);
   };
 
-  // TODO 수정
   const deleteCourse = (courseKey: number) => {
     const updatedCourses = tourData.courses.filter(
       (course) => course.courseKey !== courseKey
@@ -176,6 +176,10 @@ const TourRegistration: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    if (!TourGuidelineCheck(tourData)) {
+      return;
+    }
 
     if (tourData.category.length < MinRequiredcategory) {
       alert(`최소 ${MinRequiredcategory}개의 카테고리를 선택해 주세요.`);
