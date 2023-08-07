@@ -27,8 +27,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   );
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
-  const [tempPage, setTempPage] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [tempPage] = useState(0);
+  const [currentPage] = useState(0);
 
   const data: Data = {
     youtubeLink,
