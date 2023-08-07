@@ -7,7 +7,7 @@ import com.example.backend.dto.mate.MateRegistDto;
 import com.example.backend.dto.mate.MateUpdateDto;
 import com.example.backend.model.user.User;
 import com.example.backend.security.UserDetailsImpl;
-import com.example.backend.service.MateService;
+import com.example.backend.service.mate.MateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;

@@ -1,4 +1,4 @@
-package com.example.backend.service;
+package com.example.backend.service.chat;
 
 import com.example.backend.dto.chat.ChatRoomRegistDto;
 import com.example.backend.model.chat.ChatParticipantsInfo;

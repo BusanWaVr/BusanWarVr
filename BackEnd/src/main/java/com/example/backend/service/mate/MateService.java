@@ -1,4 +1,4 @@
-package com.example.backend.service;
+package com.example.backend.service.mate;
 
 import com.example.backend.dto.mate.MateDetailDto;
 import com.example.backend.dto.mate.MateInfoDetailDto;
