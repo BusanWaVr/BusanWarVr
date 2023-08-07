@@ -9,17 +9,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/openvidu")
 public class OpenviduPrivateController {
 
-    @Value("${OPENVIDU_URL}")
+    @Value("${openvidu.url}")
     private String OPENVIDU_URL;
 
-    @Value("${OPENVIDU_SECRET}")
+    @Value("${openvidu.secret}")
     private String OPENVIDU_SECRET;
 
     private OpenVidu openvidu;
