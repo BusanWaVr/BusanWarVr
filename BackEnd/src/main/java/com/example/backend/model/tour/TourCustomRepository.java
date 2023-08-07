@@ -13,6 +13,7 @@ import com.example.backend.model.user.QUser;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +40,12 @@ public class TourCustomRepository extends QuerydslRepositorySupport {
                 return findByRegionToTour(keyword, pageable);
             case "GUIDE" :
                 User findUser = userRepository.findByNickname(keyword);
+
+                if(findUser == null){
+                    Map<Long, SearchTourDto> map = new HashMap<>();
+                    return map;
+                }
+
                 return findByGuideNameToTour(findUser.getId(), pageable);
         }
 

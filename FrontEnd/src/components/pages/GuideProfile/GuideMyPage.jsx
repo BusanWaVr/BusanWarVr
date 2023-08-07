@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, useOutletContext } from "react-router-dom";
+import { Outlet, useOutletContext, useParams } from "react-router-dom";
 import GuideNavbar from "./GuideNavbar";
 import GuideMini from "./GuideMini";
 import { useSelector } from "react-redux";
@@ -25,11 +25,19 @@ const OutletWrapper = styled.div`
 function GuideMyPage() {
   // redux에서 userId 가져오기
   const { userId } = useSelector((state) => state.userInfo);
-  const url = `http://52.79.93.203/guide/guideInfo/${userId}`;
+  const { urlId } = useParams();
+  const localId = localStorage.getItem("userId");
+  const url = `http://52.79.93.203/guide/guideInfo/${urlId}`;
   const [guideInfoData, setGuideInfoData] = useState(null);
-  const [userInfoData, setUserInfoData] = useState(null);
+  const [isMe, setIsMe] = useState(false);
 
   useEffect(() => {
+    if (userId === urlId) {
+      setIsMe(true);
+    }
+    console.log("urlId", urlId);
+    console.log("userId", userId);
+    console.log("localId", localId);
     const fetchData = async () => {
       try {
         const response = await fetch(url, {
@@ -52,16 +60,17 @@ function GuideMyPage() {
     };
 
     fetchData();
-  }, []);
+  }, [urlId]);
 
+  console.log("isMe", isMe);
   return (
     <Wrapper>
       <NavbarWrapper>
-        <GuideMini guideInfoData={guideInfoData} />
+        <GuideMini guideInfoData={guideInfoData} isMe={isMe} />
         <GuideNavbar />
       </NavbarWrapper>
       <OutletWrapper>
-        <Outlet context={{ guideInfoData }} />
+        <Outlet context={{ guideInfoData, isMe }} />
       </OutletWrapper>
     </Wrapper>
   );
