@@ -117,9 +117,10 @@ public class TourController {
     }
 
     @PostMapping("/tour/search")
-    public Response<List<SearchTourDto>> searchTour(@PageableDefault(size = 6) Pageable pageable, @RequestBody
-            TourSearchInfoDto.Request request){
-        List<SearchTourDto> searchTourDtos =  tourSearchService.searchTour(request, pageable);
+    public Response<List<SearchTourDto>> searchTour(@PageableDefault(size = 6) Pageable pageable,
+            @RequestBody
+            TourSearchInfoDto.Request request) {
+        List<SearchTourDto> searchTourDtos = tourSearchService.searchTour(request, pageable);
         return new Response<>("200", "성공적으로 투어를 찾았습니다.", searchTourDtos);
     }
 }
