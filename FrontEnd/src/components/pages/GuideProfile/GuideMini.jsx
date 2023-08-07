@@ -1,3 +1,5 @@
+import FollowBtn from "../../blocks/FollowBtn.jsx";
+
 function GuideMini({ guideInfoData }) {
   return (
     <div>
@@ -16,6 +18,7 @@ function GuideMini({ guideInfoData }) {
             <strong>{guideInfoData.nickname}</strong>
           </h3>
           <p>팔로워 : {guideInfoData.followerNum}</p>
+          <FollowBtn guideInfoData={guideInfoData} />
         </div>
       ) : (
         <p>loading...</p>
