@@ -226,12 +226,16 @@ const TourRegistration: React.FC = () => {
     });
 
     try {
-      const res = await axios.post("/api/tour", formData, {
-        headers: {
-          Authorization: accessToken,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await axios.post(
+        "https://busanwavrserver.store/tour",
+        formData,
+        {
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       if (res.data.code == 200) {
         toast.success("투어를 성공적으로 등록하였습니다.");
         navigate(`../tour/${res.data.data.tourId}`);

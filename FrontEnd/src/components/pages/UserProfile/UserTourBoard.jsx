@@ -10,12 +10,15 @@ function UserTourBoard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/user/tour/${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://busanwavrserver.store/user/tour/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (response.status === 200) {
           console.log("유저투어데이터 받았어요");
           const data = await response.json();

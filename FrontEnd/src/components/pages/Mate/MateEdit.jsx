@@ -48,14 +48,17 @@ const MateEdit = () => {
           content: content,
         };
 
-        const response = await fetch(`/api/mate/${mateId}`, {
-          method: "PUT",
-          headers: {
-            Authorization: accessToken,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
+        const response = await fetch(
+          `https://busanwavrserver.store/mate/${mateId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: accessToken,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
 
         const data = await response.json();
 

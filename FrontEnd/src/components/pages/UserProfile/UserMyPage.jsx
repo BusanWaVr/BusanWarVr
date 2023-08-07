@@ -38,12 +38,15 @@ function UserMyPage() {
 
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/user/userInfo/${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://busanwavrserver.store/user/userInfo/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (response.status === 200) {
           console.log("유저데이터 받았어요");
           const data = await response.json();
