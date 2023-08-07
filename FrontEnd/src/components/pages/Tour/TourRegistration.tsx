@@ -4,8 +4,10 @@ import { useSelector } from "react-redux";
 import TourCourseUpload from "./TourCourseUpload";
 import TourImageUpload from "./TourImageUpload";
 import TourDatePicker from "./TourDatePicker";
+import { TourGuidelineCheck } from "./TourGuildelineCheck";
 import Editor from "../../blocks/Editor";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const regionList = [
   "강서구",
@@ -102,7 +104,7 @@ const TourRegistration: React.FC = () => {
           category: [...prevData.category, value],
         }));
       } else {
-        alert(
+        toast.warning(
           `카테고리는 최대 ${MaxAllowedcategory}개까지 선택할 수 있습니다.`
         );
       }
@@ -128,7 +130,7 @@ const TourRegistration: React.FC = () => {
       const newCourses = [...tourData.courses, newCourse];
       setTourData({ ...tourData, courses: newCourses });
     } else {
-      alert("코스는 최대 3개까지 등록할 수 있습니다.");
+      toast.warning("코스는 최대 3개까지 등록할 수 있습니다.");
     }
   };
 
@@ -140,7 +142,7 @@ const TourRegistration: React.FC = () => {
         minMember: value,
       }));
     } else {
-      alert("최대인원보다 작거나 같아야 합니다.");
+      toast.warning("최대인원보다 작거나 같아야 합니다.");
     }
   };
 
@@ -152,7 +154,7 @@ const TourRegistration: React.FC = () => {
         maxMember: value,
       }));
     } else {
-      alert("최소인원보다 크거나 같아야 합니다.");
+      toast.warning("최소인원보다 크거나 같아야 합니다.");
     }
   };
 
@@ -166,7 +168,6 @@ const TourRegistration: React.FC = () => {
     setImageFiles(newImageFiles);
   };
 
-  // TODO 수정
   const deleteCourse = (courseKey: number) => {
     const updatedCourses = tourData.courses.filter(
       (course) => course.courseKey !== courseKey
@@ -177,8 +178,7 @@ const TourRegistration: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (tourData.category.length < MinRequiredcategory) {
-      alert(`최소 ${MinRequiredcategory}개의 카테고리를 선택해 주세요.`);
+    if (!TourGuidelineCheck(tourData)) {
       return;
     }
 
@@ -233,12 +233,13 @@ const TourRegistration: React.FC = () => {
         },
       });
       if (res.data.code == 200) {
+        toast.success("투어를 성공적으로 등록하였습니다.");
         navigate(`../tour/${res.data.data.tourId}`);
       } else {
-        alert("죄송합니다. 잠시후 다시 시도 해주세요.");
+        toast.error("죄송합니다. 잠시후 다시 시도 해주세요.");
       }
     } catch (error) {
-      console.error(error);
+      toast.error(error);
     }
   };
 
