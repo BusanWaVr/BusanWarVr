@@ -13,7 +13,7 @@ import com.example.backend.dto.userinfo.UserInfoDto;
 import com.example.backend.dto.userinfo.UserTourDto;
 import com.example.backend.dto.userinfo.UserWishDto;
 import com.example.backend.security.UserDetailsImpl;
-import com.example.backend.service.UserInfoService;
+import com.example.backend.service.user.UserInfoService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -128,5 +128,11 @@ public class UserInfoController {
         GuideCanceledToursDto.Response response = userInfoService.getGuideCanceledTourList(
                 guideId, pageable);
         return new Response<>("200", "성공적으로 가이드의 취소된 투어 목록을 가져왔습니다.", response);
+    }
+
+    @GetMapping("/user/{guideId}/follow")
+    public Response<Boolean> checkIsFollowed(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long guideId){
+        boolean response = userInfoService.checkIsFollowed(userDetails.getUser(), guideId);
+        return new Response("200", "성공적으로 해당 가이드 팔로우 여부를 확인했습니다.", response);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.backend.service;
+package com.example.backend.service.chat;
 
 import com.example.backend.config.pubsub.RedisPublisher;
 import com.example.backend.document.MessageRepository;

@@ -30,7 +30,7 @@ function FollowingCard({ followingData }) {
             }}
           />
           <br />
-          <Link to={`/guide/${Following.id}/detail`}>
+          <Link to={`/guide/${Following.id}/mypage`}>
             <span> {Following.nickname}</span>
           </Link>
           <p>팔로워 : {Following.follower}</p>

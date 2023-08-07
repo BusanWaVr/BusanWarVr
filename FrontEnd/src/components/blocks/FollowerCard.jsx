@@ -29,7 +29,7 @@ function FollowerCard({ followerData }) {
             }}
           />
           <br />
-          <Link to={`/user/${follower.userId}/detail`}>
+          <Link to={`/user/${follower.userId}/mypage`}>
             <span> {follower.nickname}</span>
           </Link>
         </CardContainer>

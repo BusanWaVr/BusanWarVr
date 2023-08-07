@@ -20,7 +20,7 @@ function WishCard({ wishData }) {
             <h2>{wish.title}</h2>
           </Link>
           <span>가이드 :</span>
-          <Link to={`/guide/${wish.guide.id}/detail`}>
+          <Link to={`/guide/${wish.guide.id}/mypage`}>
             <span> {wish.guide.name}</span>
           </Link>
           <p>시작 날짜 : {wish.startDate}</p>
