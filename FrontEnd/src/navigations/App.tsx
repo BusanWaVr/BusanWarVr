@@ -26,6 +26,7 @@ import GuideTourBoard from "../components/pages/GuideProfile/GuideTourBoard.jsx"
 import GuideScheduledBoard from "../components/pages/GuideProfile/GuideScheduledBoard.jsx";
 import GuideEndedBoard from "../components/pages/GuideProfile/GuideEndedBoard.jsx";
 import GuideCanceledBoard from "../components/pages/GuideProfile/GuideCanceledBoard.jsx";
+import TestPage from "../components/pages/GuideProfile/TestPage.jsx";
 
 import TourBoard from "../components/pages/Tour/TourBoard";
 import TourUpdate from "../components/pages/Tour/TourUpdate.tsx";
@@ -118,6 +119,7 @@ function App() {
                 <Route path="" element={<GuideScheduledBoard />} />
                 <Route path="ended" element={<GuideEndedBoard />} />
                 <Route path="canceled" element={<GuideCanceledBoard />} />
+                <Route path="test" element={<TestPage />} />
               </Route>
             </Route>
           </Route>
