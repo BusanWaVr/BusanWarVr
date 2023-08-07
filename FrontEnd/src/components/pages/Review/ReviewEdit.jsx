@@ -62,14 +62,17 @@ const ReviewEdit = () => {
           score: score,
         };
 
-        const response = await fetch(`/api/tour/review/${reviewId}`, {
-          method: "PUT",
-          headers: {
-            Authorization: accessToken,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
+        const response = await fetch(
+          `https://busanwavrserver.store/tour/review/${reviewId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: accessToken,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
 
         console.log(requestBody);
 

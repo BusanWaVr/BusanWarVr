@@ -7,13 +7,16 @@ const ReviewDelete = ({ reviewId, userId, reviewDelete }) => {
     console.log(reviewId);
     console.log(typeof reviewId);
     try {
-      const response = await fetch(`/api/tour/review/${reviewId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: accessToken,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `https://busanwavrserver.store/tour/review/${reviewId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
 

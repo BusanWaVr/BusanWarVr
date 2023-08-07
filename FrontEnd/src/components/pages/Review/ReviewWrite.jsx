@@ -52,14 +52,17 @@ const ReviewWrite = () => {
           score: score,
         };
 
-        const response = await fetch("/api/tour/review", {
-          method: "POST",
-          headers: {
-            Authorization: accessToken,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
+        const response = await fetch(
+          "https://busanwavrserver.store/tour/review",
+          {
+            method: "POST",
+            headers: {
+              Authorization: accessToken,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
 
         console.log(requestBody);
 

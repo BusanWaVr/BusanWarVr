@@ -16,12 +16,15 @@ function GuideCanceledBoard() {
 
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/guide/${urlId}/tour/canceled`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://busanwavrserver.store/guide/${urlId}/tour/canceled`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         console.log(response);
         if (response.status === 200) {
           console.log("가이드 취소정보를 받았어요");
