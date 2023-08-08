@@ -8,6 +8,7 @@ import lombok.Data;
 public class TourInfoForUserTourDto {
 
     private Long tourId;
+    private String uid;
     private String title;
     private Date startDate;
     private int currentMember;
@@ -16,6 +17,7 @@ public class TourInfoForUserTourDto {
 
     public TourInfoForUserTourDto(Tour tour, GuideInfoForUserTourDto guide) {
         this.tourId = tour.getId();
+        this.uid = tour.getUid();
         this.title = tour.getTitle();
         this.startDate = tour.getStartDate();
         this.currentMember = tour.getCurrentMember();

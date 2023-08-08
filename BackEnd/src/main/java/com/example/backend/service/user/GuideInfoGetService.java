@@ -82,6 +82,7 @@ public class GuideInfoGetService {
 
             if (!isCanceled && startDate.after(now)) {
                 scheduledToursDto.setTourId(tour.getId());
+                scheduledToursDto.setUid(tour.getUid());
                 scheduledToursDto.setTitle(tour.getTitle());
 
                 TourImage tourImage = tourIdToImageMap.get(tour.getId());
