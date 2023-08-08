@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 public class TourRecommendDto {
 
+    private Long tourId;
     private String title;
     private List<String> category;
     private List<String> tourImgs;
@@ -20,6 +21,7 @@ public class TourRecommendDto {
     private int maxMember;
 
     public TourRecommendDto(Tour tour, List<String> category, List<String> tourImgs) {
+        this.tourId = tour.getId();
         this.title = tour.getTitle();
         this.category = category;
         this.tourImgs = tourImgs;

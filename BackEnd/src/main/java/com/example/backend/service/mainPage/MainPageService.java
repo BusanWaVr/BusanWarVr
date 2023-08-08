@@ -11,6 +11,8 @@ import com.example.backend.util.image.ImageUtil;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +25,7 @@ public class MainPageService {
     private final CategoryUtil categoryUtil;
     private final ImageUtil imageUtil;
 
-    public List<TourRecommendDto> tourRecommend(User user, Pageable pageable) {
+    public Page<TourRecommendDto> tourRecommend(User user, Pageable pageable) {
         List<Tour> tours = tourRepository.findByIsEndedFalseOrderByStartDate();
         List<TourRecommendDto> tourRecommendDtoList = new ArrayList<>();
         List<UserCategory> userCategoryList = userCategoryRepository.findAllByUser(user);
@@ -50,7 +52,10 @@ public class MainPageService {
                     new TourRecommendDto(tour, tourCategories, tourImageUrls));
         }
 
-        return tourRecommendDtoList;
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), tourRecommendDtoList.size());
+
+        return new PageImpl<>(tourRecommendDtoList.subList(start, end), pageable, tourRecommendDtoList.size());
     }
 
 
