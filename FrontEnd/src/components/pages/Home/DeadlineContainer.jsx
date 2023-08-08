@@ -5,7 +5,7 @@ import DeadCard from "../../blocks/DeadCard";
 
 const Container = styled.div`
   height: 500px;
-  background-color: #999999;
+  // background-color: #999999;
 `;
 
 
@@ -14,7 +14,7 @@ const MentionsContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 50px;
-  background-color: #565656;
+  // background-color: #565656;
 `;
 
 function DeadlineContainer() {

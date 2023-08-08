@@ -6,14 +6,15 @@ const CardContainer = styled.div`
 display: flex;
   flex-direction: row;   // 가로 배열
   align-items: center;   // 가로 중앙 정렬
+  justify-content: center;
   margin: 20px;
-  overflow-x: scroll;
+//   overflow-x: scroll;
 `;
 
 const Card = styled.div`
   margin: 20px;
   background-color: white;
-  width: 250px;
+  width: 200px;
   height: 350px;
   border-radius: 20px;
 `;
@@ -32,7 +33,7 @@ function GuideRecoCard({ guideRecoData }) {
                   style={{
                     width: "100%",
                     height: "200px",
-                    borderRadius: "15px",
+                    borderRadius: "50%",
                   }}
                 />
               ) : (
