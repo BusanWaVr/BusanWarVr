@@ -52,7 +52,10 @@ function GeneralUpdate(props: EditProfileProps) {
     { name: "핫플", label: "핫플" },
     { name: "카페", label: "카페" },
   ];
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const localCategories = localStorage.getItem("category");
+  const [selectedCategories, setSelectedCategories] = useState(
+    localCategories.split(",")
+  );
   const [isCategory, setIsCategory] = useState(false);
 
   const handleCategoryChange = (category: string) => {
@@ -264,7 +267,6 @@ function GeneralUpdate(props: EditProfileProps) {
     }
   };
   const currentNickname = localStorage.getItem("nickname");
-
   const handleSave = async () => {
     try {
       const categoriesString = selectedCategories.join(",");
