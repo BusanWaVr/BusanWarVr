@@ -93,4 +93,5 @@ public class MainPageService {
         }
         return new NearDeadlineTourDto.Response(tourDtoList);
     }
+
 }

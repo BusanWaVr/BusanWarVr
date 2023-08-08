@@ -1,6 +1,6 @@
-import React from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { Button } from "antd";
 
 interface Joiner {
   profileImage: string;
@@ -77,9 +77,21 @@ const TourReserveButton = ({
   return (
     <>
       {isJoined ? (
-        <button onClick={cancelHandler}>예약 취소하기</button>
+        <Button
+          onClick={cancelHandler}
+          style={{ width: "100%", height: "40px" }}
+          danger
+        >
+          예약 취소하기
+        </Button>
       ) : (
-        <button onClick={reserveHandler}>투어 예약하기</button>
+        <Button
+          type="primary"
+          onClick={reserveHandler}
+          style={{ width: "100%", height: "40px" }}
+        >
+          투어 예약하기
+        </Button>
       )}
     </>
   );

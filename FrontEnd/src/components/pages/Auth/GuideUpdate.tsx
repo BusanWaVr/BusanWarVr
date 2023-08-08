@@ -103,7 +103,7 @@ function GuideUpdate(props: EditProfileProps) {
       setIntroductionMessage("");
       setIsIntroduction(true);
     }
-    localStorage.setItem("introduction", currentIntroduction);
+    localStorage.setItem("introduce", currentIntroduction);
   };
 
   async function handleSubmitName(e: React.FormEvent<HTMLFormElement>) {
