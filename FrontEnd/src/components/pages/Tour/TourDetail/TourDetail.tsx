@@ -40,18 +40,18 @@ interface Joiner {
   joinDate: string;
 }
 
+const TourDetailWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+`;
+
 const TourDetail: React.FC = () => {
   const { tourId } = useParams<{ tourId: string }>();
   const [tourData, setTourData] = useState<TourData | null>(null);
   const { nickname } = useSelector((state: any) => state.userInfo);
   const [isJoined, setIsJoined] = useState<boolean>(false);
   const [joiners, setJoiners] = useState([]);
-
-  const TourDetailWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-  `;
 
   useEffect(() => {
     const fetchTourData = async () => {
@@ -77,6 +77,19 @@ const TourDetail: React.FC = () => {
 
     fetchTourData();
   }, [tourId]);
+
+  useEffect(() => {
+    const fetchJoinerData = async () => {
+      const response = await fetch(
+        `https://busanwavrserver.store/tour/${tourId}`
+      );
+      if (response.status === 200) {
+        const res = await response.json();
+        setJoiners(res.data.joiners);
+      }
+    };
+    fetchJoinerData();
+  }, [isJoined]);
 
   return (
     <>

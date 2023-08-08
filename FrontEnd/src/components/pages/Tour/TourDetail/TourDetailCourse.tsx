@@ -9,6 +9,32 @@ interface Course {
   content: string;
   image: string;
 }
+
+const CourseWrapper = styled.div`
+  border-left: 2px solid #1983ff;
+  padding: 0 20px;
+  margin-bottom: 40px;
+  font-size: 14px;
+  line-height: 24px;
+  & h3 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+`;
+
+const CourseMedia = styled.div`
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  & > .course-content {
+    width: 50%;
+  }
+  & img {
+    width: 200px;
+    border-radius: 4px;
+  }
+`;
+
 const TourDetailCourse = ({
   index,
   lon,
@@ -17,31 +43,6 @@ const TourDetailCourse = ({
   content,
   image,
 }: Course) => {
-  const CourseWrapper = styled.div`
-    border-left: 2px solid #1983ff;
-    padding: 0 20px;
-    margin: 40px 0;
-    font-size: 14px;
-    line-height: 24px;
-    & h3 {
-      font-size: 18px;
-      font-weight: 600;
-    }
-  `;
-
-  const CourseMedia = styled.div`
-    margin-top: 20px;
-    display: flex;
-    gap: 20px;
-    & > .course-content {
-      width: 50%;
-    }
-    & img {
-      width: 200px;
-      border-radius: 4px;
-    }
-  `;
-
   return (
     <>
       <CourseWrapper>

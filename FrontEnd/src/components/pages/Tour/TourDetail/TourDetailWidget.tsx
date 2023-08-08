@@ -6,6 +6,24 @@ import TourReserveButton from "./TourReserveButton";
 import TourCancelButton from "./TourCancelButton";
 import TourWishButton from "./TourWishButton";
 
+const TourDetailWidgetWrapper = styled.div`
+  width: 320px;
+`;
+const StickeyWidget = styled.div`
+  position: sticky;
+  top: 80px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background-color: #fff;
+`;
+const TourGuideInfo = styled.div`
+  & img {
+    width: 45px;
+    height: 45px;
+    border-radius: 45px;
+  }
+`;
+
 const TourDetailWidget = ({
   tourData,
   isJoined,
@@ -21,24 +39,6 @@ const TourDetailWidget = ({
 }) => {
   const { tourId } = useParams<{ tourId: string }>();
   const { userId, userType } = useSelector((state: any) => state.userInfo);
-
-  const TourDetailWidgetWrapper = styled.div`
-    width: 320px;
-  `;
-  const StickeyWidget = styled.div`
-    position: sticky;
-    top: 80px;
-    border: 1px solid #000;
-    border-radius: 4px;
-    background-color: #fff;
-  `;
-  const TourGuideInfo = styled.div`
-    & img {
-      width: 45px;
-      height: 45px;
-      border-radius: 45px;
-    }
-  `;
 
   const day = ["일", "월", "화", "수", "목", "금", "토", "일"];
 

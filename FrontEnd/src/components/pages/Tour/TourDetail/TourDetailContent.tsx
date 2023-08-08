@@ -3,41 +3,50 @@ import { EnvironmentFilled } from "@ant-design/icons";
 import { AccessTime, Groups } from "@mui/icons-material";
 import { Divider, Space, Tag } from "antd";
 import { styled } from "styled-components";
+import CurrentMate from "./CurrentMate";
+
+const TourDetailContentWrapper = styled.div`
+  width: 700px;
+  text-align: left;
+  margin-bottom: 40px;
+  & > h1 {
+    font-size: 32px;
+    font-weight: 700;
+  }
+  & > h2 {
+    font-size: 24px;
+  }
+  & > .section-title {
+    font-size: 24px;
+    color: #1983ff;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+`;
+
+const TourDetailContentTags = styled.div`
+  padding: 20px 0;
+`;
+
+const TourContentInfo = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  & p {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+`;
+
+const TourContentImage = styled.img`
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 5px;
+`;
 
 const TourDetailContent = ({ tourData, joiners }) => {
-  const TourDetailContentWrapper = styled.div`
-    width: 700px;
-    text-align: left;
-    & > h1 {
-      font-size: 32px;
-      font-weight: 700;
-    }
-    & > h2 {
-      font-size: 24px;
-    }
-  `;
-
-  const TourDetailContentTags = styled.div`
-    padding: 20px 0;
-  `;
-
-  const TourContentInfo = styled.div`
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    & p {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-  `;
-
-  const TourContentImage = styled.img`
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border-radius: 5px;
-  `;
 
   return (
     <>
@@ -47,8 +56,10 @@ const TourDetailContent = ({ tourData, joiners }) => {
             <Tag color="blue" icon={<EnvironmentFilled />}>
               {tourData.region}
             </Tag>
-            {tourData.category.map((c) => (
-              <Tag color="geekblue">{c} </Tag>
+            {tourData.category.map((c, i) => (
+              <Tag color="geekblue" key={i}>
+                {c}{" "}
+              </Tag>
             ))}
           </Space>
         </TourDetailContentTags>
@@ -73,15 +84,16 @@ const TourDetailContent = ({ tourData, joiners }) => {
         <div dangerouslySetInnerHTML={{ __html: tourData.content }} />
         <Divider />
         <div>
-          {tourData.tourImgs.map((url) => (
-            <TourContentImage src={url} alt="" />
+          {tourData.tourImgs.map((url, i) => (
+            <TourContentImage key={i} src={url} alt="" />
           ))}
         </div>
         <Divider />
-        <h2> 코스 소개 </h2>
+        <p className="section-title"> 코스 소개 </p>
         {tourData.courses.map((course, index) => (
           <TourDetailCourse
             key={index}
+            index={index}
             lon={course.lon}
             lat={course.lat}
             title={course.title}
@@ -89,46 +101,9 @@ const TourDetailContent = ({ tourData, joiners }) => {
             image={course.image}
           />
         ))}
-        <div>
-          <p>현재 모집 현황</p>
-          {joiners.length > 0 ? (
-            <div>
-              <h3>
-                <strong>이 투어에 참여하는 사람들</strong>
-              </h3>
-              <p>
-                총 <strong>{tourData.maxMember}</strong>명 중{" "}
-                <strong>{joiners.length}</strong>명이 모였어요.
-              </p>
-
-              <div>
-                <ul>
-                  {joiners.map((joiner, index) => (
-                    <li key={index}>
-                      <div>
-                        <img
-                          src={joiner.profileImage}
-                          alt="프로필 이미지"
-                          style={{
-                            width: "200px",
-                            height: "200px",
-                            borderRadius: "50%",
-                          }}
-                        />
-                        <div>
-                          <strong>{joiner.nickname}</strong> 님
-                        </div>
-                        <div>{joiner.joinDate}</div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ) : (
-            <p>참가자가 없습니다.</p>
-          )}
-        </div>
+        <Divider />
+        <p className="section-title">현재 모집 현황</p>
+        <CurrentMate tourData={tourData} joiners={joiners} />
       </TourDetailContentWrapper>
     </>
   );
