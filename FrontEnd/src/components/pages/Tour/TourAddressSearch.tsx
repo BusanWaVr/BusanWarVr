@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import ReactDaumPost from "react-daumpost-hook";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { SearchOutlined } from "@ant-design/icons";
+import { Input } from "antd";
 
 type TourAddressSearchProps = {
   index: number;
@@ -70,13 +72,21 @@ const TourAddressSearch = ({
     <>
       <main>
         <div>
-          우편번호찾기
-          <input type="text" onClick={postCode} defaultValue={""} readOnly />
+          <Input
+            type="text"
+            onClick={postCode}
+            defaultValue={""}
+            readOnly
+            placeholder="주소를 검색해보세요."
+            suffix={<SearchOutlined />}
+          />
         </div>
-        {tourData.courses.filter((course: any) => course.courseKey == courseKey)[0]
-          .lat != 0 ||
-        tourData.courses.filter((course: any) => course.courseKey == courseKey)[0]
-          .lon != 0 ? (
+        {tourData.courses.filter(
+          (course: any) => course.courseKey == courseKey
+        )[0].lat != 0 ||
+        tourData.courses.filter(
+          (course: any) => course.courseKey == courseKey
+        )[0].lon != 0 ? (
           <Map
             center={{
               lat: tourData.courses.filter(

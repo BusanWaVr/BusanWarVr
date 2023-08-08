@@ -1,62 +1,50 @@
 import React, { useState, useEffect } from "react";
-import DatePicker from "react-datepicker";
+import type { DatePickerProps, TimePickerProps, RangePickerProps } from "antd";
+import { DatePicker } from "antd";
 import "react-datepicker/dist/react-datepicker.css";
-import setHours from "date-fns/setHours";
-import setMinutes from "date-fns/setMinutes";
-import { ko } from "date-fns/locale";
+import koKR from "antd/locale/ko_KR";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import moment from "moment";
 
-const TourDatePicker = ({ setTourData, tourData }) => {
+dayjs.extend(customParseFormat);
+
+const TourDatePicker = ({ writeType, setTourData, tourData }) => {
+  const formatDate = (date: Date) => {
+    const newDate =
+      date.getFullYear() +
+      "-" +
+      String(date.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(date.getDate()).padStart(2, "0");
+    return newDate;
+  };
+
   const [startDate, setStartDate] = useState(
     tourData ? tourData.startDate : new Date()
   );
   const [endDate, setEndDate] = useState(
     tourData ? tourData.endDate : new Date()
   );
-  const [limitStartMin, setLimitStartMin] = useState(45);
-  const [limitStartHour, setLimitStartHour] = useState(23);
-  const [limitEndMin, setLimitEndMin] = useState(15);
-  const [limitEndHour, setLimitEndHour] = useState(0);
 
   useEffect(() => {
-    let newLimitEndHour = startDate.getHours();
-    let newLimitEndMin = startDate.getMinutes() + 15;
-    if (newLimitEndMin == 60) {
-      newLimitEndMin -= 60;
-      newLimitEndHour += 1;
+    if (tourData) {
+      setStartDate(tourData.startDate);
+      setEndDate(tourData.endDate);
     }
+  }, [tourData]);
 
-    setLimitEndHour(newLimitEndHour);
-    setLimitEndMin(newLimitEndMin);
-  }, [startDate]);
-
-  useEffect(() => {
-    let newLimitStartHour = endDate.getHours();
-    let newLimitStartMin = endDate.getMinutes() - 15;
-
-    if (newLimitStartMin == -15) {
-      if (newLimitStartHour == 0) {
-        newLimitStartHour = 0;
-        newLimitStartMin = 1;
-      } else {
-        newLimitStartMin += 60;
-        newLimitStartHour -= 1;
-      }
-    }
-    setLimitStartHour(newLimitStartHour);
-    setLimitStartMin(newLimitStartMin);
-  }, [endDate]);
-
-  const handleDate = (date: Date) => {
+  const handleDate: DatePickerProps["onChange"] = (date) => {
     const newStartDate = new Date(startDate);
     const newEndDate = new Date(endDate);
 
-    newStartDate.setFullYear(date.getFullYear());
-    newStartDate.setMonth(date.getMonth());
-    newStartDate.setDate(date.getDate());
+    newStartDate.setFullYear(date.year());
+    newStartDate.setMonth(date.month());
+    newStartDate.setDate(date.date());
 
-    newEndDate.setFullYear(date.getFullYear());
-    newEndDate.setMonth(date.getMonth());
-    newEndDate.setDate(date.getDate());
+    newEndDate.setFullYear(date.year());
+    newEndDate.setMonth(date.month());
+    newEndDate.setDate(date.date());
 
     setStartDate(newStartDate);
     setEndDate(newEndDate);
@@ -67,71 +55,56 @@ const TourDatePicker = ({ setTourData, tourData }) => {
     }));
   };
 
-  const handleStartDate = (date: Date) => {
-    const newStartDate = new Date(date);
+  const handleTime: TimePickerProps["onChange"] = (time) => {
+    const newStartDate = new Date(startDate);
+    newStartDate.setHours(time[0].hour());
+    newStartDate.setMinutes(time[0].minute());
+    newStartDate.setSeconds(0);
     setStartDate(newStartDate);
-    setTourData((prevData) => ({ ...prevData, startDate: newStartDate }));
 
-    let newLimitEndMin = date.getMinutes();
-    let newLimitEndHour = date.getHours();
-
-    if (newLimitEndMin >= 45) {
-      newLimitEndHour += 1;
-      newLimitEndMin = 0;
-    } else {
-      newLimitEndMin = Math.ceil(newLimitEndMin / 15) * 15;
-    }
-
-    setLimitEndHour(newLimitEndHour);
-    setLimitEndMin(newLimitEndMin);
-
-    if (newLimitEndHour === 24 && newLimitEndMin === 0) {
-      setLimitStartHour(0);
-      setLimitStartMin(15);
-    }
-  };
-
-  const handleEndDate = (date: Date) => {
-    const newEndDate = new Date(date);
+    const newEndDate = new Date(endDate);
+    newEndDate.setHours(time[1].hour());
+    newEndDate.setMinutes(time[1].minute());
+    newEndDate.setSeconds(0);
     setEndDate(newEndDate);
-    setTourData((prevData) => ({ ...prevData, endDate: newEndDate }));
+
+    setTourData((prevData) => ({
+      ...prevData,
+      startDate: newStartDate,
+      endDate: newEndDate,
+    }));
   };
+
+  const disabledDate: RangePickerProps["disabledDate"] = (current) => {
+    return current && current < dayjs().endOf("day");
+  };
+
+  const { RangePicker } = DatePicker;
 
   return (
     <>
       <DatePicker
-        dateFormat="yyyy/MM/dd"
-        selected={startDate}
+        format="YYYY/MM/DD"
+        value={
+          writeType == "update"
+            ? moment(formatDate(startDate), "YYYY-MM-DD")
+            : undefined
+        }
         onChange={handleDate}
-        locale={ko}
+        locale={koKR}
+        disabledDate={disabledDate}
       />
-      <p>시간 선택</p>
-      <span>시작 시간</span>
-      <DatePicker
-        selected={startDate}
-        onChange={handleStartDate}
-        showTimeSelect
-        showTimeSelectOnly
-        timeIntervals={15}
-        timeCaption="Time"
-        dateFormat="h:mm aa"
-        minTime={setHours(setMinutes(startDate, 0), 0)}
-        maxTime={setHours(setMinutes(startDate, limitStartMin), limitStartHour)}
-        locale={ko}
-      />
-      <br />
-      <span>종료 시간</span>
-      <DatePicker
-        selected={endDate}
-        onChange={handleEndDate}
-        showTimeSelect
-        showTimeSelectOnly
-        timeIntervals={15}
-        timeCaption="Time"
-        dateFormat="h:mm aa"
-        minTime={setHours(setMinutes(endDate, limitEndMin), limitEndHour)}
-        maxTime={setHours(setMinutes(endDate, 59), 23)}
-        locale={ko}
+      <RangePicker
+        picker="time"
+        format="h:mm A"
+        minuteStep={15}
+        locale={koKR}
+        onChange={handleTime}
+        value={
+          writeType == "update"
+            ? [moment(startDate), moment(endDate)]
+            : undefined
+        }
       />
     </>
   );
