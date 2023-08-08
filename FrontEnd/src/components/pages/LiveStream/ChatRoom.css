@@ -14,11 +14,11 @@
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  opacity: 0.2;
+  /* opacity: 0.2; */
   transition: all 0.3s ease-in-out;
-  &:hover {
+  /* &:hover {
     opacity: 1;
-  }
+  } */
 }
 
 .chat-header {
@@ -47,11 +47,15 @@
 
 .incoming {
   background-color: #f2f2f2;
+  width: fit-content;
+  margin-right: auto;
 }
 
 .outgoing {
   background-color: #fffa97;
   text-align: right;
+  width: fit-content;
+  margin-left: auto;
 }
 
 .message p {
