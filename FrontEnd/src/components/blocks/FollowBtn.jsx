@@ -1,41 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useOutletContext } from "react-router-dom";
 
 function FollowBtn(guideInfoData) {
-  const [follow, setFollow] = useState(false);
+  const [follow, setFollow] = useState(false); // 초기값을 false로 설정
   const userId = guideInfoData.guideInfoData.userId;
+  console.log("팔로우userId", userId);
 
-  //   useEffect(() => {
-  //     // 여기서 DB에서 사용자의 팔로우 상태를 가져오는 로직을 추가하세요
-  //     // 예를 들어, fetch를 사용하여 팔로우 상태를 가져올 수 있습니다.
-  //     const fetchFollowStatus = async () => {
-  //       try {
-  //         const accessToken = localStorage.getItem("accessToken");
-  //         if (!accessToken) {
-  //           return;
-  //         }
+  useEffect(() => {
+    const fetchFollowStatus = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) {
+          return;
+        }
 
-  //         const response = await fetch(`https://busanwavrserver.store/user/${userId}`, {
-  //           method: "POST",
-  //           headers: {
-  //             Authorization: accessToken,
-  //             "Content-Type": "application/json",
-  //           },
-  //         });
-  //         const data = await response.json();
-  //         console.log("팔로우 상태:", data);
-  //         if (data.message === ""
-  //         console.log(userId);
+        const response = await fetch(`/api/user/${userId}/follow`, {
+          method: "GET",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        console.log("팔로우 상태", data.data);
 
-  //         // 팔로우 상태에 따라 follow 상태 설정
-  //         setFollow(data.followStatus);
-  //       } catch (error) {
-  //         console.error("팔로우 상태 가져오기 오류", error);
-  //       }
-  //     };
+        // DB에서 가져온 값에 따라 follow의 초기값 설정
+        if (data.data) {
+          setFollow(true);
+        }
+        // setFollow(data.data === "true");
+      } catch (error) {
+        console.error("팔로우 상태 가져오기 오류", error);
+      }
+    };
 
-  //     fetchFollowStatus();
-  //   }, [userId]);
+    fetchFollowStatus();
+  }, []);
 
   const changeFollow = async () => {
     try {
@@ -43,24 +42,21 @@ function FollowBtn(guideInfoData) {
 
       if (!accessToken) {
         alert("로그인이 필요한 서비스입니다.");
-        window.location.href = "https://busanwavrserver.store";
+        window.location.href = "/api";
         return;
       }
 
-      const response = await fetch(
-        `https://busanwavrserver.store/user/${userId}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: accessToken,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`/api/user/${userId}`, {
+        method: "POST",
+        headers: {
+          Authorization: accessToken,
+          "Content-Type": "application/json",
+        },
+      });
       const data = await response.json();
-      console.log("data", data);
-      console.log("userId", userId);
-      console.log("response", response);
+      // console.log("data", data);
+      // console.log("userId", userId);
+      // console.log("response", response);
       if (
         response.status === 200 &&
         data.message === "성공적으로 가이드를 팔로우했습니다."
@@ -80,11 +76,16 @@ function FollowBtn(guideInfoData) {
       console.error("팔로우 오류", error);
     }
   };
-
+  console.log("로딩 당시 follow", follow);
   return (
     <div>
-      {follow && <button onClick={changeFollow}>팔로우</button>}
-      {!follow && <button onClick={changeFollow}>언팔로우</button>}
+      {/* {!follow && <button onClick={changeFollow}>언팔로우</button>}
+      {follow && <button onClick={changeFollow}>팔로우</button>} */}
+      {follow ? (
+        <button onClick={changeFollow}>언팔로우</button>
+      ) : (
+        <button onClick={changeFollow}>팔로우</button>
+      )}
     </div>
   );
 }

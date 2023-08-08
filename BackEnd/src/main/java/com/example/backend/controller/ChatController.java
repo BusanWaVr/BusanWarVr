@@ -22,7 +22,7 @@ public class ChatController {
         chatMessageService.sendNormalMessage(requestDto);
     }
 
-    @PostMapping("/chat/message/leave")
+    @MessageMapping("/chat/message/leave")
     public void leave(@RequestBody LeaveMessageDto requestDto){
         chatMessageService.sendLeaveMessage(requestDto);
     }

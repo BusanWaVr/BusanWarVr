@@ -239,6 +239,23 @@ const TourRegistration: React.FC = () => {
       if (res.data.code == 200) {
         toast.success("투어를 성공적으로 등록하였습니다.");
         navigate(`../tour/${res.data.data.tourId}`);
+
+        try {
+          const chatRes = await axios.post(
+            "/api/chatroom",
+            { tourId: res.data.data.tourId },
+            {
+              headers: {
+                Authorization: accessToken,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          console.log("채팅", chatRes.data);
+        } catch (chatError) {
+          console.error(chatError);
+        }
       } else {
         toast.error("죄송합니다. 잠시후 다시 시도 해주세요.");
       }
