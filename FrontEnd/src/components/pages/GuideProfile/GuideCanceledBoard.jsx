@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router";
-import TourCard from "../../blocks/GuideTourCard";
+import GuideTourCard from "../../blocks/GuideTourCard";
 
 function GuideCanceledBoard() {
   const { urlId } = useParams();
@@ -46,7 +46,7 @@ function GuideCanceledBoard() {
   }, []);
   return (
     <div>
-      <TourCard TourData={guideTourData} isMe={isMe} />
+      <GuideTourCard TourData={guideTourData} isMe={isMe} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./ChatRoom.css";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
@@ -12,13 +12,11 @@ export type message = {
 function ChatRoom() {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
-  const [stompClient, setStompClient] = useState(
+  const [stompClient] = useState(
     Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
   );
 
-  const { nickname, accessToken, userId } = useSelector(
-    (state: any) => state.userInfo
-  );
+  const { accessToken, userId } = useSelector((state: any) => state.userInfo);
 
   const messageEndRef = useRef(null);
   const scrollToBottom = () => {
@@ -33,30 +31,30 @@ function ChatRoom() {
     if (stompClient != null) {
       stompClient.connect({}, () => {
         console.log("연결됨");
-        stompClient.subscribe("/sub/chat/message/room/1", (data) => {
-          console.log("--------------------------------")
-          const receivedMessage = JSON.parse(data.body);
-          const newChatMessage = {
-            msgType: receivedMessage.type,
-            userType: receivedMessage.sender.type,
-            senderId: receivedMessage.sender.id,
-            username: receivedMessage.sender.nickname,
-            content: receivedMessage.body,
-          };
+        stompClient.subscribe(
+          "/sub/chat/message/room/45fbe71d-9470-4cd0-b03b-2119289331b7/Tue Aug 08 01:38:37 UTC 2023",
+          (data) => {
+            console.log("--------------------------------");
+            const receivedMessage = JSON.parse(data.body);
+            const newChatMessage = {
+              msgType: receivedMessage.type,
+              userType: receivedMessage.sender.type,
+              senderId: receivedMessage.sender.id,
+              username: receivedMessage.sender.nickname,
+              content: receivedMessage.body,
+            };
 
-          // 일단 넣어두기
-          scrollToBottom();
+            // 일단 넣어두기
+            scrollToBottom();
 
-          console.log(receivedMessage);
+            console.log(receivedMessage);
 
-          // 다른 유저가 보낸 메시지면
-          if (receivedMessage.sender.userId != userId) {
             setChatMessages((prevMessages) => [
               ...prevMessages,
               newChatMessage,
             ]);
           }
-        });
+        );
       });
     }
   }, []);
@@ -66,26 +64,23 @@ function ChatRoom() {
     scrollToBottom();
 
     const newMessage = {
-      roomUid: 1,
+      roomUid:
+        "45fbe71d-9470-4cd0-b03b-2119289331b7/Tue Aug 08 01:38:37 UTC 2023",
       token: accessToken,
       message: inputMessage,
     };
 
-    const newChatMessage = {
-      senderId: userId,
-      username: nickname,
-      content: inputMessage,
-    };
-
-    setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
-
-    stompClient.send("/pub/chat/message/normal", {}, JSON.stringify(newMessage));
+    stompClient.send(
+      "/pub/chat/message/normal",
+      {},
+      JSON.stringify(newMessage)
+    );
     console.log(chatMessages);
     setInputMessage("");
   };
 
   const handleEnterPress = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && inputMessage) {
       handleEnter();
     }
   };
@@ -97,21 +92,34 @@ function ChatRoom() {
           <div className="h2">chatroom</div>
         </div>
         <div className="chat-body" ref={messageEndRef}>
-          {chatMessages.map((msg, index) =>
-            msg.senderId == userId ? (
-              <div key={index} className="message outgoing">
-                <p>
-                  <strong>{msg.username}</strong> | {msg.content}{" "}
-                </p>
-              </div>
-            ) : (
-              <div key={index} className="message incoming">
-                <p>
-                  <strong>{msg.username}</strong> | {msg.content}{" "}
-                </p>
-              </div>
-            )
-          )}
+          {chatMessages.map((msg, index) => {
+            switch (msg.msgType) {
+              case "LEAVE":
+                return (
+                  <p key={index}>{msg.username}님이 채팅방에서 퇴장했습니다.</p>
+                );
+              case "VOTE":
+                return (
+                  <p key={index}>
+                    {msg.username}님이 {msg.content}번에 투표했습니다.
+                  </p>
+                );
+              default:
+                return (
+                  <div key={index}>
+                    {msg.senderId == userId ? (
+                      <p className="message outgoing" key={index}>
+                        {msg.content}
+                      </p>
+                    ) : (
+                      <p className="message incoming" key={index}>
+                        <strong>{msg.username}</strong> | {msg.content}
+                      </p>
+                    )}
+                  </div>
+                );
+            }
+          })}
         </div>
         <div className="chat-footer">
           <input
@@ -121,7 +129,9 @@ function ChatRoom() {
             onKeyPress={handleEnterPress}
             placeholder="메세지를 입력하세요."
           />
-          <button onClick={handleEnter}>send</button>
+          <button onClick={handleEnter} disabled={!inputMessage}>
+            send
+          </button>
         </div>
       </div>
     </div>

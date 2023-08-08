@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router";
-import TourCard from "../../blocks/GuideTourCard";
+import GuideTourCard from "../../blocks/GuideTourCard";
 
 function GuideScheduledBoard() {
   const { urlId } = useParams();
@@ -31,6 +31,7 @@ function GuideScheduledBoard() {
           const data = await response.json();
           const TourData = data.data;
           const GuideTour = TourData.scheduledTours;
+          console.log(GuideTour);
           setGuideTourData(GuideTour);
           console.log("guideTourData", guideTourData);
         } else {
@@ -46,7 +47,7 @@ function GuideScheduledBoard() {
   }, []);
   return (
     <div>
-      <TourCard TourData={guideTourData} isMe={isMe} />
+      <GuideTourCard TourData={guideTourData} isMe={isMe} />
     </div>
   );
 }
