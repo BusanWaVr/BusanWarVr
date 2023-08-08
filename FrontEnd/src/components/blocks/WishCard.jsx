@@ -24,7 +24,7 @@ function WishCard({ wishData }) {
             <span> {wish.guide.name}</span>
           </Link>
           <p>시작 날짜 : {wish.startDate}</p>
-          <p>카테고리 : #{wish.category.join(" #")}</p>
+          <p>#{wish.category.join(" #")}</p>
           <strong>
             {wish.currentMember}/{wish.maxMember}
           </strong>

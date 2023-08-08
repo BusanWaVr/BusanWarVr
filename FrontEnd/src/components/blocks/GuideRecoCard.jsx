@@ -18,36 +18,36 @@ const Card = styled.div`
   border-radius: 20px;
 `;
 
-function DeadCard({ deadlineData }) {
+function GuideRecoCard({ guideRecoData }) {
   return (
     <CardContainer>
-      {deadlineData ? (
-        deadlineData.length > 0 ? (
-            deadlineData.map((tour) => (
-            <Card key={tour.tourId}>
+      {guideRecoData ? (
+        guideRecoData.length > 0 ? (
+            guideRecoData.map((guide) => (
+            <Card key={guide.userId}>
+                {guide.profileImg ? (
                 <img
-                  src={tour.image || "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"}
-                  alt="투어 이미지"
+                  src={guide.profileImg}
+                  alt="프로필 이미지"
                   style={{
                     width: "100%",
                     height: "200px",
                     borderRadius: "15px",
                   }}
                 />
-              <Link to={`/tour/${tour.tourId}`}>
-                <h2>{tour.title}</h2>
+              ) : (
+                <p>등록된 프로필 이미지가 없습니다.</p>
+              )}
+              <Link to={`/guide/${guide.tourId}/mypage`}>
+                <h2>{guide.nickname}</h2>
               </Link>
-              <p>시작 날짜 : {tour.startDate}</p>
-              <p>#{tour.category.join(" #")}</p>
-              <p>
-                <strong>
-                  {tour.currentMember}/{tour.maxMember}
-                </strong>
-              </p>
+              <p>팔로워 : {guide.followerNum}</p>
+              <p>투어 수 : {guide.tourNumbers}</p>
+              <p>평점 : {guide.averageScore}</p>
             </Card>
           ))
         ) : (
-          <p>투어 데이터가 없습니다</p>
+          <p>추천 가이드 데이터가 없습니다</p>
         )
       ) : (
         <p>Loading...</p>
@@ -56,4 +56,4 @@ function DeadCard({ deadlineData }) {
   );
 }
 
-export default DeadCard;
+export default GuideRecoCard;
