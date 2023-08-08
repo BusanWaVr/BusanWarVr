@@ -63,7 +63,7 @@ public class GuideInfoGetService {
     }
 
     public GuideScheduledToursDto.Response getGuideScheduledTours(User guide, Pageable pageable) {
-        List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId(), pageable);
+        List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId());
         List<TourInfoForGuideScheduledToursDto> responseList = new ArrayList<>();
         List<TourImage> tourImages = tourImageCustomRepoistory.findTourImagesByGuide(guide,
                 pageable);
@@ -75,10 +75,12 @@ public class GuideInfoGetService {
 
         for (Tour tour : tourLists) {
 
+            boolean isCanceled = tour.isCanceled();
+
             Date startDate = tour.getStartDate();
             TourInfoForGuideScheduledToursDto scheduledToursDto = new TourInfoForGuideScheduledToursDto();
 
-            if (startDate.after(now)) {
+            if (!isCanceled && startDate.after(now)) {
                 scheduledToursDto.setTourId(tour.getId());
                 scheduledToursDto.setTitle(tour.getTitle());
 
@@ -95,7 +97,7 @@ public class GuideInfoGetService {
     }
 
     public GuideEndedToursDto.Response getGuideEndedTours(User guide, Pageable pageable) {
-        List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId(), pageable);
+        List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId());
         List<TourInfoForGuideEndedTours> responseList = new ArrayList<>();
         List<TourImage> tourImages = tourImageCustomRepoistory.findTourImagesByGuide(guide,
                 pageable);
