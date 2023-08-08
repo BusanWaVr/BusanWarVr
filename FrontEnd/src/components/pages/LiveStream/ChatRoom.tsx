@@ -80,7 +80,7 @@ function ChatRoom() {
   };
 
   const handleEnterPress = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && inputMessage) {
       handleEnter();
     }
   };
@@ -129,7 +129,9 @@ function ChatRoom() {
             onKeyPress={handleEnterPress}
             placeholder="메세지를 입력하세요."
           />
-          <button onClick={handleEnter}>send</button>
+          <button onClick={handleEnter} disabled={!inputMessage}>
+            send
+          </button>
         </div>
       </div>
     </div>

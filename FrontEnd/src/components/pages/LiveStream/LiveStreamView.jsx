@@ -54,6 +54,9 @@ const LiveStreamView = () => {
     slidesToScroll: 1,
   };
 
+  // accessToken
+  const accessToken = localStorage.getItem("accessToken");
+
   const OV = useRef(new OpenVidu());
 
   const handleMainVideoStream = useCallback(
@@ -154,10 +157,34 @@ const LiveStreamView = () => {
   }, [session, nickname, sessionid]);
 
   // 라이브 종료
-  const leaveSession = useCallback(() => {
+  const leaveSession = useCallback(async () => {
     // Leave the session
     if (session) {
       session.disconnect();
+    }
+
+    // 채팅방 나가기
+    try {
+      const response = await fetch(
+        `https://busanwavrserver.store/tour/chat/${sessionid}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+
+      if (data.code === "200") {
+        alert(data.message);
+      } else {
+        console.log(data.message);
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
     }
 
     navigate("/livestream");

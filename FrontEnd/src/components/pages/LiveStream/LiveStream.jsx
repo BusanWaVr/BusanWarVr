@@ -18,7 +18,8 @@ const LiveStream = () => {
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
 
-  const [mySessionId, setMySessionId] = useState("busanVR");
+  // tourId로 수정 필요
+  const [mySessionId, setMySessionId] = useState("");
 
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
@@ -74,7 +75,7 @@ const LiveStream = () => {
                 onChange={handleChangeSessionId}
                 required
               />
-              <span>세션코드</span>
+              <span>tourId를 입력해주세요</span>
             </label>
             <label>
               <input
