@@ -19,7 +19,11 @@ import com.example.backend.model.usercategory.UserCategory;
 import com.example.backend.model.usercategory.UserCategoryRepository;
 import com.example.backend.util.category.CategoryUtil;
 import com.example.backend.util.image.ImageUtil;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -126,8 +130,18 @@ public class MainPageService {
             }
             double averageScore = totalScore / reviewSize;
 
-            guideRecommendDtoList.add(
-                    new GuideRecommendDto(user, followerNum, tourNumbers, averageScore));
+            LocalDate latestTourDate = calculateLatestTourDate(tours); // 최근 투어 날짜 계산
+
+            if (tourNumbers != 0) {
+                guideRecommendDtoList.add(
+                        new GuideRecommendDto(user, followerNum, tourNumbers, averageScore,
+                                latestTourDate));
+
+                Comparator<GuideRecommendDto> GuideComparator = Comparator.comparing(
+                        GuideRecommendDto::getLatestTourDate);
+                Collections.sort(guideRecommendDtoList, Collections.reverseOrder(GuideComparator));
+            }
+
         }
 
         int start = (int) pageable.getOffset();
@@ -136,5 +150,20 @@ public class MainPageService {
         return new PageImpl<>(guideRecommendDtoList.subList(start, end), pageable,
                 guideRecommendDtoList.size());
 
+    }
+
+    public LocalDate calculateLatestTourDate(List<Tour> tours) {
+
+        LocalDate latestDate = LocalDate.MIN; // 날짜 비교를 위해 가장 작은 값으로 초기화
+
+        for (Tour tour : tours) {
+            LocalDate tourDate = tour.getStartDate().toInstant().atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            if (tourDate.isAfter(latestDate)) {
+                latestDate = tourDate;
+            }
+        }
+
+        return latestDate;
     }
 }
