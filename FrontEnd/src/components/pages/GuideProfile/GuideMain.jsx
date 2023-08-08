@@ -6,9 +6,6 @@ function GuideMain() {
   const { userId } = useSelector((state) => state.userInfo);
   const { urlId } = useParams();
   useEffect(() => {
-    console.log(typeof userId);
-    console.log(urlId);
-    console.log(userId === urlId);
     console.log("가이드 내 정보에서 받고 있음", guideInfoData);
   }, []);
 
