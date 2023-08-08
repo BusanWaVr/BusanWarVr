@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
+import com.example.backend.dto.userinfo.TourStartRemindDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
 import com.example.backend.dto.userinfo.UserInfoDto;
 import com.example.backend.dto.userinfo.UserTourDto;
@@ -73,5 +74,11 @@ public class UserInfoController {
             @PathVariable Long guideId) {
         boolean response = userInfoService.checkIsFollowed(userDetails.getUser(), guideId);
         return new Response("200", "성공적으로 해당 가이드 팔로우 여부를 확인했습니다.", response);
+    }
+
+    @GetMapping("/user/tourRemind")
+    public Response getTourRemind(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        TourStartRemindDto.Response response = userInfoGetService.getTourStartRemind(userDetails.getUser());
+        return new Response("200", "성공적으로 시작 임박한 예약된 투어 목록을 가져왔습니다.", response);
     }
 }

@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
-
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 function GuideMain() {
   const { guideInfoData, isMe } = useOutletContext();
-
+  const { userId } = useSelector((state) => state.userInfo);
+  const { urlId } = useParams();
   useEffect(() => {
     console.log("가이드 내 정보에서 받고 있음", guideInfoData);
   }, []);
@@ -29,7 +30,9 @@ function GuideMain() {
             <p>닉네임 : {guideInfoData.nickname}</p>
             <p>가이드 평점 : {guideInfoData.averageScore}</p>
             <p>투어 수 : {guideInfoData.tourNumbers}</p>
-            {isMe && <button onClick={handleClick}>내 정보 수정</button>}
+            {String(userId) === urlId && (
+              <button onClick={handleClick}>내 정보 수정</button>
+            )}
           </div>
         </>
       ) : (

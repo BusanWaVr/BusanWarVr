@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import MateCard from "../../blocks/MateCard";
 
 const MateList = () => {
   const [mateListData, setMateListData] = useState([]);
@@ -56,18 +57,10 @@ const MateList = () => {
   return (
     <div>
       <h1>메이트 목록 페이지</h1>
-      {mateListData.slice(tempPage * 6, (tempPage + 1) * 6).map((mate) => (
-        <div key={mate.mateId}>
-          {/* <h3 onClick={navigate(`/matedetail/${mate.mateId}`)}> */}
-          <h3>
-            <Link to={`/matedetail/${mate.mateId}`}>{mate.title}</Link>
-          </h3>
-          <div dangerouslySetInnerHTML={{ __html: mate.content }} />
-          <p>
-            참가인원: {mate.joinMember}/{mate.maxMember}
-          </p>
-        </div>
-      ))}
+      <MateCard
+        mateData={mateListData.slice(tempPage * 6, (tempPage + 1) * 6)}
+      />
+
       <div>
         <button onClick={handlePrevClick} disabled={currentPage === 0}>
           이전
