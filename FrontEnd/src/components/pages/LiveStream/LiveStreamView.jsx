@@ -22,7 +22,7 @@ import {
 } from "./LiveStreamReducer";
 
 const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
+  process.env.NODE_ENV === "production" ? "" : "https://busanwavropenvidu.store/";
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
@@ -53,6 +53,9 @@ const LiveStreamView = () => {
     slidesToShow: 6,
     slidesToScroll: 1,
   };
+
+  // accessToken
+  const accessToken = localStorage.getItem("accessToken");
 
   const OV = useRef(new OpenVidu());
 
@@ -154,10 +157,34 @@ const LiveStreamView = () => {
   }, [session, nickname, sessionid]);
 
   // 라이브 종료
-  const leaveSession = useCallback(() => {
+  const leaveSession = useCallback(async () => {
     // Leave the session
     if (session) {
       session.disconnect();
+    }
+
+    // 채팅방 나가기
+    try {
+      const response = await fetch(
+        `https://busanwavrserver.store/tour/chat/${sessionid}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+
+      if (data.code === "200") {
+        alert(data.message);
+      } else {
+        console.log(data.message);
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
     }
 
     navigate("/livestream");

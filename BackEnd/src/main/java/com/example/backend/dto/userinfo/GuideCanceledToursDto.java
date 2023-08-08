@@ -14,5 +14,6 @@ public class GuideCanceledToursDto {
     public static class Response {
 
         private List<CanceledTourDto> tourDtoList;
+
     }
 }
