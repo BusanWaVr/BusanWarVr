@@ -22,7 +22,7 @@ import {
 } from "./LiveStreamReducer";
 
 const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
+  process.env.NODE_ENV === "production" ? "" : "https://busanwavropenvidu.store/";
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
