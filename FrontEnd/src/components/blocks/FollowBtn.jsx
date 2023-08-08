@@ -13,13 +13,16 @@ function FollowBtn(guideInfoData) {
           return;
         }
 
-        const response = await fetch(`/api/user/${userId}/follow`, {
-          method: "GET",
-          headers: {
-            Authorization: accessToken,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://www.busanwavr.store/user/${userId}/follow`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: accessToken,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const data = await response.json();
         console.log("팔로우 상태", data.data);
 
@@ -42,17 +45,20 @@ function FollowBtn(guideInfoData) {
 
       if (!accessToken) {
         alert("로그인이 필요한 서비스입니다.");
-        window.location.href = "/api";
+        window.location.href = "https://www.busanwavr.store";
         return;
       }
 
-      const response = await fetch(`/api/user/${userId}`, {
-        method: "POST",
-        headers: {
-          Authorization: accessToken,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `https://www.busanwavr.store/user/${userId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = await response.json();
       // console.log("data", data);
       // console.log("userId", userId);
