@@ -7,6 +7,7 @@ import lombok.Data;
 public class TourInfoForGuideScheduledToursDto {
 
     private Long tourId;
+    private String uid;
     private String title;
     private String image;
 
