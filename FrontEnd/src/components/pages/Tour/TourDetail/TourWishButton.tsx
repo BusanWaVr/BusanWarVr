@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { setWishTour } from "../../../../store/reducers/UserInfoReducer";
+import { Button } from "antd";
+import axios from "axios";
 
 const TourWishButton: React.FC<{
   tourId: string | undefined;
@@ -54,9 +55,12 @@ const TourWishButton: React.FC<{
 
   return (
     <>
-      <button onClick={btnClickHandler}>
+      <Button
+        onClick={btnClickHandler}
+        style={{ width: "100%", height: "40px" }}
+      >
         {isInWishlist ? <>찜 취소</> : <>찜하기</>}
-      </button>
+      </Button>
     </>
   );
 };
