@@ -21,8 +21,7 @@ import {
   setIsChatOpen,
 } from "./LiveStreamReducer";
 
-const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === "production" ? "" : "https://13.209.26.92/api/v1/openvidu";
+const APPLICATION_SERVER_URL = "https://13.209.26.92/api/v1/openvidu";
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
@@ -303,7 +302,7 @@ const LiveStreamView = () => {
       {
         headers: { "Content-Type": "application/json" },
       }
-    );
+    )
     return response.data; // The sessionId
   };
 
