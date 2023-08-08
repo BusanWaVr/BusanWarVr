@@ -3,7 +3,9 @@ package com.example.backend.service.user;
 import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserTourDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserWishDto;
+import com.example.backend.dto.userinfo.RemindTourDto;
 import com.example.backend.dto.userinfo.TourInfoForUserTourDto;
+import com.example.backend.dto.userinfo.TourStartRemindDto;
 import com.example.backend.dto.userinfo.UserFollowDto;
 import com.example.backend.dto.userinfo.UserInfoDto;
 import com.example.backend.dto.userinfo.UserTourDto;
@@ -19,6 +21,8 @@ import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.tourcategory.TourCategory;
 import com.example.backend.model.tourcategory.TourCategoryRepository;
+import com.example.backend.model.tourimage.TourImage;
+import com.example.backend.model.tourimage.TourImageRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.wish.Wish;
@@ -41,6 +45,7 @@ public class UserInfoGetService {
     private final TourRepository tourRepository;
     private final ReviewRepository reviewRepository;
     private final JoinerRepository joinerRepository;
+    private final TourImageRepository tourImageRepository;
 
     public UserWishDto.Response getUserWishList(Long userId, Pageable pageable) {
         List<Wish> userWishLists = wishRepository.findAllByUserId(userId, pageable);
@@ -124,7 +129,7 @@ public class UserInfoGetService {
             boolean isEnded = tour.isEnded();
             boolean isCanceled = tour.isCanceled();
 
-            if (startDate.after(now)) {
+            if (!isCanceled && startDate.after(now)) {
                 scheduledTours.add(tourInfo);
             }
 
@@ -152,5 +157,28 @@ public class UserInfoGetService {
         TourInfoForUserTourDto tourInfo = new TourInfoForUserTourDto(tour, guideInfo);
 
         return tourInfo;
+    }
+
+    public TourStartRemindDto.Response getTourStartRemind(User user) {
+        RemindTourDto remindTourDto = null;
+        List<Joiner> joiners = joinerRepository.findAllByUserId(user.getId());
+        Date now = new Date();
+
+        for (Joiner joiner : joiners) {
+            Tour tour = joiner.getTour();
+            long timeDifference = tour.getStartDate().getTime() - now.getTime();
+            List<TourImage> tourImages = tourImageRepository.findAllByTourId(tour.getId());
+            TourImage firstImage = tourImages.isEmpty() ? null : tourImages.get(0);
+
+            boolean isCanceled = tour.isCanceled();
+
+            if (!isCanceled && timeDifference > 0 && timeDifference < 1800000) {
+                remindTourDto = new RemindTourDto(tour,
+                        firstImage != null ? firstImage.getImage().getUrl() : null
+                );
+                break;
+            }
+        }
+        return new TourStartRemindDto.Response(remindTourDto);
     }
 }
