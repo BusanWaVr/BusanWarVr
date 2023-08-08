@@ -32,7 +32,7 @@ function ChatRoom() {
       stompClient.connect({}, () => {
         console.log("연결됨");
         stompClient.subscribe(
-          "/sub/chat/message/room/892e0daa-966d-4683-a826-d004c253db30/Mon Aug 07 13:00:00 UTC 2023",
+          "/sub/chat/message/room/45fbe71d-9470-4cd0-b03b-2119289331b7/Tue Aug 08 01:38:37 UTC 2023",
           (data) => {
             console.log("--------------------------------");
             const receivedMessage = JSON.parse(data.body);
@@ -65,7 +65,7 @@ function ChatRoom() {
 
     const newMessage = {
       roomUid:
-        "892e0daa-966d-4683-a826-d004c253db30/Mon Aug 07 13:00:00 UTC 2023",
+        "45fbe71d-9470-4cd0-b03b-2119289331b7/Tue Aug 08 01:38:37 UTC 2023",
       token: accessToken,
       message: inputMessage,
     };
