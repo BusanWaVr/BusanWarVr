@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-function FollowBtn(guideInfoData) {
+function FollowBtn(guideInfoData, isMe) {
   const navigate = useNavigate();
   const [follow, setFollow] = useState(false); // 초기값을 false로 설정
   const userId = guideInfoData.guideInfoData.userId;
   const [followerNumCheck, setFollowerNumCheck] = useState(false);
   const followNum = guideInfoData.guideInfoData.followerNum;
   const [followerNum, setFollowerNum] = useState(followNum);
-  console.log("팔로우userId", userId);
+  const localType = localStorage.getItem("userType");
 
   useEffect(() => {
     const fetchFollowStatus = async () => {
@@ -103,13 +103,11 @@ function FollowBtn(guideInfoData) {
       console.error("팔로우 오류", error);
     }
   };
-  console.log("로딩 당시 follow", follow);
+  console.log(guideInfoData.guideInfoData);
   return (
     <div>
-      {/* {!follow && <button onClick={changeFollow}>언팔로우</button>}
-      {follow && <button onClick={changeFollow}>팔로우</button>} */}
-      <p>팔로워 : {followerNum}</p>
-      {follow ? (
+      <p>팔로워: {followerNum}</p>
+      {localType === "GUIDE" ? null : follow ? (
         <button onClick={changeFollow}>언팔로우</button>
       ) : (
         <button onClick={changeFollow}>팔로우</button>

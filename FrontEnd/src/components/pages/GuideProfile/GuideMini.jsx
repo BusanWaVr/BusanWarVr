@@ -1,6 +1,6 @@
 import FollowBtn from "../../blocks/FollowBtn.jsx";
 
-function GuideMini({ guideInfoData }) {
+function GuideMini({ guideInfoData, isMe }) {
   const handleButtonClick = () => {
     this.forceUpdate();
   };
@@ -24,6 +24,7 @@ function GuideMini({ guideInfoData }) {
           <FollowBtn
             onClick={handleButtonClick}
             guideInfoData={guideInfoData}
+            isMe={isMe}
           />
         </div>
       ) : (
