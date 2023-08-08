@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import TourDetailCourse from "./TourDetailCourse";
-import TourReserveButton from "./TourReserveButton";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import TourCancelButton from "./TourCancelButton";
-import TourWishButton from "./TourWishButton";
+import TourDetailContent from "./TourDetailContent";
+import TourDetailWidget from "./TourDetailWidget";
+import { styled } from "styled-components";
 
 interface TourData {
+  region: string;
   tourId: string;
   title: string;
   subTitle: string;
@@ -40,12 +40,16 @@ interface Joiner {
   joinDate: string;
 }
 
+const TourDetailWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+`;
+
 const TourDetail: React.FC = () => {
   const { tourId } = useParams<{ tourId: string }>();
   const [tourData, setTourData] = useState<TourData | null>(null);
-  const { userId, nickname, userType } = useSelector(
-    (state: any) => state.userInfo
-  );
+  const { nickname } = useSelector((state: any) => state.userInfo);
   const [isJoined, setIsJoined] = useState<boolean>(false);
   const [joiners, setJoiners] = useState([]);
 
@@ -74,132 +78,32 @@ const TourDetail: React.FC = () => {
     fetchTourData();
   }, [tourId]);
 
+  useEffect(() => {
+    const fetchJoinerData = async () => {
+      const response = await fetch(
+        `https://busanwavrserver.store/tour/${tourId}`
+      );
+      if (response.status === 200) {
+        const res = await response.json();
+        setJoiners(res.data.joiners);
+      }
+    };
+    fetchJoinerData();
+  }, [isJoined]);
+
   return (
     <>
-      <h1>{tourId}</h1>
-
       {tourData ? (
-        <div>
-          <p>제목 : {tourData.title}</p>
-          <p>부제 : {tourData.subTitle}</p>
-          <div>
-            <p>
-              가이드 :
-              <Link to={`/guide/${tourData.userId}/mypage`}>
-                <img src={tourData.profileImg} alt="" />
-                {tourData.nickname}
-              </Link>
-            </p>
-            <p>
-              {tourData.category.map((c) => (
-                <span>{c} </span>
-              ))}
-            </p>
-            <p>
-              투어진행기간 : {tourData.startDate} ~ {tourData.endDate}
-            </p>
-            <p>
-              {" "}
-              투어 인원 : {tourData.minMember}명 ~ {tourData.maxMember}명
-            </p>
-            {userId && userType == "USER" ? (
-              <TourWishButton tourId={tourId} />
-            ) : null}
-          </div>
-
-          <div dangerouslySetInnerHTML={{ __html: tourData.content }} />
-          <div>
-            {tourData.tourImgs.map((url) => (
-              <img src={url} alt="" />
-            ))}
-          </div>
-          <hr />
-          {tourData.courses.map((course) => (
-            <TourDetailCourse
-              lon={course.lon}
-              lat={course.lat}
-              title={course.title}
-              content={course.content}
-              image={course.image}
-            />
-          ))}
-          <hr />
-          <div>
-            <p>현재 모집 현황</p>
-            {joiners.length > 0 ? (
-              <div>
-                <h3>
-                  <strong>이 투어에 참여하는 사람들</strong>
-                </h3>
-                <p>
-                  총 <strong>{tourData.maxMember}</strong>명 중{" "}
-                  <strong>{joiners.length}</strong>명이 모였어요.
-                </p>
-
-                <div>
-                  <ul>
-                    {joiners.map((joiner, index) => (
-                      <li key={index}>
-                        <div>
-                          <img
-                            src={joiner.profileImage}
-                            alt="프로필 이미지"
-                            style={{
-                              width: "200px",
-                              height: "200px",
-                              borderRadius: "50%",
-                            }}
-                          />
-                          <div>
-                            <strong>{joiner.nickname}</strong> 님
-                          </div>
-                          <div>{joiner.joinDate}</div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ) : (
-              <p>참가자가 없습니다.</p>
-            )}
-          </div>
-          <hr />
-          {userId == tourData.userId ? (
-            <>
-              {tourData.canceled ? (
-                <button disabled>취소된 투어입니다.</button>
-              ) : (
-                <>
-                  <Link to={`/tour/${tourId}/update`}>
-                    <button>수정하기</button>
-                  </Link>
-                  <TourCancelButton tourId={tourId} />
-                </>
-              )}
-            </>
-          ) : (
-            <>
-              {userId && !tourData.canceled && !tourData.ended ? (
-                <TourReserveButton
-                  tourId={tourId}
-                  isJoined={isJoined}
-                  setIsJoined={setIsJoined}
-                  joiners={joiners}
-                  setJoiners={setJoiners}
-                />
-              ) : null}
-              {tourData.ended ||
-              (new Date(tourData.startDate) < new Date() &&
-                !tourData.canceled) ? (
-                <button disabled>종료된 투어입니다.</button>
-              ) : null}
-              {tourData.canceled ? (
-                <button disabled>취소된 투어입니다.</button>
-              ) : null}
-            </>
-          )}
-        </div>
+        <TourDetailWrapper>
+          <TourDetailContent tourData={tourData} joiners={joiners} />
+          <TourDetailWidget
+            tourData={tourData}
+            isJoined={isJoined}
+            setIsJoined={setIsJoined}
+            joiners={joiners}
+            setJoiners={setJoiners}
+          />
+        </TourDetailWrapper>
       ) : (
         <p>로딩중</p>
       )}

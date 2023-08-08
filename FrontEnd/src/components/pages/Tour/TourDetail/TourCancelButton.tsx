@@ -1,4 +1,4 @@
-import React from "react";
+import { Button } from "antd";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
@@ -24,7 +24,14 @@ const TourCancelButton = ({ tourId }: { tourId: string | undefined }) => {
 
   return (
     <>
-      <button onClick={cancelHandler}>투어 취소하기</button>
+      <Button
+        type="primary"
+        style={{ width: "100%", height: "40px" }}
+        onClick={cancelHandler}
+        danger
+      >
+        투어 취소하기
+      </Button>
     </>
   );
 };
