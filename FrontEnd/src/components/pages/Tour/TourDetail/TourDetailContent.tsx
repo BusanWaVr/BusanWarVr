@@ -78,8 +78,10 @@ const TourDetailContent = ({ tourData, joiners }) => {
           ))}
         </div>
         <Divider />
-        {tourData.courses.map((course) => (
+        <h2> 코스 소개 </h2>
+        {tourData.courses.map((course, index) => (
           <TourDetailCourse
+            key={index}
             lon={course.lon}
             lat={course.lat}
             title={course.title}
