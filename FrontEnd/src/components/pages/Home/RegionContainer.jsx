@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Container = styled.div`
   height: 300px;
-  background-color: #787878;
+  // background-color: #787878;
 `;
 
 function RegionContainer() {
