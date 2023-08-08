@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import TourReserveButton from "./TourReserveButton";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import TourDetailContent from "./TourDetailContent";
-import TourCancelButton from "./TourCancelButton";
-import TourWishButton from "./TourWishButton";
+import TourDetailWidget from "./TourDetailWidget";
+import { styled } from "styled-components";
 
 interface TourData {
+  region: string;
   tourId: string;
   title: string;
   subTitle: string;
@@ -43,11 +43,15 @@ interface Joiner {
 const TourDetail: React.FC = () => {
   const { tourId } = useParams<{ tourId: string }>();
   const [tourData, setTourData] = useState<TourData | null>(null);
-  const { userId, nickname, userType } = useSelector(
-    (state: any) => state.userInfo
-  );
+  const { nickname } = useSelector((state: any) => state.userInfo);
   const [isJoined, setIsJoined] = useState<boolean>(false);
   const [joiners, setJoiners] = useState([]);
+
+  const TourDetailWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+  `;
 
   useEffect(() => {
     const fetchTourData = async () => {
@@ -77,50 +81,16 @@ const TourDetail: React.FC = () => {
   return (
     <>
       {tourData ? (
-        <div>
+        <TourDetailWrapper>
           <TourDetailContent tourData={tourData} joiners={joiners} />
-          {userId && userType == "USER" ? (
-            <TourWishButton tourId={tourId} />
-          ) : null}
-          <hr />
-          {userId == tourData.userId ? (
-            <>
-              {tourData.canceled ? (
-                <button disabled>취소된 투어입니다.</button>
-              ) : (
-                <>
-                  <Link to={`/tour/${tourId}/update`}>
-                    <button>수정하기</button>
-                  </Link>
-                  <TourCancelButton tourId={tourId} />
-                </>
-              )}
-            </>
-          ) : (
-            <>
-              {userId &&
-              !tourData.canceled &&
-              !tourData.ended &&
-              new Date(tourData.startDate) > new Date() ? (
-                <TourReserveButton
-                  tourId={tourId}
-                  isJoined={isJoined}
-                  setIsJoined={setIsJoined}
-                  joiners={joiners}
-                  setJoiners={setJoiners}
-                />
-              ) : null}
-              {tourData.ended ||
-              (new Date(tourData.startDate) < new Date() &&
-                !tourData.canceled) ? (
-                <button disabled>종료된 투어입니다.</button>
-              ) : null}
-              {tourData.canceled ? (
-                <button disabled>취소된 투어입니다.</button>
-              ) : null}
-            </>
-          )}
-        </div>
+          <TourDetailWidget
+            tourData={tourData}
+            isJoined={isJoined}
+            setIsJoined={setIsJoined}
+            joiners={joiners}
+            setJoiners={setJoiners}
+          />
+        </TourDetailWrapper>
       ) : (
         <p>로딩중</p>
       )}

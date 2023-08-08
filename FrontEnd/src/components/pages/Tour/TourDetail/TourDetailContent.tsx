@@ -1,90 +1,133 @@
-import { Link } from "react-router-dom";
 import TourDetailCourse from "./TourDetailCourse";
+import { EnvironmentFilled } from "@ant-design/icons";
+import { AccessTime, Groups } from "@mui/icons-material";
+import { Divider, Space, Tag } from "antd";
+import { styled } from "styled-components";
 
-const TourDetailContent = ({tourData, joiners}) => {
+const TourDetailContent = ({ tourData, joiners }) => {
+  const TourDetailContentWrapper = styled.div`
+    width: 700px;
+    text-align: left;
+    & > h1 {
+      font-size: 32px;
+      font-weight: 700;
+    }
+    & > h2 {
+      font-size: 24px;
+    }
+  `;
+
+  const TourDetailContentTags = styled.div`
+    padding: 20px 0;
+  `;
+
+  const TourContentInfo = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    & p {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+  `;
+
+  const TourContentImage = styled.img`
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 5px;
+  `;
+
   return (
     <>
-      <p>제목 : {tourData.title}</p>
-      <p>부제 : {tourData.subTitle}</p>
-      <div>
-        <p>
-          가이드 :
-          <Link to={`/guide/${tourData.userId}/mypage`}>
-            <img src={tourData.profileImg} alt="" />
-            {tourData.nickname}
-          </Link>
-        </p>
-        <p>
-          {tourData.category.map((c) => (
-            <span>{c} </span>
+      <TourDetailContentWrapper>
+        <TourDetailContentTags>
+          <Space size={[0, 8]} wrap>
+            <Tag color="blue" icon={<EnvironmentFilled />}>
+              {tourData.region}
+            </Tag>
+            {tourData.category.map((c) => (
+              <Tag color="geekblue">{c} </Tag>
+            ))}
+          </Space>
+        </TourDetailContentTags>
+        <h1>{tourData.title}</h1>
+        <h2>{tourData.subTitle}</h2>
+        <Divider />
+        <TourContentInfo>
+          <p>
+            <AccessTime />
+            {(new Date(tourData.endDate).getTime() -
+              new Date(tourData.startDate).getTime()) /
+              (1000 * 60)}
+            분 소요
+          </p>
+          <Divider type="vertical" />
+          <p>
+            <Groups />
+            {tourData.minMember}명 ~ {tourData.maxMember}명
+          </p>
+        </TourContentInfo>
+        <Divider />
+        <div dangerouslySetInnerHTML={{ __html: tourData.content }} />
+        <Divider />
+        <div>
+          {tourData.tourImgs.map((url) => (
+            <TourContentImage src={url} alt="" />
           ))}
-        </p>
-        <p>
-          투어진행기간 : {tourData.startDate} ~ {tourData.endDate}
-        </p>
-        <p>
-          {" "}
-          투어 인원 : {tourData.minMember}명 ~ {tourData.maxMember}명
-        </p>
-      </div>
-
-      <div dangerouslySetInnerHTML={{ __html: tourData.content }} />
-      <div>
-        {tourData.tourImgs.map((url) => (
-          <img src={url} alt="" />
+        </div>
+        <Divider />
+        {tourData.courses.map((course) => (
+          <TourDetailCourse
+            lon={course.lon}
+            lat={course.lat}
+            title={course.title}
+            content={course.content}
+            image={course.image}
+          />
         ))}
-      </div>
-      <hr />
-      {tourData.courses.map((course) => (
-        <TourDetailCourse
-          lon={course.lon}
-          lat={course.lat}
-          title={course.title}
-          content={course.content}
-          image={course.image}
-        />
-      ))}
-      <hr />
-      <div>
-        <p>현재 모집 현황</p>
-        {joiners.length > 0 ? (
-          <div>
-            <h3>
-              <strong>이 투어에 참여하는 사람들</strong>
-            </h3>
-            <p>
-              총 <strong>{tourData.maxMember}</strong>명 중{" "}
-              <strong>{joiners.length}</strong>명이 모였어요.
-            </p>
-
+        <div>
+          <p>현재 모집 현황</p>
+          {joiners.length > 0 ? (
             <div>
-              <ul>
-                {joiners.map((joiner, index) => (
-                  <li key={index}>
-                    <div>
-                      <img
-                        src={joiner.profileImage}
-                        alt="프로필 이미지"
-                        style={{
-                          width: "200px",
-                          height: "200px",
-                          borderRadius: "50%",
-                        }}
-                      />
+              <h3>
+                <strong>이 투어에 참여하는 사람들</strong>
+              </h3>
+              <p>
+                총 <strong>{tourData.maxMember}</strong>명 중{" "}
+                <strong>{joiners.length}</strong>명이 모였어요.
+              </p>
+
+              <div>
+                <ul>
+                  {joiners.map((joiner, index) => (
+                    <li key={index}>
                       <div>
-                        <strong>{joiner.nickname}</strong> 님
+                        <img
+                          src={joiner.profileImage}
+                          alt="프로필 이미지"
+                          style={{
+                            width: "200px",
+                            height: "200px",
+                            borderRadius: "50%",
+                          }}
+                        />
+                        <div>
+                          <strong>{joiner.nickname}</strong> 님
+                        </div>
+                        <div>{joiner.joinDate}</div>
                       </div>
-                      <div>{joiner.joinDate}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
-        ) : (
-          <p>참가자가 없습니다.</p>
-        )}
-      </div>
+          ) : (
+            <p>참가자가 없습니다.</p>
+          )}
+        </div>
+      </TourDetailContentWrapper>
     </>
   );
 };
