@@ -59,9 +59,20 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
             />{" "}
           </Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/tour">투어 게시판</Nav.Link>
-            <Nav.Link as={Link} to="/mate">메이트 모집</Nav.Link>
-            <Nav.Link as={Link} to="/livestream">스트리밍 테스트</Nav.Link>
+            <Nav.Link as={Link} to="/tour">
+              투어 게시판
+            </Nav.Link>
+            <Nav.Link as={Link} to="/mate">
+              메이트 모집
+            </Nav.Link>
+            <Nav.Link as={Link} to="/livestream">
+              스트리밍 테스트
+            </Nav.Link>
+            {isLoggedIn && userType === "GUIDE" ? (
+              <Nav.Link as={Link} to="/tour/write">
+                투어 개설
+              </Nav.Link>
+            ) : null}
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             {isLoggedIn ? (
