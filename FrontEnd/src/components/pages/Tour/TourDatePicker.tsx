@@ -87,7 +87,7 @@ const TourDatePicker = ({ writeType, setTourData, tourData }) => {
         format="YYYY/MM/DD"
         value={
           writeType == "update"
-            ? moment(formatDate(startDate), "YYYY-MM-DD")
+            ? dayjs(formatDate(startDate), "YYYY-MM-DD")
             : undefined
         }
         onChange={handleDate}
