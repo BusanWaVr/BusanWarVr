@@ -230,6 +230,9 @@ const TourUpdate: React.FC = () => {
           setTourData(updatedTourData);
           setImageFiles(currentImageFiles);
           setCourseKeySetting(res.data.courses.length);
+          console.log(res.data);
+          setSelectedMinMember(res.data.minMember);
+          setSelectedMaxMember(res.data.maxMember);
         } else {
           toast.error("해당 투어가 존재하지 않습니다.");
         }
@@ -451,7 +454,7 @@ const TourUpdate: React.FC = () => {
               <Slider
                 className="essential__slider"
                 range
-                defaultValue={[selectedMinMember, selectedMaxMember]}
+                value={[selectedMinMember, selectedMaxMember]}
                 min={1}
                 max={6}
                 onChange={handleSliderChange}
