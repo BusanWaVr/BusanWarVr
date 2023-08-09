@@ -147,9 +147,9 @@ public class TourService {
             tour.setEnded(true);
             tourRepository.save(tour);
         } else if (user.getType() == AuthType.USER) {
-            throw new IllegalAccessException("가이드만 투어 취소 가능합니다.");
+            throw new IllegalAccessException("가이드만 투어 종료 가능합니다.");
         } else {
-            throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 취소 가능합니다.");
+            throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 종료 가능합니다.");
         }
     }
 }
