@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import TourCourseUpload from "./TourCourseUpload";
@@ -8,6 +8,17 @@ import { TourGuidelineCheck } from "./TourGuildelineCheck";
 import Editor from "../../blocks/Editor";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { styled } from "styled-components";
+import { Select, Slider, Input, Button } from "antd";
+import type { SliderMarks } from "antd/es/slider";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { Chip } from "@mui/material";
+import {
+  ExclamationCircleOutlined,
+  MinusOutlined,
+  PlusCircleOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 
 const regionList = [
   "강서구",
@@ -29,7 +40,6 @@ const regionList = [
 ];
 
 const MaxAllowedcategory = 5;
-const MinRequiredcategory = 3;
 
 const categoryList = [
   { name: "힐링", label: "힐링" },
@@ -48,6 +58,73 @@ const categoryList = [
   { name: "핫플", label: "핫플" },
   { name: "카페", label: "카페" },
 ];
+
+const customTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#1983FF",
+      dark: "#006AE6",
+    },
+  },
+});
+
+const TourDataUploadWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 20px 40px;
+`;
+
+const EssentialInfoContainer = styled.div`
+  text-align: left;
+  border: 1px solid #d5d5da;
+  border-radius: 4px;
+  padding: 20px;
+
+  & .essential__section {
+    margin-bottom: 20px;
+  }
+
+  & .essential__title {
+    color: #1983ff;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  & .essential__subtitle {
+    color: #3b3b4f;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  & .essential__slider {
+    width: 30%;
+  }
+`;
+
+const CourseListHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
+  & > p {
+    color: #1983ff;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  & > button {
+    display: flex;
+    align-items: center;
+    color: #757583;
+  }
+  & > button:not(:disabled):not(.ant-btn-disabled):hover {
+    color: #ff4d4f;
+  }
+`;
 
 type TourData = {
   region: string;
@@ -95,24 +172,23 @@ const TourRegistration: React.FC = () => {
 
   const { accessToken } = useSelector((state: any) => state.userInfo);
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      if (tourData.category.length < MaxAllowedcategory) {
-        setTourData((prevData) => ({
-          ...prevData,
-          category: [...prevData.category, value],
-        }));
-      } else {
-        toast.warning(
-          `카테고리는 최대 ${MaxAllowedcategory}개까지 선택할 수 있습니다.`
-        );
-      }
-    } else {
+  const handleChipClick = (categoryName) => {
+    const isCategorySelected = tourData.category.includes(categoryName);
+
+    if (isCategorySelected) {
       setTourData((prevData) => ({
         ...prevData,
-        category: prevData.category.filter((cat) => cat !== value),
+        category: prevData.category.filter((cat) => cat !== categoryName),
       }));
+    } else if (tourData.category.length < MaxAllowedcategory) {
+      setTourData((prevData) => ({
+        ...prevData,
+        category: [...prevData.category, categoryName],
+      }));
+    } else {
+      toast.warning(
+        `카테고리는 최대 ${MaxAllowedcategory}개까지 선택할 수 있습니다.`
+      );
     }
   };
 
@@ -134,38 +210,24 @@ const TourRegistration: React.FC = () => {
     }
   };
 
-  const handleMinMemberClick = (value: number) => {
-    if (value <= selectedMaxMember) {
-      setSelectedMinMember(value);
-      setTourData((prevData) => ({
-        ...prevData,
-        minMember: value,
-      }));
-    } else {
-      toast.warning("최대인원보다 작거나 같아야 합니다.");
-    }
+  const handleSliderChange = (values) => {
+    const [newMinMember, newMaxMember] = values;
+    setSelectedMinMember(newMinMember);
+    setSelectedMaxMember(newMaxMember);
+    setTourData((prevData) => ({
+      ...prevData,
+      minMember: newMinMember,
+      maxMember: newMaxMember,
+    }));
   };
 
-  const handleMaxMemberClick = (value: number) => {
-    if (value >= selectedMinMember) {
-      setSelectedMaxMember(value);
-      setTourData((prevData) => ({
-        ...prevData,
-        maxMember: value,
-      }));
-    } else {
-      toast.warning("최소인원보다 크거나 같아야 합니다.");
-    }
-  };
-
-  const handleImageFileChange = (file: File | null, index: number) => {
-    const newImageFiles = [...imageFiles];
-    if (file) {
-      newImageFiles[index] = file;
-    } else {
-      newImageFiles.splice(index, 1);
-    }
-    setImageFiles(newImageFiles);
+  const marks: SliderMarks = {
+    1: "1",
+    2: "2",
+    3: "3",
+    4: "4",
+    5: "5",
+    6: "6",
   };
 
   const deleteCourse = (courseKey: number) => {
@@ -265,125 +327,114 @@ const TourRegistration: React.FC = () => {
   };
 
   return (
-    <div>
-      {/* 지역 */}
-      <div>
-        <span>지역</span>
-        <select
-          value={tourData.region}
-          onChange={(e) => setTourData({ ...tourData, region: e.target.value })}
-        >
-          <option value="">Select Region</option>
-          {regionList.map((region) => (
-            <option key={region} value={region}>
-              {region}
-            </option>
-          ))}
-        </select>
-      </div>
+    <TourDataUploadWrapper>
+      <EssentialInfoContainer>
+        <p className="essential__title">
+          <ExclamationCircleOutlined />
+          필수 정보 입력
+        </p>
+        {/* 지역 */}
+        <div className="essential__section">
+          <p className="essential__subtitle">지역</p>
+          <Select
+            style={{ width: "300px" }}
+            showSearch
+            placeholder="지역을 선택해 주세요"
+            optionFilterProp="children"
+            onChange={(e) => setTourData({ ...tourData, region: e })}
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            options={regionList.map((region) => ({
+              value: region,
+              label: region,
+            }))}
+          />
+        </div>
 
-      {/* 카테고리 */}
-      <div>
-        <span>카테고리</span>
-        {categoryList.map((category) => (
-          <label key={category.name}>
-            <input
-              type="checkbox"
-              value={category.name}
-              checked={tourData.category.includes(category.name)}
-              onChange={handleCategoryChange}
-            />
-            {category.label}
-          </label>
-        ))}
-      </div>
+        {/* 카테고리 */}
+        <ThemeProvider theme={customTheme}>
+          <div className="essential__section">
+            <p className="essential__subtitle">카테고리</p>
+            {categoryList.map((category) => (
+              <Chip
+                key={category.name}
+                label={category.label}
+                onClick={() => handleChipClick(category.name)}
+                color={
+                  tourData.category.includes(category.name)
+                    ? "primary"
+                    : "default"
+                }
+                variant={
+                  tourData.category.includes(category.name)
+                    ? "filled"
+                    : "outlined"
+                }
+                style={{ margin: "4px" }}
+              />
+            ))}
+          </div>
+        </ThemeProvider>
+
+        {/* 여행 날짜 */}
+        <div className="essential__section">
+          <p className="essential__subtitle">투어 기간</p>
+          <TourDatePicker
+            writeType="registration"
+            setTourData={setTourData}
+            tourData={null}
+          />
+        </div>
+
+        {/* 인원 */}
+        <div className="essential__section">
+          <p className="essential__subtitle">참여 가능 인원</p>
+          <Slider
+            className="essential__slider"
+            range
+            defaultValue={[selectedMinMember, selectedMaxMember]}
+            min={1}
+            max={6}
+            onChange={handleSliderChange}
+            marks={marks}
+          />
+        </div>
+      </EssentialInfoContainer>
 
       {/* 제목 */}
-      <div>
-        <span>제목</span>
-        <input
-          type="text"
-          placeholder="Title"
-          value={tourData.title}
-          onChange={(e) => setTourData({ ...tourData, title: e.target.value })}
-        />
-      </div>
+      <Input
+        type="text"
+        placeholder="제목을 입력해주세요."
+        value={tourData.title}
+        onChange={(e) => setTourData({ ...tourData, title: e.target.value })}
+        style={{ height: "50px", "font-size": "18px" }}
+      />
 
       {/* 서브 제목 */}
-      <div>
-        <span>서브 제목</span>
-        <input
-          type="text"
-          placeholder="Sub Title"
-          value={tourData.subTitle}
-          onChange={(e) =>
-            setTourData({ ...tourData, subTitle: e.target.value })
-          }
-        />
-      </div>
+      <Input
+        type="text"
+        placeholder="부제목을 입력해주세요."
+        value={tourData.subTitle}
+        onChange={(e) => setTourData({ ...tourData, subTitle: e.target.value })}
+      />
 
       {/* 내용 */}
       <Editor
+        customHeight="400px"
         value={tourData.content}
         onChange={(content: string) =>
           setTourData({ ...tourData, content: content })
         }
       />
-      <div>
-        <span>내용</span>
-      </div>
 
       {/* 이미지 */}
       <div>
-        <span>이미지</span>
-        {Array.from(
-          { length: imageFiles.length < 3 ? imageFiles.length + 1 : 3 },
-          (_, index) => (
-            <TourImageUpload
-              key={index}
-              imageFile={imageFiles[index] || null}
-              setImageFile={(file) => handleImageFileChange(file, index)}
-            />
-          )
-        )}
-      </div>
-
-      {/* 여행 날짜 */}
-      <div>
-        <p>투어 기간</p>
-        <TourDatePicker setTourData={setTourData} tourData={null} />
-      </div>
-
-      {/* 최소 인원 */}
-      <div>
-        <span>최소 인원 : </span>
-        {[1, 2, 3, 4, 5, 6].map((value) => (
-          <button
-            key={value}
-            onClick={() => handleMinMemberClick(value)}
-            style={{
-              background: selectedMinMember === value ? "tomato" : "white",
-            }}
-          >
-            {value}
-          </button>
-        ))}
-      </div>
-
-      {/* 최대 인원 */}
-      <div>
-        <span>최대 인원 : </span>
-        {[1, 2, 3, 4, 5, 6].map((value) => (
-          <button
-            key={value}
-            onClick={() => handleMaxMemberClick(value)}
-            style={{
-              background: selectedMaxMember === value ? "tomato" : "white",
-            }}
-          >
-            {value}
-          </button>
-        ))}
+        <TourImageUpload
+          imageFiles={imageFiles}
+          setImageFiles={setImageFiles}
+          maxImages={3}
+        />
       </div>
 
       <hr />
@@ -391,27 +442,59 @@ const TourRegistration: React.FC = () => {
       {/* 투어 코스 */}
       {tourData.courses &&
         tourData.courses.map((_, index: number) => (
-          <div key={index}>
-            <TourCourseUpload
-              index={index}
-              courseKey={tourData.courses[index].courseKey}
-              tourData={tourData}
-              setTourData={setTourData}
-            />
-            <button
-              onClick={() => deleteCourse(tourData.courses[index].courseKey)}
-            >
-              투어 삭제
-            </button>
-          </div>
+          <>
+            <CourseListHeader>
+              <p>{index + 1}번째 코스</p>
+
+              <Button
+                type="link"
+                icon={<MinusOutlined />}
+                onClick={() => deleteCourse(tourData.courses[index].courseKey)}
+              >
+                코스 삭제
+              </Button>
+            </CourseListHeader>
+            <div key={index}>
+              <TourCourseUpload
+                index={index}
+                courseKey={tourData.courses[index].courseKey}
+                tourData={tourData}
+                setTourData={setTourData}
+              />
+            </div>
+          </>
         ))}
 
       <div onClick={increaseCoursesNum}>
-        <button>장소 추가</button>
+        <Button
+          style={{
+            width: "100%",
+            height: "45px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          icon={<PlusCircleOutlined />}
+        >
+          코스 추가
+        </Button>
       </div>
 
-      <button onClick={handleSubmit}>투어 등록</button>
-    </div>
+      <Button
+        type="primary"
+        onClick={handleSubmit}
+        icon={<EditOutlined />}
+        style={{
+          width: "100%",
+          height: "45px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        투어 등록
+      </Button>
+    </TourDataUploadWrapper>
   );
 };
 
