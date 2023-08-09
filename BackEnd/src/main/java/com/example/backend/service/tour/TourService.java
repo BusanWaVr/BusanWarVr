@@ -1,5 +1,6 @@
 package com.example.backend.service.tour;
 
+import com.example.backend.dto.tour.TourLinkUpdateDto;
 import com.example.backend.dto.tour.TourReservationCancelDto;
 import com.example.backend.dto.tour.TourReservationDto;
 import com.example.backend.model.enums.AuthType;
@@ -86,8 +87,7 @@ public class TourService {
         }
     }
 
-    public void tourCancel(Long tourId, User user)
-            throws IllegalAccessException {
+    public void tourCancel(Long tourId, User user) throws IllegalAccessException {
         Tour tour = tourRepository.findById(tourId).get();
         if ((user.getType() == AuthType.GUIDE) && (tour.getUserId() == user.getId())) {
             tour.setCanceled(true);
@@ -105,9 +105,18 @@ public class TourService {
             tour.setEnded(true);
             tourRepository.save(tour);
         } else if (user.getType() == AuthType.USER) {
-            throw new IllegalAccessException("가이드만 투어 취소 가능합니다.");
+            throw new IllegalAccessException("가이드만 투어 종료 가능합니다.");
         } else {
-            throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 취소 가능합니다.");
+            throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 종료 가능합니다.");
         }
+    }
+
+    public void tourLinkUpdate(User user, TourLinkUpdateDto.Request request, Long tourId) {
+        Tour tour = tourRepository.findById(tourId).get();
+        if (user.getType() != AuthType.GUIDE && user.getId() != tour.getUserId()) {
+            throw new IllegalArgumentException("해당 투어를 작성한 가이드만 링크 등록 가능합니다!");
+        }
+        tour.setLink(request.getLink());
+        tourRepository.save(tour);
     }
 }

@@ -14,6 +14,7 @@ public class TourInfoForUserTourDto {
     private int currentMember;
     private int maxMember;
     private GuideInfoForUserTourDto guide;
+    private String link;
 
     public TourInfoForUserTourDto(Tour tour, GuideInfoForUserTourDto guide) {
         this.tourId = tour.getId();
@@ -23,6 +24,7 @@ public class TourInfoForUserTourDto {
         this.currentMember = tour.getCurrentMember();
         this.maxMember = tour.getMaxMember();
         this.guide = guide;
+        this.link = tour.getLink();
     }
 
 }
