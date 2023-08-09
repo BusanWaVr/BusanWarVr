@@ -21,7 +21,7 @@ import {
   setIsChatOpen,
 } from "./LiveStreamReducer";
 
-const APPLICATION_SERVER_URL = "https://13.209.26.92/api/v1/openvidu";
+const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
@@ -302,13 +302,13 @@ const LiveStreamView = () => {
       {
         headers: { "Content-Type": "application/json" },
       }
-    )
+    );
     return response.data; // The sessionId
   };
 
   const createToken = async (sessionId) => {
     const response = await axios.post(
-      APPLICATION_SERVER_URL +"/"+ sessionId + "/connections",
+      APPLICATION_SERVER_URL + "/" + sessionId + "/connections",
       {},
       {
         headers: { "Content-Type": "application/json" },
