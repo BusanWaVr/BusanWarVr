@@ -19,14 +19,14 @@ const Card = styled.div`
   border-radius: 20px;
 `;
 
-function RegionCard() {
+function RegionCard({ regionData }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate("/tour", {
       state: {
         type: "REGION",
-        keyword: "강서구",
+        keyword: regionData.name,
       },
     });
   };
@@ -34,9 +34,7 @@ function RegionCard() {
     <CardContainer>
       <Card onClick={handleClick}>
         <img
-          src={
-            "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
-          }
+          src={regionData.img}
           alt="투어 이미지"
           style={{
             width: "100%",
