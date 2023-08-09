@@ -4,6 +4,7 @@ import ReactDaumPost from "react-daumpost-hook";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { SearchOutlined } from "@ant-design/icons";
 import { Input } from "antd";
+import { styled } from "styled-components";
 
 type TourAddressSearchProps = {
   index: number;
@@ -11,6 +12,12 @@ type TourAddressSearchProps = {
   tourData: any;
   setTourData: any;
 };
+
+const TourAddressSearchWrapper = styled.div`
+  height: 400px;
+  & > .search-box {
+  }
+`;
 
 const TourAddressSearch = ({
   index,
@@ -70,8 +77,8 @@ const TourAddressSearch = ({
 
   return (
     <>
-      <main>
-        <div>
+      <TourAddressSearchWrapper>
+        <div className="search-box">
           <Input
             type="text"
             onClick={postCode}
@@ -79,6 +86,7 @@ const TourAddressSearch = ({
             readOnly
             placeholder="주소를 검색해보세요."
             suffix={<SearchOutlined />}
+            style={{ height: "45px", marginBottom: "10px" }}
           />
         </div>
         {tourData.courses.filter(
@@ -98,7 +106,7 @@ const TourAddressSearch = ({
             }}
             style={{
               width: "100%",
-              height: "450px",
+              height: "390px",
             }}
             level={3}
           >
@@ -118,7 +126,7 @@ const TourAddressSearch = ({
             <div>주소를 검색해보세요</div>
           </>
         )}
-      </main>
+      </TourAddressSearchWrapper>
     </>
   );
 };

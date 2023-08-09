@@ -3,6 +3,7 @@ import TourAddressSearch from "./TourAddressSearch";
 import TourImageUpload from "./TourImageUpload";
 import Editor from "../../blocks/Editor";
 import { styled } from "styled-components";
+import { Input } from "antd";
 
 type TourCourseUploadProps = {
   index: number;
@@ -13,6 +14,25 @@ type TourCourseUploadProps = {
 
 const TourCourseWrapper = styled.div`
   display: flex;
+  gap: 40px;
+  height: 450px;
+  overflow: hidden;
+  & > div {
+    width: 100%;
+  }
+`;
+
+const AddressSearchWrapper = styled.div`
+  border-radius: 5px;
+  overflow: hidden;
+`;
+
+const CourseEditorWrapper = styled.div`
+  box-sizing: border-box;
+  flex-direction: column;
+  height: 450px;
+  border-radius: 5px;
+  overflow: hidden;
 `;
 
 const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
@@ -78,7 +98,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
   return (
     <>
       <TourCourseWrapper>
-        <div>
+        <AddressSearchWrapper>
           <TourAddressSearch
             index={index}
             courseKey={courseKey}
@@ -107,38 +127,42 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
             disabled
             style={{ display: "none" }}
           />
-        </div>
+        </AddressSearchWrapper>
 
-        <div>
-          <label>
-            제목:
-            <input
-              type="text"
-              value={
-                tourData.courses.filter(
-                  (course: any) => course.courseKey == courseKey
-                )[0].title
-              }
-              onChange={handleTitleChange}
-            />
-          </label>
-          <Editor
+        <CourseEditorWrapper>
+          <Input
+            placeholder="코스명을 입력해주세요."
+            type="text"
             value={
               tourData.courses.filter(
                 (course: any) => course.courseKey == courseKey
-              )[0].content
+              )[0].title
             }
-            onChange={handleContentChange}
+            onChange={handleTitleChange}
+            style={{ height: "45px", marginBottom: "10px" }}
           />
-          <TourImageUpload
-            imageFile={
-              tourData.courses.filter(
-                (course: any) => course.courseKey == courseKey
-              )[0].image
-            }
-            setImageFile={(file) => handleImageFileChange(file)}
-          />
-        </div>
+          <div style={{ height: "contentFit" }}>
+            <Editor
+              value={
+                tourData.courses.filter(
+                  (course: any) => course.courseKey == courseKey
+                )[0].content
+              }
+              onChange={handleContentChange}
+            />
+          </div>
+
+          <div>
+            <TourImageUpload
+              imageFile={
+                tourData.courses.filter(
+                  (course: any) => course.courseKey == courseKey
+                )[0].image
+              }
+              setImageFile={(file) => handleImageFileChange(file)}
+            />
+          </div>
+        </CourseEditorWrapper>
       </TourCourseWrapper>
     </>
   );

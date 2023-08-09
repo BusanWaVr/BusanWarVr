@@ -57,6 +57,13 @@ class Editor extends Component {
           }
           // onChange={(content, delta, source, editor) => onChange(content)}
         />
+        <style>
+          {`
+            .ql-container {
+              height: calc(100% - 42px);
+            }
+          `}
+        </style>
       </div>
     );
   }
