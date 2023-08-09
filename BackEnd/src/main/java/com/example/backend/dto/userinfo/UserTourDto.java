@@ -12,6 +12,7 @@ public class UserTourDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Response {
+
         private List<TourInfoForUserTourDto> scheduledTours;
         private List<TourInfoForUserTourDto> endedTours;
         private List<TourInfoForUserTourDto> canceledTours;

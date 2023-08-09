@@ -12,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Data
 @NoArgsConstructor
 public class CanceledTourDto {
+
     private Long tourId;
     private String region;
     private List<String> category;

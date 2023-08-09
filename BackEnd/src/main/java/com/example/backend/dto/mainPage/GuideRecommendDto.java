@@ -17,7 +17,8 @@ public class GuideRecommendDto {
     private double averageScore;
     private LocalDate latestTourDate;
 
-    public GuideRecommendDto(User user, int followerNum, int tourNumbers, double averageScore, LocalDate latestTourDate) {
+    public GuideRecommendDto(User user, int followerNum, int tourNumbers, double averageScore,
+            LocalDate latestTourDate) {
         double roundedScore = Math.max(0.0, Math.min(5.0, Math.round(averageScore * 10) / 10.0));
         this.userId = user.getId();
         this.nickname = user.getNickname();

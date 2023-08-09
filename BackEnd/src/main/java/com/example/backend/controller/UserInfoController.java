@@ -78,7 +78,8 @@ public class UserInfoController {
 
     @GetMapping("/user/tourRemind")
     public Response getTourRemind(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        TourStartRemindDto.Response response = userInfoGetService.getTourStartRemind(userDetails.getUser());
+        TourStartRemindDto.Response response = userInfoGetService.getTourStartRemind(
+                userDetails.getUser());
         return new Response("200", "성공적으로 시작 임박한 예약된 투어 목록을 가져왔습니다.", response);
     }
 }
