@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 import type { RcFile, UploadProps } from "antd/es/upload";
@@ -24,16 +24,21 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState<UploadFile[]>((imageFiles?imageFiles.map((image, index)=>{
-    {uid: -index, name: image.}
-  }):[
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  useEffect(() => {
+    console.log(imageFiles);
+    if (imageFiles) {
+      setFileList(
+        imageFiles.map((imageFile, index) => ({
+          uid: index.toString(),
+          name: URL.createObjectURL(imageFile).split("/").pop(),
+          status: "done",
+          url: URL.createObjectURL(imageFile),
+          originFileObj: imageFile,
+        }))
+      );
+    }
+  }, [imageFiles]);
 
   const handleCancel = () => setPreviewOpen(false);
 
@@ -50,7 +55,9 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
   };
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+    console.log(newFileList);
+    const newImageFiles = newFileList.map((file) => file.originFileObj);
+    setImageFiles(newImageFiles);
   };
 
   const uploadButton = (
@@ -60,22 +67,9 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
     </div>
   );
 
-  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = e.target.files;
-  //   if (!files) return;
-
-  //   const selectedImage = files[0];
-  //   setImageFile(selectedImage);
-  // };
-
-  // const handleImageDelete = () => {
-  //   setImageFile(null);
-  // };
-
   return (
     <>
       <Upload
-        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         listType="picture-card"
         fileList={fileList}
         onPreview={handlePreview}
@@ -92,20 +86,6 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
         <img alt="example" style={{ width: "100%" }} src={previewImage} />
       </Modal>
     </>
-    // <>
-    //   {typeof imageFile != "string" && imageFile ? (
-    //     <div>
-    //       <img
-    //         src={URL.createObjectURL(imageFile)}
-    //         alt="Tour Image"
-    //         style={{ maxWidth: "200px" }}
-    //       />
-    //       <button onClick={handleImageDelete}>Delete</button>
-    //     </div>
-    //   ) : (
-    //     <input type="file" accept="image/*" onChange={handleImageChange} />
-    //   )}
-    // </>
   );
 };
 

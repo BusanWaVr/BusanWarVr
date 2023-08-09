@@ -299,28 +299,6 @@ const TourUpdate: React.FC = () => {
     6: "6",
   };
 
-  const handleImageFileChange = (file: File | null, index: number) => {
-    const newImageFiles = [...imageFiles];
-    if (file) {
-      newImageFiles[index] = file;
-    } else {
-      newImageFiles.splice(index, 1);
-    }
-    setImageFiles(newImageFiles);
-  };
-
-  const handleImageFilesChange = (files: File[]) => {
-    const newImageFiles = [...imageFiles];
-    files.map((file, index) => {
-      if (file) {
-        newImageFiles[index] = file;
-      } else {
-        newImageFiles.splice(index, 1);
-      }
-    });
-    setImageFiles(newImageFiles);
-  };
-
   const deleteCourse = (courseKey: number) => {
     const updatedCourses = tourData.courses.filter(
       (course) => course.courseKey !== courseKey
@@ -513,19 +491,9 @@ const TourUpdate: React.FC = () => {
 
           {/* 이미지 */}
           <div>
-            {/* {Array.from(
-              { length: imageFiles.length < 3 ? imageFiles.length + 1 : 3 },
-              (_, index) => (
-                <TourImageUpload
-                  key={index}
-                  imageFile={imageFiles[index] || null}
-                  setImageFile={(file) => handleImageFileChange(file, index)}
-                />
-              )
-            )} */}
             <TourImageUpload
               imageFiles={imageFiles}
-              setImageFiles={(files) => handleImageFilesChange(files)}
+              setImageFiles={setImageFiles}
             />
           </div>
 

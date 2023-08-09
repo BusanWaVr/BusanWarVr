@@ -230,16 +230,6 @@ const TourRegistration: React.FC = () => {
     6: "6",
   };
 
-  const handleImageFileChange = (file: File | null, index: number) => {
-    const newImageFiles = [...imageFiles];
-    if (file) {
-      newImageFiles[index] = file;
-    } else {
-      newImageFiles.splice(index, 1);
-    }
-    setImageFiles(newImageFiles);
-  };
-
   const deleteCourse = (courseKey: number) => {
     const updatedCourses = tourData.courses.filter(
       (course) => course.courseKey !== courseKey
@@ -439,16 +429,10 @@ const TourRegistration: React.FC = () => {
 
       {/* 이미지 */}
       <div>
-        {Array.from(
-          { length: imageFiles.length < 3 ? imageFiles.length + 1 : 3 },
-          (_, index) => (
-            <TourImageUpload
-              key={index}
-              imageFile={imageFiles[index] || null}
-              setImageFile={(file) => handleImageFileChange(file, index)}
-            />
-          )
-        )}
+        <TourImageUpload
+          imageFiles={imageFiles}
+          setImageFiles={setImageFiles}
+        />
       </div>
 
       <hr />
@@ -506,7 +490,7 @@ const TourRegistration: React.FC = () => {
           justifyContent: "center",
         }}
       >
-        수정 완료
+        투어 등록
       </Button>
     </TourDataUploadWrapper>
   );
