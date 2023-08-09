@@ -1,10 +1,9 @@
 import styled from "styled-components";
 
 const Container = styled.div`
-  height: 300px;
+  height: 450px;
   width: 100%;
-  background-color: #f0f0f0;
-`;
+  `;
 
 function VideoContainer() {
   return (

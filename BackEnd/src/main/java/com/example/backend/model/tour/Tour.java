@@ -57,6 +57,9 @@ public class Tour {
     @Column
     private boolean isEnded;
 
+    @Column
+    private String link;
+
     public Tour(String region, String title, String subTitle, String content, Date startDate,
             Date endDate, int minMember, int maxMember, long userId) {
         this.region = region;

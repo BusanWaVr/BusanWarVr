@@ -1,61 +1,20 @@
 package com.example.backend.service.tour;
 
-import com.example.backend.dto.course.CourseDto;
-import com.example.backend.dto.joiner.JoinerDto;
-import com.example.backend.dto.tour.ReviewDetailDto;
-import com.example.backend.dto.tour.ReviewRegistDto;
-import com.example.backend.dto.tour.ReviewUpdateDto;
-import com.example.backend.dto.tour.TourDetailDto;
-import com.example.backend.dto.tour.TourDto;
-import com.example.backend.dto.tour.TourListDto;
-import com.example.backend.dto.tour.TourRegistDto;
+import com.example.backend.dto.tour.TourLinkUpdateDto;
 import com.example.backend.dto.tour.TourReservationCancelDto;
 import com.example.backend.dto.tour.TourReservationDto;
-import com.example.backend.dto.tour.TourSearchInfoDto;
-import com.example.backend.dto.tour.TourUpdateDto;
-import com.example.backend.model.category.Category;
-import com.example.backend.model.category.CategoryRepository;
-import com.example.backend.model.course.Course;
-import com.example.backend.model.course.CourseCustomRepository;
-import com.example.backend.model.course.CourseRepository;
-import com.example.backend.model.course.qdto.CourseCustomDto;
-import com.example.backend.model.courseimage.CourseImage;
-import com.example.backend.model.courseimage.CourseImageRepository;
 import com.example.backend.model.enums.AuthType;
-import com.example.backend.model.image.Image;
-import com.example.backend.model.image.ImageRepository;
 import com.example.backend.model.joiner.Joiner;
 import com.example.backend.model.joiner.JoinerRepository;
-import com.example.backend.model.review.Review;
-import com.example.backend.model.review.ReviewRepository;
 import com.example.backend.model.tour.Tour;
-import com.example.backend.model.tour.TourCustomRepository;
 import com.example.backend.model.tour.TourRepository;
-import com.example.backend.model.tour.qdto.SearchTourDto;
-import com.example.backend.model.tourcategory.TourCategory;
-import com.example.backend.model.tourcategory.TourCategoryRepository;
-import com.example.backend.model.tourimage.TourImage;
-import com.example.backend.model.tourimage.TourImageRepository;
 import com.example.backend.model.user.User;
-import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.wish.Wish;
 import com.example.backend.model.wish.WishRepository;
-import com.example.backend.util.awsS3.S3Uploader;
-import com.example.backend.util.category.CategoryUtil;
-import com.example.backend.util.course.CourseUtil;
-import com.example.backend.util.image.ImageUtil;
-import com.example.backend.util.joiner.JoinerUtil;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @AllArgsConstructor
@@ -69,7 +28,7 @@ public class TourService {
     public void tourReservation(Long tourId, User user) {
         Tour tour = tourRepository.findById(tourId).get();
         TourReservationDto tourReservationDto = new TourReservationDto(tour);
-        if(tour.isCanceled() || tour.isEnded()){
+        if (tour.isCanceled() || tour.isEnded()) {
             throw new IllegalArgumentException("이미 종료되었거나 취소된 투어입니다.");
         }
         if (tour.getMaxMember() <= tour.getCurrentMember()) {
@@ -128,8 +87,7 @@ public class TourService {
         }
     }
 
-    public void tourCancel(Long tourId, User user)
-            throws IllegalAccessException {
+    public void tourCancel(Long tourId, User user) throws IllegalAccessException {
         Tour tour = tourRepository.findById(tourId).get();
         if ((user.getType() == AuthType.GUIDE) && (tour.getUserId() == user.getId())) {
             tour.setCanceled(true);
@@ -147,9 +105,18 @@ public class TourService {
             tour.setEnded(true);
             tourRepository.save(tour);
         } else if (user.getType() == AuthType.USER) {
-            throw new IllegalAccessException("가이드만 투어 취소 가능합니다.");
+            throw new IllegalAccessException("가이드만 투어 종료 가능합니다.");
         } else {
-            throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 취소 가능합니다.");
+            throw new IllegalAccessException("해당 투어의 작성자 가이드만 투어 종료 가능합니다.");
         }
+    }
+
+    public void tourLinkUpdate(User user, TourLinkUpdateDto.Request request, Long tourId) {
+        Tour tour = tourRepository.findById(tourId).get();
+        if (user.getType() != AuthType.GUIDE && user.getId() != tour.getUserId()) {
+            throw new IllegalArgumentException("해당 투어를 작성한 가이드만 링크 등록 가능합니다!");
+        }
+        tour.setLink(request.getLink());
+        tourRepository.save(tour);
     }
 }
