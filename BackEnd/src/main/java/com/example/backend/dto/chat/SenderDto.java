@@ -11,7 +11,7 @@ public class SenderDto {
     private String nickname;
     private String type;
 
-    public SenderDto(User user){
+    public SenderDto(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.nickname = user.getNickname();

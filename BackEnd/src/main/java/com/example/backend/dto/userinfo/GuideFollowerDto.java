@@ -13,7 +13,7 @@ public class GuideFollowerDto {
     private String nickname;
     private String profileImg;
 
-    public GuideFollowerDto(Follower follower){
+    public GuideFollowerDto(Follower follower) {
         User user = follower.getUser();
         this.userId = user.getId();
         this.nickname = user.getNickname();

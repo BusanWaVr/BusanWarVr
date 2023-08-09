@@ -63,9 +63,7 @@ public class UserInfoGetService {
 
             User tourGuide = userRepository.findById(tour.getUserId()).get();
 
-            GuideInfoForUserWishDto guide = new GuideInfoForUserWishDto();
-            guide.setId(tourGuide.getId());
-            guide.setName(tourGuide.getNickname());
+            GuideInfoForUserWishDto guide = new GuideInfoForUserWishDto(tourGuide);
 
             wishList.add(new UserWishTourDto(tour, categoryList, guide));
         }

@@ -14,6 +14,7 @@ import com.example.backend.dto.userinfo.ReviewInfoForGuideReviewDto;
 import com.example.backend.dto.userinfo.TourInfoForGuideEndedTours;
 import com.example.backend.dto.userinfo.TourInfoForGuideScheduledToursDto;
 import com.example.backend.dto.userinfo.UserInfoForGuideReviewsDto;
+import com.example.backend.model.enums.AuthType;
 import com.example.backend.model.follower.Follower;
 import com.example.backend.model.follower.FollowerRepository;
 import com.example.backend.model.review.Review;
@@ -52,13 +53,20 @@ public class GuideInfoGetService {
     private final JoinerUtil joinerUtil;
 
     public GuideScheduledToursDto.Response guideScheduledToursService(Long guideId,
-            Pageable pageable) {
+            Pageable pageable) throws IllegalAccessException {
         User guide = userRepository.findById(guideId).get();
+        if (guide.getType().toString() == "USER") {
+            throw new IllegalAccessException("가이드가 아닙니다!");
+        }
         return getGuideScheduledTours(guide, pageable);
     }
 
-    public GuideEndedToursDto.Response guideEndedToursService(Long guideId, Pageable pageable) {
+    public GuideEndedToursDto.Response guideEndedToursService(Long guideId, Pageable pageable)
+            throws IllegalAccessException {
         User guide = userRepository.findById(guideId).get();
+        if (guide.getType().toString() == "USER") {
+            throw new IllegalAccessException("가이드가 아닙니다!");
+        }
         return getGuideEndedTours(guide, pageable);
     }
 
@@ -107,7 +115,6 @@ public class GuideInfoGetService {
         tourIdToImage(tourImages, tourIdToImageMap);
 
         for (Tour tour : tourLists) {
-            System.out.println(tour.getId());
             boolean isEnded = tour.isEnded();
             TourInfoForGuideEndedTours endedToursDto = new TourInfoForGuideEndedTours();
 
@@ -141,8 +148,11 @@ public class GuideInfoGetService {
         }
     }
 
-    public GuideInfoDto.Response getGuideInfo(Long guideId) {
+    public GuideInfoDto.Response getGuideInfo(Long guideId) throws IllegalAccessException {
         User user = userRepository.findById(guideId).get();
+        if (user.getType().toString() == "USER") {
+            throw new IllegalAccessException("가이드가 아닙니다!");
+        }
         List<Follower> followers = followerRepository.findAllByGuideId(guideId);
         int followerNum = followers.size();
         List<Tour> tours = tourRepository.findAllByUserId(guideId);
@@ -164,8 +174,12 @@ public class GuideInfoGetService {
         return response;
     }
 
-    public GuideReviewsDto.Response guideReviewsService(Long guideId, Pageable pageable) {
+    public GuideReviewsDto.Response guideReviewsService(Long guideId, Pageable pageable)
+            throws IllegalAccessException {
         User guide = userRepository.findById(guideId).get();
+        if (guide.getType().toString() == "USER") {
+            throw new IllegalAccessException("가이드가 아닙니다!");
+        }
         return getGuideReviews(guide, pageable);
     }
 
@@ -190,9 +204,13 @@ public class GuideInfoGetService {
         return new GuideReviewsDto.Response(responseList);
     }
 
-    public GuideHomeDto.Response guideHome(Long guideId, Pageable pageable) {
+    public GuideHomeDto.Response guideHome(Long guideId, Pageable pageable)
+            throws IllegalAccessException {
         GuideHomeDto.Response response = new GuideHomeDto.Response();
         User guide = userRepository.findById(guideId).get();
+        if (guide.getType().toString() == "USER") {
+            throw new IllegalAccessException("가이드가 아닙니다!");
+        }
         response.setIntroduction(guide.getIntroduction());
 
         GuideScheduledToursDto.Response scheduledToursResponse = getGuideScheduledTours(guide,
