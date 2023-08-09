@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import TourListCard from "../../blocks/TourListCard";
 import SearchBar from "../../blocks/SearchBar";
@@ -32,11 +32,22 @@ function TourBoard() {
   // 검색어 (Searchbar에서 받아옴)
   const [searchValue, setSearchValue] = useState("");
 
+  const location = useLocation();
+
   const handleSearchValue = (searchValue, type) => {
     console.log("검색창에서 받은 검색어:", searchValue, type);
     setSearchValue(searchValue); // 검색어 상태값 업데이트
     setType(type);
   };
+
+  // 메인화면에서 넘어옴
+  useEffect(() => {
+    if (location.state) {
+      const { type: type, keyword: keyword } = location.state;
+      setType(type);
+      setSearchValue(keyword);
+    }
+  }, [location.state]);
 
   // 초기값 통신
   useEffect(() => {
