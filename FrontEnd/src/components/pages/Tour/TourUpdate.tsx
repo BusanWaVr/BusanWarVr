@@ -230,7 +230,6 @@ const TourUpdate: React.FC = () => {
           setTourData(updatedTourData);
           setImageFiles(currentImageFiles);
           setCourseKeySetting(res.data.courses.length);
-          console.log(res.data);
           setSelectedMinMember(res.data.minMember);
           setSelectedMaxMember(res.data.maxMember);
         } else {
@@ -497,6 +496,7 @@ const TourUpdate: React.FC = () => {
             <TourImageUpload
               imageFiles={imageFiles}
               setImageFiles={setImageFiles}
+              maxImages={3}
             />
           </div>
 

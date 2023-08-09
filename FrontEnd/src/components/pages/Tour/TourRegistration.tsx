@@ -432,6 +432,7 @@ const TourRegistration: React.FC = () => {
         <TourImageUpload
           imageFiles={imageFiles}
           setImageFiles={setImageFiles}
+          maxImages={3}
         />
       </div>
 

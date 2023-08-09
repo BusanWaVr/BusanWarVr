@@ -1,9 +1,9 @@
-import { useEffect } from "react";
 import TourAddressSearch from "./TourAddressSearch";
 import TourImageUpload from "./TourImageUpload";
 import Editor from "../../blocks/Editor";
 import { styled } from "styled-components";
 import { Input } from "antd";
+import { useEffect, useState } from "react";
 
 type TourCourseUploadProps = {
   index: number;
@@ -41,9 +41,14 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
   tourData,
   setTourData,
 }) => {
+  const [imageFiles, setImageFiles] = useState<File[]>([
+    tourData.courses.filter((course: any) => course.courseKey == courseKey)[0]
+      .image,
+  ]);
+
   useEffect(() => {
-    console.log(courseKey);
-  }, []);
+    console.log(tourData);
+  }, [tourData]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCourses = [...tourData.courses];
@@ -65,13 +70,14 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
     setTourData({ ...tourData, courses: newCourses });
   };
 
-  const handleImageFileChange = (file: File | null) => {
+  const handleImageChange = (files: File[]) => {
     const newCourses = [...tourData.courses];
     newCourses.forEach((course, i) => {
       if (course.courseKey === courseKey) {
-        newCourses[i].image = file;
+        newCourses[i].image = files[0];
       }
     });
+    setImageFiles(files);
     setTourData({ ...tourData, courses: newCourses });
   };
 
@@ -154,12 +160,9 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
 
           <div>
             <TourImageUpload
-              imageFile={
-                tourData.courses.filter(
-                  (course: any) => course.courseKey == courseKey
-                )[0].image
-              }
-              setImageFile={(file) => handleImageFileChange(file)}
+              imageFiles={imageFiles}
+              setImageFiles={(files) => handleImageChange(files)}
+              maxImages={1}
             />
           </div>
         </CourseEditorWrapper>

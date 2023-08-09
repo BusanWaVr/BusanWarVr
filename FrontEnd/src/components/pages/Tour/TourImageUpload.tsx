@@ -5,8 +5,9 @@ import type { RcFile, UploadProps } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
 
 type TourImageUploadProps = {
-  imageFiles: File[];
+  imageFiles: File[] | string[] | null;
   setImageFiles: (file: File[]) => void;
+  maxImages: number;
 };
 
 const getBase64 = (file: RcFile): Promise<string> =>
@@ -20,6 +21,7 @@ const getBase64 = (file: RcFile): Promise<string> =>
 const TourImageUpload: React.FC<TourImageUploadProps> = ({
   imageFiles,
   setImageFiles,
+  maxImages,
 }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -27,7 +29,7 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   useEffect(() => {
     console.log(imageFiles);
-    if (imageFiles) {
+    if (imageFiles && imageFiles[0] != "" && imageFiles[0] != null) {
       setFileList(
         imageFiles.map((imageFile, index) => ({
           uid: index.toString(),
@@ -37,6 +39,8 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
           originFileObj: imageFile,
         }))
       );
+    } else {
+      setFileList([]);
     }
   }, [imageFiles]);
 
@@ -75,7 +79,7 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
         onPreview={handlePreview}
         onChange={handleChange}
       >
-        {fileList.length >= 3 ? null : uploadButton}
+        {fileList.length >= maxImages ? null : uploadButton}
       </Upload>
       <Modal
         open={previewOpen}
