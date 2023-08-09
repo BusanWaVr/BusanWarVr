@@ -46,6 +46,7 @@ function TourBoard() {
       const { type: type, keyword: keyword } = location.state;
       setType(type);
       setSearchValue(keyword);
+      console.log(type, keyword);
     }
   }, [location.state]);
 
@@ -71,7 +72,7 @@ function TourBoard() {
           console.log("투어데이터 받았어요");
           const data = await response.json();
           setSearchResults(data.data);
-          console.log("부모에서 넘겨주고 있음", data.data);
+          // console.log("부모에서 넘겨주고 있음", data.data);
         } else {
           alert(data.message);
         }
