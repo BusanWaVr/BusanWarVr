@@ -87,7 +87,7 @@ function TourBoard() {
       <TourListCard TourData={searchResults} tempPage={tempPage} />
 
       <ButtonContainer>
-        <PrevButton onClick={handlePrevClick} disabled={tempPage === 0}>
+        <PrevButton onClick={handlePrevClick} disabled={currentPage === 0}>
           이전
         </PrevButton>
 

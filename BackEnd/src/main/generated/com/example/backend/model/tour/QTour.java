@@ -31,6 +31,8 @@ public class QTour extends EntityPathBase<Tour> {
 
     public final BooleanPath isEnded = createBoolean("isEnded");
 
+    public final StringPath link = createString("link");
+
     public final NumberPath<Integer> maxMember = createNumber("maxMember", Integer.class);
 
     public final NumberPath<Integer> minMember = createNumber("minMember", Integer.class);
