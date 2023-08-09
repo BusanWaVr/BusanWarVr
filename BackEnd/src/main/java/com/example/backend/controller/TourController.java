@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
 import com.example.backend.dto.tour.TourDetailDto;
+import com.example.backend.dto.tour.TourLinkUpdateDto;
 import com.example.backend.dto.tour.TourListDto;
 import com.example.backend.dto.tour.TourRegistDto;
 import com.example.backend.dto.tour.TourSearchInfoDto;
@@ -122,5 +123,11 @@ public class TourController {
             TourSearchInfoDto.Request request) {
         List<SearchTourDto> searchTourDtos = tourSearchService.searchTour(request, pageable);
         return new Response<>("200", "성공적으로 투어를 찾았습니다.", searchTourDtos);
+    }
+
+    @PutMapping("/tour/link/{tourId}")
+    public Response<TourLinkUpdateDto> tourLinkUpdateApi(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody TourLinkUpdateDto.Request request ,@PathVariable Long tourId){
+        tourService.tourLinkUpdate(userDetails.getUser(), request, tourId);
+        return new Response<>("200", "성공적으로 투어 링크를 등록했습니다.", null);
     }
 }
