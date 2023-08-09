@@ -10,7 +10,7 @@ import Editor from "../../blocks/Editor";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { styled } from "styled-components";
-import { Select, Slider, Input, Button } from "antd";
+import { Select, Slider, Input, Button, Divider } from "antd";
 import type { SliderMarks } from "antd/es/slider";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Chip } from "@mui/material";
@@ -485,6 +485,7 @@ const TourUpdate: React.FC = () => {
 
           {/* 내용 */}
           <Editor
+            customHeight="400px"
             value={tourData.content}
             onChange={(content: string) =>
               setTourData({ ...tourData, content: content })
@@ -500,12 +501,11 @@ const TourUpdate: React.FC = () => {
             />
           </div>
 
-          <hr />
-
           {/* 투어 코스 */}
           {tourData.courses &&
             tourData.courses.map((_, index: number) => (
               <>
+                <Divider />
                 <CourseListHeader>
                   <p>{index + 1}번째 코스</p>
 

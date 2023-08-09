@@ -5,6 +5,7 @@ import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { SearchOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 import { styled } from "styled-components";
+import BoogieSearching from "../../../assets/boogie_searching.png";
 
 type TourAddressSearchProps = {
   index: number;
@@ -16,6 +17,21 @@ type TourAddressSearchProps = {
 const TourAddressSearchWrapper = styled.div`
   height: 400px;
   & > .search-box {
+  }
+`;
+
+const AddressSearchDiv = styled.div`
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+  color: #757583;
+  font-weight: 700;
+  & > img {
+    height: 150px;
+    opacity: 0.5;
   }
 `;
 
@@ -122,9 +138,10 @@ const TourAddressSearch = ({
             ></MapMarker>
           </Map>
         ) : (
-          <>
+          <AddressSearchDiv>
             <div>주소를 검색해보세요</div>
-          </>
+            <img src={BoogieSearching} alt="" />
+          </AddressSearchDiv>
         )}
       </TourAddressSearchWrapper>
     </>

@@ -3,12 +3,19 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 import type { RcFile, UploadProps } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
+import { styled } from "styled-components";
 
 type TourImageUploadProps = {
   imageFiles: File[] | string[] | null;
   setImageFiles: (file: File[]) => void;
   maxImages: number;
 };
+
+const ImageUploadWrapper = styled.div`
+  & > span {
+    text-align: left;
+  }
+`;
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -73,22 +80,24 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
 
   return (
     <>
-      <Upload
-        listType="picture-card"
-        fileList={fileList}
-        onPreview={handlePreview}
-        onChange={handleChange}
-      >
-        {fileList.length >= maxImages ? null : uploadButton}
-      </Upload>
-      <Modal
-        open={previewOpen}
-        title={previewTitle}
-        footer={null}
-        onCancel={handleCancel}
-      >
-        <img alt="example" style={{ width: "100%" }} src={previewImage} />
-      </Modal>
+      <ImageUploadWrapper>
+        <Upload
+          listType="picture-card"
+          fileList={fileList}
+          onPreview={handlePreview}
+          onChange={handleChange}
+        >
+          {fileList.length >= maxImages ? null : uploadButton}
+        </Upload>
+        <Modal
+          open={previewOpen}
+          title={previewTitle}
+          footer={null}
+          onCancel={handleCancel}
+        >
+          <img alt="example" style={{ width: "100%" }} src={previewImage} />
+        </Modal>
+      </ImageUploadWrapper>
     </>
   );
 };

@@ -421,6 +421,7 @@ const TourRegistration: React.FC = () => {
 
       {/* 내용 */}
       <Editor
+        customHeight="400px"
         value={tourData.content}
         onChange={(content: string) =>
           setTourData({ ...tourData, content: content })

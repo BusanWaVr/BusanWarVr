@@ -149,6 +149,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
           />
           <div style={{ height: "contentFit" }}>
             <Editor
+              customHeight="250px"
               value={
                 tourData.courses.filter(
                   (course: any) => course.courseKey == courseKey
@@ -158,7 +159,7 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
             />
           </div>
 
-          <div>
+          <div style={{ marginTop: "20px" }}>
             <TourImageUpload
               imageFiles={imageFiles}
               setImageFiles={(files) => handleImageChange(files)}

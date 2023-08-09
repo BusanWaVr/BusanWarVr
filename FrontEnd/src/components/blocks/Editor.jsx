@@ -43,11 +43,11 @@ class Editor extends Component {
   ];
 
   render() {
-    const { value, onChange } = this.props;
+    const { customHeight, value, onChange } = this.props;
     return (
-      <div style={{ height: "350px" }}>
+      <div>
         <ReactQuill
-          style={{ height: "300px" }}
+          style={{ height: customHeight }}
           theme="snow"
           modules={this.modules}
           formats={this.formats}
@@ -59,8 +59,27 @@ class Editor extends Component {
         />
         <style>
           {`
-            .ql-container {
-              height: calc(100% - 42px);
+            .quill {
+              border: 1px solid #d5d5da;
+              border-radius: 5px;
+              min-height: 100px !important;
+              max-height: ${customHeight};
+              overflow: hidden;
+            }
+            .ql-toolbar.ql-snow {
+              border: none;
+              border-bottom: 1px solid #d5d5da;
+            }
+            .ql-container.ql-snow {
+              border: none;
+            }
+
+            .quill:hover {
+              overflow-y: scroll;
+            }
+
+            .quill::-webkit-scrollbar {
+              width: 0.5px;
             }
           `}
         </style>
