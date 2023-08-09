@@ -56,6 +56,7 @@ public class TourDto {
         this.isCanceled = tour.isCanceled();
         this.isEnded = tour.isEnded();
     }
+
     public TourDto(Tour tour, List<String> category, List<String> tourImgs,
             List<CourseDto.Response> courses, List<JoinerDto> joiners) {
         this.tourId = tour.getId();

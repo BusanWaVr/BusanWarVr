@@ -13,7 +13,8 @@ public class GuideInfoForUserFollowDto {
     private String imageUrl;
     private double averageScore;
 
-    public GuideInfoForUserFollowDto(User guide, int follower, int tourNumbers, double averageScore) {
+    public GuideInfoForUserFollowDto(User guide, int follower, int tourNumbers,
+            double averageScore) {
         this.id = guide.getId();
         this.nickname = guide.getNickname();
         this.follower = follower;

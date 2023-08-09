@@ -8,14 +8,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class LeaveMessageDto {
+
     private String roomUid;
     private String token;
 
-    public ChatMessageResponseDto toChatMessageResponseDto(User user){
+    public ChatMessageResponseDto toChatMessageResponseDto(User user) {
         return new ChatMessageResponseDto<>(this.roomUid, new SenderDto(user), "LEAVE", null);
     }
 
-    public Message toMessage(User user, String type){
+    public Message toMessage(User user, String type) {
         SenderDto senderDto = new SenderDto(user);
         return new Message(this.roomUid, senderDto, type, null);
     }

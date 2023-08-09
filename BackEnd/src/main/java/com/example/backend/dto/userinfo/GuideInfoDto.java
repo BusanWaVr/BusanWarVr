@@ -17,11 +17,12 @@ public class GuideInfoDto {
         private AuthType type;
         private String introduction;
         private int followerNum;
-        private int tourNumbers;;
+        private int tourNumbers;
         private double averageScore;
 
         public Response(User user, int followerNum, int tourNumbers, double averageScore) {
-            double roundedScore = Math.max(0.0, Math.min(5.0, Math.round(averageScore * 10) / 10.0));
+            double roundedScore = Math.max(0.0,
+                    Math.min(5.0, Math.round(averageScore * 10) / 10.0));
             this.userId = user.getId();
             this.email = user.getEmail();
             this.nickname = user.getNickname();

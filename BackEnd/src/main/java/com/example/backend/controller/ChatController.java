@@ -6,7 +6,6 @@ import com.example.backend.dto.chat.NormalMessageDto;
 import com.example.backend.service.chat.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +22,7 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/message/leave")
-    public void leave(@RequestBody LeaveMessageDto requestDto){
+    public void leave(@RequestBody LeaveMessageDto requestDto) {
         chatMessageService.sendLeaveMessage(requestDto);
     }
 }

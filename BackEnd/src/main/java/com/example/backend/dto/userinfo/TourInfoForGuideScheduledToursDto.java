@@ -1,6 +1,5 @@
 package com.example.backend.dto.userinfo;
 
-import com.example.backend.model.image.Image;
 import lombok.Data;
 
 @Data
