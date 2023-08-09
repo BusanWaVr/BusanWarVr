@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./LiveStream.css";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -9,7 +9,11 @@ import {
   setIsVideoEnabled,
 } from "./LiveStreamReducer";
 
-const LiveStream = () => {
+function LiveStream(props) {
+  const location = useLocation();
+  const tourUID = location.state ? location.state.tourUID : "";
+  const tourId = location.state ? location.state.tourId : "";
+  console.log("tourId", tourId);
   const navigate = useNavigate();
 
   const { youtubeLink, isAudioEnabled, isVideoEnabled } = useSelector(
@@ -18,8 +22,11 @@ const LiveStream = () => {
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
 
-  // tourId로 수정 필요
-  const [mySessionId, setMySessionId] = useState("");
+  // api 호출용 tourId
+  const [apitourId, setApiTourId] = useState(`${tourId}`);
+  console.log("apitourId", apitourId);
+  // tourUId
+  const [mySessionId, setMySessionId] = useState(`${tourUID}`);
 
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
@@ -45,6 +52,33 @@ const LiveStream = () => {
 
   const joinSession = (e) => {
     navigate(`/livestream/${mySessionId}`);
+  };
+
+  const saveYouTubeLink = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        return;
+      }
+
+      const linkData = {
+        link: youtubeLink,
+      };
+
+      const response = await fetch(
+        `https://busanwavrserver.store/tour/link/${tourId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(linkData),
+        }
+      );
+    } catch (error) {
+      console.error("유튜브 Url 등록실패", error);
+    }
   };
 
   return (
@@ -102,7 +136,12 @@ const LiveStream = () => {
                 </button>
               </p>
             </div>
-            <button className="button submit" name="commit" type="submit">
+            <button
+              className="button submit"
+              name="commit"
+              type="submit"
+              onClick={saveYouTubeLink}
+            >
               JOIN
             </button>
           </form>
@@ -110,6 +149,6 @@ const LiveStream = () => {
       </div>
     </div>
   );
-};
+}
 
 export default LiveStream;
