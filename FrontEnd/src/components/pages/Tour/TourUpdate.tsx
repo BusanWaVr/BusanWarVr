@@ -309,6 +309,18 @@ const TourUpdate: React.FC = () => {
     setImageFiles(newImageFiles);
   };
 
+  const handleImageFilesChange = (files: File[]) => {
+    const newImageFiles = [...imageFiles];
+    files.map((file, index) => {
+      if (file) {
+        newImageFiles[index] = file;
+      } else {
+        newImageFiles.splice(index, 1);
+      }
+    });
+    setImageFiles(newImageFiles);
+  };
+
   const deleteCourse = (courseKey: number) => {
     const updatedCourses = tourData.courses.filter(
       (course) => course.courseKey !== courseKey
@@ -501,8 +513,7 @@ const TourUpdate: React.FC = () => {
 
           {/* 이미지 */}
           <div>
-            <span>이미지</span>
-            {Array.from(
+            {/* {Array.from(
               { length: imageFiles.length < 3 ? imageFiles.length + 1 : 3 },
               (_, index) => (
                 <TourImageUpload
@@ -511,7 +522,11 @@ const TourUpdate: React.FC = () => {
                   setImageFile={(file) => handleImageFileChange(file, index)}
                 />
               )
-            )}
+            )} */}
+            <TourImageUpload
+              imageFiles={imageFiles}
+              setImageFiles={(files) => handleImageFilesChange(files)}
+            />
           </div>
 
           <hr />

@@ -439,7 +439,6 @@ const TourRegistration: React.FC = () => {
 
       {/* 이미지 */}
       <div>
-        <span>이미지</span>
         {Array.from(
           { length: imageFiles.length < 3 ? imageFiles.length + 1 : 3 },
           (_, index) => (
