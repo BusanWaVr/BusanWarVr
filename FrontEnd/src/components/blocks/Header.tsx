@@ -47,7 +47,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
 
   return (
     <>
-      <Navbar className="bg-body-tertiary">
+      <Navbar className="bg-body-tertiary" style={{ zIndex: "999" }}>
         <Container>
           <Navbar.Brand href="/">
             <img
