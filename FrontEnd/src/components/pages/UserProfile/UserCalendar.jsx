@@ -56,6 +56,8 @@ const UserCalendar = () => {
         item.startDate.substring(0, 10) === moment(value).format("YYYY-MM-DD")
     );
 
+    console.log(tour);
+
     if (tour) {
       setSelectedTour(tour);
     } else {
@@ -65,7 +67,14 @@ const UserCalendar = () => {
   }, [value]);
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent:"space-around" }}>
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "20px",
+        justifyContent: "space-around",
+      }}
+    >
       <Calendar
         onChange={onChange} // useState로 포커스 변경 시 현재 날짜 받아오기
         formatDay={(locale, date) => moment(date).format("DD")} // 날'일' 제외하고 숫자만 보이도록 설정
