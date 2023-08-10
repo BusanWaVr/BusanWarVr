@@ -45,6 +45,7 @@ function GuideScheduledBoard() {
     fetchData();
     // window.location.reload();
   }, []);
+  console.log("스케쥴", isMe);
   return (
     <div>
       <GuideTourCard TourData={guideTourData} isMe={isMe} />

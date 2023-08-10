@@ -1,14 +1,18 @@
 import TourStartBtn from "./TourStartBtn.jsx";
 
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 
 const CardContainer = styled.div`
   margin: 50px;
 `;
 
-function GuideTourCard({ TourData, isMe }) {
+function GuideTourCard({ TourData }) {
+  const { userId } = useSelector((state) => state.userInfo);
+  const { urlId } = useParams();
+
   return (
     <div>
       {TourData ? (
@@ -29,7 +33,7 @@ function GuideTourCard({ TourData, isMe }) {
                   }}
                 />
               </Link>
-              <TourStartBtn Tour={tour} />
+              {userId === urlId ? <TourStartBtn Tour={tour} /> : "하이"}
             </CardContainer>
           ))
         ) : (
