@@ -1,28 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
-import UserNavbar from "./UserNavbar";
+
+import { Layout } from "antd";
+
+const { Content, Sider } = Layout;
+
 import UserMini from "./UserMini";
-import styled from "styled-components";
+import UserNavbar from "./UserNavbar";
 
-const Wrapper = styled.div`
-  display: flex;
-  margin: auto;
-  width: 70%;w
-  // background-color: #343434;
-`;
-
-const NavbarWrapper = styled.div`
-  width: 30%;
-  // background-color: #505050;
-`;
-
-const OutletWrapper = styled.div`
-  width: 70%;
-  // background-color: #808080;
-`;
-
-function UserMyPage() {
-  // 내 정보 가져오기
+const UserMyPageLayout: React.FC = () => {
+  const [collapsed, setCollapsed] = useState(false);
 
   const [userInfoData, setUserInfoData] = useState(null);
   const [isMe, setIsMe] = useState(false);
@@ -48,10 +35,8 @@ function UserMyPage() {
           }
         );
         if (response.status === 200) {
-          console.log("유저데이터 받았어요");
           const data = await response.json();
           setUserInfoData(data.data);
-          // console.log("부모에서 넘겨주고 있음", data.data);
         } else {
           alert("유저데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요.");
         }
@@ -64,16 +49,28 @@ function UserMyPage() {
   }, [userId]);
 
   return (
-    <Wrapper>
-      <NavbarWrapper>
-        <UserMini userInfoData={userInfoData} isMe={isMe} />
+    <Layout style={{ height: "calc(100vh - 5rem )" }}>
+      <Sider
+        style={{ height: "calc(100vh - 5rem )" }}
+        theme="light"
+        breakpoint="lg"
+        onBreakpoint={(broken) => {
+          setCollapsed(broken);
+        }}
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
+      >
+        <UserMini userInfoData={userInfoData} collapsed={collapsed} />
         <UserNavbar />
-      </NavbarWrapper>
-      <OutletWrapper>
-        <Outlet context={{ userInfoData, isMe }} />
-      </OutletWrapper>
-    </Wrapper>
+      </Sider>
+      <Layout style={{ height: "calc(100vh - 4.3rem)", overflowY: "scroll" }}>
+        <Content style={{ margin: "0 16px" }}>
+          <Outlet context={{ userInfoData, isMe }} />
+        </Content>
+      </Layout>
+    </Layout>
   );
-}
+};
 
-export default UserMyPage;
+export default UserMyPageLayout;

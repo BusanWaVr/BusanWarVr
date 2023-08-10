@@ -1,4 +1,3 @@
-import FollowBtn from "../../blocks/FollowBtn.jsx";
 import { Avatar } from "antd";
 import { Skeleton } from "@nextui-org/react";
 import { styled } from "styled-components";
@@ -11,11 +10,13 @@ const UserInfoWrapper = styled.div`
   margin: 20px 0;
 `;
 
-function GuideMini({ userInfoData, collapsed, isMe }) {
-  const handleButtonClick = () => {
-    this.forceUpdate();
-  };
-
+function UserMini({
+  userInfoData,
+  collapsed,
+}: {
+  userInfoData: any;
+  collapsed: boolean;
+}) {
   return (
     <div>
       {userInfoData ? (
@@ -31,11 +32,6 @@ function GuideMini({ userInfoData, collapsed, isMe }) {
                 <strong>{userInfoData.nickname}</strong>
               </h3>
               <p>{userInfoData.email}</p>
-              <FollowBtn
-                onClick={handleButtonClick}
-                guideInfoData={userInfoData}
-                isMe={isMe}
-              />
             </>
           )}
         </UserInfoWrapper>
@@ -65,34 +61,6 @@ function GuideMini({ userInfoData, collapsed, isMe }) {
       )}
     </div>
   );
-
-  // return (
-  //   <div>
-  //     {guideInfoData ? (
-  //       <div>
-  //         <img
-  //           src={guideInfoData.profileImg}
-  //           alt="프로필 이미지"
-  //           style={{
-  //             width: "200px",
-  //             height: "200px",
-  //             borderRadius: "50%",
-  //           }}
-  //         />
-  //         <h3>
-  //           <strong>{guideInfoData.nickname}</strong>
-  //         </h3>
-  //         <FollowBtn
-  //           onClick={handleButtonClick}
-  //           guideInfoData={guideInfoData}
-  //           isMe={isMe}
-  //         />
-  //       </div>
-  //     ) : (
-  //       <p>loading...</p>
-  //     )}
-  //   </div>
-  // );
 }
 
-export default GuideMini;
+export default UserMini;
