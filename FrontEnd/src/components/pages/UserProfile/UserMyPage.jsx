@@ -51,7 +51,7 @@ function UserMyPage() {
           console.log("유저데이터 받았어요");
           const data = await response.json();
           setUserInfoData(data.data);
-          console.log("부모에서 넘겨주고 있음", data.data);
+          // console.log("부모에서 넘겨주고 있음", data.data);
         } else {
           alert("유저데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요.");
         }
