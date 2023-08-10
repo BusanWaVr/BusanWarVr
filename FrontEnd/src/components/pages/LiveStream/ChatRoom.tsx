@@ -9,7 +9,7 @@ export type message = {
   content: string;
 };
 
-function ChatRoom() {
+function ChatRoom({ tourId }) {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [stompClient] = useState(
@@ -18,6 +18,7 @@ function ChatRoom() {
 
   const { accessToken, userId } = useSelector((state: any) => state.userInfo);
 
+  // 자동 스크롤
   const messageEndRef = useRef(null);
   const scrollToBottom = () => {
     messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
@@ -26,7 +27,9 @@ function ChatRoom() {
   useEffect(() => {
     scrollToBottom();
   }, [chatMessages]);
+  
 
+  // 구독하고 메시지 받기
   useEffect(() => {
     if (stompClient != null) {
       stompClient.connect({}, () => {
@@ -57,7 +60,7 @@ function ChatRoom() {
     }
   }, []);
 
-
+  // 메시지 보내기
   const handleEnter = () => {
     scrollToBottom();
 
@@ -83,6 +86,41 @@ function ChatRoom() {
     }
   };
 
+  // 채팅방 나가기
+  const handleLeaveChat = () => {
+    const leaveMessage = {
+      roomUid: "cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
+      token: accessToken,
+    };
+    stompClient.send("/pub/chat/message/leave", {}, JSON.stringify(leaveMessage));
+  };
+
+  // 채팅방 재입장
+const handleJoinChat = async () => {
+    try {
+        const requestBody = {
+            tourId: tourId,
+          };
+
+        const response = await fetch("/api/chatroom/rejoin", {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+        if (response.status === 200) {
+          const data = await response.json();
+          alert(data.message);
+        } else {
+          console.log(data.message);
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+}
 
   return (
     <div className="chatroom-container">
@@ -130,6 +168,12 @@ function ChatRoom() {
           />
           <button onClick={handleEnter} disabled={!inputMessage}>
             send
+          </button>
+          <button onClick={handleLeaveChat}>
+            나가기
+          </button>
+          <button onClick={handleJoinChat}>
+            재입장
           </button>
         </div>
       </div>

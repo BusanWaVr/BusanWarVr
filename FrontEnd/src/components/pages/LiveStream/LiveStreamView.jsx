@@ -291,6 +291,16 @@ const LiveStreamView = () => {
     dispatch(setIsChatOpen(!isChatOpen));
   };
 
+  // 채팅방 나가기, 재입장 호출
+  const onLeaveChat = () => {
+    console.log('Leave chat');
+  };
+
+
+  const onJoinChat = () => {
+    console.log('join chat');
+  };
+
   const getToken = useCallback(async () => {
     return createSession(sessionid).then((sessionId) => createToken(sessionId));
   }, [sessionid]);
@@ -354,7 +364,7 @@ const LiveStreamView = () => {
           </div>
           {/* 채팅창 */}
           <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
-            <ChatRoom onload={onload} />
+            <ChatRoom onload={onload} tourId={sessionid} />
           </div>
           {/* 툴바 */}
           <Toolbar
@@ -366,6 +376,8 @@ const LiveStreamView = () => {
             isFullScreen={isFullScreen}
             isChatOpen={isChatOpen}
             handleChatToggle={handleChatToggle}
+            onLeaveChat={onLeaveChat}
+            onJoinChat={onJoinChat}
           />
           <QRCodeComponent youtubeLink={youtubeLink} />
         </FullScreen>

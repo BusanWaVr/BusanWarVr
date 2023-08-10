@@ -15,7 +15,7 @@ function TestPage() {
                 tourId: tourId,
               };
 
-            const response = await fetch("/api/chatroom/start", {
+            const response = await fetch("https://busanwavrserver.store/chatroom/start", {
               method: "POST",
               headers: {
                 Authorization: accessToken,
