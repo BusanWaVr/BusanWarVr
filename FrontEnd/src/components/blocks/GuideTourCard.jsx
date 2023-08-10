@@ -33,7 +33,7 @@ function GuideTourCard({ TourData }) {
                   }}
                 />
               </Link>
-              {userId === urlId ? <TourStartBtn Tour={tour} /> : "하이"}
+              {userId === urlId ? <TourStartBtn Tour={tour} /> : ""}
             </CardContainer>
           ))
         ) : (
