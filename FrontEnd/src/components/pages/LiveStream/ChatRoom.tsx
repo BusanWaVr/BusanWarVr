@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./ChatRoom.css";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
@@ -9,7 +9,7 @@ export type message = {
   content: string;
 };
 
-function ChatRoom() {
+function ChatRoom(props, ref) {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [stompClient] = useState(
@@ -18,6 +18,7 @@ function ChatRoom() {
 
   const { accessToken, userId } = useSelector((state: any) => state.userInfo);
 
+  // 자동 스크롤
   const messageEndRef = useRef(null);
   const scrollToBottom = () => {
     messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
@@ -26,13 +27,15 @@ function ChatRoom() {
   useEffect(() => {
     scrollToBottom();
   }, [chatMessages]);
+  
 
+  // 구독하고 메시지 받기
   useEffect(() => {
     if (stompClient != null) {
       stompClient.connect({}, () => {
         console.log("연결됨");
         stompClient.subscribe(
-          "/sub/chat/message/room/45fbe71d-9470-4cd0-b03b-2119289331b7/Tue Aug 08 01:38:37 UTC 2023",
+          "/sub/chat/message/room/cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
           (data) => {
             console.log("--------------------------------");
             const receivedMessage = JSON.parse(data.body);
@@ -43,8 +46,6 @@ function ChatRoom() {
               username: receivedMessage.sender.nickname,
               content: receivedMessage.body,
             };
-
-            // 일단 넣어두기
             scrollToBottom();
 
             console.log(receivedMessage);
@@ -59,13 +60,13 @@ function ChatRoom() {
     }
   }, []);
 
+  // 메시지 보내기
   const handleEnter = () => {
-    // 단 넣어두기22
     scrollToBottom();
 
     const newMessage = {
       roomUid:
-        "45fbe71d-9470-4cd0-b03b-2119289331b7/Tue Aug 08 01:38:37 UTC 2023",
+        "cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
       token: accessToken,
       message: inputMessage,
     };
@@ -85,6 +86,46 @@ function ChatRoom() {
     }
   };
 
+  // 채팅방 나가기
+  const handleLeaveChat = () => {
+    const leaveMessage = {
+      roomUid: "cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
+      token: accessToken,
+    };
+    stompClient.send("/pub/chat/message/leave", {}, JSON.stringify(leaveMessage));
+  };
+
+  React.useImperativeHandle(ref, () => ({
+    handleLeaveChat: handleLeaveChat,
+  }));
+
+  // 채팅방 재입장
+const handleJoinChat = async () => {
+    try {
+        const requestBody = {
+            tourId: props.tourId,
+          };
+
+        const response = await fetch("/api/chatroom/rejoin", {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+        if (response.status === 200) {
+          const data = await response.json();
+          alert(data.message);
+        } else {
+          console.log(data.message);
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+}
+
   return (
     <div className="chatroom-container">
       <div className="chat-card">
@@ -96,11 +137,11 @@ function ChatRoom() {
             switch (msg.msgType) {
               case "LEAVE":
                 return (
-                  <p key={index}>{msg.username}님이 채팅방에서 퇴장했습니다.</p>
+                  <p className="leave" key={index}>{msg.username}님이 채팅방에서 퇴장했습니다.</p>
                 );
               case "VOTE":
                 return (
-                  <p key={index}>
+                  <p className="vote" key={index}>
                     {msg.username}님이 {msg.content}번에 투표했습니다.
                   </p>
                 );
@@ -133,9 +174,20 @@ function ChatRoom() {
             send
           </button>
         </div>
+        <div className="chat-footer-temp">
+          <button onClick={handleLeaveChat}>
+            나가기
+          </button>
+          <button onClick={handleJoinChat} disabled>
+            재입장
+          </button>
+          <button disabled>
+            투표하기
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-export default ChatRoom;
+export default React.forwardRef(ChatRoom);
