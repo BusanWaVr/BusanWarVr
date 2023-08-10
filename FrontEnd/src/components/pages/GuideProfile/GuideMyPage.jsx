@@ -62,7 +62,6 @@ function GuideMyPage() {
     fetchData();
   }, [urlId]);
 
-  console.log("isMe", isMe);
   console.log("guideInfoData", guideInfoData);
   return (
     <Wrapper>
