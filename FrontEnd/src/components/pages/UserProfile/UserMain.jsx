@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import UserCalendar from "./UserCalendar";
 
 function UserMain() {
   const { userInfoData, isMe } = useOutletContext();
@@ -17,12 +18,13 @@ function UserMain() {
 
   return (
     <div>
-      <h1>유저 마이페이지 메인</h1>
       {isMe ? (
         userInfoData ? (
           <div>
             <p>이메일: {userInfoData.email}</p>
             <p>닉네임: {userInfoData.nickname}</p>
+
+            <UserCalendar />
 
             <button onClick={handleClick}>내 정보 수정</button>
           </div>

@@ -2,6 +2,7 @@
   "dependencies": {
     "antd": "^5.8.2",
     "prop-types": "^15.8.1",
+    "react-calendar": "^4.6.0",
     "react-moment": "^1.1.3"
   }
 }
