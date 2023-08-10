@@ -295,14 +295,23 @@ const LiveStreamView = () => {
     dispatch(setIsChatOpen(true));
   };
 
+  
   // 채팅방 나가기, 재입장 호출
+
+  const chatRoomRef = useRef(null);
+
   const onLeaveChat = () => {
     console.log('Leave chat');
+    if (chatRoomRef.current) {
+      chatRoomRef.current.handleLeaveChat();
+    }
   };
-
 
   const onJoinChat = () => {
     console.log('join chat');
+    if (chatRoomRef.current) {
+      chatRoomRef.current.handleJoinChat();
+    }
   };
 
   const getToken = useCallback(async () => {
@@ -368,7 +377,7 @@ const LiveStreamView = () => {
           </div>
           {/* 채팅창 */}
           <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
-            <ChatRoom onload={onload} tourId={sessionid} />
+            <ChatRoom ref={chatRoomRef} onload={onload} tourId={sessionid} />
           </div>
           {/* 툴바 */}
           <Toolbar

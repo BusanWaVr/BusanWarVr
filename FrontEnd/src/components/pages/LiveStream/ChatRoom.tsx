@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./ChatRoom.css";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
@@ -9,7 +9,7 @@ export type message = {
   content: string;
 };
 
-function ChatRoom() {
+function ChatRoom(props, ref) {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [stompClient] = useState(
@@ -95,11 +95,15 @@ function ChatRoom() {
     stompClient.send("/pub/chat/message/leave", {}, JSON.stringify(leaveMessage));
   };
 
+  React.useImperativeHandle(ref, () => ({
+    handleLeaveChat: handleLeaveChat,
+  }));
+
   // 채팅방 재입장
 const handleJoinChat = async () => {
     try {
         const requestBody = {
-            tourId: 49,
+            tourId: props.tourId,
           };
 
         const response = await fetch("/api/chatroom/rejoin", {
@@ -181,5 +185,4 @@ const handleJoinChat = async () => {
   );
 }
 
-
-export default ChatRoom;
+export default React.forwardRef(ChatRoom);
