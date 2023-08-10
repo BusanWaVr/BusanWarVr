@@ -1,5 +1,15 @@
 import React, { useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import UserInfo from "./UserInfo";
+import UserCalendar from "./UserCalendar";
+import { styled } from "styled-components";
+
+const UserInfoWrapper = styled.div`
+  height: 300px;
+  // background-color: #ffffff;
+  // border-radius: 5px;
+  margin: 20px 0;
+`;
 
 function UserMain() {
   const { userInfoData, isMe } = useOutletContext();
@@ -17,14 +27,15 @@ function UserMain() {
 
   return (
     <div>
-      <h1>유저 마이페이지 메인</h1>
       {isMe ? (
         userInfoData ? (
           <div>
-            <p>이메일: {userInfoData.email}</p>
-            <p>닉네임: {userInfoData.nickname}</p>
+            <UserInfoWrapper>
+              <UserInfo userInfoData={userInfoData} />
 
-            <button onClick={handleClick}>내 정보 수정</button>
+            </UserInfoWrapper>
+
+            <UserCalendar />
           </div>
         ) : (
           <p>로딩중ㅎ</p>
