@@ -71,8 +71,7 @@ const UserCalendar = () => {
       style={{
         display: "flex",
         flexWrap: "wrap",
-        gap: "20px",
-        justifyContent: "space-around",
+        justifyContent: "space-between",
       }}
     >
       <Calendar
@@ -83,7 +82,7 @@ const UserCalendar = () => {
         maxDetail="month" // 상단 네비게이션에서 '월' 단위만 보이게 설정
         navigationLabel={null}
         showNeighboringMonth={true}
-        className="w-full md:w-1/2"
+        className="w-full md:w-3/5"
         tileContent={({ date, view }) => {
           let html = [];
           if (mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
@@ -96,7 +95,7 @@ const UserCalendar = () => {
           );
         }}
       />
-      <div className="w-full md:w-2/5">
+      <div className="w-full md:w-2/5 pl-6">
         <UserCalendarTour selectedTour={selectedTour} />
       </div>
     </div>

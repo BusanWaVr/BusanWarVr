@@ -49,9 +49,9 @@ const UserMyPageLayout: React.FC = () => {
   }, [userId]);
 
   return (
-    <Layout style={{ height: "calc(100vh - 4rem)" }}>
+    <Layout style={{ height: "calc(100vh - 5rem )" }}>
       <Sider
-        style={{ height: "calc(100vh - 4rem)" }}
+        style={{ height: "calc(100vh - 5rem )" }}
         theme="light"
         breakpoint="lg"
         onBreakpoint={(broken) => {
@@ -64,7 +64,7 @@ const UserMyPageLayout: React.FC = () => {
         <UserMini userInfoData={userInfoData} collapsed={collapsed} />
         <UserNavbar />
       </Sider>
-      <Layout style={{ height: "calc(100vh - 4rem)", overflow: "scroll" }}>
+      <Layout style={{ height: "calc(100vh - 4.3rem)", overflowY: "scroll" }}>
         <Content style={{ margin: "0 16px" }}>
           <Outlet context={{ userInfoData, isMe }} />
         </Content>

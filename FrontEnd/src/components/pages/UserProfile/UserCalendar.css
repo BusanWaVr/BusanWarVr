@@ -25,6 +25,9 @@
 .react-calendar__tile--active {
   color: #000;
 }
+.react-calendar__month-view__days__day--weekend {
+  color: #ff4d4f;
+}
 abbr[title] {
   text-decoration: none;
 }
