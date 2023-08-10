@@ -21,7 +21,7 @@ const Dialog = styled.dialog`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   padding: 0;
   overflow: hidden;
-  z-index: 1;
+  z-index: 999;
   text-align: center;
 `;
 
