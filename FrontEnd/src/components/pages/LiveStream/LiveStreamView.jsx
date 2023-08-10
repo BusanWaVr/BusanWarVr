@@ -287,8 +287,12 @@ const LiveStreamView = () => {
     }
   };
 
-  const handleChatToggle = () => {
-    dispatch(setIsChatOpen(!isChatOpen));
+  const handleLeaveChatToggle = () => {
+    dispatch(setIsChatOpen(false));
+  };
+  
+  const handleJoinChatToggle = () => {
+    dispatch(setIsChatOpen(true));
   };
 
   // 채팅방 나가기, 재입장 호출
@@ -375,7 +379,8 @@ const LiveStreamView = () => {
             toggleFullScreen={toggleFullScreen}
             isFullScreen={isFullScreen}
             isChatOpen={isChatOpen}
-            handleChatToggle={handleChatToggle}
+            handleLeaveChatToggle={handleLeaveChatToggle}
+            handleJoinChatToggle={handleJoinChatToggle}
             onLeaveChat={onLeaveChat}
             onJoinChat={onJoinChat}
           />

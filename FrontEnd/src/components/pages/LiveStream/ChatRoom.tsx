@@ -9,7 +9,7 @@ export type message = {
   content: string;
 };
 
-function ChatRoom({ tourId }) {
+function ChatRoom() {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [stompClient] = useState(
@@ -99,7 +99,7 @@ function ChatRoom({ tourId }) {
 const handleJoinChat = async () => {
     try {
         const requestBody = {
-            tourId: tourId,
+            tourId: 49,
           };
 
         const response = await fetch("/api/chatroom/rejoin", {

@@ -82,11 +82,11 @@ const Toolbar = (props) => {
       )}
 
       {isChatOpen ? (
-        <ToolbarButton onClick={() => { props.handleChatToggle(); props.onLeaveChat(); }}>
+        <ToolbarButton onClick={() => { props.handleLeaveChatToggle(); props.onLeaveChat(); }}>
           <CommentIcon />
         </ToolbarButton>
       ) : (
-        <ToolbarButton onClick={() => { props.handleChatToggle(); props.onJoinChat(); }}>
+        <ToolbarButton onClick={() => { props.handleJoinChatToggle(); props.onJoinChat(); }}>
           <CommentsDisabledIcon />
         </ToolbarButton>
       )}
