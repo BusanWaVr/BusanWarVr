@@ -16,7 +16,7 @@ const initialState: LiveStreamState = {
   isAudioEnabled: true,
   isVideoEnabled: true,
   isFullScreen: false,
-  isChatOpen: false,
+  isChatOpen: true,
   tourId: null,
   tourUID: null,
 };

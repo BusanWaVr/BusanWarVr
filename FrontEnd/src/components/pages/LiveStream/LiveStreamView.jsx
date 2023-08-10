@@ -39,7 +39,8 @@ const LiveStreamView = () => {
   const dispatch = useDispatch();
 
   // 그냥 모든 sessionid => tourId로 바꿔주면 되는데 무서워서 일단 이렇게
-  const { sessionid } = tourId
+  // const sessionid = tourId 로 하니까 채팅은 되는데 오픈비두가 안됨..
+  const { sessionid } = useParams();
 
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -166,29 +167,7 @@ const LiveStreamView = () => {
       session.disconnect();
     }
 
-    // 채팅방 나가기
-    try {
-      const response = await fetch(
-        `https://busanwavrserver.store/tour/chat/${sessionid}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: accessToken,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-
-      if (data.code === "200") {
-        alert(data.message);
-      } else {
-        console.log(data.message);
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    onLeaveChat();
 
     navigate("/livestream");
   }, [session]);
