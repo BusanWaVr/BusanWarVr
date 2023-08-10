@@ -10,6 +10,13 @@ export type message = {
 };
 
 function ChatRoom(props, ref) {
+
+  // reducer에서 데이터 가져오기
+  const {
+    tourId,
+    tourUID,
+  } = useSelector((state) => state.liveStream);
+
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [stompClient] = useState(
@@ -35,7 +42,7 @@ function ChatRoom(props, ref) {
       stompClient.connect({}, () => {
         console.log("연결됨");
         stompClient.subscribe(
-          "/sub/chat/message/room/cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
+          `/sub/chat/message/room/${tourUID}`,
           (data) => {
             console.log("--------------------------------");
             const receivedMessage = JSON.parse(data.body);
@@ -65,8 +72,7 @@ function ChatRoom(props, ref) {
     scrollToBottom();
 
     const newMessage = {
-      roomUid:
-        "cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
+      roomUid: tourUID,
       token: accessToken,
       message: inputMessage,
     };
@@ -89,7 +95,7 @@ function ChatRoom(props, ref) {
   // 채팅방 나가기
   const handleLeaveChat = () => {
     const leaveMessage = {
-      roomUid: "cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
+      roomUid: tourUID,
       token: accessToken,
     };
     stompClient.send("/pub/chat/message/leave", {}, JSON.stringify(leaveMessage));
@@ -103,7 +109,7 @@ function ChatRoom(props, ref) {
 const handleJoinChat = async () => {
     try {
         const requestBody = {
-            tourId: props.tourId,
+            tourId: tourId,
           };
 
         const response = await fetch("/api/chatroom/rejoin", {

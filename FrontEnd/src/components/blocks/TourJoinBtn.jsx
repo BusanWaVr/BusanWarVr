@@ -6,14 +6,12 @@ function TourJoinBtn({ Tour }) {
   const navigate = useNavigate();
   const tourUID = Tour.uid;
   const tourId = Tour.tourId;
-  const livelink = Tour.link;
+  const liveLink = Tour.link;
 
   const handleStartClick = () => {
     navigate("../../../../livestream", {
-      state: { tourUID: tourUID, tourId: tourId, livelink: livelink },
+      state: { tourUID: tourUID, tourId: tourId, liveLink: liveLink },
     });
-    console.log(Tour);
-    console.log(livelink);
   };
   console.log("시작하기", Tour);
 

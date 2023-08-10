@@ -6,6 +6,8 @@ interface LiveStreamState {
   isVideoEnabled: boolean;
   isFullScreen: boolean;
   isChatOpen: boolean;
+  tourId: string | null;
+  tourUID: string | null;
 }
 
 const initialState: LiveStreamState = {
@@ -15,6 +17,8 @@ const initialState: LiveStreamState = {
   isVideoEnabled: true,
   isFullScreen: false,
   isChatOpen: false,
+  tourId: null,
+  tourUID: null,
 };
 
 const LiveStreamSlice = createSlice({
@@ -36,6 +40,12 @@ const LiveStreamSlice = createSlice({
     setIsChatOpen: (state, action: PayloadAction<boolean>) => {
       state.isChatOpen = action.payload;
     },
+    setTourId: (state, action: PayloadAction<string | null>) => {
+      state.tourId = action.payload;
+    },
+    setTourUID: (state, action: PayloadAction<string | null>) => {
+      state.tourUID = action.payload;
+    },
   },
 });
 
@@ -45,5 +55,7 @@ export const {
   setIsVideoEnabled,
   setIsFullScreen,
   setIsChatOpen,
+  setTourId,
+  setTourUID,
 } = LiveStreamSlice.actions;
 export default LiveStreamSlice.reducer;

@@ -2,7 +2,7 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import Slider from "react-slick";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "./UserVideoComponent";
 import Toolbar from "./Toolbar";
@@ -25,7 +25,6 @@ const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
-  const { sessionid } = useParams();
 
   const {
     youtubeLink,
@@ -33,9 +32,14 @@ const LiveStreamView = () => {
     isVideoEnabled,
     isFullScreen,
     isChatOpen,
+    tourId,
+    tourUID,
   } = useSelector((state) => state.liveStream);
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
+
+  // 그냥 모든 sessionid => tourId로 바꿔주면 되는데 무서워서 일단 이렇게
+  const { sessionid } = tourId
 
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -377,7 +381,7 @@ const LiveStreamView = () => {
           </div>
           {/* 채팅창 */}
           <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
-            <ChatRoom ref={chatRoomRef} onload={onload} tourId={sessionid} />
+            <ChatRoom ref={chatRoomRef} onload={onload} />
           </div>
           {/* 툴바 */}
           <Toolbar
