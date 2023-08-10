@@ -85,6 +85,32 @@ function LiveStream(props) {
     } catch (error) {
       console.error("유튜브 Url 등록실패", error);
     }
+
+    try {
+      const requestBody = {
+        tourId: tourId,
+      };
+
+      const response = await fetch("/api/chatroom/start", {
+        method: "POST",
+        headers: {
+          Authorization: accessToken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log("요청", requestBody);
+        console.log("응답", data);
+        alert(data.message);
+      } else {
+        console.log(data.message);
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
