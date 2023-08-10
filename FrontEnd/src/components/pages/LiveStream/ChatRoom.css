@@ -110,6 +110,31 @@
   background-color: #385ac2;
 }
 
+
+/* 임시 나가기, 재입장 버튼 */
+.chat-footer-temp {
+  padding: 10px;
+  background-color: #f2f2f2;
+  display: flex;
+}
+
+.chat-footer-temp button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 0px;
+  background-color: #bb2828;
+  color: #fff;
+  /* font-weight: bold; */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 0 auto;
+}
+
+.chat-footer-temp button:hover {
+  background-color: #9b0505;
+}
+/* -------------------------------- */
+
 @keyframes chatAnimation {
   0% {
     opacity: 0;

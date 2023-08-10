@@ -173,11 +173,16 @@ const handleJoinChat = async () => {
           <button onClick={handleEnter} disabled={!inputMessage}>
             send
           </button>
+        </div>
+        <div className="chat-footer-temp">
           <button onClick={handleLeaveChat}>
             나가기
           </button>
-          <button onClick={handleJoinChat}>
+          <button onClick={handleJoinChat} disabled>
             재입장
+          </button>
+          <button disabled>
+            투표하기
           </button>
         </div>
       </div>
