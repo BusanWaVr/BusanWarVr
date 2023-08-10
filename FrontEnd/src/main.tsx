@@ -6,7 +6,7 @@ import registerServiceWorker from "./utils/registerServiceWorker.js";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { DataProvider } from "./store/DataContext.tsx";
-
+import { StyleProvider } from "@ant-design/cssinjs";
 import { Provider } from "react-redux";
 import store from "./store";
 
@@ -14,9 +14,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <React.StrictMode>
       <BrowserRouter>
-        <DataProvider>
-          <App />
-        </DataProvider>
+        <StyleProvider hashPriority="high">
+          <DataProvider>
+            <App />
+          </DataProvider>
+        </StyleProvider>
       </BrowserRouter>
     </React.StrictMode>
   </Provider>
