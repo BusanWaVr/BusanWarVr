@@ -14,12 +14,12 @@ function UserNavbar() {
 
   const items: MenuProps["items"] = [
     {
-      label: <Link to={`/user/${userId}/mypage/`}>내 정보</Link>,
+      label: <Link to={`/user/${userId}/mypage/`}>회원 정보</Link>,
       key: "1",
       icon: <UserOutlined />,
     },
     {
-      label: <Link to={`/user/${userId}/mypage/tour`}>내 투어 리스트</Link>,
+      label: <Link to={`/user/${userId}/mypage/tour`}>투어 리스트</Link>,
       key: "2",
       icon: <RocketOutlined />,
     },
