@@ -13,6 +13,8 @@ function LiveStream(props) {
   const location = useLocation();
   const tourUID = location.state ? location.state.tourUID : "";
   const tourId = location.state ? location.state.tourId : "";
+  const livelink = location.state ? location.state.livelink : "";
+  console.log("livelink", livelink);
   console.log("tourId", tourId);
   const navigate = useNavigate();
 
@@ -21,6 +23,10 @@ function LiveStream(props) {
   );
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
+
+  // 디폴트 youtubeLink 세팅
+  // setYoutubeLink(livelink);
+  // console.log("youtubeLink", youtubeLink);
 
   // api 호출용 tourId
   const [apitourId, setApiTourId] = useState(`${tourId}`);
@@ -116,7 +122,7 @@ function LiveStream(props) {
                 className="form-control input"
                 type="text"
                 id="sessionId"
-                value={youtubeLink}
+                value={youtubeLink || livelink}
                 onChange={handleChangeYouTubeLink}
                 required
               />
