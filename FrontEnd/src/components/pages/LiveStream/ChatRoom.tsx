@@ -32,7 +32,7 @@ function ChatRoom() {
       stompClient.connect({}, () => {
         console.log("연결됨");
         stompClient.subscribe(
-          "/sub/chat/message/room/45fbe71d-9470-4cd0-b03b-2119289331b7/Tue Aug 08 01:38:37 UTC 2023",
+          "/sub/chat/message/room/cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
           (data) => {
             console.log("--------------------------------");
             const receivedMessage = JSON.parse(data.body);
@@ -43,8 +43,6 @@ function ChatRoom() {
               username: receivedMessage.sender.nickname,
               content: receivedMessage.body,
             };
-
-            // 일단 넣어두기
             scrollToBottom();
 
             console.log(receivedMessage);
@@ -59,13 +57,13 @@ function ChatRoom() {
     }
   }, []);
 
+
   const handleEnter = () => {
-    // 단 넣어두기22
     scrollToBottom();
 
     const newMessage = {
       roomUid:
-        "45fbe71d-9470-4cd0-b03b-2119289331b7/Tue Aug 08 01:38:37 UTC 2023",
+        "cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
       token: accessToken,
       message: inputMessage,
     };
@@ -85,6 +83,7 @@ function ChatRoom() {
     }
   };
 
+
   return (
     <div className="chatroom-container">
       <div className="chat-card">
@@ -96,11 +95,11 @@ function ChatRoom() {
             switch (msg.msgType) {
               case "LEAVE":
                 return (
-                  <p key={index}>{msg.username}님이 채팅방에서 퇴장했습니다.</p>
+                  <p className="leave" key={index}>{msg.username}님이 채팅방에서 퇴장했습니다.</p>
                 );
               case "VOTE":
                 return (
-                  <p key={index}>
+                  <p className="vote" key={index}>
                     {msg.username}님이 {msg.content}번에 투표했습니다.
                   </p>
                 );
@@ -137,5 +136,6 @@ function ChatRoom() {
     </div>
   );
 }
+
 
 export default ChatRoom;
