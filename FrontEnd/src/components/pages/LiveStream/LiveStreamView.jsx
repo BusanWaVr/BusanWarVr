@@ -287,8 +287,31 @@ const LiveStreamView = () => {
     }
   };
 
-  const handleChatToggle = () => {
-    dispatch(setIsChatOpen(!isChatOpen));
+  const handleLeaveChatToggle = () => {
+    dispatch(setIsChatOpen(false));
+  };
+  
+  const handleJoinChatToggle = () => {
+    dispatch(setIsChatOpen(true));
+  };
+
+  
+  // 채팅방 나가기, 재입장 호출
+
+  const chatRoomRef = useRef(null);
+
+  const onLeaveChat = () => {
+    console.log('Leave chat');
+    if (chatRoomRef.current) {
+      chatRoomRef.current.handleLeaveChat();
+    }
+  };
+
+  const onJoinChat = () => {
+    console.log('join chat');
+    if (chatRoomRef.current) {
+      chatRoomRef.current.handleJoinChat();
+    }
   };
 
   const getToken = useCallback(async () => {
@@ -354,7 +377,7 @@ const LiveStreamView = () => {
           </div>
           {/* 채팅창 */}
           <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
-            <ChatRoom onload={onload} />
+            <ChatRoom ref={chatRoomRef} onload={onload} tourId={sessionid} />
           </div>
           {/* 툴바 */}
           <Toolbar
@@ -365,7 +388,10 @@ const LiveStreamView = () => {
             toggleFullScreen={toggleFullScreen}
             isFullScreen={isFullScreen}
             isChatOpen={isChatOpen}
-            handleChatToggle={handleChatToggle}
+            handleLeaveChatToggle={handleLeaveChatToggle}
+            handleJoinChatToggle={handleJoinChatToggle}
+            onLeaveChat={onLeaveChat}
+            onJoinChat={onJoinChat}
           />
           <QRCodeComponent youtubeLink={youtubeLink} />
         </FullScreen>
