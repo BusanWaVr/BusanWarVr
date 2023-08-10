@@ -4,6 +4,8 @@ import { Outlet } from "react-router-dom";
 import Header from "../../blocks/Header.tsx";
 import { useSelector } from "react-redux";
 
+import { NextUIProvider } from "@nextui-org/react";
+
 function RootLayout() {
   const { accessToken, refreshToken } = useSelector(
     (state: any) => state.userInfo
@@ -21,8 +23,10 @@ function RootLayout() {
 
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-      <Outlet />
+      <NextUIProvider>
+        <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        <Outlet />
+      </NextUIProvider>
     </>
   );
 }
