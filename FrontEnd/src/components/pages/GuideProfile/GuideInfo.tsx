@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { styled } from "styled-components";
 import BusanBg from "../../../assets/busan_background.png";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Tooltip } from "antd";
 
 const UserStateWrapper = styled.div`
@@ -23,51 +23,38 @@ const UserInfoHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 `;
 
 const UserInfoContent = styled.div`
   padding-left: 15px;
   text-align: left;
-  margin: 30px 0;
+  margin: 20px 0;
   & p:nth-child(1) {
     color: #1983ff;
     font-weight: 600;
   }
 
   & p:nth-child(2) {
-    font-size: 18px;
+    font-size: 16px;
   }
 `;
 
+const GuideIntroduction = styled.div`
+  height: 50px;
+  width: 100%;
+  background-color: #b8daff;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+`;
+
 const UserInfo = ({ userInfoData }) => {
+  console.log(userInfoData);
   const [userTourData, setUserTourData] = useState(null);
-  const { userId } = useParams();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `https://busanwavrserver.store/user/tour/${userId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (response.status === 200) {
-          const data = await response.json();
-          const endedTours = data.data.endedTours;
-          // TODO - 종료 일자받아와서 총 투어 시간 계산하기
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { urlId } = useParams();
 
   const navigate = useNavigate();
 
@@ -89,24 +76,36 @@ const UserInfo = ({ userInfoData }) => {
         <UserInfoWrapper>
           <UserInfoHeader>
             <p className="font-bold">회원 정보</p>
-            <Tooltip title="회원 정보 수정">
-              <Button
-                type="link"
-                shape="circle"
-                icon={<EditOutlined />}
-                onClick={handleClick}
-              />
-            </Tooltip>
+            {String(userInfoData.userId) === urlId ? (
+              <Tooltip title="회원 정보 수정">
+                <Button
+                  type="link"
+                  shape="circle"
+                  icon={<EditOutlined />}
+                  onClick={handleClick}
+                />
+              </Tooltip>
+            ) : (
+              <></>
+            )}
           </UserInfoHeader>
+          <GuideIntroduction>{userInfoData.introduction}</GuideIntroduction>
           <UserInfoContent>
             <p>이메일</p>
-            <p>{userInfoData.email}</p>
+            <p style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              {userInfoData.email}
+              <a
+                href={`mailto: ${userInfoData.email}`}
+                style={{ paddingBottom: "2px" }}
+              >
+                <MailOutlined />
+              </a>
+            </p>
           </UserInfoContent>
           <UserInfoContent>
             <p>닉네임</p>
             <p>{userInfoData.nickname}</p>
           </UserInfoContent>
-          {/* //TODO - 관심 카테고리 받아오기 */}
         </UserInfoWrapper>
       </div>
     </div>

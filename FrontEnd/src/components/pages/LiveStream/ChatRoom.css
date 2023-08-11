@@ -35,7 +35,7 @@
 
 .chat-body {
   padding: 20px;
-  height: 300px;
+  height: 150px;
   overflow-y: scroll;
 }
 
@@ -109,7 +109,6 @@
 .chat-footer button:hover {
   background-color: #385ac2;
 }
-
 
 /* 임시 나가기, 재입장 버튼 */
 .chat-footer-temp {
