@@ -5,10 +5,10 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import moment from "moment";
 import CalendarTour from "../../blocks/CalendarTour";
-import "./UserCalendar.css";
+import "./GuideCalendar.css";
 
 const UserCalendar = () => {
-  const { userId } = useParams();
+  const { urlId } = useParams();
   const [value, onChange] = useState(new Date());
   const [scheduledTours, setScheduledTours] = useState([]);
   const [mark, setMark] = useState([]);
@@ -20,7 +20,7 @@ const UserCalendar = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://busanwavrserver.store/user/tour/${userId}`,
+          `https://busanwavrserver.store/guide/${urlId}/tour/schedule`,
           {
             method: "GET",
             headers: {
@@ -30,7 +30,7 @@ const UserCalendar = () => {
         );
         if (response.status === 200) {
           const data = await response.json();
-
+          console.log(data.data.scheduledTours);
           setScheduledTours(data.data.scheduledTours);
 
           const tourDates = data.data.scheduledTours.map((item) =>
@@ -95,7 +95,7 @@ const UserCalendar = () => {
           );
         }}
       />
-      <div className="w-full md:w-2/5 pl-6 mb-4 md:m-0">
+      <div className="w-full md:w-2/5 md:pl-6 mb-4 md:m-0">
         <CalendarTour selectedTour={selectedTour} />
       </div>
     </div>

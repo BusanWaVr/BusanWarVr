@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 import moment from "moment";
-import BoogieThinking from "../../../assets/boogie_thinking.png";
-import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
+import BoogieThinking from "../../assets/boogie_thinking.png";
 
 const TourWrapper = styled.div`
   background-color: #b8daff47;
@@ -60,7 +59,7 @@ interface Joiner {
   joinDate: string;
 }
 
-const UserCalendarTour = ({ selectedTour }) => {
+const CalendarTour = ({ selectedTour }) => {
   const [tourData, setTourData] = useState<TourData | null>(null);
 
   useEffect(() => {
@@ -121,4 +120,4 @@ const UserCalendarTour = ({ selectedTour }) => {
   );
 };
 
-export default UserCalendarTour;
+export default CalendarTour;
