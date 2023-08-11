@@ -8,6 +8,7 @@ import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,5 +47,13 @@ public class CommentController {
                 userDetails.getUser());
 
         return new Response<>("200", "성공적으로 댓글 수정을 완료했습니다.", response);
+    }
+
+    @DeleteMapping("/comment/{commentId}")
+    public Response commentDeleteApi(@PathVariable Long commentId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        commentService.commentDelete(commentId, userDetails.getUser());
+
+        return new Response<>("200", "성공적으로 댓글 삭제를 완료했습니다.", null);
     }
 }

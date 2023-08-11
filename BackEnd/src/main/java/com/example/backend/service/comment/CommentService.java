@@ -53,4 +53,13 @@ public class CommentService {
 
         return response;
     }
+
+    public void commentDelete(Long commentId, User user) {
+
+        Comment comment = commentRepository.findById(commentId).get();
+        if (comment.getUserId() != user.getId()) {
+            throw new IllegalArgumentException("댓글 작성자만 삭제 가능합니다");
+        }
+        commentRepository.deleteById(commentId);
+    }
 }
