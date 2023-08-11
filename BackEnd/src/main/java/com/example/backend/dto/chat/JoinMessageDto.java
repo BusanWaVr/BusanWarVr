@@ -12,7 +12,7 @@ public class JoinMessageDto {
     private String token;
 
     public ChatMessageResponseDto toChatMessageResponseDto(User user) {
-        return new ChatMessageResponseDto<>(this.roomUid, new SenderDto(user), "Join", null);
+        return new ChatMessageResponseDto<>(this.roomUid, new SenderDto(user), "JOIN", null);
     }
 
     public Message toMessage(User user, String type) {
