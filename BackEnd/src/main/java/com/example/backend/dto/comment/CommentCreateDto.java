@@ -22,11 +22,11 @@ public class CommentCreateDto {
 
     @Data
     @NoArgsConstructor
-    public static class Response{
+    public static class Response {
 
         private Long commentId;
 
-        public Response(Long commentId){
+        public Response(Long commentId) {
             this.commentId = commentId;
         }
     }
