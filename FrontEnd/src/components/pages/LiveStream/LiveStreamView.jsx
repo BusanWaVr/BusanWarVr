@@ -1,7 +1,13 @@
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import Slider from "react-slick";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "./UserVideoComponent";
@@ -12,6 +18,9 @@ import useCustomBack from "../../../hooks/useCustomBack";
 import ChatRoom from "./ChatRoom";
 import QRCodeComponent from "./QRCodeComponent";
 import "./LiveStreamView.css";
+import TestTest from "../Test/TestTest";
+import SockJS from "sockjs-client/dist/sockjs";
+import Stomp from "stompjs";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -19,6 +28,7 @@ import {
   setIsVideoEnabled,
   setIsFullScreen,
   setIsChatOpen,
+  setStompClient,
 } from "./LiveStreamReducer";
 
 const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
@@ -34,6 +44,7 @@ const LiveStreamView = () => {
     isChatOpen,
     tourId,
     tourUID,
+    stompClient,
   } = useSelector((state) => state.liveStream);
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
@@ -42,6 +53,10 @@ const LiveStreamView = () => {
   // const sessionid = tourId 로 하니까 채팅은 되는데 오픈비두가 안됨..
   const { sessionid } = useParams();
 
+  // 투표
+  const [voting, setVoting] = useState(false);
+  // const [voted, setVoted] = useState(false);
+
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -49,6 +64,8 @@ const LiveStreamView = () => {
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [onload, setOnload] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [dkdk, setDkdk] = useState(false);
 
   const sliderSettings = {
     dots: false,
@@ -79,6 +96,22 @@ const LiveStreamView = () => {
   };
 
   const videoId = extractVideoIdFromLink(youtubeLink);
+
+  useEffect(() => {
+    dispatch(
+      setStompClient(
+        Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
+      )
+    );
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (stompClient) {
+      stompClient.connect({}, () => {
+        console.log("연결됨");
+      });
+    }
+  }, [stompClient]);
 
   useEffect(() => {
     const mySession = OV.current.initSession();
@@ -273,29 +306,47 @@ const LiveStreamView = () => {
   const handleLeaveChatToggle = () => {
     dispatch(setIsChatOpen(false));
   };
-  
+
   const handleJoinChatToggle = () => {
     dispatch(setIsChatOpen(true));
   };
 
-  
   // 채팅방 나가기, 재입장 호출
 
   const chatRoomRef = useRef(null);
 
   const onLeaveChat = () => {
-    console.log('Leave chat');
+    console.log("Leave chat");
     if (chatRoomRef.current) {
       chatRoomRef.current.handleLeaveChat();
     }
   };
 
   const onJoinChat = () => {
-    console.log('join chat');
+    console.log("join chat");
     if (chatRoomRef.current) {
       chatRoomRef.current.handleJoinChat();
     }
   };
+
+  // 투표하기(init)호출
+
+  const initRef = useRef(null);
+
+  // async function () {}
+
+  // 가이드가 투표 시작을 하면, setVoting(true)가 되면서 TestTest의 init 실행시키기
+  useEffect(() => {
+    if (voting) {
+      console.log("투표시작");
+      if (initRef.current) {
+        console.log("여기까지들어가는지궁금해서");
+        initRef.current.init();
+      }
+    } else {
+      console.log("투표종료");
+    }
+  }, [voting]);
 
   const getToken = useCallback(async () => {
     return createSession(sessionid).then((sessionId) => createToken(sessionId));
@@ -359,9 +410,9 @@ const LiveStreamView = () => {
             </div>
           </div>
           {/* 채팅창 */}
-          <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
+          {/* <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
             <ChatRoom ref={chatRoomRef} onload={onload} />
-          </div>
+          </div> */}
           {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
@@ -377,6 +428,14 @@ const LiveStreamView = () => {
             onJoinChat={onJoinChat}
           />
           <QRCodeComponent youtubeLink={youtubeLink} />
+          <button
+            onClick={() => {
+              setVoting(true);
+            }}
+          >
+            여기
+          </button>{" "}
+          <TestTest ref={initRef} /> : <></>
         </FullScreen>
       )}
     </>
