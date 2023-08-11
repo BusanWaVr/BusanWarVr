@@ -37,7 +37,6 @@ function LiveStream(props) {
   // tourUId
   const [mySessionId, setMySessionId] = useState(`${tourId}`);
 
-
   // location.state로 받아온 데이터들 reducer에 저장
   useEffect(() => {
     dispatch(setTourId(tourId));
@@ -47,7 +46,6 @@ function LiveStream(props) {
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
   }, []);
-
 
   const handleChangeYouTubeLink = useCallback((e) => {
     dispatch(setYoutubeLink(e.target.value));
@@ -64,7 +62,7 @@ function LiveStream(props) {
   };
 
   const joinSession = () => {
-    navigate(`/livestream/${mySessionId}`)
+    navigate(`/livestream/${mySessionId}`);
   };
 
   const saveYouTubeLink = async () => {
@@ -94,23 +92,30 @@ function LiveStream(props) {
     }
 
     try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        return;
+      }
+
       const requestBody = {
         tourId: tourId,
       };
 
-      const response = await fetch("/api/chatroom/start", {
-        method: "POST",
-        headers: {
-          Authorization: accessToken,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await fetch(
+        "https://busanwavrserver.store/chatroom/start",
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
       if (response.status === 200) {
         const data = await response.json();
-        console.log("요청", requestBody);
-        console.log("응답", data);
         alert(data.message);
+        console.log("다음 채팅방이 시작되었습니다", tourId);
       } else {
         console.log(data.message);
         alert(data.message);
