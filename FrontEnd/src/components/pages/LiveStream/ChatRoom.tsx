@@ -15,7 +15,6 @@ function ChatRoom(props, ref) {
   const { accessToken, userId } = useSelector((state: any) => state.userInfo);
 
   // 구독 상태를 관리해보자
-
   const [subscribed, setSubscribed] = useState(false);
 
   const [chatMessages, setChatMessages] = useState<message[]>([]);
@@ -46,7 +45,7 @@ function ChatRoom(props, ref) {
 
     return () => {
       if (subscribed) {
-        stompClient.unsubscribe(`/sub/chat/message/room/${tourUID}`);
+        gowp();
         setSubscribed(false);
       }
     };
@@ -152,6 +151,12 @@ function ChatRoom(props, ref) {
                     {msg.username}님이 채팅방에서 퇴장했습니다.
                   </p>
                 );
+              case "JOIN":
+                return (
+                  <p className="join" key={index}>
+                    {msg.username}님이 채팅방에 입장했습니다.
+                  </p>
+                );
               case "VOTE":
                 return (
                   <p className="vote" key={index}>
@@ -188,8 +193,8 @@ function ChatRoom(props, ref) {
           </button>
         </div>
         <div className="chat-footer-temp">
-          <button onClick={handleLeaveChat}>나가기</button>
-          <button onClick={handleJoinChat}>재입장</button>
+          {/* <button onClick={handleLeaveChat}>나가기</button>
+          <button onClick={handleJoinChat}>재입장</button> */}
           <button disabled>투표하기</button>
         </div>
       </div>
