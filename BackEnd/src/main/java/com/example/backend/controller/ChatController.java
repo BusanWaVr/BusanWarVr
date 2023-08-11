@@ -1,11 +1,18 @@
 package com.example.backend.controller;
 
 import com.example.backend.document.EventRepository;
+import com.example.backend.dto.chat.CreateVoteDto;
+import com.example.backend.dto.chat.JoinMessageDto;
 import com.example.backend.dto.chat.LeaveMessageDto;
 import com.example.backend.dto.chat.NormalMessageDto;
+import com.example.backend.dto.chat.VoteMessageDto;
+import com.example.backend.model.user.User;
+import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.chat.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,5 +31,22 @@ public class ChatController {
     @MessageMapping("/chat/message/leave")
     public void leave(@RequestBody LeaveMessageDto requestDto) {
         chatMessageService.sendLeaveMessage(requestDto);
+    }
+
+    @MessageMapping("/chat/message/join")
+    public void join(@RequestBody JoinMessageDto requestDto){
+
+        chatMessageService.sendJoinMessage(requestDto);
+    }
+
+    @PostMapping("/chat/vote/create")
+    public void createVote(@RequestBody CreateVoteDto.Request request){
+        chatMessageService.sendCreateVoteMessage(request);
+    }
+
+    @PostMapping("/chat/vote")
+    public void vote(@RequestBody VoteMessageDto.Request request, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userDetails.getUser();
+        chatMessageService.sendVoteMessage(request, user);
     }
 }
