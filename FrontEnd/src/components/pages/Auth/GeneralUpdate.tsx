@@ -1,17 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import ProfileImageUpload from "./ProfileImageUpdate";
+import { toast } from "react-toastify";
 
 interface EditProfileProps {
   // 필요한 다른 프롭스들을 여기에 추가하세요
 }
 
 function GeneralUpdate(props: EditProfileProps) {
+  const convertURLtoFile = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      const data = await response.blob();
+      const ext = url.split(".").pop();
+      const metadata = { type: `image/${ext}` };
+      const filename = url.split("/").pop();
+      return new File([data], filename!, metadata);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
   const [name, setName] = useState(`${localStorage.getItem("nickname")}`);
   const [nicknameMessage, setNicknameMessage] = useState("");
-  const [isNickname, setIsNickname] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(
-    `${localStorage.getItem("profileImg")}`
-  );
+  const [isNickname, setIsNickname] = useState(true);
   const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -19,7 +32,6 @@ function GeneralUpdate(props: EditProfileProps) {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
   const [passwordChangeMessage, setPasswordChangeMessage] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordDBCheck, setPasswordDBCheck] = useState(false);
 
   const [nameMessage, setNameMessage] = useState("");
@@ -27,11 +39,26 @@ function GeneralUpdate(props: EditProfileProps) {
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordConfirmMessage, setPasswordConfirmMessage] = useState("");
 
-  const [isName, setIsName] = useState(false);
-  const [isPassword, setIsPassword] = useState(false);
-  const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
+  const [isName, setIsName] = useState(true);
+  const [isPassword, setIsPassword] = useState(true);
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState(true);
 
   const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      const currentProfileImage = await convertURLtoFile(
+        localStorage.getItem("profileImg")
+      );
+      setSelectedImageFile(currentProfileImage);
+    };
+    fetchImage();
+  }, []);
+
+  const handleImageUpload = (files: any[]) => {
+    setSelectedImageFile(files[0].originFileObj);
+  };
+
   // 카테고리
   const MaxAllowedCategories = 5;
   const MinRequiredCategories = 3;
@@ -84,19 +111,17 @@ function GeneralUpdate(props: EditProfileProps) {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const imageFile = e.target.files?.[0];
-    if (imageFile) {
-      setSelectedImageFile(imageFile); // 이미지 파일을 selectedImageFile로 설정
-      setSelectedImage(URL.createObjectURL(imageFile));
-    }
-    console.log(selectedImage);
-  };
-
   const onChangeName = (e) => {
     const currentName = e.target.value;
     setName(currentName);
 
+    if (currentName === localStorage.getItem("nickname")) {
+      setIsName(true);
+      setIsNickname(true);
+    } else {
+      setIsName(false);
+      setIsNickname(false);
+    }
     const regex = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]*$/;
 
     if (
@@ -115,6 +140,8 @@ function GeneralUpdate(props: EditProfileProps) {
   const onChangePassword = (e) => {
     const currentPassword = e.target.value;
     setNewPassword(currentPassword);
+    setIsPassword(false);
+    setIsPasswordConfirm(false);
     const passwordRegExp =
       /^(?=.[A-Za-z])(?=.*\d)(?=.*[!@#$%])[A-Za-z\d!@#$%]{10,}$/;
 
@@ -143,7 +170,6 @@ function GeneralUpdate(props: EditProfileProps) {
 
   async function handleSubmitName(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     try {
       const requestBody = {
         nickname: name,
@@ -216,16 +242,6 @@ function GeneralUpdate(props: EditProfileProps) {
     }
   }
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPassword(e.target.value);
-  };
-
-  const handleConfirmPasswordChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setConfirmPassword(e.target.value);
-  };
-
   const handleSubmitNewPassword = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -268,6 +284,13 @@ function GeneralUpdate(props: EditProfileProps) {
   };
   const currentNickname = localStorage.getItem("nickname");
   const handleSave = async () => {
+    if (!isNickname || !isName) {
+      toast.warning("닉네임을 확인해주세요.");
+      return;
+    } else if (!isPassword || !isPasswordConfirm) {
+      toast.warning("비밀번호를 확인해주세요.");
+      return;
+    }
     try {
       const categoriesString = selectedCategories.join(",");
       localStorage.setItem("category", categoriesString);
@@ -280,10 +303,8 @@ function GeneralUpdate(props: EditProfileProps) {
       } else {
         formData.append("nickname", currentNickname);
       }
-
       formData.append("category", categoriesString);
-      console.log(selectedImage);
-      // 이미지를 선택한 경우에만 FormData에 추가
+
       if (selectedImageFile) {
         formData.append("profileImg", selectedImageFile);
       }
@@ -301,7 +322,7 @@ function GeneralUpdate(props: EditProfileProps) {
       );
 
       console.log("response", response.data);
-      console.log("저장되었습니다!");
+      toast.success("성공적으로 회원정보가 변경되었습니다.");
       if (selectedImageFile) {
         localStorage.setItem("profileImg", selectedImageFile);
       }
@@ -417,28 +438,13 @@ function GeneralUpdate(props: EditProfileProps) {
         </div>
       </div>
       <div>
-        <form>
-          <label>프로필 이미지 업로드:</label>
-          <input type="file" onChange={handleImageUpload} accept="image/*" />
-        </form>
-        {selectedImage && (
-          <div>
-            <p>미리보기:</p>
-            <img
-              src={selectedImage}
-              alt="Uploaded"
-              style={{ width: "200px", height: "auto" }}
-            />
-          </div>
-        )}
+        <ProfileImageUpload
+          selectedImageFile={selectedImageFile}
+          handleImageChange={(files) => handleImageUpload(files)}
+        />
       </div>
       <div>
-        <button
-          onClick={handleSave}
-          disabled={(!isNickname && name !== currentNickname) || !isCategory}
-        >
-          저장하기
-        </button>
+        <button onClick={handleSave}>저장하기</button>
       </div>
     </div>
   );

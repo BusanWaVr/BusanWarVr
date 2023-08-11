@@ -1,15 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import ProfileImageUpload from "./ProfileImageUpdate";
+import { toast } from "react-toastify";
 
-interface EditProfileProps {
-  // 필요한 다른 프롭스들을 여기에 추가하세요
-}
+function GuideUpdate() {
+  const convertURLtoFile = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      const data = await response.blob();
+      const ext = url.split(".").pop();
+      const metadata = { type: `image/${ext}` };
+      const filename = url.split("/").pop();
+      return new File([data], filename!, metadata);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
 
-function GuideUpdate(props: EditProfileProps) {
   const [name, setName] = useState(`${localStorage.getItem("nickname")}`);
   const [nicknameMessage, setNicknameMessage] = useState("");
   const [isNickname, setIsNickname] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -21,7 +32,6 @@ function GuideUpdate(props: EditProfileProps) {
   const [introduction, setIntroduction] = useState(
     `${localStorage.getItem("introduce")}`
   );
-  // const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const [nameMessage, setNameMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
@@ -35,13 +45,18 @@ function GuideUpdate(props: EditProfileProps) {
 
   const userId = localStorage.getItem("userId");
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const imageFile = e.target.files?.[0];
-    if (imageFile) {
-      setSelectedImageFile(imageFile); // 이미지 파일을 selectedImageFile로 설정
-      setSelectedImage(URL.createObjectURL(imageFile));
-    }
-    console.log(selectedImage);
+  useEffect(() => {
+    const fetchImage = async () => {
+      const currentProfileImage = await convertURLtoFile(
+        localStorage.getItem("profileImg")
+      );
+      setSelectedImageFile(currentProfileImage);
+    };
+    fetchImage();
+  }, []);
+
+  const handleImageUpload = (files: any[]) => {
+    setSelectedImageFile(files[0].originFileObj);
   };
 
   const onChangeName = (e) => {
@@ -113,7 +128,6 @@ function GuideUpdate(props: EditProfileProps) {
       const requestBody = {
         nickname: name,
       };
-      console.log(requestBody);
       const response = await fetch(
         "https://busanwavrserver.store/auth/nickname",
         {
@@ -124,7 +138,6 @@ function GuideUpdate(props: EditProfileProps) {
           body: JSON.stringify(requestBody),
         }
       );
-      console.log(response);
       const data = await response.json();
 
       if (data.code === "200" || name === localStorage.getItem("nickname")) {
@@ -149,7 +162,6 @@ function GuideUpdate(props: EditProfileProps) {
       const requestBody = {
         password: password,
       };
-      console.log(requestBody);
 
       const accessToken = localStorage.getItem("accessToken");
 
@@ -165,7 +177,6 @@ function GuideUpdate(props: EditProfileProps) {
         }
       );
 
-      console.log(response);
       const data = await response.json();
 
       if (data.message === "비밀번호가 일치합니다.") {
@@ -182,16 +193,6 @@ function GuideUpdate(props: EditProfileProps) {
     }
   }
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPassword(e.target.value);
-  };
-
-  const handleConfirmPasswordChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setConfirmPassword(e.target.value);
-  };
-
   const handleSubmitNewPassword = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -203,7 +204,6 @@ function GuideUpdate(props: EditProfileProps) {
         const requestBody = {
           password: newPassword,
         };
-        console.log(requestBody);
 
         const accessToken = localStorage.getItem("accessToken");
 
@@ -219,10 +219,8 @@ function GuideUpdate(props: EditProfileProps) {
         );
 
         if (response.status === 500) {
-          console.log(response);
           setpasswordDBCheck(true);
         } else if (response.data.message === "비밀번호를 변경했습니다.") {
-          console.log(response.data);
           setpasswordDBCheck(false);
           setPasswordChangeMessage("비밀번호가 변경되었습니다!");
         }
@@ -265,11 +263,11 @@ function GuideUpdate(props: EditProfileProps) {
         }
       );
 
-      console.log("response", response.data);
-      console.log("저장되었습니다!");
+      toast.success("정보가 수정되었습니다.");
+
       localStorage.setItem("nickname", name);
       if (selectedImageFile) {
-        localStorage.setItem("profileImg", selectedImageFile);
+        localStorage.setItem("imageFile", selectedImageFile);
       }
       if (introduction) {
         localStorage.setItem("introduce", introduction);
@@ -286,12 +284,7 @@ function GuideUpdate(props: EditProfileProps) {
         <form onSubmit={handleSubmitName}>
           <label>
             닉네임:
-            <input
-              type="text"
-              value={name}
-              onChange={onChangeName}
-              // onChange={(e) => setName(e.target.value)}
-            />
+            <input type="text" value={name} onChange={onChangeName} />
           </label>
 
           <div>
@@ -366,20 +359,10 @@ function GuideUpdate(props: EditProfileProps) {
         )}
       </div>
       <div>
-        <form>
-          <label>프로필 이미지 업로드:</label>
-          <input type="file" onChange={handleImageUpload} accept="image/*" />
-        </form>
-        {selectedImage && (
-          <div>
-            <p>미리보기:</p>
-            <img
-              src={selectedImage}
-              alt="Uploaded"
-              style={{ width: "200px", height: "auto" }}
-            />
-          </div>
-        )}
+        <ProfileImageUpload
+          selectedImageFile={selectedImageFile}
+          handleImageChange={(files) => handleImageUpload(files)}
+        />
       </div>
       <div>
         <form>
@@ -396,12 +379,6 @@ function GuideUpdate(props: EditProfileProps) {
       <div>
         <button
           onClick={handleSave}
-          disabled={
-            !isName &&
-            !isIntroduction &&
-            name !== currentNickname &&
-            introductionMessage === ""
-          }
         >
           저장하기
         </button>

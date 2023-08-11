@@ -373,7 +373,6 @@ const TourUpdate: React.FC = () => {
         toast.success("게시글 수정이 완료되었습니다.");
         navigate(`/tour/${tourId}`);
       } else {
-        console.log(res.data.message);
         toast.error("죄송합니다. 잠시후 다시 시도해 주세요.");
       }
     } catch (error) {

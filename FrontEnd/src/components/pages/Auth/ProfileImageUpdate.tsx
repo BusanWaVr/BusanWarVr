@@ -1,21 +1,9 @@
 import React, { useState, useEffect } from "react";
+import ImgCrop from "antd-img-crop";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 import type { RcFile, UploadProps } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
-import { styled } from "styled-components";
-
-type TourImageUploadProps = {
-  imageFiles: File[] | string[] | null;
-  setImageFiles: (file: File[]) => void;
-  maxImages: number;
-};
-
-const ImageUploadWrapper = styled.div`
-  & > span {
-    text-align: left;
-  }
-`;
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -25,30 +13,30 @@ const getBase64 = (file: RcFile): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-const TourImageUpload: React.FC<TourImageUploadProps> = ({
-  imageFiles,
-  setImageFiles,
-  maxImages,
+const ProfileImageUpload: React.FC = ({
+  selectedImageFile,
+  handleImageChange,
 }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+
   useEffect(() => {
-    if (imageFiles && imageFiles[0] != "" && imageFiles[0] != null) {
-      setFileList(
-        imageFiles.map((imageFile, index) => ({
-          uid: index.toString(),
-          name: URL.createObjectURL(imageFile).split("/").pop(),
+    if (selectedImageFile && selectedImageFile != "") {
+      setFileList([
+        {
+          uid: "1",
+          name: URL.createObjectURL(selectedImageFile).split("/").pop(),
           status: "done",
-          url: URL.createObjectURL(imageFile),
-          originFileObj: imageFile,
-        }))
-      );
+          url: URL.createObjectURL(selectedImageFile),
+          originFileObj: selectedImageFile,
+        },
+      ]);
     } else {
       setFileList([]);
     }
-  }, [imageFiles]);
+  }, [selectedImageFile]);
 
   const handleCancel = () => setPreviewOpen(false);
 
@@ -65,8 +53,8 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
   };
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-    const newImageFiles = newFileList.map((file) => file.originFileObj);
-    setImageFiles(newImageFiles);
+    setFileList(newFileList);
+    handleImageChange(newFileList);
   };
 
   const uploadButton = (
@@ -75,29 +63,29 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
-
   return (
     <>
-      <ImageUploadWrapper>
+      <ImgCrop>
         <Upload
           listType="picture-card"
           fileList={fileList}
           onPreview={handlePreview}
-          onChange={handleChange}
+          onChange={(files) => handleChange(files)}
         >
-          {fileList.length >= maxImages ? null : uploadButton}
+          {fileList.length == 1 ? null : uploadButton}
         </Upload>
-        <Modal
-          open={previewOpen}
-          title={previewTitle}
-          footer={null}
-          onCancel={handleCancel}
-        >
-          <img alt="example" style={{ width: "100%" }} src={previewImage} />
-        </Modal>
-      </ImageUploadWrapper>
+      </ImgCrop>
+
+      <Modal
+        open={previewOpen}
+        title={previewTitle}
+        footer={null}
+        onCancel={handleCancel}
+      >
+        <img alt="example" style={{ width: "100%" }} src={previewImage} />
+      </Modal>
     </>
   );
 };
 
-export default TourImageUpload;
+export default ProfileImageUpload;
