@@ -2,6 +2,10 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import ReactDaumPost from "react-daumpost-hook";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { SearchOutlined } from "@ant-design/icons";
+import { Input } from "antd";
+import { styled } from "styled-components";
+import BoogieSearching from "../../../assets/boogie_searching.png";
 
 type TourAddressSearchProps = {
   index: number;
@@ -9,6 +13,27 @@ type TourAddressSearchProps = {
   tourData: any;
   setTourData: any;
 };
+
+const TourAddressSearchWrapper = styled.div`
+  height: 400px;
+  & > .search-box {
+  }
+`;
+
+const AddressSearchDiv = styled.div`
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+  color: #757583;
+  font-weight: 700;
+  & > img {
+    height: 150px;
+    opacity: 0.5;
+  }
+`;
 
 const TourAddressSearch = ({
   index,
@@ -68,15 +93,24 @@ const TourAddressSearch = ({
 
   return (
     <>
-      <main>
-        <div>
-          우편번호찾기
-          <input type="text" onClick={postCode} defaultValue={""} readOnly />
+      <TourAddressSearchWrapper>
+        <div className="search-box">
+          <Input
+            type="text"
+            onClick={postCode}
+            defaultValue={""}
+            readOnly
+            placeholder="주소를 검색해보세요."
+            suffix={<SearchOutlined />}
+            style={{ height: "45px", marginBottom: "10px" }}
+          />
         </div>
-        {tourData.courses.filter((course: any) => course.courseKey == courseKey)[0]
-          .lat != 0 ||
-        tourData.courses.filter((course: any) => course.courseKey == courseKey)[0]
-          .lon != 0 ? (
+        {tourData.courses.filter(
+          (course: any) => course.courseKey == courseKey
+        )[0].lat != 0 ||
+        tourData.courses.filter(
+          (course: any) => course.courseKey == courseKey
+        )[0].lon != 0 ? (
           <Map
             center={{
               lat: tourData.courses.filter(
@@ -88,7 +122,7 @@ const TourAddressSearch = ({
             }}
             style={{
               width: "100%",
-              height: "450px",
+              height: "390px",
             }}
             level={3}
           >
@@ -104,11 +138,12 @@ const TourAddressSearch = ({
             ></MapMarker>
           </Map>
         ) : (
-          <>
+          <AddressSearchDiv>
             <div>주소를 검색해보세요</div>
-          </>
+            <img src={BoogieSearching} alt="" />
+          </AddressSearchDiv>
         )}
-      </main>
+      </TourAddressSearchWrapper>
     </>
   );
 };

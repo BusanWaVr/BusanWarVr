@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./LiveStream.css";
 
@@ -7,13 +7,18 @@ import {
   setYoutubeLink,
   setIsAudioEnabled,
   setIsVideoEnabled,
+  setTourId,
+  setTourUID,
 } from "./LiveStreamReducer";
 
 function LiveStream(props) {
   const location = useLocation();
   const tourUID = location.state ? location.state.tourUID : "";
   const tourId = location.state ? location.state.tourId : "";
+  const liveLink = location.state ? location.state.liveLink : "";
+  console.log("liveLink", liveLink);
   console.log("tourId", tourId);
+  console.log("tourUID", tourUID);
   const navigate = useNavigate();
 
   const { youtubeLink, isAudioEnabled, isVideoEnabled } = useSelector(
@@ -22,19 +27,25 @@ function LiveStream(props) {
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
 
+  // 디폴트 youtubeLink 세팅
+  // setYoutubeLink(liveLink);
+  // console.log("youtubeLink", youtubeLink);
+
   // api 호출용 tourId
   const [apitourId, setApiTourId] = useState(`${tourId}`);
   console.log("apitourId", apitourId);
   // tourUId
-  const [mySessionId, setMySessionId] = useState(`${tourUID}`);
+  const [mySessionId, setMySessionId] = useState(`${tourId}`);
+
+  // location.state로 받아온 데이터들 reducer에 저장
+  useEffect(() => {
+    dispatch(setTourId(tourId));
+    dispatch(setTourUID(tourUID));
+  }, [dispatch, tourId, tourUID]);
 
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
   }, []);
-
-  // const handleChangeUserName = useCallback((e) => {
-  //   dispatch(setUserName(e.target.value));
-  // }, []);
 
   const handleChangeYouTubeLink = useCallback((e) => {
     dispatch(setYoutubeLink(e.target.value));
@@ -50,7 +61,7 @@ function LiveStream(props) {
     dispatch(setIsVideoEnabled(!isVideoEnabled));
   };
 
-  const joinSession = (e) => {
+  const joinSession = () => {
     navigate(`/livestream/${mySessionId}`);
   };
 
@@ -78,6 +89,39 @@ function LiveStream(props) {
       );
     } catch (error) {
       console.error("유튜브 Url 등록실패", error);
+    }
+
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        return;
+      }
+
+      const requestBody = {
+        tourId: tourId,
+      };
+
+      const response = await fetch(
+        "https://busanwavrserver.store/chatroom/start",
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+      if (response.status === 200) {
+        const data = await response.json();
+        alert(data.message);
+        console.log("다음 채팅방이 시작되었습니다", tourId);
+      } else {
+        console.log(data.message);
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -116,7 +160,7 @@ function LiveStream(props) {
                 className="form-control input"
                 type="text"
                 id="sessionId"
-                value={youtubeLink}
+                value={youtubeLink || liveLink}
                 onChange={handleChangeYouTubeLink}
                 required
               />

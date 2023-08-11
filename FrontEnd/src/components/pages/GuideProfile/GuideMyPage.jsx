@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { Outlet, useOutletContext, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import GuideNavbar from "./GuideNavbar";
 import GuideMini from "./GuideMini";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { Layout } from "antd";
+
+const { Content, Sider } = Layout;
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,7 +26,8 @@ const OutletWrapper = styled.div`
 `;
 
 function GuideMyPage() {
-  // redux에서 userId 가져오기
+  const [collapsed, setCollapsed] = useState(false);
+
   const { userId } = useSelector((state) => state.userInfo);
   const { urlId } = useParams();
   const localId = localStorage.getItem("userId");
@@ -35,9 +39,7 @@ function GuideMyPage() {
     if (userId === urlId) {
       setIsMe(true);
     }
-    console.log("urlId", urlId);
-    console.log("userId", userId);
-    console.log("localId", localId);
+
     const fetchData = async () => {
       try {
         const response = await fetch(url, {
@@ -47,10 +49,8 @@ function GuideMyPage() {
           },
         });
         if (response.status === 200) {
-          console.log("유저정보 GET");
           const data = await response.json();
           setGuideInfoData(data.data);
-          console.log("부모에서 자식으로 넘김", data.data);
         } else {
           alert("유저데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요.");
         }
@@ -62,18 +62,41 @@ function GuideMyPage() {
     fetchData();
   }, [urlId]);
 
-  console.log("isMe", isMe);
-  console.log("guideInfoData", guideInfoData);
   return (
-    <Wrapper>
-      <NavbarWrapper>
-        <GuideMini guideInfoData={guideInfoData} isMe={isMe} />
+    <Layout style={{ height: "calc(100vh - 5rem )" }}>
+      <Sider
+        style={{ height: "calc(100vh - 5rem )" }}
+        theme="light"
+        breakpoint="lg"
+        onBreakpoint={(broken) => {
+          setCollapsed(broken);
+        }}
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
+      >
+        <GuideMini
+          userInfoData={guideInfoData}
+          collapsed={collapsed}
+          isMe={isMe}
+        />
         <GuideNavbar />
-      </NavbarWrapper>
-      <OutletWrapper>
-        <Outlet context={{ guideInfoData, isMe }} />
-      </OutletWrapper>
-    </Wrapper>
+      </Sider>
+      <Layout style={{ height: "calc(100vh - 4.3rem)", overflowY: "scroll" }}>
+        <Content style={{ margin: "0 16px" }}>
+          <Outlet context={{ guideInfoData, isMe }} />
+        </Content>
+      </Layout>
+    </Layout>
+    // <Wrapper>
+    //   <NavbarWrapper>
+    //     <GuideMini guideInfoData={guideInfoData} isMe={isMe} />
+    //     <GuideNavbar />
+    //   </NavbarWrapper>
+    //   <OutletWrapper>
+    //     <Outlet context={{ guideInfoData, isMe }} />
+    //   </OutletWrapper>
+    // </Wrapper>
   );
 }
 

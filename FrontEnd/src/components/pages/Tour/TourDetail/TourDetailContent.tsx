@@ -44,10 +44,13 @@ const TourContentImage = styled.img`
   aspect-ratio: 16 / 9;
   object-fit: cover;
   border-radius: 5px;
+  margin-bottom: 20px;
+  &: last-child {
+    margin-bottom: 0;
+  }
 `;
 
 const TourDetailContent = ({ tourData, joiners }) => {
-
   return (
     <>
       <TourDetailContentWrapper>

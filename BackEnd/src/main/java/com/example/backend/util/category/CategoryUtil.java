@@ -4,7 +4,9 @@ import com.example.backend.model.category.Category;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tourcategory.TourCategory;
 import com.example.backend.model.tourcategory.TourCategoryRepository;
+import com.example.backend.model.user.User;
 import com.example.backend.model.usercategory.UserCategory;
+import com.example.backend.model.usercategory.UserCategoryRepository;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class CategoryUtil {
 
     private final TourCategoryRepository tourCategoryRepository;
+    private final UserCategoryRepository userCategoryRepository;
 
     public void tourCategoryCreate(Tour tour, Category category) {
         TourCategory tourCategory = new TourCategory();
@@ -43,36 +46,11 @@ public class CategoryUtil {
         return false;
     }
 
-//    public Page<TourRecommendDto> tourRecommend(User user, Pageable pageable) {
-//        List<Tour> tours = tourRepository.findByIsEndedFalseOrderByStartDate();
-//        List<TourRecommendDto> tourRecommendDtoList = new ArrayList<>();
-//        List<UserCategory> userCategoryList = userCategoryRepository.findAllByUser(user);
-//
-//        for (Tour tour : tours) {
-//            Long tourId = tour.getId();
-//
-//            List<String> tourCategories = new ArrayList<>();
-//            categoryUtil.tourCategoryList(tourId, tourCategories);
-//
-//            if (tour.isEnded() || tour.isCanceled()
-//                    || tour.getCurrentMember() >= tour.getMaxMember()) {
-//                continue;
-//            }
-//
-//            if (!categoryUtil.isContainCategory(userCategoryList, tourCategories)) {
-//                continue;
-//            }
-//
-//            List<String> tourImageUrls = new ArrayList<>();
-//            imageUtil.tourImageUrlList(tourId, tourImageUrls);
-//
-//            tourRecommendDtoList.add(
-//                    new TourRecommendDto(tour, tourCategories, tourImageUrls));
-//        }
-//
-//        int start = (int) pageable.getOffset();
-//        int end = Math.min((start + pageable.getPageSize()), tourRecommendDtoList.size());
-//
-//        return new PageImpl<>(tourRecommendDtoList.subList(start, end), pageable, tourRecommendDtoList.size());
-//    }
+    public void userCategoryList(User user, List<String> userCategories) {
+        List<UserCategory> categories = userCategoryRepository.findAllByUser(user);
+        for (UserCategory userCategory : categories) {
+            Category category = userCategory.getCategory();
+            userCategories.add(category.getName());
+        }
+    }
 }
