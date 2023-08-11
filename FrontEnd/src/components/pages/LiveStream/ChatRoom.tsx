@@ -126,9 +126,15 @@ function ChatRoom(props, ref) {
   };
 
   // 채팅방 재입장
-  const handleJoinChat = async () => {
-    // 재입장하면서 다시 구독 + 다시 입장했다는 메시지 send
+  const handleJoinChat = () => {
+    // 재입장하면서 다시 구독
     rnehr();
+
+    const joinMessage = {
+      roomUid: tourUID,
+      token: accessToken,
+    };
+    stompClient.send("/pub/chat/message/join", {}, JSON.stringify(joinMessage));
   };
 
   React.useImperativeHandle(ref, () => ({
