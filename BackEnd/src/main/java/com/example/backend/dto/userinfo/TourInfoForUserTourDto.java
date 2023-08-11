@@ -11,6 +11,7 @@ public class TourInfoForUserTourDto {
     private String uid;
     private String title;
     private Date startDate;
+    private Date endDate;
     private int currentMember;
     private int maxMember;
     private GuideInfoForUserTourDto guide;
@@ -21,6 +22,7 @@ public class TourInfoForUserTourDto {
         this.uid = tour.getUid();
         this.title = tour.getTitle();
         this.startDate = tour.getStartDate();
+        this.endDate = tour.getEndDate();
         this.currentMember = tour.getCurrentMember();
         this.maxMember = tour.getMaxMember();
         this.guide = guide;
