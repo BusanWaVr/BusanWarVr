@@ -4,7 +4,6 @@ import com.example.backend.config.pubsub.RedisPublisher;
 import com.example.backend.document.MessageRepository;
 import com.example.backend.dto.chat.LeaveMessageDto;
 import com.example.backend.dto.chat.NormalMessageDto;
-import com.example.backend.dto.tour.TourRegistDto;
 import com.example.backend.model.chat.ChatParticipantsInfoRepository;
 import com.example.backend.model.chat.ChatRoom;
 import com.example.backend.model.chat.ChatRoomRepository;
@@ -36,7 +35,7 @@ public class ChatMessageService {
         redisPublisher.chatMessagePublish(normalMessageDto.toChatMessageResponseDto(user));
     }
 
-    public void sendLeaveMessage(LeaveMessageDto leaveMessageDto){
+    public void sendLeaveMessage(LeaveMessageDto leaveMessageDto) {
         String token = leaveMessageDto.getToken();
         User user = getUserFromToken(token);
 
@@ -48,7 +47,7 @@ public class ChatMessageService {
         chatParticipantsInfoRepository.deleteByUserAndChatRoom(user, chatRoom);
     }
 
-    public User getUserFromToken(String token){
+    public User getUserFromToken(String token) {
         token = token.substring(7);
         String email = jwtDecoder.decodeUsername(token);
         return userRepository.findByEmail(email);

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class GuideLoginDto {
+
     private long userId;
     private String email;
     private String nickname;
@@ -16,7 +17,7 @@ public class GuideLoginDto {
     private String Access_Token;
     private String Refresh_Token;
 
-    public GuideLoginDto(User user, String access, String refresh){
+    public GuideLoginDto(User user, String access, String refresh) {
         this.userId = user.getId();
         this.email = user.getEmail();
         this.nickname = user.getNickname();

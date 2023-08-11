@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import TourJoinBtn from "./TourJoinBtn.jsx";
 
 const CardContainer = styled.div`
   margin: 50px;
@@ -50,9 +51,12 @@ function TourCard({ TourData, isMe }) {
                 </Link>
               )}
               {isMe && showMateButton && (
-                <Link to={`/mate/${tour.tourId}/write`}>
-                  <button>메이트 모집</button>
-                </Link>
+                <div>
+                  <Link to={`/mate/${tour.tourId}/write`}>
+                    <button>메이트 모집</button>
+                  </Link>
+                  <TourJoinBtn Tour={tour} />
+                </div>
               )}
             </CardContainer>
           ))

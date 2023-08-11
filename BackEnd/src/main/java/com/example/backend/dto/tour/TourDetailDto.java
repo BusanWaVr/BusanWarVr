@@ -37,6 +37,7 @@ public class TourDetailDto {
         private String profileImg;
         private boolean isCanceled;
         private boolean isEnded;
+
         public Response(Tour tour, User user, List<String> category, List<String> tourImgs,
                 List<CourseDto.Response> courses, List<JoinerDto> joiners) {
             this.uid = tour.getUid();

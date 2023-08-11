@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useCallback, useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./LiveStream.css";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -7,9 +7,18 @@ import {
   setYoutubeLink,
   setIsAudioEnabled,
   setIsVideoEnabled,
+  setTourId,
+  setTourUID,
 } from "./LiveStreamReducer";
 
-const LiveStream = () => {
+function LiveStream(props) {
+  const location = useLocation();
+  const tourUID = location.state ? location.state.tourUID : "";
+  const tourId = location.state ? location.state.tourId : "";
+  const liveLink = location.state ? location.state.liveLink : "";
+  console.log("liveLink", liveLink);
+  console.log("tourId", tourId);
+  console.log("tourUID", tourUID);
   const navigate = useNavigate();
 
   const { youtubeLink, isAudioEnabled, isVideoEnabled } = useSelector(
@@ -18,16 +27,27 @@ const LiveStream = () => {
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
 
-  // tourId로 수정 필요
-  const [mySessionId, setMySessionId] = useState("");
+  // 디폴트 youtubeLink 세팅
+  // setYoutubeLink(liveLink);
+  // console.log("youtubeLink", youtubeLink);
+
+  // api 호출용 tourId
+  const [apitourId, setApiTourId] = useState(`${tourId}`);
+  console.log("apitourId", apitourId);
+  // tourUId
+  const [mySessionId, setMySessionId] = useState(`${tourId}`);
+
+
+  // location.state로 받아온 데이터들 reducer에 저장
+  useEffect(() => {
+    dispatch(setTourId(tourId));
+    dispatch(setTourUID(tourUID));
+  }, [dispatch, tourId, tourUID]);
 
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
   }, []);
 
-  // const handleChangeUserName = useCallback((e) => {
-  //   dispatch(setUserName(e.target.value));
-  // }, []);
 
   const handleChangeYouTubeLink = useCallback((e) => {
     dispatch(setYoutubeLink(e.target.value));
@@ -43,8 +63,61 @@ const LiveStream = () => {
     dispatch(setIsVideoEnabled(!isVideoEnabled));
   };
 
-  const joinSession = (e) => {
-    navigate(`/livestream/${mySessionId}`);
+  const joinSession = () => {
+    navigate(`/livestream/${mySessionId}`)
+  };
+
+  const saveYouTubeLink = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        return;
+      }
+
+      const linkData = {
+        link: youtubeLink,
+      };
+
+      const response = await fetch(
+        `https://busanwavrserver.store/tour/link/${tourId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(linkData),
+        }
+      );
+    } catch (error) {
+      console.error("유튜브 Url 등록실패", error);
+    }
+
+    try {
+      const requestBody = {
+        tourId: tourId,
+      };
+
+      const response = await fetch("/api/chatroom/start", {
+        method: "POST",
+        headers: {
+          Authorization: accessToken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log("요청", requestBody);
+        console.log("응답", data);
+        alert(data.message);
+      } else {
+        console.log(data.message);
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -82,7 +155,7 @@ const LiveStream = () => {
                 className="form-control input"
                 type="text"
                 id="sessionId"
-                value={youtubeLink}
+                value={youtubeLink || liveLink}
                 onChange={handleChangeYouTubeLink}
                 required
               />
@@ -102,7 +175,12 @@ const LiveStream = () => {
                 </button>
               </p>
             </div>
-            <button className="button submit" name="commit" type="submit">
+            <button
+              className="button submit"
+              name="commit"
+              type="submit"
+              onClick={saveYouTubeLink}
+            >
               JOIN
             </button>
           </form>
@@ -110,6 +188,6 @@ const LiveStream = () => {
       </div>
     </div>
   );
-};
+}
 
 export default LiveStream;

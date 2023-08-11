@@ -2,7 +2,7 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import Slider from "react-slick";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "./UserVideoComponent";
 import Toolbar from "./Toolbar";
@@ -21,11 +21,10 @@ import {
   setIsChatOpen,
 } from "./LiveStreamReducer";
 
-const APPLICATION_SERVER_URL = "https://13.209.26.92/api/v1/openvidu";
+const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
-  const { sessionid } = useParams();
 
   const {
     youtubeLink,
@@ -33,9 +32,15 @@ const LiveStreamView = () => {
     isVideoEnabled,
     isFullScreen,
     isChatOpen,
+    tourId,
+    tourUID,
   } = useSelector((state) => state.liveStream);
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
+
+  // 그냥 모든 sessionid => tourId로 바꿔주면 되는데 무서워서 일단 이렇게
+  // const sessionid = tourId 로 하니까 채팅은 되는데 오픈비두가 안됨..
+  const { sessionid } = useParams();
 
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -113,6 +118,7 @@ const LiveStreamView = () => {
       // Get a token from the OpenVidu deployment
       getToken().then(async (token) => {
         try {
+          console.log(token);
           await session.connect(token, { clientData: nickname });
 
           let publisher = await OV.current.initPublisherAsync(undefined, {
@@ -162,29 +168,7 @@ const LiveStreamView = () => {
       session.disconnect();
     }
 
-    // 채팅방 나가기
-    try {
-      const response = await fetch(
-        `https://busanwavrserver.store/tour/chat/${sessionid}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: accessToken,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-
-      if (data.code === "200") {
-        alert(data.message);
-      } else {
-        console.log(data.message);
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    onLeaveChat();
 
     navigate("/livestream");
   }, [session]);
@@ -287,8 +271,31 @@ const LiveStreamView = () => {
     }
   };
 
-  const handleChatToggle = () => {
-    dispatch(setIsChatOpen(!isChatOpen));
+  const handleLeaveChatToggle = () => {
+    dispatch(setIsChatOpen(false));
+  };
+  
+  const handleJoinChatToggle = () => {
+    dispatch(setIsChatOpen(true));
+  };
+
+  
+  // 채팅방 나가기, 재입장 호출
+
+  const chatRoomRef = useRef(null);
+
+  const onLeaveChat = () => {
+    console.log('Leave chat');
+    if (chatRoomRef.current) {
+      chatRoomRef.current.handleLeaveChat();
+    }
+  };
+
+  const onJoinChat = () => {
+    console.log('join chat');
+    if (chatRoomRef.current) {
+      chatRoomRef.current.handleJoinChat();
+    }
   };
 
   const getToken = useCallback(async () => {
@@ -302,18 +309,21 @@ const LiveStreamView = () => {
       {
         headers: { "Content-Type": "application/json" },
       }
-    )
+    );
+
+    console.log(response.data);
     return response.data; // The sessionId
   };
 
   const createToken = async (sessionId) => {
     const response = await axios.post(
-      APPLICATION_SERVER_URL +"/"+ sessionId + "/connections",
+      APPLICATION_SERVER_URL + "/" + sessionId + "/connections",
       {},
       {
         headers: { "Content-Type": "application/json" },
       }
     );
+    console.log(response.data);
     return response.data; // The token
   };
 
@@ -354,7 +364,7 @@ const LiveStreamView = () => {
           </div>
           {/* 채팅창 */}
           <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
-            <ChatRoom onload={onload} />
+            <ChatRoom ref={chatRoomRef} onload={onload} />
           </div>
           {/* 툴바 */}
           <Toolbar
@@ -365,7 +375,10 @@ const LiveStreamView = () => {
             toggleFullScreen={toggleFullScreen}
             isFullScreen={isFullScreen}
             isChatOpen={isChatOpen}
-            handleChatToggle={handleChatToggle}
+            handleLeaveChatToggle={handleLeaveChatToggle}
+            handleJoinChatToggle={handleJoinChatToggle}
+            onLeaveChat={onLeaveChat}
+            onJoinChat={onJoinChat}
           />
           <QRCodeComponent youtubeLink={youtubeLink} />
         </FullScreen>
