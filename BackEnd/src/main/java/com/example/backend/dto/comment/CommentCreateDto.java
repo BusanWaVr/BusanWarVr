@@ -4,6 +4,7 @@ import com.example.backend.model.comment.Comment;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.user.User;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 public class CommentCreateDto {
@@ -20,9 +21,14 @@ public class CommentCreateDto {
     }
 
     @Data
+    @NoArgsConstructor
     public static class Response{
 
         private Long commentId;
+
+        public Response(Long commentId){
+            this.commentId = commentId;
+        }
     }
 
 }
