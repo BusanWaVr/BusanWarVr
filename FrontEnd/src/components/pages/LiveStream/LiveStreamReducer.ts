@@ -8,6 +8,7 @@ interface LiveStreamState {
   isChatOpen: boolean;
   tourId: string | null;
   tourUID: string | null;
+  stompClient: any;
 }
 
 const initialState: LiveStreamState = {
@@ -19,6 +20,7 @@ const initialState: LiveStreamState = {
   isChatOpen: true,
   tourId: null,
   tourUID: null,
+  stompClient: null,
 };
 
 const LiveStreamSlice = createSlice({
@@ -46,6 +48,9 @@ const LiveStreamSlice = createSlice({
     setTourUID: (state, action: PayloadAction<string | null>) => {
       state.tourUID = action.payload;
     },
+    setStompClient: (state, action: PayloadAction<any | null>) => {
+      state.stompClient = action.payload;
+    },
   },
 });
 
@@ -57,5 +62,6 @@ export const {
   setIsChatOpen,
   setTourId,
   setTourUID,
+  setStompClient,
 } = LiveStreamSlice.actions;
 export default LiveStreamSlice.reducer;
