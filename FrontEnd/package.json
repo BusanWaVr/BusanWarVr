@@ -30,6 +30,7 @@
     "http-proxy-middleware": "^2.0.6",
     "install": "^0.13.0",
     "lodash": "^4.17.21",
+    "microsoft-cognitiveservices-speech-sdk": "^1.31.0",
     "npm": "^9.8.1",
     "openvidu-browser": "2.27.0",
     "pretendard": "^1.3.8",
@@ -60,7 +61,8 @@
     "sockjs": "^0.3.24",
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
-    "styled-components": "^6.0.4"
+    "styled-components": "^6.0.4",
+    "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
     "@types/node": "^20.4.4",
