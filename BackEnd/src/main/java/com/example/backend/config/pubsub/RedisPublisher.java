@@ -1,6 +1,9 @@
 package com.example.backend.config.pubsub;
 
 import com.example.backend.dto.chat.ChatMessageResponseDto;
+import com.example.backend.dto.chat.CreateVoteDto;
+import com.example.backend.dto.chat.VoteMessageDto;
+import com.example.backend.model.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -16,5 +19,15 @@ public class RedisPublisher {
 
     public void chatMessagePublish(ChatMessageResponseDto messageDto){
         messagingTemplate.convertAndSend("/sub/chat/message/room/" + messageDto.getRoomUid(), messageDto);
+    }
+
+    // 가이드가 투표를 만들면 칼럼명들을 보내준다.
+    public void chatCreateVotePublish(CreateVoteDto.Response response){
+        messagingTemplate.convertAndSend("/sub/chat/vote/create/room/" + response.getRoomUid(), response);
+    }
+
+    // 사용자들의 투표내용들을 가이드와 사용자들에게 전부 보내준다.
+    public void chatVotePublish(VoteMessageDto.Request request, User user){
+        messagingTemplate.convertAndSend("/sub/chat/vote/room/" + request.getRoomUid(), request);
     }
 }

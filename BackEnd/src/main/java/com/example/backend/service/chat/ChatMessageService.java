@@ -2,8 +2,13 @@ package com.example.backend.service.chat;
 
 import com.example.backend.config.pubsub.RedisPublisher;
 import com.example.backend.document.MessageRepository;
+import com.example.backend.dto.chat.CreateVoteDto;
+import com.example.backend.dto.chat.CreateVoteDto.Response;
+import com.example.backend.dto.chat.JoinMessageDto;
 import com.example.backend.dto.chat.LeaveMessageDto;
 import com.example.backend.dto.chat.NormalMessageDto;
+import com.example.backend.dto.chat.VoteMessageDto;
+import com.example.backend.dto.chat.VoteMessageDto.Request;
 import com.example.backend.model.chat.ChatParticipantsInfoRepository;
 import com.example.backend.model.chat.ChatRoom;
 import com.example.backend.model.chat.ChatRoomRepository;
@@ -13,6 +18,7 @@ import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;
+import org.graalvm.compiler.lir.LIRInstruction.Use;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,9 +53,24 @@ public class ChatMessageService {
         chatParticipantsInfoRepository.deleteByUserAndChatRoom(user, chatRoom);
     }
 
+    public void sendJoinMessage(JoinMessageDto joinMessageDto){
+        String token = joinMessageDto.getToken();
+        User user = getUserFromToken(token);
+        messageRepository.save(joinMessageDto.toMessage(user, "JOIN"));
+        redisPublisher.chatMessagePublish(joinMessageDto.toChatMessageResponseDto(user));
+    }
+
+    public void sendCreateVoteMessage(CreateVoteDto.Request request){
+        redisPublisher.chatCreateVotePublish(new CreateVoteDto.Response(request));
+    }
+
     public User getUserFromToken(String token) {
         token = token.substring(7);
         String email = jwtDecoder.decodeUsername(token);
         return userRepository.findByEmail(email);
+    }
+
+    public void sendVoteMessage(VoteMessageDto.Request request, User user) {
+        redisPublisher.chatVotePublish(request, user);
     }
 }
