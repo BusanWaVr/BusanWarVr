@@ -14,6 +14,7 @@ import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.usercategory.UserCategory;
 import com.example.backend.model.usercategory.UserCategoryRepository;
 import com.example.backend.util.awsS3.S3Uploader;
+import com.example.backend.util.category.CategoryUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +36,7 @@ public class UserService {
     private final UserCategoryRepository userCategoryRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final S3Uploader s3Uploader;
+    private final CategoryUtil categoryUtil;
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -115,7 +117,7 @@ public class UserService {
     }
 
     @Transactional
-    public void guideUpdate(User user, GuideUpdateDto.Request request)
+    public GuideUpdateDto.Response guideUpdate(User user, GuideUpdateDto.Request request)
             throws IOException, IllegalAccessException {
 
         String newNickname = request.getNickname();
@@ -137,6 +139,9 @@ public class UserService {
         user.setProfileImg(fileUrl);
         user.setIntroduction(request.getIntroduction());
         userRepository.save(user);
+
+        GuideUpdateDto.Response response = new GuideUpdateDto.Response(user);
+        return response;
     }
 
     public void userCategoryCreate(User user, Category category) {
@@ -156,7 +161,7 @@ public class UserService {
     }
 
     @Transactional
-    public void userUpdate(User user, UserUpdateDto.Request request)
+    public UserUpdateDto.Response userUpdate(User user, UserUpdateDto.Request request)
             throws IOException, IllegalAccessException {
 
         String newNickname = request.getNickname();
@@ -191,5 +196,12 @@ public class UserService {
                 userCategoryCreate(user, categoryRepository.findByName(categoryName));
             }
         }
+
+        List<String> categoryList = new ArrayList<>();
+        categoryUtil.userCategoryList(user, categoryList);
+
+        UserUpdateDto.Response response = new UserUpdateDto.Response(user, categoryList);
+
+        return response;
     }
 }

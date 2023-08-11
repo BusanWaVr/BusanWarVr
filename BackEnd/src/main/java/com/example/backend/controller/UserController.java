@@ -163,7 +163,7 @@ public class UserController {
     }
 
     @PutMapping("/guide")
-    public Response updateGuide(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public Response<GuideUpdateDto.Response> updateGuide(@AuthenticationPrincipal UserDetailsImpl userDetails,
             @ModelAttribute @Valid GuideUpdateDto.Request request,
             BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
         if (bindingResult.hasErrors()) {
@@ -174,13 +174,13 @@ public class UserController {
             throw new IllegalArgumentException("권한이 없는 사용자의 접근입니다.");
         }
 
-        userService.guideUpdate(userDetails.getUser(), request);
+        GuideUpdateDto.Response response = userService.guideUpdate(userDetails.getUser(), request);
 
-        return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", null);
+        return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", response);
     }
 
     @PutMapping("/user")
-    public Response updateGuide(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public Response<UserUpdateDto.Response> updateUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
             @ModelAttribute @Valid UserUpdateDto.Request request,
             BindingResult bindingResult) throws BindException, IOException, IllegalAccessException {
         if (bindingResult.hasErrors()) {
@@ -195,8 +195,8 @@ public class UserController {
             throw new IllegalArgumentException("권한이 없는 사용자의 접근입니다.");
         }
 
-        userService.userUpdate(userDetails.getUser(), request);
+        UserUpdateDto.Response response = userService.userUpdate(userDetails.getUser(), request);
 
-        return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", null);
+        return new Response<>("200", "성공적으로 회원정보를 변경했습니다.", response);
     }
 }
