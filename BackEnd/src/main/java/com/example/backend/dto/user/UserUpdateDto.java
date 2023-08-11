@@ -1,6 +1,7 @@
 package com.example.backend.dto.user;
 
 import com.example.backend.model.category.Category;
+import com.example.backend.model.user.User;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -27,5 +28,18 @@ public class UserUpdateDto {
             return new Category(categoryName);
         }
 
+    }
+
+    @Data
+    public static class Response{
+        private String nickname;
+        private String profileImg;
+        private List<String> category;
+
+        public Response(User user, List<String> category){
+            this.nickname = user.getNickname();
+            this.profileImg = user.getProfileImg();
+            this.category = category;
+        }
     }
 }
