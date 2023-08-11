@@ -27,6 +27,7 @@ import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.wish.Wish;
 import com.example.backend.model.wish.WishRepository;
+import com.example.backend.util.category.CategoryUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,7 @@ public class UserInfoGetService {
     private final ReviewRepository reviewRepository;
     private final JoinerRepository joinerRepository;
     private final TourImageRepository tourImageRepository;
+    private final CategoryUtil categoryUtil;
 
     public UserWishDto.Response getUserWishList(Long userId, Pageable pageable) {
         List<Wish> userWishLists = wishRepository.findAllByUserId(userId, pageable);
@@ -103,10 +105,12 @@ public class UserInfoGetService {
 
     public UserInfoDto.Response getUserInfo(Long userId) {
         User user = userRepository.findById(userId).get();
+        List<String> categories = new ArrayList<>();
+        categoryUtil.userCategoryList(user, categories);
         List<Follower> followings = followerRepository.findAllByUserId(userId);
         int followingNum = followings.size();
         List<Review> reviews = reviewRepository.findAllByUserId(userId);
-        UserInfoDto.Response response = new UserInfoDto.Response(user, followingNum, reviews);
+        UserInfoDto.Response response = new UserInfoDto.Response(user, categories, followingNum, reviews);
         return response;
     }
 
