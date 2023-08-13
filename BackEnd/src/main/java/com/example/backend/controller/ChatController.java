@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.document.EventRepository;
 import com.example.backend.dto.chat.CreateVoteDto;
+import com.example.backend.dto.chat.EndVoteDto;
 import com.example.backend.dto.chat.JoinMessageDto;
 import com.example.backend.dto.chat.LeaveMessageDto;
 import com.example.backend.dto.chat.NormalMessageDto;
@@ -48,5 +49,15 @@ public class ChatController {
     public void vote(@RequestBody VoteMessageDto.Request request, @AuthenticationPrincipal UserDetailsImpl userDetails){
         User user = userDetails.getUser();
         chatMessageService.sendVoteMessage(request, user);
+    }
+
+    @PostMapping("/chat/vote/end")
+    public void end(@RequestBody EndVoteDto.Request request, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userDetails.getUser();
+        if(!user.getType().toString().equals("GUIDE")){
+            throw new IllegalArgumentException("가이드가 아닙니다. 다시 확인해주세요.");
+        }
+
+        chatMessageService.endVote(request);
     }
 }
