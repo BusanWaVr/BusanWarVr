@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import "./ChatRoom.css";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setStompClient } from "./LiveStreamReducer";
 
 export type message = {
   username: string;
@@ -11,7 +12,9 @@ export type message = {
 
 function ChatRoom(props, ref) {
   // reducer에서 데이터 가져오기
-  const { tourId, tourUID } = useSelector((state) => state.liveStream);
+  const { tourId, tourUID, stompClient } = useSelector(
+    (state) => state.liveStream
+  );
   const { accessToken, userId } = useSelector((state: any) => state.userInfo);
 
   // 구독 상태를 관리해보자
@@ -19,9 +22,6 @@ function ChatRoom(props, ref) {
 
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
-  const [stompClient, setStompClient] = useState(
-    Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
-  );
 
   // 자동 스크롤
   const messageEndRef = useRef(null);
@@ -126,11 +126,18 @@ function ChatRoom(props, ref) {
   };
 
   // 채팅방 재입장
-  const handleJoinChat = async () => {
-    // 재입장하면서 다시 구독 + 다시 입장했다는 메시지 send
+  const handleJoinChat = () => {
+    // 재입장하면서 다시 구독
     rnehr();
+
+    const joinMessage = {
+      roomUid: tourUID,
+      token: accessToken,
+    };
+    stompClient.send("/pub/chat/message/join", {}, JSON.stringify(joinMessage));
   };
 
+  // 부모에서 호출할 함수
   React.useImperativeHandle(ref, () => ({
     handleLeaveChat: handleLeaveChat,
     handleJoinChat: handleJoinChat,
