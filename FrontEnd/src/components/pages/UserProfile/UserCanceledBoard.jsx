@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import { useOutletContext } from "react-router";
 import TourCard from "../../blocks/TourCard";
 
-function UserCanceledBoard() {
-  const { userTourData } = useOutletContext();
+function UserCanceledBoard({ userTourData }) {
 
   if (!userTourData || !userTourData.canceledTours) {
     return <div>Loading...</div>;

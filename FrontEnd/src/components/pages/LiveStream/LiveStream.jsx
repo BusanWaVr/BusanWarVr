@@ -154,7 +154,7 @@ function LiveStream(props) {
               />
               <span>라이브 스트리밍 링크</span>
             </label>
-            <div className="flex">
+            <div className="livestream-flex">
               {/* 카메라 온오프 설정 */}
               <p>
                 <button type="button" onClick={toggleVideo}>

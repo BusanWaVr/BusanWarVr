@@ -25,7 +25,8 @@
   object-fit: cover;
 }
 
-.current-stream video, .current-stream .streamcomponent div {
+.current-stream video,
+.current-stream .streamcomponent div {
   border: 2px solid #385ac2;
 }
 
@@ -107,7 +108,7 @@
   text-decoration: underline royalblue;
 }
 
-.flex {
+.livestream-flex {
   display: flex;
   justify-content: center;
   width: 100%;

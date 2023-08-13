@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Outlet, useOutletContext, useParams } from "react-router-dom";
-import UserTourNavbar from "./UserTourNavbar";
+import { useParams, useOutletContext } from "react-router";
+import { Tabs, Tab } from "@nextui-org/react";
+import UserScheduledBoard from "./UserScheduledBoard";
+import UserEndedBoard from "./UserEndedBoard";
+import UserCanceledBoard from "./UserCanceledBoard";
 
 function UserTourBoard() {
   const [userTourData, setUserTourData] = useState(null);
@@ -20,10 +23,8 @@ function UserTourBoard() {
           }
         );
         if (response.status === 200) {
-          console.log("유저투어데이터 받았어요");
           const data = await response.json();
           setUserTourData(data.data);
-          console.log("예정종료취소로 잘감?", userTourData);
         } else {
           alert("투어데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요.");
         }
@@ -37,9 +38,17 @@ function UserTourBoard() {
 
   return (
     <div>
-      <h1>유저 투어 보드</h1>
-      <UserTourNavbar />
-      <Outlet context={{ userTourData, isMe }} />
+      <Tabs variant="underlined" aria-label="Tabs variants" color="primary">
+        <Tab key="scheduled" title="예정된 투어">
+          <UserScheduledBoard isMe={isMe} userTourData={userTourData} />
+        </Tab>
+        <Tab key="ended" title="지난 투어">
+          <UserEndedBoard isMe={isMe} userTourData={userTourData} />
+        </Tab>
+        <Tab key="canceled" title="취소된 투어">
+          <UserCanceledBoard userTourData={userTourData} />
+        </Tab>
+      </Tabs>
     </div>
   );
 }

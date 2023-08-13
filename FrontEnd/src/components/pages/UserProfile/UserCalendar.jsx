@@ -95,7 +95,7 @@ const UserCalendar = () => {
           );
         }}
       />
-      <div className="w-full md:w-2/5 pl-6 mb-4 md:m-0">
+      <div className="w-full md:w-2/5 pl-0 mb-4 md:m-0 md:pl-6">
         <CalendarTour selectedTour={selectedTour} />
       </div>
     </div>
