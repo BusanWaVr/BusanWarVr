@@ -1,6 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import {
+  EditOutlined,
+  EllipsisOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
+import { Button, Avatar, Card } from "antd";
+
+const { Meta } = Card;
 
 const CardContainer = styled.div`
   margin: 50px;
@@ -19,23 +27,19 @@ function FollowingCard({ followingData }) {
       )}
 
       {followingData.map((Following) => (
-        <CardContainer key={Following.id}>
-          <img
-            src={Following.imageUrl}
-            alt="프로필 이미지"
-            style={{
-              width: "200px",
-              height: "200px",
-              borderRadius: "50%",
-            }}
+        <Card
+          key={Following.id}
+          style={{ width: 300 }}
+          actions={[
+            <Button danger>언팔로우</Button>,
+          ]}
+        >
+          <Meta
+            avatar={<Avatar src={Following.imageUrl} size="large" />}
+            title={Following.nickname}
+            description={`팔로워 ${Following.follower}ㅤ|ㅤ총 투어 ${Following.tourNumbers}`}
           />
-          <br />
-          <Link to={`/guide/${Following.id}/mypage`}>
-            <span> {Following.nickname}</span>
-          </Link>
-          <p>팔로워 : {Following.follower}</p>
-          <p>투어수 : {Following.tourNumbers}</p>
-        </CardContainer>
+        </Card>
       ))}
     </div>
   );
