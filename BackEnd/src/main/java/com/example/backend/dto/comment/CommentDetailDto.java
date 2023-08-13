@@ -11,16 +11,16 @@ public class CommentDetailDto {
     @Data
     public static class Response {
 
-        private String content;
         private String nickname;
         private String profileImg;
         private Date writeDate;
+        private String content;
 
         public Response(User user, Comment comment) {
-            this.content = comment.getContent();
             this.nickname = user.getNickname();
             this.profileImg = user.getProfileImg();
             this.writeDate = comment.getWriteDate();
+            this.content = comment.getContent();
         }
     }
 }
