@@ -3,11 +3,7 @@ import axios from "axios";
 import ProfileImageUpload from "./ProfileImageUpdate";
 import { toast } from "react-toastify";
 
-interface EditProfileProps {
-  // 필요한 다른 프롭스들을 여기에 추가하세요
-}
-
-function GeneralUpdate(props: EditProfileProps) {
+function GeneralUpdate() {
   const convertURLtoFile = async (url: string) => {
     try {
       const response = await fetch(url);
@@ -23,25 +19,29 @@ function GeneralUpdate(props: EditProfileProps) {
   };
 
   const [name, setName] = useState(`${localStorage.getItem("nickname")}`);
+  const [nameMessage, setNameMessage] = useState("");
+  const [isName, setIsName] = useState(true);
   const [nicknameMessage, setNicknameMessage] = useState("");
   const [isNickname, setIsNickname] = useState(true);
+
   const [selectedImageFile, setSelectedImageFile] = useState(null);
+
   const [password, setPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [isPassword, setIsPassword] = useState(true);
+
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordConfirmMessage, setPasswordConfirmMessage] = useState("");
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState(true);
+
+  const [newPassword, setNewPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
   const [passwordChangeMessage, setPasswordChangeMessage] = useState("");
   const [passwordDBCheck, setPasswordDBCheck] = useState(false);
 
-  const [nameMessage, setNameMessage] = useState("");
   const [categoryMessage, setCategoryMessage] = useState(""); // 카테고리 메시지
-  const [passwordMessage, setPasswordMessage] = useState("");
-  const [passwordConfirmMessage, setPasswordConfirmMessage] = useState("");
-
-  const [isName, setIsName] = useState(true);
-  const [isPassword, setIsPassword] = useState(true);
-  const [isPasswordConfirm, setIsPasswordConfirm] = useState(true);
+  const [isCategory, setIsCategory] = useState(true);
 
   const userId = localStorage.getItem("userId");
 
@@ -55,11 +55,12 @@ function GeneralUpdate(props: EditProfileProps) {
     fetchImage();
   }, []);
 
+  // 이미지 변경
   const handleImageUpload = (files: any[]) => {
     setSelectedImageFile(files[0].originFileObj);
   };
 
-  // 카테고리
+  // 카테고리 변경
   const MaxAllowedCategories = 5;
   const MinRequiredCategories = 3;
   const categoriesList = [
@@ -83,9 +84,9 @@ function GeneralUpdate(props: EditProfileProps) {
   const [selectedCategories, setSelectedCategories] = useState(
     localCategories.split(",")
   );
-  const [isCategory, setIsCategory] = useState(false);
-
   const handleCategoryChange = (category: string) => {
+    setIsCategory(false);
+
     const updatedCategories = [...selectedCategories] as string[];
     const categoryIndex = updatedCategories.indexOf(category);
 
@@ -111,6 +112,7 @@ function GeneralUpdate(props: EditProfileProps) {
     }
   };
 
+  // 닉네임 변경
   const onChangeName = (e) => {
     const currentName = e.target.value;
     setName(currentName);
@@ -136,38 +138,6 @@ function GeneralUpdate(props: EditProfileProps) {
       setIsName(true);
     }
   };
-
-  const onChangePassword = (e) => {
-    const currentPassword = e.target.value;
-    setNewPassword(currentPassword);
-    setIsPassword(false);
-    setIsPasswordConfirm(false);
-    const passwordRegExp =
-      /^(?=.[A-Za-z])(?=.*\d)(?=.*[!@#$%])[A-Za-z\d!@#$%]{10,}$/;
-
-    if (!passwordRegExp.test(currentPassword)) {
-      setPasswordMessage(
-        "영문, 숫자, 특수문자(!@#$%)를 모두 포함하여 10자 이상 입력해 주세요."
-      );
-      setIsPassword(false);
-    } else {
-      setPasswordMessage("안전한 비밀번호 입니다.");
-      setIsPassword(true);
-    }
-  };
-
-  const onChangePasswordConfirm = (e) => {
-    const currentPasswordConfirm = e.target.value;
-    setConfirmPassword(currentPasswordConfirm);
-    if (newPassword !== currentPasswordConfirm) {
-      setPasswordConfirmMessage("비밀번호가 일치하지 않습니다.");
-      setIsPasswordConfirm(false);
-    } else {
-      setPasswordConfirmMessage("비밀번호가 일치합니다.");
-      setIsPasswordConfirm(true);
-    }
-  };
-
   async function handleSubmitName(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
@@ -202,6 +172,36 @@ function GeneralUpdate(props: EditProfileProps) {
     }
   }
 
+  // 비밀번호 변경
+  const onChangePassword = (e) => {
+    const currentPassword = e.target.value;
+    setNewPassword(currentPassword);
+    setIsPassword(false);
+    setIsPasswordConfirm(false);
+    const passwordRegExp =
+      /^(?=.[A-Za-z])(?=.*\d)(?=.*[!@#$%])[A-Za-z\d!@#$%]{10,}$/;
+
+    if (!passwordRegExp.test(currentPassword)) {
+      setPasswordMessage(
+        "영문, 숫자, 특수문자(!@#$%)를 모두 포함하여 10자 이상 입력해 주세요."
+      );
+      setIsPassword(false);
+    } else {
+      setPasswordMessage("안전한 비밀번호 입니다.");
+      setIsPassword(true);
+    }
+  };
+  const onChangePasswordConfirm = (e) => {
+    const currentPasswordConfirm = e.target.value;
+    setConfirmPassword(currentPasswordConfirm);
+    if (newPassword !== currentPasswordConfirm) {
+      setPasswordConfirmMessage("비밀번호가 일치하지 않습니다.");
+      setIsPasswordConfirm(false);
+    } else {
+      setPasswordConfirmMessage("비밀번호가 일치합니다.");
+      setIsPasswordConfirm(true);
+    }
+  };
   async function handleSubmitPassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -241,7 +241,6 @@ function GeneralUpdate(props: EditProfileProps) {
       console.error(error);
     }
   }
-
   const handleSubmitNewPassword = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -282,6 +281,8 @@ function GeneralUpdate(props: EditProfileProps) {
       setPasswordMatch(false);
     }
   };
+
+  // 수정 버튼
   const currentNickname = localStorage.getItem("nickname");
   const handleSave = async () => {
     if (!isNickname || !isName) {
@@ -290,6 +291,8 @@ function GeneralUpdate(props: EditProfileProps) {
     } else if (!isPassword || !isPasswordConfirm) {
       toast.warning("비밀번호를 확인해주세요.");
       return;
+    } else if (!isCategory) {
+      toast.warning("카테고리를 확인해주세요.");
     }
     try {
       const categoriesString = selectedCategories.join(",");

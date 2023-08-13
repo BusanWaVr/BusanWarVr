@@ -19,29 +19,32 @@ function GuideUpdate() {
   };
 
   const [name, setName] = useState(`${localStorage.getItem("nickname")}`);
+  const [nameMessage, setNameMessage] = useState("");
+  const [isName, setIsName] = useState(true);
   const [nicknameMessage, setNicknameMessage] = useState("");
-  const [isNickname, setIsNickname] = useState(false);
+  const [isNickname, setIsNickname] = useState(true);
+
   const [selectedImageFile, setSelectedImageFile] = useState(null);
+
   const [password, setPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [isPassword, setIsPassword] = useState(true);
+
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordConfirmMessage, setPasswordConfirmMessage] = useState("");
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState(true);
+
+  const [newPassword, setNewPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
-  const [passwordDBCheck, setpasswordDBCheck] = useState(false);
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
   const [passwordChangeMessage, setPasswordChangeMessage] = useState("");
+  const [passwordDBCheck, setPasswordDBCheck] = useState(false);
+
   const [introduction, setIntroduction] = useState(
     `${localStorage.getItem("introduce")}`
   );
-
-  const [nameMessage, setNameMessage] = useState("");
-  const [passwordMessage, setPasswordMessage] = useState("");
-  const [passwordConfirmMessage, setPasswordConfirmMessage] = useState("");
   const [introductionMessage, setIntroductionMessage] = useState("");
-  const [isIntroduction, setIsIntroduction] = useState(false);
-
-  const [isName, setIsName] = useState(false);
-  const [isPassword, setIsPassword] = useState(false);
-  const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
+  const [isIntroduction, setIsIntroduction] = useState(true);
 
   const userId = localStorage.getItem("userId");
 
@@ -59,9 +62,17 @@ function GuideUpdate() {
     setSelectedImageFile(files[0].originFileObj);
   };
 
+  // 닉네임 변경
   const onChangeName = (e) => {
     const currentName = e.target.value;
     setName(currentName);
+    if (currentName === localStorage.getItem("nickname")) {
+      setIsName(true);
+      setIsNickname(true);
+    } else {
+      setIsName(false);
+      setIsNickname(false);
+    }
 
     const regex = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]*$/;
 
@@ -77,50 +88,6 @@ function GuideUpdate() {
       setIsName(true);
     }
   };
-
-  const onChangePassword = (e) => {
-    const currentPassword = e.target.value;
-    setNewPassword(currentPassword);
-    const passwordRegExp =
-      /^(?=.[A-Za-z])(?=.*\d)(?=.*[!@#$%])[A-Za-z\d!@#$%]{10,}$/;
-
-    if (!passwordRegExp.test(currentPassword)) {
-      setPasswordMessage(
-        "영문, 숫자, 특수문자(!@#$%)를 모두 포함하여 10자 이상 입력해 주세요."
-      );
-      setIsPassword(false);
-    } else {
-      setPasswordMessage("안전한 비밀번호 입니다.");
-      setIsPassword(true);
-    }
-  };
-
-  const onChangePasswordConfirm = (e) => {
-    const currentPasswordConfirm = e.target.value;
-    setConfirmPassword(currentPasswordConfirm);
-    if (newPassword !== currentPasswordConfirm) {
-      setPasswordConfirmMessage("비밀번호가 일치하지 않습니다.");
-      setIsPasswordConfirm(false);
-    } else {
-      setPasswordConfirmMessage("비밀번호가 일치합니다.");
-      setIsPasswordConfirm(true);
-    }
-  };
-
-  const onChangeIntroduction = (e) => {
-    const currentIntroduction = e.target.value;
-    setIntroduction(currentIntroduction);
-
-    if (currentIntroduction.length > 150) {
-      setIntroductionMessage("자기소개는 150자 이내로 입력해 주세요.");
-      setIsIntroduction(false);
-    } else {
-      setIntroductionMessage("");
-      setIsIntroduction(true);
-    }
-    localStorage.setItem("introduce", currentIntroduction);
-  };
-
   async function handleSubmitName(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -155,6 +122,36 @@ function GuideUpdate() {
     }
   }
 
+  // 비밀번호 변경
+  const onChangePassword = (e) => {
+    const currentPassword = e.target.value;
+    setNewPassword(currentPassword);
+    setIsPassword(false);
+    setIsPasswordConfirm(false);
+    const passwordRegExp =
+      /^(?=.[A-Za-z])(?=.*\d)(?=.*[!@#$%])[A-Za-z\d!@#$%]{10,}$/;
+
+    if (!passwordRegExp.test(currentPassword)) {
+      setPasswordMessage(
+        "영문, 숫자, 특수문자(!@#$%)를 모두 포함하여 10자 이상 입력해 주세요."
+      );
+      setIsPassword(false);
+    } else {
+      setPasswordMessage("안전한 비밀번호 입니다.");
+      setIsPassword(true);
+    }
+  };
+  const onChangePasswordConfirm = (e) => {
+    const currentPasswordConfirm = e.target.value;
+    setConfirmPassword(currentPasswordConfirm);
+    if (newPassword !== currentPasswordConfirm) {
+      setPasswordConfirmMessage("비밀번호가 일치하지 않습니다.");
+      setIsPasswordConfirm(false);
+    } else {
+      setPasswordConfirmMessage("비밀번호가 일치합니다.");
+      setIsPasswordConfirm(true);
+    }
+  };
   async function handleSubmitPassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -192,7 +189,6 @@ function GuideUpdate() {
       console.error(error);
     }
   }
-
   const handleSubmitNewPassword = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -219,9 +215,9 @@ function GuideUpdate() {
         );
 
         if (response.status === 500) {
-          setpasswordDBCheck(true);
+          setPasswordDBCheck(true);
         } else if (response.data.message === "비밀번호를 변경했습니다.") {
-          setpasswordDBCheck(false);
+          setPasswordDBCheck(false);
           setPasswordChangeMessage("비밀번호가 변경되었습니다!");
         }
       } catch (error) {
@@ -232,9 +228,34 @@ function GuideUpdate() {
     }
   };
 
-  const currentNickname = localStorage.getItem("nickname");
+  // 한줄 소개 변경
+  const onChangeIntroduction = (e) => {
+    const currentIntroduction = e.target.value;
+    setIntroduction(currentIntroduction);
+    setIsIntroduction(false);
 
+    if (currentIntroduction.length > 150) {
+      setIntroductionMessage("자기소개는 150자 이내로 입력해 주세요.");
+      setIsIntroduction(false);
+    } else {
+      setIntroductionMessage("");
+      setIsIntroduction(true);
+    }
+    localStorage.setItem("introduce", currentIntroduction);
+  };
+
+  // 수정 버튼
+  const currentNickname = localStorage.getItem("nickname");
   const handleSave = async () => {
+    if (!isNickname || !isName) {
+      toast.warning("닉네임을 확인해주세요.");
+      return;
+    } else if (!isPassword || !isPasswordConfirm) {
+      toast.warning("비밀번호를 확인해주세요.");
+      return;
+    } else if (!isIntroduction) {
+      toast.warning("한줄 소개를 확인해주세요.");
+    }
     try {
       const formData = new FormData();
 
@@ -377,11 +398,7 @@ function GuideUpdate() {
         </form>
       </div>
       <div>
-        <button
-          onClick={handleSave}
-        >
-          저장하기
-        </button>
+        <button onClick={handleSave}>저장하기</button>
       </div>
     </div>
   );
