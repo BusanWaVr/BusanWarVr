@@ -55,7 +55,8 @@ const LiveStreamView = () => {
 
   // 투표
   const [voting, setVoting] = useState(false);
-  // const [voted, setVoted] = useState(false);
+  const [column1, setColumn1] = useState("");
+  const [column2, setColumn2] = useState("");
 
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -65,7 +66,7 @@ const LiveStreamView = () => {
   const [onload, setOnload] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [dkdk, setDkdk] = useState(false);
+  const [onConnect, setOnConnect] = useState(false);
 
   const sliderSettings = {
     dots: false,
@@ -109,6 +110,8 @@ const LiveStreamView = () => {
     if (stompClient) {
       stompClient.connect({}, () => {
         console.log("연결됨");
+        setOnConnect(true);
+        subscribeVote(stompClient);
       });
     }
   }, [stompClient]);
@@ -348,6 +351,66 @@ const LiveStreamView = () => {
     }
   }, [voting]);
 
+
+  // 투표함 생성
+  function subscribeVote(stomp) {
+    stomp.subscribe(`/sub/chat/vote/create/room/${tourUID}`,
+    (data) => {
+      const received = JSON.parse(data.body);
+      const receivedMessage = {
+        column1 : received.column1,
+        column2 : received.column2,
+      }
+      console.log("투표 구독으로 받아오는 메시지", receivedMessage);
+    },
+    { id: "subVote" }
+    )
+  };
+
+  const onChangeColumn1 = (e) => {
+    setColumn1(e.target.value);
+  }
+
+  const onChangeColumn2 = (e) => {
+    setColumn2(e.target.value);
+  }
+
+  const createVote = async () => {
+    try {
+      const requestBody = {
+        roomUid: tourUID,
+        column1: column1,
+        column2: column2,
+      };
+
+      const response = await fetch(
+        "https://busanwavrserver.store/chat/vote/create",
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      console.log(requestBody);
+
+      if (response.status === 200) {
+        console.log("제대로왔음", response);
+        setColumn1("");
+        setColumn2("");
+      } else {
+        // 에러
+        console.log(response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
   const getToken = useCallback(async () => {
     return createSession(sessionid).then((sessionId) => createToken(sessionId));
   }, [sessionid]);
@@ -410,9 +473,9 @@ const LiveStreamView = () => {
             </div>
           </div>
           {/* 채팅창 */}
-          {/* <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
-            <ChatRoom ref={chatRoomRef} onload={onload} />
-          </div> */}
+          <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
+            <ChatRoom ref={chatRoomRef} onload={onload} onConnect={onConnect}/>
+          </div>
           {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
@@ -435,6 +498,13 @@ const LiveStreamView = () => {
           >
             여기
           </button>{" "}
+          <input type="text" placeholder="1번 선택지" value={column1}
+          onChange={onChangeColumn1}
+          />
+          <input type="text" placeholder="2번 선택지" value={column2}
+          onChange={onChangeColumn2}
+          />
+          <button onClick={createVote}>투표 시작하기</button>
           <TestTest ref={initRef} /> : <></>
         </FullScreen>
       )}

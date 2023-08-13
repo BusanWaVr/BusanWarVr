@@ -23,6 +23,7 @@ function ChatRoom(props, ref) {
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
+
   // 자동 스크롤
   const messageEndRef = useRef(null);
   const scrollToBottom = () => {
@@ -34,22 +35,30 @@ function ChatRoom(props, ref) {
   }, [chatMessages]);
 
   // 연결
-  useEffect(() => {
-    if (!subscribed) {
-      stompClient.connect({}, () => {
-        console.log("연결됨");
-        rnehr();
-        setSubscribed(true);
-      });
-    }
+  // useEffect(() => {
+  //   if (!subscribed) {
+  //     stompClient.connect({}, () => {
+  //       console.log("연결됨");
+  //       rnehr();
+  //       setSubscribed(true);
+  //     });
+  //   }
 
-    return () => {
-      if (subscribed) {
-        gowp();
-        setSubscribed(false);
-      }
-    };
-  }, [subscribed]);
+  //   return () => {
+  //     if (subscribed) {
+  //       gowp();
+  //       setSubscribed(false);
+  //     }
+  //   };
+  // }, [subscribed]);
+
+  useEffect(() => {
+      rnehr();
+  
+      console.log(stompClient);
+      console.log(props.onConnect)
+
+  },[])
 
   // 구독하기
   const rnehr = () => {
@@ -68,12 +77,14 @@ function ChatRoom(props, ref) {
           content: receivedMessage.body,
         };
 
+        
         console.log(receivedMessage);
-
+        
         setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
       },
       { id: "chat" }
-    );
+      );
+      setSubscribed(true);
   };
 
   // 구독해제
