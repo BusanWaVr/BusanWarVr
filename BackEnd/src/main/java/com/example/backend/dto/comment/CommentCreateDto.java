@@ -18,6 +18,14 @@ public class CommentCreateDto {
         public Comment toComment(User user, Tour tour) {
             return new Comment(this.content, user, tour, this.parentId);
         }
+
+        public Comment toCommentAboutRoot(User user, Tour tour, Long parentId) {
+            return new Comment(this.content, user, tour, parentId);
+        }
+
+        public Comment toReComment(User user, Tour tour, Long rootId) {
+            return new Comment(this.content, user, tour, rootId);
+        }
     }
 
     @Data
