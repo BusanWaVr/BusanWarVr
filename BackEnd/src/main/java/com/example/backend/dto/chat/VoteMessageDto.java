@@ -19,7 +19,7 @@ public class VoteMessageDto {
         private SenderDto sender;
         private int selectType;
 
-        public Response(Request request, User user){
+        public Response(VoteMessageDto.Request request, User user){
             this.sender = new SenderDto(user);
             this.selectType = request.getSelectType();
         }
