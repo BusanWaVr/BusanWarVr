@@ -18,7 +18,7 @@ public class ReviewUtil {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
 
-    public void ReviewDtoList(Long tourId, List<ReviewDto> ReviewDtos) {
+    public void reviewDtoList(Long tourId, List<ReviewDto> ReviewDtos) {
         List<Review> ReviewList = reviewRepository.findAllByTourId(tourId);
         for (Review review : ReviewList) {
             User user = userRepository.findById(review.getUserId()).get();
