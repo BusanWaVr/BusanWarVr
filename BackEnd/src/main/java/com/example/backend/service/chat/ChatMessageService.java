@@ -3,6 +3,7 @@ package com.example.backend.service.chat;
 import com.example.backend.config.pubsub.RedisPublisher;
 import com.example.backend.document.MessageRepository;
 import com.example.backend.dto.chat.CreateVoteDto;
+import com.example.backend.dto.chat.EndVoteDto;
 import com.example.backend.dto.chat.JoinMessageDto;
 import com.example.backend.dto.chat.LeaveMessageDto;
 import com.example.backend.dto.chat.NormalMessageDto;
@@ -69,5 +70,9 @@ public class ChatMessageService {
 
     public void sendVoteMessage(VoteMessageDto.Request request, User user) {
         redisPublisher.chatVotePublish(request, user);
+    }
+
+    public void endVote(EndVoteDto.Request request){
+        redisPublisher.chatVoteEndPublish(request);
     }
 }
