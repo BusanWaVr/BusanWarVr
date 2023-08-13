@@ -121,6 +121,7 @@ const LiveStreamView = () => {
         setOnConnect(true);
         subscribeVote(stompClient);
         subscribeVoteCnt(stompClient);
+        subscribeEndVote(stompClient);
       });
     }
   }, [stompClient]);
@@ -369,6 +370,7 @@ const LiveStreamView = () => {
         column1 : received.column1,
         column2 : received.column2,
       }
+      setVoting(true);
       setOption1(received.column1)
       setOption2(received.column2)
       console.log("투표 구독으로 받아오는 메시지", receivedMessage);
@@ -421,7 +423,7 @@ const LiveStreamView = () => {
     }
   }
 
-  // 사용자 투표 실시간 받기
+  // 사용자 투표 실시간 받기(SUB)
   function subscribeVoteCnt(stomp) {
     stomp.subscribe(`/sub/chat/vote/room/${tourUID}`,
     (data) => {
@@ -438,6 +440,48 @@ const LiveStreamView = () => {
       }
     },
     { id: "voteCnt" }
+    )
+  };
+
+  // 가이드 투표 종료하기(POST)
+  async function endVote() {
+    try {
+      const requestBody = {
+        roomUid: tourUID,
+      };
+
+      const response = await fetch(
+        "https://busanwavrserver.store/chat/vote/end",
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("투표 종료 요청", response);
+      } else {
+        // 에러
+        console.log("에러", response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+  // 가이드 투표 종료인지 확인하기(SUB)
+  function subscribeEndVote(stomp) {
+    stomp.subscribe(`/sub/chat/vote/end/${tourUID}`,
+    (data) => {
+      setVoting(false);
+      console.log("투표 종료")
+    },
+    { id: "endVote" }
     )
   };
 
@@ -522,13 +566,13 @@ const LiveStreamView = () => {
             onJoinChat={onJoinChat}
           />
           <QRCodeComponent youtubeLink={youtubeLink} />
-          <button
+          {/* <button
             onClick={() => {
               setVoting(true);
             }}
           >
             여기
-          </button>{" "}
+          </button>{" "} */}
           <input type="text" placeholder="1번 선택지" value={column1}
           onChange={onChangeColumn1}
           />
@@ -536,6 +580,7 @@ const LiveStreamView = () => {
           onChange={onChangeColumn2}
           />
           <button onClick={createVote}>투표 시작하기</button>
+          <button onClick={endVote}>투표 종료하기</button>
           <TestTest ref={initRef} tourUID={tourUID} accessToken={accessToken}/> : <></>
           <VoteModal option1={option1} option2={option2} column1Cnt={column1Cnt} column2Cnt={column2Cnt}/>
         </FullScreen>
