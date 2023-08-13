@@ -12,7 +12,7 @@ import store from "./store";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <React.StrictMode>
+
       <BrowserRouter>
         <StyleProvider hashPriority="high">
           <DataProvider>
@@ -20,7 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           </DataProvider>
         </StyleProvider>
       </BrowserRouter>
-    </React.StrictMode>
+
   </Provider>
 );
 registerServiceWorker();

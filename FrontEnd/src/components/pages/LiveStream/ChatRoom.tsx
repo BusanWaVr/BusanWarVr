@@ -12,16 +12,18 @@ export type message = {
 
 function ChatRoom(props, ref) {
   // reducer에서 데이터 가져오기
-  const { tourId, tourUID, stompClient } = useSelector(
+  const { tourId, stompClient } = useSelector(
     (state) => state.liveStream
   );
   const { accessToken, userId } = useSelector((state: any) => state.userInfo);
+  const tourUID = props.tourUID
 
   // 구독 상태를 관리해보자
   const [subscribed, setSubscribed] = useState(false);
 
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
+
 
   // 자동 스크롤
   const messageEndRef = useRef(null);
@@ -34,22 +36,30 @@ function ChatRoom(props, ref) {
   }, [chatMessages]);
 
   // 연결
-  useEffect(() => {
-    if (!subscribed) {
-      stompClient.connect({}, () => {
-        console.log("연결됨");
-        rnehr();
-        setSubscribed(true);
-      });
-    }
+  // useEffect(() => {
+  //   if (!subscribed) {
+  //     stompClient.connect({}, () => {
+  //       console.log("연결됨");
+  //       rnehr();
+  //       setSubscribed(true);
+  //     });
+  //   }
 
-    return () => {
-      if (subscribed) {
-        gowp();
-        setSubscribed(false);
-      }
-    };
-  }, [subscribed]);
+  //   return () => {
+  //     if (subscribed) {
+  //       gowp();
+  //       setSubscribed(false);
+  //     }
+  //   };
+  // }, [subscribed]);
+
+  useEffect(() => {
+      rnehr();
+  
+      console.log(stompClient);
+      console.log(props.onConnect)
+
+  },[])
 
   // 구독하기
   const rnehr = () => {
@@ -68,12 +78,14 @@ function ChatRoom(props, ref) {
           content: receivedMessage.body,
         };
 
+        
         console.log(receivedMessage);
-
+        
         setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
       },
       { id: "chat" }
-    );
+      );
+      setSubscribed(true);
   };
 
   // 구독해제

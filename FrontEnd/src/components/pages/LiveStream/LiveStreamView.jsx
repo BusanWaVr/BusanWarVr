@@ -17,6 +17,8 @@ import Loader from "../../atoms/Loader";
 import useCustomBack from "../../../hooks/useCustomBack";
 import ChatRoom from "./ChatRoom";
 import QRCodeComponent from "./QRCodeComponent";
+import VoteModal from "./VoteModal";
+
 import "./LiveStreamView.css";
 import TestTest from "../Test/TestTest";
 import SockJS from "sockjs-client/dist/sockjs";
@@ -43,7 +45,7 @@ const LiveStreamView = () => {
     isFullScreen,
     isChatOpen,
     tourId,
-    tourUID,
+    // tourUID,
     stompClient,
   } = useSelector((state) => state.liveStream);
   const { nickname } = useSelector((state) => state.userInfo);
@@ -52,10 +54,17 @@ const LiveStreamView = () => {
   // 그냥 모든 sessionid => tourId로 바꿔주면 되는데 무서워서 일단 이렇게
   // const sessionid = tourId 로 하니까 채팅은 되는데 오픈비두가 안됨..
   const { sessionid } = useParams();
+  const tourUID = sessionid
 
   // 투표
   const [voting, setVoting] = useState(false);
-  // const [voted, setVoted] = useState(false);
+  const [column1, setColumn1] = useState("");
+  const [column2, setColumn2] = useState("");
+  const [option1, setOption1] = useState("");
+  const [option2, setOption2] = useState("");
+  const [column1Cnt, setColumn1Cnt] = useState(0);
+  const [column2Cnt, setColumn2Cnt] = useState(0);
+
 
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -65,7 +74,7 @@ const LiveStreamView = () => {
   const [onload, setOnload] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [dkdk, setDkdk] = useState(false);
+  const [onConnect, setOnConnect] = useState(false);
 
   const sliderSettings = {
     dots: false,
@@ -109,6 +118,10 @@ const LiveStreamView = () => {
     if (stompClient) {
       stompClient.connect({}, () => {
         console.log("연결됨");
+        setOnConnect(true);
+        subscribeVote(stompClient);
+        subscribeVoteCnt(stompClient);
+        subscribeEndVote(stompClient);
       });
     }
   }, [stompClient]);
@@ -281,6 +294,8 @@ const LiveStreamView = () => {
 
   // 전체화면 온오프
   useEffect(() => {
+    console.log("tourId:", tourId, "tourUID:", tourUID, "세션아이디", sessionid)
+
     const handleFullscreenChange = () => {
       dispatch(setIsFullScreen(!!document.fullscreenElement));
     };
@@ -330,10 +345,7 @@ const LiveStreamView = () => {
   };
 
   // 투표하기(init)호출
-
   const initRef = useRef(null);
-
-  // async function () {}
 
   // 가이드가 투표 시작을 하면, setVoting(true)가 되면서 TestTest의 init 실행시키기
   useEffect(() => {
@@ -347,6 +359,132 @@ const LiveStreamView = () => {
       console.log("투표종료");
     }
   }, [voting]);
+
+
+  // 투표함 생성 받기(SUB)
+  function subscribeVote(stomp) {
+    stomp.subscribe(`/sub/chat/vote/create/room/${tourUID}`,
+    (data) => {
+      const received = JSON.parse(data.body);
+      const receivedMessage = {
+        column1 : received.column1,
+        column2 : received.column2,
+      }
+      setVoting(true);
+      setOption1(received.column1)
+      setOption2(received.column2)
+      console.log("투표 구독으로 받아오는 메시지", receivedMessage);
+    },
+    { id: "subVote" }
+    )
+  };
+
+  const onChangeColumn1 = (e) => {
+    setColumn1(e.target.value);
+  }
+
+  const onChangeColumn2 = (e) => {
+    setColumn2(e.target.value);
+  }
+
+  const createVote = async () => {
+    // 투표함 생성(POST)
+    try {
+      const requestBody = {
+        roomUid: tourUID,
+        column1: column1,
+        column2: column2,
+      };
+
+      const response = await fetch(
+        "https://busanwavrserver.store/chat/vote/create",
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      console.log(requestBody);
+
+      if (response.status === 200) {
+        console.log("제대로왔음", response);
+        setColumn1("");
+        setColumn2("");
+      } else {
+        // 에러
+        console.log(response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // 사용자 투표 실시간 받기(SUB)
+  function subscribeVoteCnt(stomp) {
+    stomp.subscribe(`/sub/chat/vote/room/${tourUID}`,
+    (data) => {
+      const received = JSON.parse(data.body);
+      const receivedMessage = {
+        nickname : received.sender.nickname,
+        option : received.selectType,
+      }
+      console.log("사용자 투표로 받아오는 메시지", receivedMessage);
+      if (received.selectType == 1) {
+        setColumn1Cnt(column1Cnt+1);
+      } else {
+        setColumn2Cnt(column2Cnt+1);
+      }
+    },
+    { id: "voteCnt" }
+    )
+  };
+
+  // 가이드 투표 종료하기(POST)
+  async function endVote() {
+    try {
+      const requestBody = {
+        roomUid: tourUID,
+      };
+
+      const response = await fetch(
+        "https://busanwavrserver.store/chat/vote/end",
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("투표 종료 요청", response);
+      } else {
+        // 에러
+        console.log("에러", response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+  // 가이드 투표 종료인지 확인하기(SUB)
+  function subscribeEndVote(stomp) {
+    stomp.subscribe(`/sub/chat/vote/end/${tourUID}`,
+    (data) => {
+      setVoting(false);
+      console.log("투표 종료")
+    },
+    { id: "endVote" }
+    )
+  };
+
 
   const getToken = useCallback(async () => {
     return createSession(sessionid).then((sessionId) => createToken(sessionId));
@@ -410,9 +548,9 @@ const LiveStreamView = () => {
             </div>
           </div>
           {/* 채팅창 */}
-          {/* <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
-            <ChatRoom ref={chatRoomRef} onload={onload} />
-          </div> */}
+          <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
+            <ChatRoom ref={chatRoomRef} onload={onload} onConnect={onConnect} tourUID={tourUID}/>
+          </div>
           {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
@@ -428,14 +566,23 @@ const LiveStreamView = () => {
             onJoinChat={onJoinChat}
           />
           <QRCodeComponent youtubeLink={youtubeLink} />
-          <button
+          {/* <button
             onClick={() => {
               setVoting(true);
             }}
           >
             여기
-          </button>{" "}
-          <TestTest ref={initRef} /> : <></>
+          </button>{" "} */}
+          <input type="text" placeholder="1번 선택지" value={column1}
+          onChange={onChangeColumn1}
+          />
+          <input type="text" placeholder="2번 선택지" value={column2}
+          onChange={onChangeColumn2}
+          />
+          <button onClick={createVote}>투표 시작하기</button>
+          <button onClick={endVote}>투표 종료하기</button>
+          <TestTest ref={initRef} tourUID={tourUID} accessToken={accessToken}/> : <></>
+          <VoteModal option1={option1} option2={option2} column1Cnt={column1Cnt} column2Cnt={column2Cnt}/>
         </FullScreen>
       )}
     </>

@@ -7,26 +7,21 @@ import {
   setYoutubeLink,
   setIsAudioEnabled,
   setIsVideoEnabled,
-  setTourId,
-  setTourUID,
 } from "./LiveStreamReducer";
 
 function LiveStream(props) {
-  const location = useLocation();
-  const tourUID = location.state ? location.state.tourUID : "";
-  const tourId = location.state ? location.state.tourId : "";
-  const liveLink = location.state ? location.state.liveLink : "";
-  console.log("liveLink", liveLink);
-  console.log("tourId", tourId);
-  console.log("tourUID", tourUID);
   const navigate = useNavigate();
-
-  const { youtubeLink, isAudioEnabled, isVideoEnabled } = useSelector(
-    (state) => state.liveStream
-  );
+  
+  const { youtubeLink, isAudioEnabled, isVideoEnabled, tourId,
+    tourUID, } = useSelector(
+      (state) => state.liveStream
+      );
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
-
+  
+  console.log("liveLink", youtubeLink);
+  console.log("tourId", tourId);
+  console.log("tourUID", tourUID);
   // 디폴트 youtubeLink 세팅
   // setYoutubeLink(liveLink);
   // console.log("youtubeLink", youtubeLink);
@@ -35,13 +30,8 @@ function LiveStream(props) {
   const [apitourId, setApiTourId] = useState(`${tourId}`);
   console.log("apitourId", apitourId);
   // tourUId
-  const [mySessionId, setMySessionId] = useState(`${tourId}`);
+  const [mySessionId, setMySessionId] = useState(`${tourUID}`);
 
-  // location.state로 받아온 데이터들 reducer에 저장
-  useEffect(() => {
-    dispatch(setTourId(tourId));
-    dispatch(setTourUID(tourUID));
-  }, [dispatch, tourId, tourUID]);
 
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
@@ -160,7 +150,7 @@ function LiveStream(props) {
                 className="form-control input"
                 type="text"
                 id="sessionId"
-                value={youtubeLink || liveLink}
+                value={youtubeLink}
                 onChange={handleChangeYouTubeLink}
                 required
               />
