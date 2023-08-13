@@ -31,6 +31,10 @@ import {
   setIsFullScreen,
   setIsChatOpen,
   setStompClient,
+  setOption1,
+  setOption2,
+  setOption1Cnt,
+  setOption2Cnt,
 } from "./LiveStreamReducer";
 
 const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
@@ -47,6 +51,10 @@ const LiveStreamView = () => {
     tourId,
     // tourUID,
     stompClient,
+    option1,
+    option2,
+    option1Cnt,
+    option2Cnt,
   } = useSelector((state) => state.liveStream);
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
@@ -58,13 +66,9 @@ const LiveStreamView = () => {
 
   // 투표
   const [voting, setVoting] = useState(false);
+  // 가이드가 입력할 투표 항목
   const [column1, setColumn1] = useState("");
   const [column2, setColumn2] = useState("");
-  const [option1, setOption1] = useState("");
-  const [option2, setOption2] = useState("");
-  const [column1Cnt, setColumn1Cnt] = useState(0);
-  const [column2Cnt, setColumn2Cnt] = useState(0);
-
 
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -367,12 +371,12 @@ const LiveStreamView = () => {
     (data) => {
       const received = JSON.parse(data.body);
       const receivedMessage = {
-        column1 : received.column1,
-        column2 : received.column2,
+        option1 : received.column1,
+        option2 : received.column2,
       }
       setVoting(true);
-      setOption1(received.column1)
-      setOption2(received.column2)
+      dispatch(setOption1(received.column1));
+      dispatch(setOption2(received.column2));
       console.log("투표 구독으로 받아오는 메시지", receivedMessage);
     },
     { id: "subVote" }
@@ -430,13 +434,13 @@ const LiveStreamView = () => {
       const received = JSON.parse(data.body);
       const receivedMessage = {
         nickname : received.sender.nickname,
-        option : received.selectType,
+        selectType : received.selectType,
       }
       console.log("사용자 투표로 받아오는 메시지", receivedMessage);
       if (received.selectType == 1) {
-        setColumn1Cnt(column1Cnt+1);
+        dispatch(setOption1Cnt(option1Cnt+1));
       } else {
-        setColumn2Cnt(column2Cnt+1);
+        dispatch(setOption2Cnt(option2Cnt+1));
       }
     },
     { id: "voteCnt" }
@@ -582,7 +586,7 @@ const LiveStreamView = () => {
           <button onClick={createVote}>투표 시작하기</button>
           <button onClick={endVote}>투표 종료하기</button>
           <TestTest ref={initRef} tourUID={tourUID} accessToken={accessToken}/> : <></>
-          <VoteModal option1={option1} option2={option2} column1Cnt={column1Cnt} column2Cnt={column2Cnt}/>
+          <VoteModal />
         </FullScreen>
       )}
     </>

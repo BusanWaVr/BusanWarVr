@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setTourId,
+  setTourUID,
+} from "../pages/LiveStream/LiveStreamReducer";
 
 // 시작하기 버튼 컴포넌트
 function TourJoinBtn({ Tour }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const tourUID = Tour.uid;
-  const tourId = Tour.tourId;
-  const liveLink = Tour.link;
+
+  // 리듀서에 저장
+  useEffect(() => {
+    dispatch(setTourUID(Tour.uid))
+    dispatch(setTourId(Tour.tourId))
+  }, [dispatch]);
 
   const handleStartClick = () => {
-    navigate("../../../../livestream", {
-      state: { tourUID: tourUID, tourId: tourId, liveLink: liveLink },
-    });
+    navigate("../../../../livestream");
   };
   console.log("시작하기", Tour);
 
