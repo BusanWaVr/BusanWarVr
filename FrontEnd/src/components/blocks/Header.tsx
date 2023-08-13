@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -29,8 +29,8 @@ interface Props {
 
 function Header({ isLoggedIn, setIsLoggedIn }: Props) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
   const [onLoginModal, setOnLoginModal] = useState(false);
+  const [userInfo, setUserInfo] = useState({});
 
   const onModalHandler = () => {
     console.log("클릭");
@@ -56,11 +56,15 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
     setIsLoggedIn(false);
   };
 
-  const nickname = localStorage.getItem("nickname");
-  const userId = localStorage.getItem("userId");
-  const userType = localStorage.getItem("userType");
-  const profileImg = localStorage.getItem("profileImg");
-  const email = localStorage.getItem("email");
+  useEffect(() => {
+    setUserInfo({
+      nickname: localStorage.getItem("nickname"),
+      userId: localStorage.getItem("userId"),
+      userType: localStorage.getItem("userType"),
+      profileImg: localStorage.getItem("profileImg"),
+      email: localStorage.getItem("email"),
+    });
+  }, [localStorage]);
 
   return (
     <>
@@ -97,7 +101,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
               스트리밍 테스트
             </Link>
           </NavbarItem>
-          {isLoggedIn && userType === "GUIDE" ? (
+          {isLoggedIn && userInfo.userType === "GUIDE" ? (
             <NavbarItem>
               <Link href="/tour/write" color="foreground" className="text-sm">
                 투어 개설
@@ -117,36 +121,36 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
                     as="button"
                     className="transition-transform"
                     color="primary"
-                    name={nickname}
+                    name={userInfo.nickname}
                     size="sm"
-                    src={profileImg}
+                    src={userInfo.profileImg}
                   />
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Profile Actions" variant="flat">
                   <DropdownItem key="profile" className="h-14 gap-2">
                     <Link
                       href={
-                        userType === "USER"
-                          ? `/user/${userId}/mypage`
-                          : `/guide/${userId}/mypage`
+                        userInfo.userType === "USER"
+                          ? `/user/${userInfo.userId}/mypage`
+                          : `/guide/${userInfo.userId}/mypage`
                       }
                       className="flex-col text-left items-start"
                     >
-                      <p className="font-bold text-sm">{nickname}</p>
-                      <p className="font-semibold text-sm text-left">{email}</p>
+                      <p className="font-bold text-sm">{userInfo.nickname}</p>
+                      <p className="font-semibold text-sm text-left">{userInfo.email}</p>
                     </Link>
                   </DropdownItem>
                   <DropdownItem key="settings">
-                    {userType === "USER" ? (
+                    {userInfo.userType === "USER" ? (
                       <Link
-                        href={`/user/${userId}/mypage/tour`}
+                        href={`/user/${userInfo.userId}/mypage/tour`}
                         className="text-sm text-slate-600"
                       >
                         나의 투어 목록
                       </Link>
                     ) : (
                       <Link
-                        href={`/guide/${userId}/mypage/tour`}
+                        href={`/guide/${userInfo.userId}/mypage/tour`}
                         className="text-sm text-slate-600"
                       >
                         개설한 투어 목록
@@ -189,7 +193,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
               스트리밍 테스트
             </Link>
           </NavbarMenuItem>
-          {isLoggedIn && userType === "GUIDE" ? (
+          {isLoggedIn && userInfo.userType === "GUIDE" ? (
             <NavbarMenuItem>
               <Link
                 href="/tour/write"

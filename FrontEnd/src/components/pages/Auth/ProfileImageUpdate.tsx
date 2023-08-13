@@ -67,7 +67,7 @@ const ProfileImageUpload: React.FC = ({
     <>
       <ImgCrop>
         <Upload
-          listType="picture-card"
+          listType="picture-circle"
           fileList={fileList}
           onPreview={handlePreview}
           onChange={(files) => handleChange(files)}
