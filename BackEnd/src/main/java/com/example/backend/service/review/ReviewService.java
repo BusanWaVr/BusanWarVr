@@ -1,8 +1,8 @@
 package com.example.backend.service.review;
 
-import com.example.backend.dto.tour.ReviewDetailDto;
-import com.example.backend.dto.tour.ReviewRegistDto;
-import com.example.backend.dto.tour.ReviewUpdateDto;
+import com.example.backend.dto.review.ReviewDetailDto;
+import com.example.backend.dto.review.ReviewRegistDto;
+import com.example.backend.dto.review.ReviewUpdateDto;
 import com.example.backend.model.enums.AuthType;
 import com.example.backend.model.joiner.JoinerRepository;
 import com.example.backend.model.review.Review;

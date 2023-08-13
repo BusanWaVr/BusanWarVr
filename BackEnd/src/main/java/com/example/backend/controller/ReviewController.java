@@ -1,9 +1,9 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.Response;
-import com.example.backend.dto.tour.ReviewDetailDto;
-import com.example.backend.dto.tour.ReviewRegistDto;
-import com.example.backend.dto.tour.ReviewUpdateDto;
+import com.example.backend.dto.review.ReviewDetailDto;
+import com.example.backend.dto.review.ReviewRegistDto;
+import com.example.backend.dto.review.ReviewUpdateDto;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;

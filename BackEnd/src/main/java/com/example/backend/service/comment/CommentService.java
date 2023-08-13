@@ -1,7 +1,6 @@
 package com.example.backend.service.comment;
 
 import com.example.backend.dto.comment.CommentCreateDto;
-import com.example.backend.dto.comment.CommentCreateDto.Request;
 import com.example.backend.dto.comment.CommentDetailDto;
 import com.example.backend.dto.comment.CommentUpdateDto;
 import com.example.backend.model.comment.Comment;
@@ -21,10 +20,30 @@ public class CommentService {
     private final TourRepository tourRepository;
     private final UserRepository userRepository;
 
-    public CommentCreateDto.Response commentCreate(User user, Request request, Long tourId) {
+    public CommentCreateDto.Response commentCreate(User user, CommentCreateDto.Request request,
+            Long tourId) {
 
         Tour tour = tourRepository.findById(tourId).get();
-        Comment comment = request.toComment(user, tour);
+        // 부모 댓글 x, 본인이 루트 댓글
+        if (request.getParentId() == null) {
+            Comment comment = request.toComment(user, tour);
+            commentRepository.save(comment);
+            CommentCreateDto.Response response = new CommentCreateDto.Response(comment.getId());
+
+            return response;
+        }
+        // 부모 댓글 o : 대댓글이란 의미
+        Comment parent = commentRepository.findById(request.getParentId()).get();
+        // 부모가 대댓글 : 루트 댓글의 번호 저장
+        if (parent.getParentId() != null) {
+            Comment comment = request.toCommentAboutRoot(user, tour, parent.getParentId());
+            commentRepository.save(comment);
+            CommentCreateDto.Response response = new CommentCreateDto.Response(comment.getId());
+
+            return response;
+        }
+        // 부모가 루트 댓글 : 부모의 번호 저장
+        Comment comment = request.toReComment(user, tour, parent.getId());
         commentRepository.save(comment);
         CommentCreateDto.Response response = new CommentCreateDto.Response(comment.getId());
 

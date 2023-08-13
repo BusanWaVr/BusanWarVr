@@ -1,4 +1,4 @@
-package com.example.backend.dto.tour;
+package com.example.backend.dto.review;
 
 import com.example.backend.model.review.Review;
 import java.util.Date;

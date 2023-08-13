@@ -2,6 +2,7 @@ package com.example.backend.dto.tour;
 
 import com.example.backend.dto.course.CourseDto;
 import com.example.backend.dto.joiner.JoinerDto;
+import com.example.backend.dto.review.ReviewDto;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.user.User;
 import java.util.Date;
@@ -37,9 +38,10 @@ public class TourDetailDto {
         private String profileImg;
         private boolean isCanceled;
         private boolean isEnded;
+        private List<ReviewDto> reviews;
 
         public Response(Tour tour, User user, List<String> category, List<String> tourImgs,
-                List<CourseDto.Response> courses, List<JoinerDto> joiners) {
+                List<CourseDto.Response> courses, List<JoinerDto> joiners, List<ReviewDto> reviewDtos) {
             this.uid = tour.getUid();
             this.region = tour.getRegion();
             this.category = category;
@@ -58,6 +60,7 @@ public class TourDetailDto {
             this.profileImg = user.getProfileImg();
             this.isCanceled = tour.isCanceled();
             this.isEnded = tour.isEnded();
+            this.reviews = reviewDtos;
         }
     }
 }
