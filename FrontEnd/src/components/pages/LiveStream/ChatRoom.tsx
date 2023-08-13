@@ -12,10 +12,11 @@ export type message = {
 
 function ChatRoom(props, ref) {
   // reducer에서 데이터 가져오기
-  const { tourId, tourUID, stompClient } = useSelector(
+  const { tourId, stompClient } = useSelector(
     (state) => state.liveStream
   );
   const { accessToken, userId } = useSelector((state: any) => state.userInfo);
+  const tourUID = props.tourUID
 
   // 구독 상태를 관리해보자
   const [subscribed, setSubscribed] = useState(false);
