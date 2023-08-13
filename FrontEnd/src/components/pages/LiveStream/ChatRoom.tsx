@@ -55,6 +55,13 @@ function ChatRoom(props, ref) {
 
   useEffect(() => {
       rnehr();
+
+      // 입장메시지 send
+      const joinMessage = {
+        roomUid: tourUID,
+        token: accessToken,
+      };
+      stompClient.send("/pub/chat/message/join", {}, JSON.stringify(joinMessage));
   
       console.log(stompClient);
       console.log(props.onConnect)
