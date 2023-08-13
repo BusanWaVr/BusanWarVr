@@ -369,6 +369,8 @@ const LiveStreamView = () => {
         column1 : received.column1,
         column2 : received.column2,
       }
+      setOption1(received.column1)
+      setOption2(received.column2)
       console.log("투표 구독으로 받아오는 메시지", receivedMessage);
     },
     { id: "subVote" }
@@ -384,9 +386,6 @@ const LiveStreamView = () => {
   }
 
   const createVote = async () => {
-    setOption1(column1)
-    setOption2(column2)
-
     // 투표함 생성(POST)
     try {
       const requestBody = {
