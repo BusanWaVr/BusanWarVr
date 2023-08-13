@@ -35,24 +35,8 @@ function ChatRoom(props, ref) {
     scrollToBottom();
   }, [chatMessages]);
 
-  // 연결
-  // useEffect(() => {
-  //   if (!subscribed) {
-  //     stompClient.connect({}, () => {
-  //       console.log("연결됨");
-  //       rnehr();
-  //       setSubscribed(true);
-  //     });
-  //   }
 
-  //   return () => {
-  //     if (subscribed) {
-  //       gowp();
-  //       setSubscribed(false);
-  //     }
-  //   };
-  // }, [subscribed]);
-
+  
   useEffect(() => {
       rnehr();
   

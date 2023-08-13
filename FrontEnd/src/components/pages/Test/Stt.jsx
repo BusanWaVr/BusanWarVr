@@ -1,11 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
 import * as speechsdk from 'microsoft-cognitiveservices-speech-sdk';
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 
-function Stt() {
+
+function Stt(props) {
+    const { stompClient } = useSelector((state) => state.liveStream);
+    const { accessToken } = useSelector((state) => state.userInfo);
+    const tourUID = props.tourUID
+
+
     const [displayText, setDisplayText] = useState('마이크가 꺼져있습니다.');
     const [isListening, setIsListening] = useState(false); // 마이크 동작 여부 상태
     const [recognizedText, setRecognizedText] = useState('');
+
+    useEffect(() => {
+        if (recognizedText) {
+            const voiceMessage = {
+                roomUid: tourUID,
+                token: accessToken,
+                message: recognizedText,
+              };
+          
+              stompClient.send(
+                "/pub/chat/message/normal",
+                {},
+                JSON.stringify(voiceMessage)
+              );
+              console.log("음성채팅으로 보냄", voiceMessage);
+        }
+    },[recognizedText])
 
     async function sttFromMic() {
         try {

@@ -21,6 +21,8 @@ import VoteModal from "./VoteModal";
 
 import "./LiveStreamView.css";
 import TestTest from "../Test/TestTest";
+import Stt from "../Test/Stt";
+
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 
@@ -555,6 +557,7 @@ const LiveStreamView = () => {
           <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
             <ChatRoom ref={chatRoomRef} onload={onload} onConnect={onConnect} tourUID={tourUID}/>
           </div>
+          <Stt tourUID={tourUID}/>
           {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
