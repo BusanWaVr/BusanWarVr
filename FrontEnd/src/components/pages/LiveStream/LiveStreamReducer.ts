@@ -68,10 +68,10 @@ const LiveStreamSlice = createSlice({
       state.option2 = action.payload;
     },
     setOption1Cnt: (state, action: PayloadAction<number>) => {
-      state.option1Cnt = action.payload;
+      state.option1Cnt += action.payload;
     },
     setOption2Cnt: (state, action: PayloadAction<number>) => {
-      state.option2Cnt = action.payload;
+      state.option2Cnt += action.payload;
     },
   },
 });
