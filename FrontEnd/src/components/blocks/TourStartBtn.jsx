@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@nextui-org/react";
 
 // 가이드의 투어시작하기 버튼 컴포넌트
 function TourStartBtn({ Tour }) {
@@ -11,13 +12,19 @@ function TourStartBtn({ Tour }) {
     navigate("../../../../livestream", {
       state: { tourUID: tourUID, tourId: tourId },
     });
-    console.log(Tour);
   };
 
   return (
-    <div>
-      <button onClick={handleStartClick}>방송 시작하기</button>
-    </div>
+    <>
+      <Button
+        className="mt-3 bg-blue-50 p-3 rounded-md w-full"
+        color="primary"
+        variant="flat"
+        onClick={handleStartClick}
+      >
+        방송 시작하기
+      </Button>
+    </>
   );
 }
 

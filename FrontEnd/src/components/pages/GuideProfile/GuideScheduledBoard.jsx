@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router";
 import GuideTourCard from "../../blocks/GuideTourCard";
+import { toast } from "react-toastify";
 
 function GuideScheduledBoard() {
   const { urlId } = useParams();
@@ -34,20 +35,19 @@ function GuideScheduledBoard() {
           setGuideTourData(GuideTour);
           console.log("guideTourData", guideTourData);
         } else {
-          alert("투어데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요.");
+          toast.error(
+            "투어데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요."
+          );
         }
       } catch (error) {
         console.error(error);
       }
     };
-
     fetchData();
-    // window.location.reload();
   }, []);
-  console.log("스케쥴", isMe);
   return (
     <div>
-      <GuideTourCard TourData={guideTourData} isMe={isMe} />
+      <GuideTourCard TourData={guideTourData} tourType="scheduled" />
     </div>
   );
 }
