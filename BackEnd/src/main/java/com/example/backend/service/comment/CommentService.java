@@ -2,6 +2,7 @@ package com.example.backend.service.comment;
 
 import com.example.backend.dto.comment.CommentCreateDto;
 import com.example.backend.dto.comment.CommentDetailDto;
+import com.example.backend.dto.comment.CommentDto;
 import com.example.backend.dto.comment.CommentUpdateDto;
 import com.example.backend.model.comment.Comment;
 import com.example.backend.model.comment.CommentRepository;
@@ -9,7 +10,13 @@ import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
+import com.example.backend.util.comment.CommentUtil;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +26,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final TourRepository tourRepository;
     private final UserRepository userRepository;
+    private final CommentUtil commentUtil;
 
     public CommentCreateDto.Response commentCreate(User user, CommentCreateDto.Request request,
             Long tourId) {
@@ -80,6 +88,18 @@ public class CommentService {
             throw new IllegalArgumentException("댓글 작성자만 삭제 가능합니다");
         }
         commentRepository.deleteById(commentId);
+    }
+
+    public Page<CommentDto> getCommentList(Long tourId, Pageable pageable) {
+
+        List<CommentDto> commentDtos = new ArrayList<>();
+        commentUtil.commentDtoList(tourId, commentDtos);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), commentDtos.size());
+
+        return new PageImpl<>(commentDtos.subList(start, end), pageable,
+                commentDtos.size());
     }
 
 }

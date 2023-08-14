@@ -18,11 +18,13 @@ function TestTest(props, ref) {
     if (playSoundOne == 1) {
       selectOneAudio.play();
       handleDisable();
+      vote(playSoundOne)
     }
     // 2번 선택
     else if (playSoundOne == 2) {
       selectTwoAudio.play();
       handleDisable();
+      vote(playSoundOne)
     }
   }, [playSoundOne]);
 
@@ -109,6 +111,37 @@ function TestTest(props, ref) {
   function handleDisable() {
     setPlaySoundOne(false);
     isLooping.current = false;
+  }
+
+  // 사용자 투표하기(POST)
+  async function vote(option) {
+    try {
+      const requestBody = {
+        roomUid: props.tourUID,
+        selectType: option,
+      };
+
+      const response = await fetch(
+        "https://busanwavrserver.store/chat/vote",
+        {
+          method: "POST",
+          headers: {
+            Authorization: props.accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("투표 완료", response);
+      } else {
+        // 에러
+        console.log("에러", response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
