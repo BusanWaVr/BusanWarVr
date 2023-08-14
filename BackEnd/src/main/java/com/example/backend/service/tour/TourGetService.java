@@ -1,6 +1,5 @@
 package com.example.backend.service.tour;
 
-import com.example.backend.dto.comment.CommentDto;
 import com.example.backend.dto.course.CourseDto;
 import com.example.backend.dto.joiner.JoinerDto;
 import com.example.backend.dto.review.ReviewDto;
@@ -12,7 +11,6 @@ import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.util.category.CategoryUtil;
-import com.example.backend.util.comment.CommentUtil;
 import com.example.backend.util.course.CourseUtil;
 import com.example.backend.util.image.ImageUtil;
 import com.example.backend.util.joiner.JoinerUtil;
@@ -55,8 +53,15 @@ public class TourGetService {
         List<ReviewDto> reviewDtos = new ArrayList<>();
         reviewUtil.reviewDtoList(tourId, reviewDtos);
 
+        List<ReviewDto> reviewFive;
+        if (reviewDtos.size() >= 5) {
+            reviewFive = reviewDtos.subList(0, 5);
+            return new TourDetailDto.Response(tour, user, tourCategories, tourImageUrls, courseDtos,
+                    joinerDtos, reviewFive);
+        }
+        reviewFive = reviewDtos.subList(0, reviewDtos.size());
         return new TourDetailDto.Response(tour, user, tourCategories, tourImageUrls, courseDtos,
-                joinerDtos, reviewDtos);
+                joinerDtos, reviewFive);
     }
 
     public TourListDto.Response getALLTour(Pageable pageable) {
