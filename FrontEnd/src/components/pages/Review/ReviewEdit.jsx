@@ -1,27 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-// import Responsive from "../../common/Responsive";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import Rating from "@mui/material/Rating";
+import { Input, Button, Avatar } from "antd";
 import Editor from "../../blocks/Editor";
-import styled from "styled-components";
+import { styled } from "@mui/material/styles";
+import { toast } from "react-toastify";
+import { EditOutlined } from "@ant-design/icons";
 
-const StyledWritePage = styled.div`
-  width: 60%;
-  margin: 0 auto;
-`;
+const StyledRating = styled(Rating)({
+  "& .MuiRating-iconFilled": {
+    color: "#1983FF",
+  },
+  "& .MuiRating-iconHover": {
+    color: "#006AE6",
+  },
+});
 
 const ReviewEdit = () => {
   const { reviewId } = useParams();
 
-  const [tourId, setTourId] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [score, setScore] = useState("");
+  const [score, setScore] = useState(0);
+  const [tourData, setTourData] = useState(null);
+  const [tourId, setTourId] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
+  const accessToken = localStorage.getItem("accessToken");
 
   const userId = localStorage.getItem("userId");
-  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     if (location.state) {
@@ -38,27 +46,57 @@ const ReviewEdit = () => {
     }
   }, [location.state]);
 
+  useEffect(() => {
+    const fetchTourData = async () => {
+      try {
+        const response = await fetch(
+          `https://busanwavrserver.store/tour/${tourId}`
+        );
+        if (response.status === 200) {
+          const res = await response.json();
+          console.log(res.data);
+          setTourData(res.data);
+        } else {
+          toast.error("해당 투어가 존재하지 않습니다.");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (tourId != "") {
+      fetchTourData();
+    }
+  }, [tourId]);
+
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
 
-  // 별점: 추후 수정
   const handleClickScore = (value) => {
     setScore(value);
   };
 
-  // 제출
   const handleSubmit = async (e) => {
-    console.log("슈웃");
     e.preventDefault();
-
+    if (score == "0") {
+      toast.warning("평점을 등록해주세요!");
+      return;
+    }
+    if (!title) {
+      toast.warning("제목을 입력해주세요!");
+      return;
+    }
+    if (!content) {
+      toast.warning("내용을 입력해주세요!");
+      return;
+    }
     if (tourId && title && content && score) {
       try {
         const requestBody = {
           tourId: tourId * 1,
           title: title,
           content: content,
-          //   date: new Date().toISOString(),
           score: score,
         };
 
@@ -74,17 +112,13 @@ const ReviewEdit = () => {
           }
         );
 
-        console.log(requestBody);
-
         const data = await response.json();
 
         if (data.code === "200") {
-          alert(data.message);
+          toast.success("리뷰를 수정하였습니다.");
           navigate(`/user/${userId}/mypage/review`);
         } else {
-          // 에러
-          console.log(data.message);
-          alert(data.message);
+          toast.error(data.message);
         }
       } catch (error) {
         console.error(error);
@@ -92,44 +126,72 @@ const ReviewEdit = () => {
     }
   };
 
-  return (
-    // <Responsive>
-    <StyledWritePage>
+  return tourData ? (
+    <div className="mx-4 sm:mx-24 lg:mx-48 2xl:mx-96 my-6">
       <div>
-        <h1>투어 후기 글쓰기 페이지</h1>
-        <br />
         <form>
-          <label htmlFor="tourId">투어 id :　</label>
-          <input type="text" id="tourId" value={tourId} disabled />
+          <div className="w-1/3 mx-auto mt-6 flex flex-col items-center gap-2">
+            <img
+              src={tourData.tourImgs[0]}
+              alt=""
+              className="w-40 h-40 rounded-full object-cover"
+            />
+            <p className="font-bold text-lg">{tourData.title}</p>
+            <div className="flex items-center justify-center gap-1 text-sm">
+              <Avatar src={tourData.profileImg} alt="" />
+              <p>{tourData.nickname}</p>
+            </div>
+          </div>
+
           <br />
-          <br />
-          <label htmlFor="title">제목 :　</label>
-          <input
+
+          <div className="flex flex-col items-center justify-center gap-1 mb-6">
+            <p className="font-semibold">위 투어는 어떠셨나요?</p>
+            <p className="text-sm text-slate-400">
+              투어 및 가이드에 대한 만족도를 평점으로 남겨주세요.
+            </p>
+            <StyledRating
+              name="score"
+              value={score}
+              size="large"
+              onChange={(event, newValue) => {
+                handleClickScore(newValue);
+              }}
+              precision={0.5}
+            />
+          </div>
+
+          <Input
             type="text"
-            id="title"
+            placeholder="리뷰의 제목을 입력해주세요."
             value={title}
             onChange={handleTitleChange}
-            placeholder="제목을 입력해 주세요."
+            style={{ height: "45px" }}
           />
           <br />
           <br />
-          <Editor value={content} onChange={setContent} />
+          <Editor value={content} onChange={setContent} customHeight="300px" />
         </form>
       </div>
       <br />
-      <p>별점 : {score}</p>
-      <div>
-        {[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value) => (
-          <button key={value} onClick={() => handleClickScore(value)}>
-            {value}
-          </button>
-        ))}
-      </div>
-      <button type="submit" onClick={handleSubmit}>
-        등록
-      </button>
-    </StyledWritePage>
-    // </Responsive>
+
+      <Button
+        type="primary"
+        onClick={handleSubmit}
+        icon={<EditOutlined />}
+        style={{
+          width: "100%",
+          height: "45px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        리뷰 수정
+      </Button>
+    </div>
+  ) : (
+    <>로딩중..</>
   );
 };
 
