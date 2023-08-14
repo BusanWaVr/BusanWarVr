@@ -3,7 +3,7 @@ import TourImageUpload from "./TourImageUpload";
 import Editor from "../../blocks/Editor";
 import { styled } from "styled-components";
 import { Input } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type TourCourseUploadProps = {
   index: number;
@@ -45,10 +45,6 @@ const TourCourseUpload: React.FC<TourCourseUploadProps> = ({
     tourData.courses.filter((course: any) => course.courseKey == courseKey)[0]
       .image,
   ]);
-
-  useEffect(() => {
-    console.log(tourData);
-  }, [tourData]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCourses = [...tourData.courses];

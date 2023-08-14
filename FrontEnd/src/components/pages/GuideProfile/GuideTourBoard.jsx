@@ -1,18 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { Outlet, useOutletContext, useParams } from "react-router-dom";
-import GuideTourNavbar from "./GuideTourNavbar";
+import React from "react";
+import { Tabs, Tab } from "@nextui-org/react";
+import GuideScheduledBoard from "./GuideScheduledBoard";
+import GuideEndedBoard from "./GuideEndedBoard";
+import GuideCanceledBoard from "./GuideCanceledBoard";
 
-function GuideTourBoard() {
-  const { urlId } = useParams();
-  const { isMe } = useOutletContext;
-
+function GuideTourNavbar() {
   return (
-    <div>
-      <h1>가이드 투어 보드</h1>
-      <GuideTourNavbar />
-      <Outlet context={{ isMe }} />
+    <div className="flex w-full flex-col items-center">
+      <Tabs variant="underlined" aria-label="Tabs variants" color="primary">
+        <Tab key="scheduled" title="예정된 투어">
+          <GuideScheduledBoard />
+        </Tab>
+        <Tab key="ended" title="지난 투어">
+          <GuideEndedBoard />
+        </Tab>
+        <Tab key="canceled" title="취소된 투어">
+          <GuideCanceledBoard />
+        </Tab>
+      </Tabs>
     </div>
   );
 }
 
-export default GuideTourBoard;
+export default GuideTourNavbar;

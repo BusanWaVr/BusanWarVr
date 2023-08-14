@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import FollowerCard from "../../blocks/FollowerCard.jsx";
 
 function GuideFollower() {
   const { guideInfoData } = useOutletContext();
+  const { urlId } = useParams();
 
   const [followerData, setFollowerData] = useState([]);
-  const guideId = guideInfoData.userId;
 
-  const url = `https://busanwavrserver.store/guide/follower/${guideId}`;
+  const url = `https://busanwavrserver.store/guide/follower/${urlId}`;
 
   const fetchData = async () => {
     try {
@@ -16,9 +16,7 @@ function GuideFollower() {
         method: "GET",
       });
       if (response.status === 200) {
-        console.log("가이드 팔로워목록 받음");
         const data = await response.json();
-        console.log(data);
         setFollowerData(data.data);
       }
     } catch (error) {
@@ -28,12 +26,10 @@ function GuideFollower() {
 
   useEffect(() => {
     fetchData();
-    console.log("가이드 내 정보에서 받고 있음", guideInfoData);
   }, []);
 
   return (
-    <div>
-      <h1>가이드 팔로워 목록</h1>
+    <div className="h-full">
       {followerData ? (
         <div>
           <FollowerCard followerData={followerData} />
