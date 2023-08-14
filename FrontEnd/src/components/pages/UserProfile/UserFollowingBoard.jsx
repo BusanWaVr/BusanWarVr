@@ -34,7 +34,7 @@ function UserFollowingBoard() {
   };
 
   return (
-    <div>
+    <div className="h-full">
       {followingData ? (
         <FollowingCard followingData={followingData} />
       ) : (
