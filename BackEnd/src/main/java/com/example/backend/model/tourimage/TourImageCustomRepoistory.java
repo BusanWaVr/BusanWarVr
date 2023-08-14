@@ -20,7 +20,7 @@ public class TourImageCustomRepoistory extends QuerydslRepositorySupport {
         this.queryFactory = queryFactory;
     }
 
-    public List<TourImage> findTourImagesByGuide(User guide, Pageable pageable) {
+    public List<TourImage> findTourImagesByGuide(User guide) {
 
         return (List<TourImage>) queryFactory
                 .selectFrom(tourImage)
