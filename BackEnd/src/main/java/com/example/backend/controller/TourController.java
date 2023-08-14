@@ -85,8 +85,7 @@ public class TourController {
 
     @DeleteMapping("/tour/wish/{tourId}")
     public Response tourCancelApi(@PathVariable Long tourId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails)
-            throws IllegalAccessException {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) throws IllegalAccessException {
         tourService.tourCancel(tourId, userDetails.getUser());
 
         return new Response("200", "성공적으로 투어 성공적으로 취소 하였습니다!", null);
@@ -94,8 +93,7 @@ public class TourController {
 
     @DeleteMapping("/tour/end/{tourId}")
     public Response tourTerminateApi(@PathVariable Long tourId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails)
-            throws IllegalAccessException {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) throws IllegalAccessException {
         tourService.tourTerminate(tourId, userDetails.getUser());
         return new Response("200", "성공적으로 투어를 종료 하였습니다!", null);
     }
@@ -119,14 +117,15 @@ public class TourController {
 
     @PostMapping("/tour/search")
     public Response<List<SearchTourDto>> searchTour(@PageableDefault(size = 6) Pageable pageable,
-            @RequestBody
-            TourSearchInfoDto.Request request) {
+            @RequestBody TourSearchInfoDto.Request request) {
         List<SearchTourDto> searchTourDtos = tourSearchService.searchTour(request, pageable);
         return new Response<>("200", "성공적으로 투어를 찾았습니다.", searchTourDtos);
     }
 
     @PutMapping("/tour/link/{tourId}")
-    public Response<TourLinkUpdateDto> tourLinkUpdateApi(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody TourLinkUpdateDto.Request request ,@PathVariable Long tourId){
+    public Response<TourLinkUpdateDto> tourLinkUpdateApi(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody TourLinkUpdateDto.Request request, @PathVariable Long tourId) {
         tourService.tourLinkUpdate(userDetails.getUser(), request, tourId);
         return new Response<>("200", "성공적으로 투어 링크를 등록했습니다.", null);
     }
