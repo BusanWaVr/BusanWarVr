@@ -11,7 +11,6 @@ function UserWishBoard() {
     fetchData();
   }, []);
 
-  // 토큰 말고 userId받게 수정해야함
   const fetchData = async () => {
     try {
       const response = await fetch(
@@ -36,8 +35,7 @@ function UserWishBoard() {
   };
 
   return (
-    <div>
-      <h1>유저 위시 보드</h1>
+    <div className="h-full">
       {wishData ? <WishCard wishData={wishData} /> : <p>로딩중ㅎ</p>}
     </div>
   );
