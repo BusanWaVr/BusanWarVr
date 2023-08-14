@@ -14,7 +14,6 @@ import com.example.backend.dto.userinfo.ReviewInfoForGuideReviewDto;
 import com.example.backend.dto.userinfo.TourInfoForGuideEndedTours;
 import com.example.backend.dto.userinfo.TourInfoForGuideScheduledToursDto;
 import com.example.backend.dto.userinfo.UserInfoForGuideReviewsDto;
-import com.example.backend.model.enums.AuthType;
 import com.example.backend.model.follower.Follower;
 import com.example.backend.model.follower.FollowerRepository;
 import com.example.backend.model.review.Review;
@@ -35,6 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -73,8 +74,7 @@ public class GuideInfoGetService {
     public GuideScheduledToursDto.Response getGuideScheduledTours(User guide, Pageable pageable) {
         List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId());
         List<TourInfoForGuideScheduledToursDto> responseList = new ArrayList<>();
-        List<TourImage> tourImages = tourImageCustomRepoistory.findTourImagesByGuide(guide,
-                pageable);
+        List<TourImage> tourImages = tourImageCustomRepoistory.findTourImagesByGuide(guide);
 
         Date now = new Date();
 
@@ -106,14 +106,18 @@ public class GuideInfoGetService {
                 responseList.add(scheduledToursDto);
             }
         }
-        return new GuideScheduledToursDto.Response(responseList);
+        // 페이징 적용
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), responseList.size());
+        Page<TourInfoForGuideScheduledToursDto> page = new PageImpl<>(
+                responseList.subList(start, end), pageable, responseList.size());
+        return new GuideScheduledToursDto.Response(page.getContent());
     }
 
     public GuideEndedToursDto.Response getGuideEndedTours(User guide, Pageable pageable) {
         List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId());
         List<TourInfoForGuideEndedTours> responseList = new ArrayList<>();
-        List<TourImage> tourImages = tourImageCustomRepoistory.findTourImagesByGuide(guide,
-                pageable);
+        List<TourImage> tourImages = tourImageCustomRepoistory.findTourImagesByGuide(guide);
 
         Map<Long, TourImage> tourIdToImageMap = new HashMap<>();
         tourIdToImage(tourImages, tourIdToImageMap);
@@ -135,7 +139,12 @@ public class GuideInfoGetService {
                 responseList.add(endedToursDto);
             }
         }
-        return new GuideEndedToursDto.Response(responseList);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), responseList.size());
+        Page<TourInfoForGuideEndedTours> page = new PageImpl<>(responseList.subList(start, end),
+                pageable, responseList.size());
+        return new GuideEndedToursDto.Response(page.getContent());
     }
 
     public void tourIdToImage(List<TourImage> tourImages, Map<Long, TourImage> tourIdToImageMap) {
@@ -205,7 +214,11 @@ public class GuideInfoGetService {
                 responseList.add(reviewInfo);
             }
         }
-        return new GuideReviewsDto.Response(responseList);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), responseList.size());
+        Page<ReviewInfoForGuideReviewDto> page = new PageImpl<>(responseList.subList(start, end),
+                pageable, responseList.size());
+        return new GuideReviewsDto.Response(page.getContent());
     }
 
     public GuideHomeDto.Response guideHome(Long guideId, Pageable pageable)

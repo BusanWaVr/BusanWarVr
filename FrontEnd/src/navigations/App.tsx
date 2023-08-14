@@ -87,6 +87,8 @@ function App() {
             <Route path="/update" element={<Update />} />
           </Route>
 
+          
+
           <Route element={<PrivateRoute />}>
             <Route path="/chatroom" element={<ChatRoom />} />
             {/* 마이페이지 */}
@@ -151,6 +153,7 @@ function App() {
         <Route path="/test/stt" element={<Stt/>} />
         <Route path="/test/teachable" element={<TestTest/>} />
         <Route path="/livestream/:sessionid" element={<LiveStreamView />} />
+        <Route path="/teachable" element={<TestTest />} />
       </Routes>
     </>
   );
