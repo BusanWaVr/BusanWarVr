@@ -26,7 +26,7 @@ function UserFollowingBoard() {
         setFollowingData(data.data.guides);
         console.log(data.data.guides);
       } else {
-        alert("위시데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요.");
+        alert("잠시 후 다시 시도해 주세요.");
       }
     } catch (error) {
       console.error(error);
