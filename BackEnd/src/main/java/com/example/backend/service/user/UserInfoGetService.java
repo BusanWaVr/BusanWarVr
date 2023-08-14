@@ -13,6 +13,7 @@ import com.example.backend.dto.userinfo.UserWishDto;
 import com.example.backend.dto.userinfo.UserWishTourDto;
 import com.example.backend.model.follower.Follower;
 import com.example.backend.model.follower.FollowerRepository;
+import com.example.backend.model.image.ImageRepository;
 import com.example.backend.model.joiner.Joiner;
 import com.example.backend.model.joiner.JoinerRepository;
 import com.example.backend.model.review.Review;
@@ -48,6 +49,7 @@ public class UserInfoGetService {
     private final JoinerRepository joinerRepository;
     private final TourImageRepository tourImageRepository;
     private final CategoryUtil categoryUtil;
+    private final ImageRepository imageRepository;
 
     public UserWishDto.Response getUserWishList(Long userId, Pageable pageable) {
         List<Wish> userWishLists = wishRepository.findAllByUserId(userId, pageable);
@@ -154,9 +156,15 @@ public class UserInfoGetService {
     private TourInfoForUserTourDto createTourInfoForUserTourDto(Tour tour) {
 
         User guide = userRepository.findById(tour.getUserId()).get();
-
+        TourImage tourImage = tourImageRepository.findByTourId(tour.getId());
         GuideInfoForUserTourDto guideInfo = new GuideInfoForUserTourDto(guide);
-        TourInfoForUserTourDto tourInfo = new TourInfoForUserTourDto(tour, guideInfo);
+        String tourImageUrl;
+        if(tourImage == null){
+            TourInfoForUserTourDto tourInfo = new TourInfoForUserTourDto(tour, null, guideInfo);
+            return tourInfo;
+        }
+        tourImageUrl = tourImage.getImage().getUrl();
+        TourInfoForUserTourDto tourInfo = new TourInfoForUserTourDto(tour, tourImageUrl, guideInfo);
 
         return tourInfo;
     }
