@@ -34,7 +34,6 @@ public class TourGetService {
     private final CourseUtil courseUtil;
     private final JoinerUtil joinerUtil;
     private final ReviewUtil reviewUtil;
-    private final CommentUtil commentUtil;
 
     public TourDetailDto.Response tourDetail(Long tourId) {
         Tour tour = tourRepository.findById(tourId).get();
@@ -56,11 +55,8 @@ public class TourGetService {
         List<ReviewDto> reviewDtos = new ArrayList<>();
         reviewUtil.reviewDtoList(tourId, reviewDtos);
 
-        List<CommentDto> commentDtos = new ArrayList<>();
-        commentUtil.commentDtoList(tourId, commentDtos);
-
         return new TourDetailDto.Response(tour, user, tourCategories, tourImageUrls, courseDtos,
-                joinerDtos, reviewDtos, commentDtos);
+                joinerDtos, reviewDtos);
     }
 
     public TourListDto.Response getALLTour(Pageable pageable) {
