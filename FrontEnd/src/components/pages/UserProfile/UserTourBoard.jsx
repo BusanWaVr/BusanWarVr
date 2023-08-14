@@ -37,7 +37,7 @@ function UserTourBoard() {
   }, []);
 
   return (
-    <div>
+    <div className="flex w-full flex-col items-center">
       <Tabs variant="underlined" aria-label="Tabs variants" color="primary">
         <Tab key="scheduled" title="예정된 투어">
           <UserScheduledBoard isMe={isMe} userTourData={userTourData} />

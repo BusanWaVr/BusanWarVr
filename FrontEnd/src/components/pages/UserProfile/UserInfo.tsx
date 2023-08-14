@@ -40,8 +40,7 @@ const UserInfoContent = styled.div`
   }
 `;
 
-const UserInfo = ({ userInfoData }) => {
-  const [userTourData, setUserTourData] = useState(null);
+const UserInfo = ({ userInfoData, isMe }) => {
   const { userId } = useParams();
 
   useEffect(() => {
@@ -89,14 +88,18 @@ const UserInfo = ({ userInfoData }) => {
         <UserInfoWrapper>
           <UserInfoHeader>
             <p className="font-bold">회원 정보</p>
-            <Tooltip title="회원 정보 수정">
-              <Button
-                type="link"
-                shape="circle"
-                icon={<EditOutlined />}
-                onClick={handleClick}
-              />
-            </Tooltip>
+            {isMe ? (
+              <Tooltip title="회원 정보 수정">
+                <Button
+                  type="link"
+                  shape="circle"
+                  icon={<EditOutlined />}
+                  onClick={handleClick}
+                />
+              </Tooltip>
+            ) : (
+              <></>
+            )}
           </UserInfoHeader>
           <UserInfoContent>
             <p>이메일</p>

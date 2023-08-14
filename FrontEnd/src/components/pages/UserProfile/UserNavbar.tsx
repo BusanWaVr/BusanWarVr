@@ -43,7 +43,6 @@ function UserNavbar() {
   return (
     <Menu
       theme="light"
-      defaultSelectedKeys={["1"]}
       mode="inline"
       items={items}
     />
