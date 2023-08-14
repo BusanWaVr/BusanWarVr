@@ -148,8 +148,8 @@ function App() {
             }
           />
         </Route>
-        <Route path="/test/stt" element={<Stt/>} />
-        <Route path="/test/teachable" element={<TestTest/>} />
+        <Route path="/test/stt" element={<Stt />} />
+        <Route path="/test/teachable" element={<TestTest />} />
         <Route path="/livestream/:sessionid" element={<LiveStreamView />} />
       </Routes>
     </>

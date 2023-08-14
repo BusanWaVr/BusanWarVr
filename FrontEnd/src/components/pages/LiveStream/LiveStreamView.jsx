@@ -571,6 +571,7 @@ const LiveStreamView = () => {
               tourUID={tourUID}
             />
           </div>
+          {/* 음성인식 */}
           <Stt tourUID={tourUID} />
           {/* 툴바 */}
           <Toolbar
@@ -587,33 +588,31 @@ const LiveStreamView = () => {
             onJoinChat={onJoinChat}
           />
           <QRCodeComponent youtubeLink={youtubeLink} />
-          {/* <button
-            onClick={() => {
-              setVoting(true);
-            }}
-          >
-            여기
-          </button>{" "} */}
-          <input
-            type="text"
-            placeholder="1번 선택지"
-            value={column1}
-            onChange={onChangeColumn1}
-          />
-          <input
-            type="text"
-            placeholder="2번 선택지"
-            value={column2}
-            onChange={onChangeColumn2}
-          />
-          <button onClick={createVote}>투표 시작하기</button>
-          <button onClick={endVote}>투표 종료하기</button>
+          {/* 가이드가 1번항목, 2번항목을 입력하고 투표를 시작 */}
+          <div>
+            <input
+              type="text"
+              placeholder="1번 선택지"
+              value={column1}
+              onChange={onChangeColumn1}
+            />
+            <input
+              type="text"
+              placeholder="2번 선택지"
+              value={column2}
+              onChange={onChangeColumn2}
+            />
+            <button onClick={createVote}>투표 시작하기</button>
+            <button onClick={endVote}>투표 종료하기</button>
+          </div>
+          {/* 모션인식 실행 */}
           <TestTest
             ref={initRef}
             tourUID={tourUID}
             accessToken={accessToken}
           />{" "}
           : <></>
+          {/* 투표 현황 */}
           <VoteModal />
         </FullScreen>
       )}

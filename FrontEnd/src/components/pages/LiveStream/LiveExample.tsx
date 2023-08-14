@@ -31,7 +31,7 @@ function LiveExample({ videoId }: Props) {
 
   return (
     <>
-      <div className="youtube-header"></div>
+      {/* <div className="youtube-header"></div> */}
       <div className="youtube-container">
         <YouTube
           videoId={videoId}
