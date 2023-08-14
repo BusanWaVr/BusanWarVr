@@ -28,6 +28,7 @@ function WishCardList({ wishData }) {
       )}
       <WishCard wishData={upcomingWishData} />
       <Divider />
+      <h2 className="text-xl font-semibold mb-2">지난 투어</h2>
       <WishCard wishData={pastWishData} />
     </>
   );
