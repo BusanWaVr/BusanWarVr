@@ -30,6 +30,7 @@
     "http-proxy-middleware": "^2.0.6",
     "install": "^0.13.0",
     "lodash": "^4.17.21",
+    "microsoft-cognitiveservices-speech-sdk": "^1.31.0",
     "moment": "^2.29.4",
     "npm": "^9.8.1",
     "openvidu-browser": "2.27.0",
@@ -37,9 +38,11 @@
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
+    "react-calendar": "^4.6.0",
     "react-datepicker": "^4.16.0",
     "react-datetime": "^3.2.0",
     "react-daumpost-hook": "^1.1.8",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-full-screen": "^1.1.1",
     "react-kakao-maps-sdk": "^1.1.11",
@@ -63,7 +66,8 @@
     "sockjs": "^0.3.24",
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
-    "styled-components": "^6.0.4"
+    "styled-components": "^6.0.4",
+    "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
     "@types/node": "^20.4.4",

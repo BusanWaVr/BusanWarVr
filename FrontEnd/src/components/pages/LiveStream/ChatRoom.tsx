@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import "./ChatRoom.css";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setStompClient } from "./LiveStreamReducer";
 
 export type message = {
   username: string;
@@ -10,13 +11,19 @@ export type message = {
 };
 
 function ChatRoom(props, ref) {
+  // reducer에서 데이터 가져오기
+  const { tourId, stompClient } = useSelector(
+    (state) => state.liveStream
+  );
+  const { accessToken, userId } = useSelector((state: any) => state.userInfo);
+  const tourUID = props.tourUID
+
+  // 구독 상태를 관리해보자
+  const [subscribed, setSubscribed] = useState(false);
+
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
-  const [stompClient] = useState(
-    Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
-  );
 
-  const { accessToken, userId } = useSelector((state: any) => state.userInfo);
 
   // 자동 스크롤
   const messageEndRef = useRef(null);
@@ -27,46 +34,65 @@ function ChatRoom(props, ref) {
   useEffect(() => {
     scrollToBottom();
   }, [chatMessages]);
+
+
   
-
-  // 구독하고 메시지 받기
   useEffect(() => {
-    if (stompClient != null) {
-      stompClient.connect({}, () => {
-        console.log("연결됨");
-        stompClient.subscribe(
-          "/sub/chat/message/room/cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
-          (data) => {
-            console.log("--------------------------------");
-            const receivedMessage = JSON.parse(data.body);
-            const newChatMessage = {
-              msgType: receivedMessage.type,
-              userType: receivedMessage.sender.type,
-              senderId: receivedMessage.sender.id,
-              username: receivedMessage.sender.nickname,
-              content: receivedMessage.body,
-            };
-            scrollToBottom();
+      rnehr();
 
-            console.log(receivedMessage);
+      // 입장메시지 send
+      const joinMessage = {
+        roomUid: tourUID,
+        token: accessToken,
+      };
+      stompClient.send("/pub/chat/message/join", {}, JSON.stringify(joinMessage));
+  
+      console.log(stompClient);
+      console.log(props.onConnect)
 
-            setChatMessages((prevMessages) => [
-              ...prevMessages,
-              newChatMessage,
-            ]);
-          }
-        );
-      });
-    }
-  }, []);
+  },[])
+
+  // 구독하기
+  const rnehr = () => {
+    stompClient.subscribe(
+      `/sub/chat/message/room/${tourUID}`,
+      (data) => {
+        console.log(data);
+
+        console.log("--------구독으로 받아오는 메시지---------");
+        const receivedMessage = JSON.parse(data.body);
+        const newChatMessage = {
+          msgType: receivedMessage.type,
+          userType: receivedMessage.sender.type,
+          senderId: receivedMessage.sender.id,
+          username: receivedMessage.sender.nickname,
+          content: receivedMessage.body,
+        };
+
+        
+        console.log(receivedMessage);
+        
+        setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
+      },
+      { id: "chat" }
+      );
+      setSubscribed(true);
+  };
+
+  // 구독해제
+  const gowp = () => {
+    stompClient.unsubscribe(`chat`);
+    const stopmClientSave = stompClient;
+    setStompClient(stopmClientSave);
+    console.log(stompClient);
+  };
 
   // 메시지 보내기
   const handleEnter = () => {
     scrollToBottom();
 
     const newMessage = {
-      roomUid:
-        "cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
+      roomUid: tourUID,
       token: accessToken,
       message: inputMessage,
     };
@@ -89,42 +115,36 @@ function ChatRoom(props, ref) {
   // 채팅방 나가기
   const handleLeaveChat = () => {
     const leaveMessage = {
-      roomUid: "cb74f5f1-cc08-47cc-8e88-ef7d9a3d87cd/Thu Aug 10 02:20:32 UTC 2023",
+      roomUid: tourUID,
       token: accessToken,
     };
-    stompClient.send("/pub/chat/message/leave", {}, JSON.stringify(leaveMessage));
+    stompClient.send(
+      "/pub/chat/message/leave",
+      {},
+      JSON.stringify(leaveMessage)
+    );
+
+    // 채팅방 나가면서 구독 해제
+    gowp();
   };
 
+  // 채팅방 재입장
+  const handleJoinChat = () => {
+    // 재입장하면서 다시 구독
+    rnehr();
+
+    const joinMessage = {
+      roomUid: tourUID,
+      token: accessToken,
+    };
+    stompClient.send("/pub/chat/message/join", {}, JSON.stringify(joinMessage));
+  };
+
+  // 부모에서 호출할 함수
   React.useImperativeHandle(ref, () => ({
     handleLeaveChat: handleLeaveChat,
+    handleJoinChat: handleJoinChat,
   }));
-
-  // 채팅방 재입장
-const handleJoinChat = async () => {
-    try {
-        const requestBody = {
-            tourId: props.tourId,
-          };
-
-        const response = await fetch("/api/chatroom/rejoin", {
-          method: "POST",
-          headers: {
-            Authorization: accessToken,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
-        if (response.status === 200) {
-          const data = await response.json();
-          alert(data.message);
-        } else {
-          console.log(data.message);
-          alert(data.message);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-}
 
   return (
     <div className="chatroom-container">
@@ -137,7 +157,15 @@ const handleJoinChat = async () => {
             switch (msg.msgType) {
               case "LEAVE":
                 return (
-                  <p className="leave" key={index}>{msg.username}님이 채팅방에서 퇴장했습니다.</p>
+                  <p className="leave" key={index}>
+                    {msg.username}님이 채팅방에서 퇴장했습니다.
+                  </p>
+                );
+              case "JOIN":
+                return (
+                  <p className="join" key={index}>
+                    {msg.username}님이 채팅방에 입장했습니다.
+                  </p>
                 );
               case "VOTE":
                 return (
@@ -175,15 +203,9 @@ const handleJoinChat = async () => {
           </button>
         </div>
         <div className="chat-footer-temp">
-          <button onClick={handleLeaveChat}>
-            나가기
-          </button>
-          <button onClick={handleJoinChat} disabled>
-            재입장
-          </button>
-          <button disabled>
-            투표하기
-          </button>
+          {/* <button onClick={handleLeaveChat}>나가기</button>
+          <button onClick={handleJoinChat}>재입장</button> */}
+          <button disabled>투표하기</button>
         </div>
       </div>
     </div>

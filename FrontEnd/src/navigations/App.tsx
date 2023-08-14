@@ -39,6 +39,8 @@ import UserTourBoard from "../components/pages/UserProfile/UserTourBoard";
 import UserWishBoard from "../components/pages/UserProfile/UserWishBoard";
 import UserFollowingBoard from "../components/pages/UserProfile/UserFollowingBoard";
 import UserReviewBoard from "../components/pages/UserProfile/UserReviewBoard";
+import Stt from "../components/pages/Test/Stt.jsx";
+import TestTest from "../components/pages/Test/TestTest.jsx";
 
 import { ToastContainer, toast } from "react-toastify";
 
@@ -130,6 +132,8 @@ function App() {
             }
           />
         </Route>
+        <Route path="/test/stt" element={<Stt/>} />
+        <Route path="/test/teachable" element={<TestTest/>} />
         <Route path="/livestream/:sessionid" element={<LiveStreamView />} />
       </Routes>
     </>

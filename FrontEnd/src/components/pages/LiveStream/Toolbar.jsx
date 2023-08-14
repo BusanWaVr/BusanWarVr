@@ -8,6 +8,7 @@ import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import CommentIcon from "@mui/icons-material/Comment";
 import CommentsDisabledIcon from "@mui/icons-material/CommentsDisabled";
+import HowToVoteIcon from "@mui/icons-material/HowToVote";
 
 import styled from "styled-components";
 
@@ -21,9 +22,9 @@ const Toolbar = (props) => {
   const ToolbarContainer = styled.div`
     display: flex;
     justify-content: center;
-    position: fixed;
+    // position: fixed;
     left: 50%;
-    transform: translate(-50%, 0);
+    // transform: translate(-50%, 0);
     bottom: 30px;
     background-color: #eee;
     border-radius: 30px;
@@ -82,14 +83,28 @@ const Toolbar = (props) => {
       )}
 
       {isChatOpen ? (
-        <ToolbarButton onClick={() => { props.handleLeaveChatToggle(); props.onLeaveChat(); }}>
+        <ToolbarButton
+          onClick={() => {
+            props.handleLeaveChatToggle();
+            props.onLeaveChat();
+          }}
+        >
           <CommentIcon />
         </ToolbarButton>
       ) : (
-        <ToolbarButton onClick={() => { props.handleJoinChatToggle(); props.onJoinChat(); }}>
+        <ToolbarButton
+          onClick={() => {
+            props.handleJoinChatToggle();
+            props.onJoinChat();
+          }}
+        >
           <CommentsDisabledIcon />
         </ToolbarButton>
       )}
+
+      <ToolbarButton>
+        <HowToVoteIcon />
+      </ToolbarButton>
 
       <ToolbarButton
         type="button"

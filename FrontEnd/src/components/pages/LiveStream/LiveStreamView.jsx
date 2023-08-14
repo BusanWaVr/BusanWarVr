@@ -1,8 +1,14 @@
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import Slider from "react-slick";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useImperativeHandle,
+  useRef,
+} from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import UserVideoComponent from "./UserVideoComponent";
 import Toolbar from "./Toolbar";
@@ -11,7 +17,14 @@ import Loader from "../../atoms/Loader";
 import useCustomBack from "../../../hooks/useCustomBack";
 import ChatRoom from "./ChatRoom";
 import QRCodeComponent from "./QRCodeComponent";
+import VoteModal from "./VoteModal";
+
 import "./LiveStreamView.css";
+import TestTest from "../Test/TestTest";
+import Stt from "../Test/Stt";
+
+import SockJS from "sockjs-client/dist/sockjs";
+import Stomp from "stompjs";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -19,13 +32,17 @@ import {
   setIsVideoEnabled,
   setIsFullScreen,
   setIsChatOpen,
+  setStompClient,
+  setOption1,
+  setOption2,
+  setOption1Cnt,
+  setOption2Cnt,
 } from "./LiveStreamReducer";
 
 const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
-  const { sessionid } = useParams();
 
   const {
     youtubeLink,
@@ -33,9 +50,27 @@ const LiveStreamView = () => {
     isVideoEnabled,
     isFullScreen,
     isChatOpen,
+    tourId,
+    // tourUID,
+    stompClient,
+    option1,
+    option2,
+    option1Cnt,
+    option2Cnt,
   } = useSelector((state) => state.liveStream);
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
+
+  // 그냥 모든 sessionid => tourId로 바꿔주면 되는데 무서워서 일단 이렇게
+  // const sessionid = tourId 로 하니까 채팅은 되는데 오픈비두가 안됨..
+  const { sessionid } = useParams();
+  const tourUID = sessionid;
+
+  // 투표
+  const [voting, setVoting] = useState(false);
+  // 가이드가 입력할 투표 항목
+  const [column1, setColumn1] = useState("");
+  const [column2, setColumn2] = useState("");
 
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -44,6 +79,8 @@ const LiveStreamView = () => {
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [onload, setOnload] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [onConnect, setOnConnect] = useState(false);
 
   const sliderSettings = {
     dots: false,
@@ -74,6 +111,26 @@ const LiveStreamView = () => {
   };
 
   const videoId = extractVideoIdFromLink(youtubeLink);
+
+  useEffect(() => {
+    dispatch(
+      setStompClient(
+        Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
+      )
+    );
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (stompClient) {
+      stompClient.connect({}, () => {
+        console.log("연결됨");
+        setOnConnect(true);
+        subscribeVote(stompClient);
+        subscribeVoteCnt(stompClient);
+        subscribeEndVote(stompClient);
+      });
+    }
+  }, [stompClient]);
 
   useEffect(() => {
     const mySession = OV.current.initSession();
@@ -162,29 +219,7 @@ const LiveStreamView = () => {
       session.disconnect();
     }
 
-    // 채팅방 나가기
-    try {
-      const response = await fetch(
-        `https://busanwavrserver.store/tour/chat/${sessionid}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: accessToken,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-
-      if (data.code === "200") {
-        alert(data.message);
-      } else {
-        console.log(data.message);
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    onLeaveChat();
 
     navigate("/livestream");
   }, [session]);
@@ -265,6 +300,15 @@ const LiveStreamView = () => {
 
   // 전체화면 온오프
   useEffect(() => {
+    console.log(
+      "tourId:",
+      tourId,
+      "tourUID:",
+      tourUID,
+      "세션아이디",
+      sessionid
+    );
+
     const handleFullscreenChange = () => {
       dispatch(setIsFullScreen(!!document.fullscreenElement));
     };
@@ -290,29 +334,172 @@ const LiveStreamView = () => {
   const handleLeaveChatToggle = () => {
     dispatch(setIsChatOpen(false));
   };
-  
+
   const handleJoinChatToggle = () => {
     dispatch(setIsChatOpen(true));
   };
 
-  
   // 채팅방 나가기, 재입장 호출
 
   const chatRoomRef = useRef(null);
 
   const onLeaveChat = () => {
-    console.log('Leave chat');
+    console.log("Leave chat");
     if (chatRoomRef.current) {
       chatRoomRef.current.handleLeaveChat();
     }
   };
 
   const onJoinChat = () => {
-    console.log('join chat');
+    console.log("join chat");
     if (chatRoomRef.current) {
       chatRoomRef.current.handleJoinChat();
     }
   };
+
+  // 투표하기(init)호출
+  const initRef = useRef(null);
+
+  // 가이드가 투표 시작을 하면, setVoting(true)가 되면서 TestTest의 init 실행시키기
+  useEffect(() => {
+    if (voting) {
+      console.log("투표시작");
+      if (initRef.current) {
+        console.log("여기까지들어가는지궁금해서");
+        initRef.current.init();
+      }
+    } else {
+      console.log("투표종료");
+    }
+  }, [voting]);
+
+  // 투표함 생성 받기(SUB)
+  function subscribeVote(stomp) {
+    stomp.subscribe(
+      `/sub/chat/vote/create/room/${tourUID}`,
+      (data) => {
+        const received = JSON.parse(data.body);
+        const receivedMessage = {
+          option1: received.column1,
+          option2: received.column2,
+        };
+        setVoting(true);
+        dispatch(setOption1(received.column1));
+        dispatch(setOption2(received.column2));
+        console.log("투표 구독으로 받아오는 메시지", receivedMessage);
+      },
+      { id: "subVote" }
+    );
+  }
+
+  const onChangeColumn1 = (e) => {
+    setColumn1(e.target.value);
+  };
+
+  const onChangeColumn2 = (e) => {
+    setColumn2(e.target.value);
+  };
+
+  const createVote = async () => {
+    // 투표함 생성(POST)
+    try {
+      const requestBody = {
+        roomUid: tourUID,
+        column1: column1,
+        column2: column2,
+      };
+
+      const response = await fetch(
+        "https://busanwavrserver.store/chat/vote/create",
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      console.log(requestBody);
+
+      if (response.status === 200) {
+        console.log("제대로왔음", response);
+        setColumn1("");
+        setColumn2("");
+      } else {
+        // 에러
+        console.log(response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // 사용자 투표 실시간 받기(SUB)
+  function subscribeVoteCnt(stomp) {
+    stomp.subscribe(
+      `/sub/chat/vote/room/${tourUID}`,
+      (data) => {
+        const received = JSON.parse(data.body);
+        const receivedMessage = {
+          nickname: received.sender.nickname,
+          selectType: received.selectType,
+        };
+        console.log("사용자 투표로 받아오는 메시지", receivedMessage);
+        if (received.selectType == 1) {
+          dispatch(setOption1Cnt(1));
+          console.log(option1Cnt);
+        } else {
+          dispatch(setOption2Cnt(1));
+          console.log(option2Cnt);
+        }
+      },
+      { id: "voteCnt" }
+    );
+  }
+
+  // 가이드 투표 종료하기(POST)
+  async function endVote() {
+    try {
+      const requestBody = {
+        roomUid: tourUID,
+      };
+
+      const response = await fetch(
+        "https://busanwavrserver.store/chat/vote/end",
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("투표 종료 요청", response);
+      } else {
+        // 에러
+        console.log("에러", response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // 가이드 투표 종료인지 확인하기(SUB)
+  function subscribeEndVote(stomp) {
+    stomp.subscribe(
+      `/sub/chat/vote/end/${tourUID}`,
+      (data) => {
+        setVoting(false);
+        console.log("투표 종료");
+      },
+      { id: "endVote" }
+    );
+  }
 
   const getToken = useCallback(async () => {
     return createSession(sessionid).then((sessionId) => createToken(sessionId));
@@ -377,8 +564,14 @@ const LiveStreamView = () => {
           </div>
           {/* 채팅창 */}
           <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
-            <ChatRoom ref={chatRoomRef} onload={onload} tourId={sessionid} />
+            <ChatRoom
+              ref={chatRoomRef}
+              onload={onload}
+              onConnect={onConnect}
+              tourUID={tourUID}
+            />
           </div>
+          <Stt tourUID={tourUID} />
           {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
@@ -394,6 +587,34 @@ const LiveStreamView = () => {
             onJoinChat={onJoinChat}
           />
           <QRCodeComponent youtubeLink={youtubeLink} />
+          {/* <button
+            onClick={() => {
+              setVoting(true);
+            }}
+          >
+            여기
+          </button>{" "} */}
+          <input
+            type="text"
+            placeholder="1번 선택지"
+            value={column1}
+            onChange={onChangeColumn1}
+          />
+          <input
+            type="text"
+            placeholder="2번 선택지"
+            value={column2}
+            onChange={onChangeColumn2}
+          />
+          <button onClick={createVote}>투표 시작하기</button>
+          <button onClick={endVote}>투표 종료하기</button>
+          <TestTest
+            ref={initRef}
+            tourUID={tourUID}
+            accessToken={accessToken}
+          />{" "}
+          : <></>
+          <VoteModal />
         </FullScreen>
       )}
     </>

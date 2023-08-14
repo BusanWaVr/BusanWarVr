@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./LiveStream.css";
 
@@ -10,22 +10,20 @@ import {
 } from "./LiveStreamReducer";
 
 function LiveStream(props) {
-  const location = useLocation();
-  const tourUID = location.state ? location.state.tourUID : "";
-  const tourId = location.state ? location.state.tourId : "";
-  const livelink = location.state ? location.state.livelink : "";
-  console.log("livelink", livelink);
-  console.log("tourId", tourId);
   const navigate = useNavigate();
-
-  const { youtubeLink, isAudioEnabled, isVideoEnabled } = useSelector(
-    (state) => state.liveStream
-  );
+  
+  const { youtubeLink, isAudioEnabled, isVideoEnabled, tourId,
+    tourUID, } = useSelector(
+      (state) => state.liveStream
+      );
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
-
+  
+  console.log("liveLink", youtubeLink);
+  console.log("tourId", tourId);
+  console.log("tourUID", tourUID);
   // 디폴트 youtubeLink 세팅
-  // setYoutubeLink(livelink);
+  // setYoutubeLink(liveLink);
   // console.log("youtubeLink", youtubeLink);
 
   // api 호출용 tourId
@@ -34,13 +32,10 @@ function LiveStream(props) {
   // tourUId
   const [mySessionId, setMySessionId] = useState(`${tourUID}`);
 
+
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
   }, []);
-
-  // const handleChangeUserName = useCallback((e) => {
-  //   dispatch(setUserName(e.target.value));
-  // }, []);
 
   const handleChangeYouTubeLink = useCallback((e) => {
     dispatch(setYoutubeLink(e.target.value));
@@ -56,7 +51,7 @@ function LiveStream(props) {
     dispatch(setIsVideoEnabled(!isVideoEnabled));
   };
 
-  const joinSession = (e) => {
+  const joinSession = () => {
     navigate(`/livestream/${mySessionId}`);
   };
 
@@ -87,23 +82,30 @@ function LiveStream(props) {
     }
 
     try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        return;
+      }
+
       const requestBody = {
         tourId: tourId,
       };
 
-      const response = await fetch("/api/chatroom/start", {
-        method: "POST",
-        headers: {
-          Authorization: accessToken,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await fetch(
+        "https://busanwavrserver.store/chatroom/start",
+        {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
       if (response.status === 200) {
         const data = await response.json();
-        console.log("요청", requestBody);
-        console.log("응답", data);
         alert(data.message);
+        console.log("다음 채팅방이 시작되었습니다", tourId);
       } else {
         console.log(data.message);
         alert(data.message);
@@ -148,7 +150,7 @@ function LiveStream(props) {
                 className="form-control input"
                 type="text"
                 id="sessionId"
-                value={youtubeLink || livelink}
+                value={youtubeLink}
                 onChange={handleChangeYouTubeLink}
                 required
               />

@@ -1,5 +1,6 @@
 package com.example.backend.dto.user;
 
+import com.example.backend.model.user.User;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -21,6 +22,20 @@ public class GuideUpdateDto {
 
         private String introduction;
 
+    }
+
+    @Data
+    public static class Response {
+
+        private String nickname;
+        private String profileImg;
+        private String introduction;
+
+        public Response(User user){
+            this.nickname = user.getNickname();
+            this.profileImg = user.getProfileImg();
+            this.introduction = user.getIntroduction();
+        }
     }
 
 }
