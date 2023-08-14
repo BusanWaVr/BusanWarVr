@@ -96,16 +96,18 @@ const WishCard = ({ wishData }) => {
                   )}
                 </div>
               </CardHeader>
-              <Image
-                removeWrapper
-                alt="Card example background"
-                className="z-0 w-full h-full scale-125 -translate-y-6 object-cover data-[loaded=true]:opacity-50"
-                src={
-                  wish.tourImage
-                    ? wish.tourImage
-                    : "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
-                }
-              />
+              <Link to={`/tour/${wish.tourId}/`} className="h-full">
+                <Image
+                  removeWrapper
+                  alt="Card example background"
+                  className="z-0 w-full h-full scale-125 -translate-y-6 object-cover data-[loaded=true]:opacity-50"
+                  src={
+                    wish.tourImage
+                      ? wish.tourImage
+                      : "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
+                  }
+                />
+              </Link>
               <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 block flex justify-between">
                 <Chip size="sm" color="primary" variant="solid">
                   <span className="text-xs flex items-center gap-1">
