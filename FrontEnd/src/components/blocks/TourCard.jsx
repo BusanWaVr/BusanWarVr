@@ -80,7 +80,11 @@ function TourCard({ TourData, isMe, tourType }) {
                           </h1>
                         </Link>
                         <div className="my-2">
-                          <Avatar size="small" icon={<UserOutlined />} />
+                          <Avatar
+                            src={tour.guide.profileImg}
+                            size="small"
+                            icon={<UserOutlined />}
+                          />
                           <Link to={`/guide/${tour.guide.id}/mypage`}>
                             <span> {tour.guide.name}</span>
                           </Link>
