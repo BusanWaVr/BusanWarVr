@@ -21,8 +21,7 @@
 
 .stream-container {
   padding: 10px;
-  width: 200px;
-  object-fit: cover;
+  max-width: 150px;
 }
 
 .current-stream video, .current-stream .streamcomponent div {

@@ -40,6 +40,13 @@ import {
 } from "./LiveStreamReducer";
 
 const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
+const sSetting = {
+  dots: false,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 6,
+  slidesToScroll: 1,
+};
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
@@ -81,14 +88,54 @@ const LiveStreamView = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [onConnect, setOnConnect] = useState(false);
+  const [width, setWidth] = useState(window.innerWidth);
+  const [sliderSettings, setSliderSettings] = useState(sSetting);
 
-  const sliderSettings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 6,
-    slidesToScroll: 1,
+  const handleResize = () => {
+    setWidth(window.innerWidth);
+    if(width < 300){
+      let box = sliderSettings;
+      box.slidesToShow = 1;
+      setSliderSettings(box);
+    }
+    else if(width < 430){
+      let box = sliderSettings;
+      box.slidesToShow = 2;
+      setSliderSettings(box);
+    }
+    else if(width < 550){
+      let box = sliderSettings;
+      box.slidesToShow = 3;
+      setSliderSettings(box);
+    }
+    else if(width < 900){
+      let box = sliderSettings;
+      box.slidesToShow = 4;
+      setSliderSettings(box);
+    }
+    else if(width < 1200){
+      let box = sliderSettings;
+      box.slidesToShow = 5;
+      setSliderSettings(box);
+    }
+    else {
+      let box = sliderSettings;
+      box.slidesToShow = 6;
+      setSliderSettings(box);
+    }
+
+    console.log(width);
   };
+
+  useEffect(() => {
+      window.addEventListener("resize", handleResize);
+      return () => {
+          // cleanup
+          window.removeEventListener("resize", handleResize);
+      };
+  }, [width]);
+
+
 
   // accessToken
   const accessToken = localStorage.getItem("accessToken");
@@ -535,7 +582,7 @@ const LiveStreamView = () => {
         <FullScreen handle={handleFullScreen}>
           <LiveExample className="live-example" videoId={videoId} />
           <div id="session">
-            <div className="video-slider" style={{ width: "1200px" }}>
+            <div className="video-slider" style={{ width: `${width - 120}px` }}>
               <Slider id="video-container" className="" {...sliderSettings}>
                 {/* 현재 유저 화면 */}
                 {publisher !== undefined ? (
