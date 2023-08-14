@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import WishCard from "../../blocks/WishCard";
+import WishCardList from "../../blocks/WishCardList";
 
 function UserWishBoard() {
   const [wishData, setWishData] = useState([]);
@@ -36,7 +36,7 @@ function UserWishBoard() {
 
   return (
     <div className="h-full">
-      {wishData ? <WishCard wishData={wishData} /> : <p>로딩중ㅎ</p>}
+      {wishData ? <WishCardList wishData={wishData} /> : <p>로딩중ㅎ</p>}
     </div>
   );
 }
