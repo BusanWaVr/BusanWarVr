@@ -14,12 +14,7 @@ const UserInfoWrapper = styled.div`
 function UserMain() {
   const { userInfoData, isMe } = useOutletContext();
 
-  useEffect(() => {
-    console.log("자식이 받고 있음", userInfoData);
-  }, []);
-
   const navigate = useNavigate();
-  // TODO : 로컬에 저장되어있는 userId랑 다르면 이 페이지 렌더링 안되게
 
   const handleClick = () => {
     navigate("/update");

@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import { useOutletContext } from "react-router";
 import TourCard from "../../blocks/TourCard";
 
-function UserScheduledBoard() {
-  const { userTourData, isMe } = useOutletContext();
+function UserScheduledBoard({ userTourData, isMe }) {
 
   if (!userTourData || !userTourData.scheduledTours) {
     return <div>Loading...</div>;

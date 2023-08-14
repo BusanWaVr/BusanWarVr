@@ -90,14 +90,12 @@ const CalendarTour = ({ selectedTour }) => {
             className="flex flex-col h-full justify-center items-center"
           >
             <div className="pb-0 pt-2 px-4 flex-col items-start text-default-800">
-              <p className="text-tiny uppercase font-semibold">
+              <p className="text-defaultg uppercase font-semibold">
                 {moment(tourData?.startDate)
                   .utcOffset(9)
                   .format("YYYY/MM/DD HH:mm")}
               </p>
-              <small className="text-default-500">
-                가이드 {selectedTour.guide.name}
-              </small>
+
               <h4 className="font-bold text-large">{tourData?.title}</h4>
             </div>
             <div className="overflow-visible py-1 px-6 flex">

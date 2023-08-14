@@ -88,15 +88,6 @@ function GuideMyPage() {
         </Content>
       </Layout>
     </Layout>
-    // <Wrapper>
-    //   <NavbarWrapper>
-    //     <GuideMini guideInfoData={guideInfoData} isMe={isMe} />
-    //     <GuideNavbar />
-    //   </NavbarWrapper>
-    //   <OutletWrapper>
-    //     <Outlet context={{ guideInfoData, isMe }} />
-    //   </OutletWrapper>
-    // </Wrapper>
   );
 }
 

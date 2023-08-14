@@ -4,12 +4,10 @@ import com.example.backend.config.pubsub.RedisPublisher;
 import com.example.backend.document.MessageRepository;
 import com.example.backend.dto.chat.CreateVoteDto;
 import com.example.backend.dto.chat.EndVoteDto;
-import com.example.backend.dto.chat.CreateVoteDto.Response;
 import com.example.backend.dto.chat.JoinMessageDto;
 import com.example.backend.dto.chat.LeaveMessageDto;
 import com.example.backend.dto.chat.NormalMessageDto;
 import com.example.backend.dto.chat.VoteMessageDto;
-import com.example.backend.dto.chat.VoteMessageDto.Request;
 import com.example.backend.model.chat.ChatParticipantsInfoRepository;
 import com.example.backend.model.chat.ChatRoom;
 import com.example.backend.model.chat.ChatRoomRepository;
@@ -19,7 +17,6 @@ import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;
-import org.graalvm.compiler.lir.LIRInstruction.Use;
 import org.springframework.stereotype.Service;
 
 @Service

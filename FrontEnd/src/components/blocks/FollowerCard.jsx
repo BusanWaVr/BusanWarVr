@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Button, Avatar, Card } from "antd";
+import BoogieNone from "../../assets/boogie_none.png";
+
+const { Meta } = Card;
 
 const CardContainer = styled.div`
   margin: 50px;
@@ -8,32 +12,34 @@ const CardContainer = styled.div`
 
 function FollowerCard({ followerData }) {
   return (
-    <div>
+    <div className="h-full">
       {followerData.length === 0 ? (
-        <p>로딩중ㅎ</p>
+        <div className="flex flex-col justify-center items-center h-full opacity-50">
+          <img src={BoogieNone} alt="no_follower" className="w-1/6" />
+          <p className="font-bold">팔로워가 없어요 :(</p>
+        </div>
       ) : (
-        <p>
-          총 <strong>{followerData.length}</strong>명의 팔로워가 있어요.
-        </p>
+        <div className="my-4">
+          <p>
+            총 <strong>{followerData.length}</strong>명의 팔로워가 있어요.
+          </p>
+        </div>
       )}
-
-      {followerData.map((follower) => (
-        <CardContainer key={follower.userId}>
-          <img
-            src={follower.profileImg}
-            alt="프로필 이미지"
-            style={{
-              width: "200px",
-              height: "200px",
-              borderRadius: "50%",
-            }}
-          />
-          <br />
-          <Link to={`/user/${follower.userId}/mypage`}>
-            <span> {follower.nickname}</span>
-          </Link>
-        </CardContainer>
-      ))}
+      <div>
+        <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          {followerData.map((follower) => (
+            <Card key={follower.userId} style={{ margin: "10px" }}>
+              <Link to={`/user/${follower.userId}/mypage`}>
+                <Meta
+                  className="items-center"
+                  avatar={<Avatar src={follower.profileImg} size="large" />}
+                  title={follower.nickname}
+                />{" "}
+              </Link>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
