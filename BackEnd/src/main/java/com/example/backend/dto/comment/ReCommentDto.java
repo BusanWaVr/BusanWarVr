@@ -10,15 +10,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReCommentDto {
 
+    private Long commentId;
     private String nickname;
     private String profileImg;
     private Date writeDate;
+    private boolean isOwner;
+    private Long parentId;
     private String content;
 
-    public ReCommentDto(User user, Comment comment) {
+    public ReCommentDto(User user, boolean isOwner, Comment comment) {
+        this.commentId = comment.getId();
         this.nickname = user.getNickname();
         this.profileImg = user.getProfileImg();
         this.writeDate = comment.getWriteDate();
+        this.isOwner = isOwner;
+        this.parentId = comment.getParentId();
         this.content = comment.getContent();
     }
 
