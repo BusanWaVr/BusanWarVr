@@ -68,8 +68,14 @@ public class UserInfoGetService {
             User tourGuide = userRepository.findById(tour.getUserId()).get();
 
             GuideInfoForUserWishDto guide = new GuideInfoForUserWishDto(tourGuide);
-
-            wishList.add(new UserWishTourDto(tour, categoryList, guide));
+            TourImage tourImage = tourImageRepository.findByTourId(tour.getId());
+            String tourImageUrl;
+            if(tourImage == null){
+                wishList.add(new UserWishTourDto(tour, null, categoryList, guide));
+                continue;
+            }
+            tourImageUrl = tourImage.getImage().getUrl();
+            wishList.add(new UserWishTourDto(tour, tourImageUrl, categoryList, guide));
         }
         return new UserWishDto.Response(wishList);
     }
