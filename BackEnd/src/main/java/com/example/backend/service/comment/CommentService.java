@@ -6,11 +6,14 @@ import com.example.backend.dto.comment.CommentDto;
 import com.example.backend.dto.comment.CommentUpdateDto;
 import com.example.backend.model.comment.Comment;
 import com.example.backend.model.comment.CommentRepository;
+import com.example.backend.model.joiner.Joiner;
+import com.example.backend.model.joiner.JoinerRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.util.comment.CommentUtil;
+import com.example.backend.util.joiner.JoinerUtil;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,34 +29,40 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final TourRepository tourRepository;
     private final UserRepository userRepository;
+    private final JoinerRepository joinerRepository;
     private final CommentUtil commentUtil;
+    private final JoinerUtil joinerUtil;
 
     public CommentCreateDto.Response commentCreate(User user, CommentCreateDto.Request request,
             Long tourId) {
 
         Tour tour = tourRepository.findById(tourId).get();
-        // 부모 댓글 x, 본인이 루트 댓글
+        List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
+        boolean isExist = joinerUtil.isExistJoinerList(user, joinerList);
+        // 부모 댓글 x, 본인이 루트 댓글, 예약자
         if (request.getParentId() == null) {
             Comment comment = request.toComment(user, tour);
             commentRepository.save(comment);
-            CommentCreateDto.Response response = new CommentCreateDto.Response(comment.getId());
+            CommentCreateDto.Response response = new CommentCreateDto.Response(user, comment,
+                    isExist);
 
             return response;
         }
         // 부모 댓글 o : 대댓글이란 의미
         Comment parent = commentRepository.findById(request.getParentId()).get();
-        // 부모가 대댓글 : 루트 댓글의 번호 저장
+        // 부모가 대댓글 : 대댓글의 부모 번호 저장
         if (parent.getParentId() != null) {
             Comment comment = request.toCommentAboutRoot(user, tour, parent.getParentId());
             commentRepository.save(comment);
-            CommentCreateDto.Response response = new CommentCreateDto.Response(comment.getId());
+            CommentCreateDto.Response response = new CommentCreateDto.Response(user, comment,
+                    isExist);
 
             return response;
         }
         // 부모가 루트 댓글 : 부모의 번호 저장
         Comment comment = request.toReComment(user, tour, parent.getId());
         commentRepository.save(comment);
-        CommentCreateDto.Response response = new CommentCreateDto.Response(comment.getId());
+        CommentCreateDto.Response response = new CommentCreateDto.Response(user, comment, isExist);
 
         return response;
     }
