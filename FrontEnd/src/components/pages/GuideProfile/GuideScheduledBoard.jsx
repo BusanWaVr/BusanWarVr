@@ -27,7 +27,6 @@ function GuideScheduledBoard() {
         );
         console.log(response);
         if (response.status === 200) {
-          console.log("가이드 예정정보를 받았어요");
           const data = await response.json();
           const TourData = data.data;
           const GuideTour = TourData.scheduledTours;
