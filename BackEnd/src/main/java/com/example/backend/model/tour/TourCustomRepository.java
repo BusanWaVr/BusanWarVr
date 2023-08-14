@@ -13,6 +13,7 @@ import com.example.backend.model.user.QUser;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,14 +40,20 @@ public class TourCustomRepository extends QuerydslRepositorySupport {
             case "REGION" :
                 return findByRegionToTour(keyword, pageable);
             case "GUIDE" :
-                User findUser = userRepository.findByNickname(keyword);
+                List<User> findUsers = userRepository.findAllByNicknameContaining(keyword);
 
-                if(findUser == null){
+                if(findUsers.isEmpty()){
                     Map<Long, SearchTourDto> map = new HashMap<>();
                     return map;
                 }
 
-                return findByGuideNameToTour(findUser.getId(), pageable);
+                List<Long> userIds = new ArrayList<>();
+
+                for(User user : findUsers){
+                    userIds.add(user.getId());
+                }
+
+                return findByGuideNameToTour(userIds, pageable);
         }
 
         throw new IllegalArgumentException("타입을 잘못 설정하였습니다.");
@@ -61,7 +68,8 @@ public class TourCustomRepository extends QuerydslRepositorySupport {
                 .leftJoin(user)
                 .on(tour.userId.eq(user.id))
                 .fetchJoin()
-                .where(tour.title.contains(keyword))
+                .where(tour.title.contains(keyword).and(tour.isCanceled.eq(false)).and(tour.isEnded.eq(false)))
+                .orderBy(tour.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .transform(groupBy(tour.id).as(new QSearchTourDto(tour, user)));
@@ -76,13 +84,14 @@ public class TourCustomRepository extends QuerydslRepositorySupport {
                 .leftJoin(user)
                 .on(tour.userId.eq(user.id))
                 .fetchJoin()
-                .where(tour.region.contains(keyword))
+                .where(tour.region.contains(keyword).and(tour.isCanceled.eq(false)).and(tour.isEnded.eq(false)))
+                .orderBy(tour.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .transform(groupBy(tour.id).as(new QSearchTourDto(tour, user)));
     }
 
-    public Map<Long, SearchTourDto> findByGuideNameToTour(Long userId, Pageable pageable){
+    public Map<Long, SearchTourDto> findByGuideNameToTour(List<Long> userIds, Pageable pageable){
         QTour tour = QTour.tour;
         QUser user = QUser.user;
 
@@ -91,7 +100,8 @@ public class TourCustomRepository extends QuerydslRepositorySupport {
                 .leftJoin(user)
                 .on(tour.userId.eq(user.id))
                 .fetchJoin()
-                .where(tour.userId.eq(userId))
+                .where(tour.userId.in(userIds).and(tour.isCanceled.eq(false)).and(tour.isEnded.eq(false)))
+                .orderBy(tour.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .transform(groupBy(tour.id).as(new QSearchTourDto(tour, user)));
@@ -106,7 +116,8 @@ public class TourCustomRepository extends QuerydslRepositorySupport {
                 .leftJoin(user)
                 .on(tour.userId.eq(user.id))
                 .fetchJoin()
-                .where(tour.id.in(tourIds))
+                .where(tour.id.in(tourIds).and(tour.isCanceled.eq(false)).and(tour.isEnded.eq(false)))
+                .orderBy(tour.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .transform(groupBy(tour.id).as(new QSearchTourDto(tour, user)));

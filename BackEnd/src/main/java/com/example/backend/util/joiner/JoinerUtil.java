@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class JoinerUtil {
+
     private final JoinerRepository joinerRepository;
 
     public void joinerDtoList(Long tourId, List<JoinerDto> joinerDtos) {

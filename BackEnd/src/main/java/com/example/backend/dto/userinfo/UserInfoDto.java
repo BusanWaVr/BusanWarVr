@@ -15,16 +15,18 @@ public class UserInfoDto {
         private Long userId;
         private String email;
         private String nickname;
+        private List<String> categories;
         private String profileImg;
         private AuthType type;
         private String introduction;
         private int followingNum;
         private List<Review> reviews;
 
-        public Response(User user, int followingNum, List<Review> reviews) {
+        public Response(User user, List<String> categories, int followingNum, List<Review> reviews) {
             this.userId = user.getId();
             this.email = user.getEmail();
             this.nickname = user.getNickname();
+            this.categories = categories;
             this.profileImg = user.getProfileImg();
             this.type = user.getType();
             this.introduction = user.getIntroduction();
