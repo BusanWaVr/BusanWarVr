@@ -94,6 +94,8 @@ public class GuideInfoGetService {
                 scheduledToursDto.setTitle(tour.getTitle());
                 scheduledToursDto.setStartDate(tour.getStartDate());
                 scheduledToursDto.setEndDate(tour.getEndDate());
+                scheduledToursDto.setMaxMember(tour.getMaxMember());
+                scheduledToursDto.setCurrentMember(tour.getCurrentMember());
 
                 TourImage tourImage = tourIdToImageMap.get(tour.getId());
                 if (tourImage != null) {

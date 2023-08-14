@@ -13,5 +13,7 @@ public class TourInfoForGuideScheduledToursDto {
     private String image;
     private Date startDate;
     private Date endDate;
+    private int maxMember;
+    private int currentMember;
 
 }
