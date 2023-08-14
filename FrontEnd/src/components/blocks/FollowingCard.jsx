@@ -5,7 +5,7 @@ import BoogieNone from "../../assets/boogie_none.png";
 
 const { Meta } = Card;
 
-function FollowingCard({ followingData }) {
+function FollowingCard({ followingData, isMe }) {
   const [followedGuides, setFollowedGuides] = useState([]);
 
   useEffect(() => {
@@ -74,16 +74,18 @@ function FollowingCard({ followingData }) {
             <Card
               key={Following.id}
               style={{ margin: "10px" }}
-              actions={[
-                <Button
-                  danger={followedGuides.includes(Following.id)}
-                  onClick={() => changeFollow(Following.id)}
-                >
-                  {followedGuides.includes(Following.id)
-                    ? "언팔로우"
-                    : "팔로우"}
-                </Button>,
-              ]}
+              actions={
+                isMe && [
+                  <Button
+                    danger={followedGuides.includes(Following.id)}
+                    onClick={() => changeFollow(Following.id)}
+                  >
+                    {followedGuides.includes(Following.id)
+                      ? "언팔로우"
+                      : "팔로우"}
+                  </Button>,
+                ]
+              }
             >
               <Link to={`/guide/${Following.id}/mypage/`}>
                 <Meta

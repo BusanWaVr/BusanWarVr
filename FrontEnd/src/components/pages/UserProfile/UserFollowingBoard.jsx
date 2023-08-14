@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import FollowingCard from "../../blocks/FollowingCard";
 
 function UserFollowingBoard() {
+  const { isMe } = useOutletContext();
   const [followingData, setFollowingData] = useState([]);
   const { userId } = useParams();
 
@@ -36,7 +38,7 @@ function UserFollowingBoard() {
   return (
     <div className="h-full">
       {followingData ? (
-        <FollowingCard followingData={followingData} />
+        <FollowingCard followingData={followingData} isMe={isMe} />
       ) : (
         <p>로딩중ㅎ</p>
       )}
