@@ -69,4 +69,5 @@ public class CommentController {
         List<CommentDto> response = responsePage.getContent();
         return new Response<>("200", "성공적으로 댓글 목록을 불러왔습니다.", response);
     }
+
 }

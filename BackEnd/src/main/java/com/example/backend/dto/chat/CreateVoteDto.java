@@ -21,7 +21,7 @@ public class CreateVoteDto {
         private String column1;
         private String column2;
 
-        public Response(Request request){
+        public Response(CreateVoteDto.Request request){
             this.RoomUid = request.getRoomUid();
             this.column1 = request.getColumn1();
             this.column2 = request.getColumn2();
