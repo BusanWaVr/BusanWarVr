@@ -32,7 +32,6 @@ function GuideNavbar() {
   return (
     <Menu
       theme="light"
-      defaultSelectedKeys={["1"]}
       mode="inline"
       items={items}
     />

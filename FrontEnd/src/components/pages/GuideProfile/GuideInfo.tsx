@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { styled } from "styled-components";
 import BusanBg from "../../../assets/busan_background.png";
 import { EditOutlined, MailOutlined } from "@ant-design/icons";
@@ -51,11 +50,7 @@ const GuideIntroduction = styled.div`
   font-size: 16px;
 `;
 
-const UserInfo = ({ userInfoData }) => {
-  console.log(userInfoData);
-  const [userTourData, setUserTourData] = useState(null);
-  const { urlId } = useParams();
-
+const UserInfo = ({ userInfoData, isMe }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -76,7 +71,7 @@ const UserInfo = ({ userInfoData }) => {
         <UserInfoWrapper>
           <UserInfoHeader>
             <p className="font-bold">회원 정보</p>
-            {String(userInfoData.userId) === urlId ? (
+            {isMe ? (
               <Tooltip title="회원 정보 수정">
                 <Button
                   type="link"

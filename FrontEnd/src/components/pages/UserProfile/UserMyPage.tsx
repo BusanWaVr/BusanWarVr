@@ -7,6 +7,7 @@ const { Content, Sider } = Layout;
 
 import UserMini from "./UserMini";
 import UserNavbar from "./UserNavbar";
+import { toast } from "react-toastify";
 
 const UserMyPageLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -38,7 +39,9 @@ const UserMyPageLayout: React.FC = () => {
           const data = await response.json();
           setUserInfoData(data.data);
         } else {
-          alert("유저데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요.");
+          toast.error(
+            "유저데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요."
+          );
         }
       } catch (error) {
         console.error(error);
