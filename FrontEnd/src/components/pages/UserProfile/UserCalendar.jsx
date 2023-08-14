@@ -56,8 +56,6 @@ const UserCalendar = () => {
         item.startDate.substring(0, 10) === moment(value).format("YYYY-MM-DD")
     );
 
-    console.log(tour);
-
     if (tour) {
       setSelectedTour(tour);
     } else {
@@ -86,7 +84,7 @@ const UserCalendar = () => {
         tileContent={({ date, view }) => {
           let html = [];
           if (mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
-            html.push(<div className="dot"></div>);
+            html.push(<div key={date} className="dot"></div>);
           }
           return (
             <div className="flex justify-center items-center absoluteDiv">

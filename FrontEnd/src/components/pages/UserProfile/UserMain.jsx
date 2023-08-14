@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import UserInfo from "./UserInfo";
 import UserCalendar from "./UserCalendar";
@@ -16,27 +16,17 @@ function UserMain() {
 
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate("/update");
-  };
-
   return (
     <div>
-      {isMe ? (
-        userInfoData ? (
-          <div>
-            <UserInfoWrapper>
-              <UserInfo userInfoData={userInfoData} />
-
-            </UserInfoWrapper>
-
-            <UserCalendar />
-          </div>
-        ) : (
-          <p>로딩중ㅎ</p>
-        )
+      {userInfoData ? (
+        <div>
+          <UserInfoWrapper>
+            <UserInfo userInfoData={userInfoData} isMe={isMe} />
+          </UserInfoWrapper>
+          <UserCalendar />
+        </div>
       ) : (
-        <p>다른 유저의 상세정보는 비공개입니다.</p>
+        <p>로딩중ㅎ</p>
       )}
     </div>
   );

@@ -15,8 +15,7 @@ function UserEndedBoard({ userTourData, isMe }) {
 
   return (
     <div>
-      <h1>종료보드</h1>
-      <TourCard TourData={TourData} isMe={isMe} />
+      <TourCard TourData={TourData} isMe={isMe} tourType="ended"/>
     </div>
   );
 }
