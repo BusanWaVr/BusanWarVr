@@ -64,7 +64,7 @@ const LiveStreamView = () => {
   // 그냥 모든 sessionid => tourId로 바꿔주면 되는데 무서워서 일단 이렇게
   // const sessionid = tourId 로 하니까 채팅은 되는데 오픈비두가 안됨..
   const { sessionid } = useParams();
-  const tourUID = sessionid
+  const tourUID = sessionid;
 
   // 투표
   const [voting, setVoting] = useState(false);
@@ -300,7 +300,14 @@ const LiveStreamView = () => {
 
   // 전체화면 온오프
   useEffect(() => {
-    console.log("tourId:", tourId, "tourUID:", tourUID, "세션아이디", sessionid)
+    console.log(
+      "tourId:",
+      tourId,
+      "tourUID:",
+      tourUID,
+      "세션아이디",
+      sessionid
+    );
 
     const handleFullscreenChange = () => {
       dispatch(setIsFullScreen(!!document.fullscreenElement));
@@ -366,32 +373,32 @@ const LiveStreamView = () => {
     }
   }, [voting]);
 
-
   // 투표함 생성 받기(SUB)
   function subscribeVote(stomp) {
-    stomp.subscribe(`/sub/chat/vote/create/room/${tourUID}`,
-    (data) => {
-      const received = JSON.parse(data.body);
-      const receivedMessage = {
-        option1 : received.column1,
-        option2 : received.column2,
-      }
-      setVoting(true);
-      dispatch(setOption1(received.column1));
-      dispatch(setOption2(received.column2));
-      console.log("투표 구독으로 받아오는 메시지", receivedMessage);
-    },
-    { id: "subVote" }
-    )
-  };
+    stomp.subscribe(
+      `/sub/chat/vote/create/room/${tourUID}`,
+      (data) => {
+        const received = JSON.parse(data.body);
+        const receivedMessage = {
+          option1: received.column1,
+          option2: received.column2,
+        };
+        setVoting(true);
+        dispatch(setOption1(received.column1));
+        dispatch(setOption2(received.column2));
+        console.log("투표 구독으로 받아오는 메시지", receivedMessage);
+      },
+      { id: "subVote" }
+    );
+  }
 
   const onChangeColumn1 = (e) => {
     setColumn1(e.target.value);
-  }
+  };
 
   const onChangeColumn2 = (e) => {
     setColumn2(e.target.value);
-  }
+  };
 
   const createVote = async () => {
     // 투표함 생성(POST)
@@ -427,27 +434,30 @@ const LiveStreamView = () => {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   // 사용자 투표 실시간 받기(SUB)
   function subscribeVoteCnt(stomp) {
-    stomp.subscribe(`/sub/chat/vote/room/${tourUID}`,
-    (data) => {
-      const received = JSON.parse(data.body);
-      const receivedMessage = {
-        nickname : received.sender.nickname,
-        selectType : received.selectType,
-      }
-      console.log("사용자 투표로 받아오는 메시지", receivedMessage);
-      if (received.selectType == 1) {
-        dispatch(setOption1Cnt(option1Cnt+1));
-      } else {
-        dispatch(setOption2Cnt(option2Cnt+1));
-      }
-    },
-    { id: "voteCnt" }
-    )
-  };
+    stomp.subscribe(
+      `/sub/chat/vote/room/${tourUID}`,
+      (data) => {
+        const received = JSON.parse(data.body);
+        const receivedMessage = {
+          nickname: received.sender.nickname,
+          selectType: received.selectType,
+        };
+        console.log("사용자 투표로 받아오는 메시지", receivedMessage);
+        if (received.selectType == 1) {
+          dispatch(setOption1Cnt(1));
+          console.log(option1Cnt);
+        } else {
+          dispatch(setOption2Cnt(1));
+          console.log(option2Cnt);
+        }
+      },
+      { id: "voteCnt" }
+    );
+  }
 
   // 가이드 투표 종료하기(POST)
   async function endVote() {
@@ -479,18 +489,17 @@ const LiveStreamView = () => {
     }
   }
 
-
   // 가이드 투표 종료인지 확인하기(SUB)
   function subscribeEndVote(stomp) {
-    stomp.subscribe(`/sub/chat/vote/end/${tourUID}`,
-    (data) => {
-      setVoting(false);
-      console.log("투표 종료")
-    },
-    { id: "endVote" }
-    )
-  };
-
+    stomp.subscribe(
+      `/sub/chat/vote/end/${tourUID}`,
+      (data) => {
+        setVoting(false);
+        console.log("투표 종료");
+      },
+      { id: "endVote" }
+    );
+  }
 
   const getToken = useCallback(async () => {
     return createSession(sessionid).then((sessionId) => createToken(sessionId));
@@ -555,9 +564,14 @@ const LiveStreamView = () => {
           </div>
           {/* 채팅창 */}
           <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
-            <ChatRoom ref={chatRoomRef} onload={onload} onConnect={onConnect} tourUID={tourUID}/>
+            <ChatRoom
+              ref={chatRoomRef}
+              onload={onload}
+              onConnect={onConnect}
+              tourUID={tourUID}
+            />
           </div>
-          <Stt tourUID={tourUID}/>
+          <Stt tourUID={tourUID} />
           {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
@@ -580,15 +594,26 @@ const LiveStreamView = () => {
           >
             여기
           </button>{" "} */}
-          <input type="text" placeholder="1번 선택지" value={column1}
-          onChange={onChangeColumn1}
+          <input
+            type="text"
+            placeholder="1번 선택지"
+            value={column1}
+            onChange={onChangeColumn1}
           />
-          <input type="text" placeholder="2번 선택지" value={column2}
-          onChange={onChangeColumn2}
+          <input
+            type="text"
+            placeholder="2번 선택지"
+            value={column2}
+            onChange={onChangeColumn2}
           />
           <button onClick={createVote}>투표 시작하기</button>
           <button onClick={endVote}>투표 종료하기</button>
-          <TestTest ref={initRef} tourUID={tourUID} accessToken={accessToken}/> : <></>
+          <TestTest
+            ref={initRef}
+            tourUID={tourUID}
+            accessToken={accessToken}
+          />{" "}
+          : <></>
           <VoteModal />
         </FullScreen>
       )}
