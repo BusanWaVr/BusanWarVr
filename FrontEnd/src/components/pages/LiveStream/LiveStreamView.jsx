@@ -170,6 +170,7 @@ const LiveStreamView = () => {
       // Get a token from the OpenVidu deployment
       getToken().then(async (token) => {
         try {
+          console.log(token);
           await session.connect(token, { clientData: nickname });
 
           let publisher = await OV.current.initPublisherAsync(undefined, {
@@ -513,6 +514,8 @@ const LiveStreamView = () => {
         headers: { "Content-Type": "application/json" },
       }
     );
+
+    console.log(response.data);
     return response.data; // The sessionId
   };
 
@@ -524,6 +527,7 @@ const LiveStreamView = () => {
         headers: { "Content-Type": "application/json" },
       }
     );
+    console.log(response.data);
     return response.data; // The token
   };
 

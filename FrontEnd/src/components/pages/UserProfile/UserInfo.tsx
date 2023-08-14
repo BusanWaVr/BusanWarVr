@@ -29,14 +29,14 @@ const UserInfoHeader = styled.div`
 const UserInfoContent = styled.div`
   padding-left: 15px;
   text-align: left;
-  margin: 30px 0;
+  margin: 15px 0;
   & p:nth-child(1) {
     color: #1983ff;
     font-weight: 600;
   }
 
   & p:nth-child(2) {
-    font-size: 18px;
+    font-size: 16px;
   }
 `;
 
@@ -106,7 +106,10 @@ const UserInfo = ({ userInfoData }) => {
             <p>닉네임</p>
             <p>{userInfoData.nickname}</p>
           </UserInfoContent>
-          {/* //TODO - 관심 카테고리 받아오기 */}
+          <UserInfoContent>
+            <p>관심 카테고리</p>
+            <p>{userInfoData.categories.join(", ")}</p>
+          </UserInfoContent>
         </UserInfoWrapper>
       </div>
     </div>

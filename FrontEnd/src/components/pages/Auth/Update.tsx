@@ -5,8 +5,7 @@ import GuideUpdate from "./GuideUpdate";
 
 const Update = () => {
   return (
-    <div>
-      <h1>업데이트페이지</h1>
+    <div className="flex justify-center p-8 md:px-0">
       {localStorage.getItem("userType") === "GUIDE" ? (
         <GuideUpdate />
       ) : (
