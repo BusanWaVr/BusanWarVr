@@ -423,6 +423,7 @@ const LiveStreamView = () => {
         // 투표 진행중, 모션인식 진행중 true
         setVote(true);
         setVoting(true);
+        dispatch(setIsVoteOpen(true));
         // 1번 선택지, 2번 선택지 값 저장
         dispatch(setOption1(received.column1));
         dispatch(setOption2(received.column2));
