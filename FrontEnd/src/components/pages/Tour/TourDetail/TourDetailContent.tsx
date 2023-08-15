@@ -3,7 +3,7 @@ import { EnvironmentFilled } from "@ant-design/icons";
 import { AccessTime, Groups } from "@mui/icons-material";
 import { Divider, Space, Tag } from "antd";
 import { styled } from "styled-components";
-import CurrentMate from "./CurrentMate";
+import CurrentMate from "../../../blocks/CurrentMate";
 import ReviewContainer from "./ReviewContainer";
 import CommentContainer from "./CommentContainer";
 import { useI18n } from "../../../../hooks/useI18n"
