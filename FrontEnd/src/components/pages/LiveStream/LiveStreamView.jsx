@@ -1,6 +1,8 @@
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
-import Slider from "react-slick";
+import { Allotment } from "allotment";
+import "allotment/dist/style.css";
+import { Input, Button, ButtonGroup } from "@nextui-org/react";
 import React, {
   useCallback,
   useEffect,
@@ -10,13 +12,13 @@ import React, {
 } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import UserVideoComponent from "./UserVideoComponent";
+
+import UserVideoContainer from "./UserVideoContainer";
 import Toolbar from "./Toolbar";
 import LiveExample from "./LiveExample";
 import Loader from "../../atoms/Loader";
 import useCustomBack from "../../../hooks/useCustomBack";
 import ChatRoom from "./ChatRoom";
-import QRCodeComponent from "./QRCodeComponent";
 import VoteModal from "./VoteModal";
 
 import "./LiveStreamView.css";
@@ -49,8 +51,10 @@ const LiveStreamView = () => {
   const [stompClient, setStompClient] = useState(null);
 
   useEffect(() => {
-    setStompClient(Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp")))
-  },[]);
+    setStompClient(
+      Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
+    );
+  }, []);
 
   const {
     youtubeLink,
@@ -67,7 +71,7 @@ const LiveStreamView = () => {
     option1Cnt,
     option2Cnt,
   } = useSelector((state) => state.liveStream);
-  
+
   const { nickname, userType } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
 
@@ -238,7 +242,6 @@ const LiveStreamView = () => {
     stompClient.unsubscribe(`voteCnt`);
     stompClient.unsubscribe(`endVote`);
 
-
     navigate("/livestream");
   }, [session]);
 
@@ -399,11 +402,10 @@ const LiveStreamView = () => {
   // 투표 시작할 때 값 초기화하기
   useEffect(() => {
     if (vote) {
-        dispatch(setNewOption1Cnt(0));
-        dispatch(setNewOption2Cnt(0));
+      dispatch(setNewOption1Cnt(0));
+      dispatch(setNewOption2Cnt(0));
     }
-
-  }, [dispatch, vote])
+  }, [dispatch, vote]);
 
   // 투표함 생성 받기(SUB)
   function subscribeVote(stomp) {
@@ -421,6 +423,7 @@ const LiveStreamView = () => {
         // 투표 진행중, 모션인식 진행중 true
         setVote(true);
         setVoting(true);
+        dispatch(setIsVoteOpen(true));
         // 1번 선택지, 2번 선택지 값 저장
         dispatch(setOption1(received.column1));
         dispatch(setOption2(received.column2));
@@ -569,53 +572,147 @@ const LiveStreamView = () => {
     return response.data; // The token
   };
 
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <>
       {isLoading ? (
         <Loader />
       ) : (
         <FullScreen handle={handleFullScreen}>
-          <LiveExample className="live-example" videoId={videoId} />
-          <div id="session">
-            <div className="video-slider" style={{ width: "1200px" }}>
-              <Slider id="video-container" className="" {...sliderSettings}>
-                {/* 현재 유저 화면 */}
-                {publisher !== undefined ? (
-                  <div
-                    className="stream-container current-stream"
-                    onClick={() => handleMainVideoStream(publisher)}
-                    style={{ width: "200px" }}
-                  >
-                    <UserVideoComponent streamManager={publisher} />
-                  </div>
-                ) : null}
-                {/* 다른 유저 화면 */}
-                {subscribers.map((sub, i) => (
-                  <div
-                    key={sub.id}
-                    className="stream-container"
-                    onClick={() => handleMainVideoStream(sub)}
-                    style={{ width: "200px" }}
-                  >
-                    <span>{sub.id}</span>
-                    <UserVideoComponent streamManager={sub} />
-                  </div>
-                ))}
-              </Slider>
-            </div>
+          <div style={{ width: "100vw", height: "100vh" }}>
+            <Allotment
+              style={{ width: "100%", height: "100%", display: "flex" }}
+            >
+              <Allotment.Pane
+                maxSize={
+                  windowSize.width < 768 && (isVoteOpen || isChatOpen)
+                    ? 0
+                    : windowSize.width
+                }
+                minSize={windowSize.width < 768 ? 0 : windowSize.width * 0.6}
+                snap={windowSize.width < 768}
+                className="bg-zinc-800"
+              >
+                <Allotment vertical>
+                  {/* 유저비디오 */}
+                  <Allotment.Pane maxSize={200} snap>
+                    <UserVideoContainer
+                      publisher={publisher}
+                      subscribers={subscribers}
+                      handleMainVideoStream={handleMainVideoStream}
+                    />
+                  </Allotment.Pane>
+                  {/* VR라이브 */}
+                  <Allotment.Pane>
+                    <LiveExample className="live-example" videoId={videoId} />
+                  </Allotment.Pane>
+                </Allotment>
+              </Allotment.Pane>
+              {/* 추가 기능 */}
+              {(isVoteOpen || isChatOpen) && (
+                <Allotment.Pane
+                  minSize={
+                    windowSize.width < 768
+                      ? windowSize.width
+                      : windowSize.width * 0.25
+                  }
+                >
+                  <Allotment vertical>
+                    {isVoteOpen && (
+                      <Allotment.Pane className="bg-zinc-800 text-white">
+                        <div className="bg-zinc-900 h2 text-white font-semibold p-4 px-6 text-left">
+                          투표
+                        </div>
+                        {userType === "GUIDE" ? (
+                          // 가이드는 투표form, 유저들에게는 보이스채팅 기능
+                          <div className="flex flex-col gap-4 justify-center items-center px-12 py-6 text-black">
+                            <Input
+                              type="text"
+                              label="1번 선택지"
+                              value={column1}
+                              onChange={onChangeColumn1}
+                            />
+                            <Input
+                              type="text"
+                              label="2번 선택지"
+                              value={column2}
+                              onChange={onChangeColumn2}
+                            />
+                            <div className="flex gap-4 items-center w-full">
+                              <Button
+                                color="primary"
+                                variant="flat"
+                                onClick={createVote}
+                                className="w-full"
+                              >
+                                투표 시작하기
+                              </Button>
+                              <Button
+                                color="danger"
+                                variant="flat"
+                                onClick={endVote}
+                                className="w-full"
+                              >
+                                투표 종료하기
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <TestTest
+                            ref={initRef}
+                            tourUID={tourUID}
+                            accessToken={accessToken}
+                            voting={voting}
+                            setVoting={setVoting}
+                          />
+                        )}
+                        <VoteModal voting={voting} />
+                      </Allotment.Pane>
+                    )}
+                    {isChatOpen && (
+                      <Allotment.Pane className="bg-zinc-800 text-white">
+                        <div
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                          }}
+                        >
+                          <ChatRoom
+                            ref={chatRoomRef}
+                            onload={onload}
+                            onConnect={onConnect}
+                            tourUID={tourUID}
+                            stompClient={stompClient}
+                          />
+                          <Stt tourUID={tourUID} stompClient={stompClient} />
+                        </div>
+                      </Allotment.Pane>
+                    )}
+                  </Allotment>
+                </Allotment.Pane>
+              )}
+            </Allotment>
           </div>
-          {/* 채팅창 */}
-          <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
-            <ChatRoom
-              ref={chatRoomRef}
-              onload={onload}
-              onConnect={onConnect}
-              tourUID={tourUID}
-              stompClient={stompClient}
-            />
-          </div>
-          <Stt tourUID={tourUID} stompClient={stompClient}/>
-          {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
             toggleAudio={toggleAudio}
@@ -630,38 +727,7 @@ const LiveStreamView = () => {
             handleJoinChatToggle={handleJoinChatToggle}
             onLeaveChat={onLeaveChat}
             onJoinChat={onJoinChat}
-          />
-          <QRCodeComponent youtubeLink={youtubeLink} />
-          
-          {userType === 'GUIDE' ? 
-          // 가이드는 투표form, 유저들에게는 보이스채팅 기능
-          <div>
-            <input
-            type="text"
-            placeholder="1번 선택지"
-            value={column1}
-            onChange={onChangeColumn1}
-            />
-            <input
-            type="text"
-            placeholder="2번 선택지"
-            value={column2}
-            onChange={onChangeColumn2}
-          />
-          <button onClick={createVote}>투표 시작하기</button>
-          <button onClick={endVote}>투표 종료하기</button>
-          
-          </div> : 
-          
-          <TestTest
-            ref={initRef}
-            tourUID={tourUID}
-            accessToken={accessToken}
-            voting={voting}
-            setVoting={setVoting}
-          />}
-          <VoteModal 
-          vote={vote}
+            youtubeLink={youtubeLink}
           />
         </FullScreen>
       )}
