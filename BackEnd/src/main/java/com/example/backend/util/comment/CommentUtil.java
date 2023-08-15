@@ -24,12 +24,14 @@ public class CommentUtil {
     private final JoinerUtil joinerUtil;
 
     public void commentDtoList(Long tourId, List<CommentDto> commentDtos) {
-        Tour tour = tourRepository.findById(tourId).get();
+        // tour 라인 삭제
         List<Comment> commentList = commentRepository.findAllByTourId(tourId);
+
         for (Comment comment : commentList) {
             User user = userRepository.findById(comment.getUserId()).get();
             List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
             boolean isExist = joinerUtil.isExistJoinerList(user, joinerList);
+
             if (comment.getParentId() == null) {
                 List<ReCommentDto> reCommentList = new ArrayList<>();
                 reCommentDtoList(comment, reCommentList);
@@ -37,6 +39,7 @@ public class CommentUtil {
                 commentDtos.add(rootComment);
                 continue;
             }
+
             List<ReCommentDto> reCommentList = new ArrayList<>();
             reCommentDtoList(comment, reCommentList);
             CommentDto rootComment = new CommentDto(user, comment, isExist, reCommentList);
