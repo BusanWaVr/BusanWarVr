@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useI18n } from "../../hooks/useI18n"
+import LangeBtn from "./LangBtn"
 
 import {
   Navbar,
@@ -28,6 +30,7 @@ interface Props {
 }
 
 function Header({ isLoggedIn, setIsLoggedIn }: Props) {
+  const t = useI18n()
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [onLoginModal, setOnLoginModal] = useState(false);
   const [userInfo, setUserInfo] = useState({});
@@ -84,17 +87,17 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
         <NavbarContent className="hidden sm:flex gap-8" justify="start">
           <NavbarItem>
             <Link color="foreground" href="/tour" className="text-sm">
-              투어 검색
+              {t(`투어 검색`)}
             </Link>
           </NavbarItem>
           <NavbarItem>
             <Link color="foreground" href="/mate" className="text-sm">
-              메이트 모집
+            {t(`메이트 모집`)}
             </Link>
           </NavbarItem>
           <NavbarItem>
             <Link color="foreground" href="/livestream" className="text-sm">
-              스트리밍 테스트
+              {t(`스트리밍 테스트`)}
             </Link>
           </NavbarItem>
           {isLoggedIn && userType === "GUIDE" ? (
@@ -104,6 +107,11 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
               </Link>
             </NavbarItem>
           ) : null}
+        </NavbarContent>
+
+        {/* 다국어 버튼 */}
+        <NavbarContent justify="end">
+          <LangeBtn />
         </NavbarContent>
 
         <NavbarContent justify="end">
