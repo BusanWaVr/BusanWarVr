@@ -10,6 +10,8 @@ interface LiveStreamState {
   tourId: string | null;
   tourUID: string | null;
   stompClient: any;
+  // 음성 채팅
+  isListening: boolean;
   // 투표 항목 1번, 2번
   option1: string | null;
   option2: string | null;
@@ -29,6 +31,7 @@ const initialState: LiveStreamState = {
   tourId: null,
   tourUID: null,
   stompClient: null,
+  isListening: false,
   option1: "1번 선택지",
   option2: "2번 선택지",
   option1Cnt: 0,
@@ -66,6 +69,9 @@ const LiveStreamSlice = createSlice({
     setStompClient: (state, action: PayloadAction<any>) => {
       state.stompClient = action.payload;
     },
+    setIsListening: (state, action: PayloadAction<boolean>) => {
+      state.isListening = action.payload;
+    },
     setOption1: (state, action: PayloadAction<string | null>) => {
       state.option1 = action.payload;
     },
@@ -91,6 +97,7 @@ export const {
   setTourId,
   setTourUID,
   setStompClient,
+  setIsListening,
   setOption1,
   setOption2,
   setOption1Cnt,
