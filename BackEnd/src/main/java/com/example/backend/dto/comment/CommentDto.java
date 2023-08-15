@@ -19,6 +19,7 @@ public class CommentDto {
     private boolean isOwner;
     private Long parentId;
     private String content;
+    private boolean isDeleted;
     private List<ReCommentDto> reComments;
 
     public CommentDto(User user, Comment comment, boolean isOwner, List<ReCommentDto> reComments) {
@@ -30,6 +31,7 @@ public class CommentDto {
         this.isOwner = isOwner;
         this.parentId = comment.getParentId();
         this.content = comment.getContent();
+        this.isDeleted = comment.isDeleted();
         this.reComments = reComments;
     }
 }
