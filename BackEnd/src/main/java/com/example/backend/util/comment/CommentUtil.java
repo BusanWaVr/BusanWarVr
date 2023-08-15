@@ -24,7 +24,6 @@ public class CommentUtil {
     private final JoinerUtil joinerUtil;
 
     public void commentDtoList(Long tourId, List<CommentDto> commentDtos) {
-        // tour 라인 삭제
         List<Comment> commentList = commentRepository.findAllByTourId(tourId);
 
         for (Comment comment : commentList) {
@@ -32,11 +31,7 @@ public class CommentUtil {
             List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
             boolean isExist = joinerUtil.isExistJoinerList(user, joinerList);
 
-            if (comment.getParentId() == null) {
-                List<ReCommentDto> reCommentList = new ArrayList<>();
-                reCommentDtoList(comment, reCommentList);
-                CommentDto rootComment = new CommentDto(user, comment, isExist, reCommentList);
-                commentDtos.add(rootComment);
+            if (comment.getParentId() != null) {
                 continue;
             }
 
