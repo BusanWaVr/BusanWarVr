@@ -191,7 +191,10 @@ function TestTest(props, ref) {
       </Container> : <></>}
 
       
-
+      <div>
+            <canvas id="canvas"></canvas>
+            </div>
+            <div id="label-container"></div>
     </div>
   );
 }
