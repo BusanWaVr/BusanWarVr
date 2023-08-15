@@ -32,6 +32,7 @@ import {
   setIsVideoEnabled,
   setIsFullScreen,
   setIsChatOpen,
+  setIsVoteOpen,
   setStompClient,
   setOption1,
   setOption2,
@@ -50,6 +51,7 @@ const LiveStreamView = () => {
     isVideoEnabled,
     isFullScreen,
     isChatOpen,
+    isVoteOpen,
     tourId,
     // tourUID,
     stompClient,
@@ -58,7 +60,8 @@ const LiveStreamView = () => {
     option1Cnt,
     option2Cnt,
   } = useSelector((state) => state.liveStream);
-  const { nickname } = useSelector((state) => state.userInfo);
+  
+  const { nickname, userType } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
 
   // 그냥 모든 sessionid => tourId로 바꿔주면 되는데 무서워서 일단 이렇게
@@ -66,7 +69,9 @@ const LiveStreamView = () => {
   const { sessionid } = useParams();
   const tourUID = sessionid;
 
-  // 투표
+  // 가이드가 투표를 열어서, 현재 투표가 진행중인지
+  const [vote, setVote] = useState(false);
+  // 사용자가 모션인식으로 투표를 진행중인지
   const [voting, setVoting] = useState(false);
   // 가이드가 입력할 투표 항목
   const [column1, setColumn1] = useState("");
@@ -332,6 +337,11 @@ const LiveStreamView = () => {
     }
   };
 
+  // 투표 모달 온오프
+  const toggleVote = () => {
+    dispatch(setIsVoteOpen(!isVoteOpen));
+  };
+
   const handleLeaveChatToggle = () => {
     dispatch(setIsChatOpen(false));
   };
@@ -384,6 +394,7 @@ const LiveStreamView = () => {
           option1: received.column1,
           option2: received.column2,
         };
+        setVote(true);
         setVoting(true);
         dispatch(setOption1(received.column1));
         dispatch(setOption2(received.column2));
@@ -585,26 +596,25 @@ const LiveStreamView = () => {
             toggleFullScreen={toggleFullScreen}
             isFullScreen={isFullScreen}
             isChatOpen={isChatOpen}
+            isVoteOpen={isVoteOpen}
+            toggleVote={toggleVote}
             handleLeaveChatToggle={handleLeaveChatToggle}
             handleJoinChatToggle={handleJoinChatToggle}
             onLeaveChat={onLeaveChat}
             onJoinChat={onJoinChat}
           />
           <QRCodeComponent youtubeLink={youtubeLink} />
-          {/* <button
-            onClick={() => {
-              setVoting(true);
-            }}
-          >
-            여기
-          </button>{" "} */}
-          <input
+          
+          {userType === 'GUIDE' ? 
+          // 가이드는 투표form, 유저들에게는 보이스채팅 기능
+          <div>
+            <input
             type="text"
             placeholder="1번 선택지"
             value={column1}
             onChange={onChangeColumn1}
-          />
-          <input
+            />
+            <input
             type="text"
             placeholder="2번 선택지"
             value={column2}
@@ -612,13 +622,19 @@ const LiveStreamView = () => {
           />
           <button onClick={createVote}>투표 시작하기</button>
           <button onClick={endVote}>투표 종료하기</button>
+          
+          </div> : 
+          
           <TestTest
             ref={initRef}
             tourUID={tourUID}
             accessToken={accessToken}
-          />{" "}
-          : <></>
-          <VoteModal />
+            voting={voting}
+            setVoting={setVoting}
+          />}
+          <VoteModal 
+          voting={voting}
+          />
         </FullScreen>
       )}
     </>
