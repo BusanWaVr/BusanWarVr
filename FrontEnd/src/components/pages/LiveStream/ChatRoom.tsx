@@ -12,8 +12,13 @@ export type message = {
 };
 
 function ChatRoom(props, ref) {
+  
+  const stompClient = props.stompClient;
+
   // reducer에서 데이터 가져오기
-  const { isListening, stompClient } = useSelector((state) => state.liveStream);
+  const { isListening } = useSelector(
+    (state) => state.liveStream
+  );
   const { accessToken, userId } = useSelector((state: any) => state.userInfo);
   const tourUID = props.tourUID;
 
@@ -72,7 +77,6 @@ function ChatRoom(props, ref) {
   const gowp = () => {
     stompClient.unsubscribe(`chat`);
     const stopmClientSave = stompClient;
-    setStompClient(stopmClientSave);
   };
 
   // 메시지 보내기

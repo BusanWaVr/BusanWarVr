@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useI18n } from "../../hooks/useI18n"
 
 const CardContainer = styled.div`
   display: flex;
@@ -19,6 +20,7 @@ const Card = styled.div`
 `;
 
 function GuideRecoCard({ guideRecoData }) {
+  const t = useI18n()
   return (
     <CardContainer>
       {guideRecoData ? (
@@ -36,18 +38,18 @@ function GuideRecoCard({ guideRecoData }) {
                   }}
                 />
               ) : (
-                <p>등록된 프로필 이미지가 없습니다.</p>
+                <p>{t(`등록된 프로필 이미지가 없습니다.`)}</p>
               )}
               <Link to={`/guide/${guide.tourId}/mypage`}>
                 <h5>{guide.nickname}</h5>
               </Link>
-              <p>팔로워 : {guide.followerNum}</p>
-              <p>투어 수 : {guide.tourNumbers}</p>
-              <p>평점 : {guide.averageScore}</p>
+              <p>{t(`팔로워`)} : {guide.followerNum}</p>
+              <p>{t(`투어 수`)} : {guide.tourNumbers}</p>
+              <p>{t(`평점`)} : {guide.averageScore}</p>
             </Card>
           ))
         ) : (
-          <p>추천 가이드 데이터가 없습니다</p>
+          <p>{t(`추천 가이드 데이터가 없습니다`)}</p>
         )
       ) : (
         <p>Loading...</p>

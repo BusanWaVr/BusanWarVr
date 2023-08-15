@@ -8,8 +8,10 @@ import { CalendarOutlined, TeamOutlined } from "@ant-design/icons";
 import { Card, CardBody, Image, Button } from "@nextui-org/react";
 import moment from "moment";
 import { useInterval } from "react-use";
+import { useI18n } from "../../hooks/useI18n"
 
 function GuideTourCard({ TourData, tourType }) {
+  const t = useI18n()
   const { userId } = useSelector((state) => state.userInfo);
   const { urlId } = useParams();
 
@@ -113,7 +115,7 @@ function GuideTourCard({ TourData, tourType }) {
                         variant="flat"
                         isLoading
                       >
-                        투어 시작 가능 시간까지{" "}
+                        {t(`투어 시작 가능 시간까지`)}{" "}
                         {formatMilliseconds(
                           new Date(tour.startDate) -
                             new Date(seconds) -
@@ -129,7 +131,7 @@ function GuideTourCard({ TourData, tourType }) {
             </Card>
           ))
         ) : (
-          <p>투어 데이터가 없습니다</p>
+          <p>{t(`투어 데이터가 없습니다`)}</p>
         )
       ) : (
         <p>Loading...</p>

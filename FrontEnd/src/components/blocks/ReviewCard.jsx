@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ReviewDelete from "../pages/Review/ReviewDelete";
+import { useI18n } from "../../hooks/useI18n"
 
 const CardContainer = styled.div`
   margin: 50px;
 `;
 
 function ReviewCard({ ReviewData }) {
+  const t = useI18n()
   const [reviews, setReviews] = useState(null);
   const navigate = useNavigate();
 
@@ -45,12 +47,12 @@ function ReviewCard({ ReviewData }) {
             <CardContainer key={review.id}>
               {/* 투어명도 받아와야 하나?.. */}
               <Link to={`/tour/${review.tourId}`}>
-                <p>이 리뷰가 달린 투어 정보 보러가기</p>
+                <p>{t(`이 리뷰가 달린 투어 정보 보러가기`)}</p>
               </Link>
               <h2>{review.title}</h2>
-              <h3>별점 : {review.score}</h3>
+              <h3>{t(`별점`)} : {review.score}</h3>
               <div dangerouslySetInnerHTML={{ __html: review.content }} />
-              <p> 작성 날짜 : {review.date}</p>
+              <p> {t(`작성 날짜`)} : {review.date}</p>
               {localUserId === review.userId &&
               <div>
                 <button onClick={() => handleEditClick(review)}>수정</button>
@@ -64,10 +66,10 @@ function ReviewCard({ ReviewData }) {
             </CardContainer>
           ))
         ) : (
-          <p>작성한 리뷰가 없습니다.</p>
+          <p>{t(`작성한 리뷰가 없습니다.`)}</p>
         )
       ) : (
-        <p>로딩중ㅎ</p>
+        <p>{t(`로딩중ㅎ`)}</p>
       )}
     </div>
   );

@@ -20,6 +20,7 @@ import {
   PlusCircleOutlined,
   EditOutlined,
 } from "@ant-design/icons";
+import { useI18n } from "../../../hooks/useI18n"
 
 type TourData = {
   region: string;
@@ -151,6 +152,7 @@ const CourseListHeader = styled.div`
 `;
 
 const TourUpdate: React.FC = () => {
+  const t = useI18n()
   const navigate = useNavigate();
   const { tourId } = useParams<{ tourId: string }>();
   const [tourData, setTourData] = useState<TourData>({
@@ -387,7 +389,7 @@ const TourUpdate: React.FC = () => {
           <EssentialInfoContainer>
             <p className="essential__title">
               <ExclamationCircleOutlined />
-              필수 정보 입력
+              {t(`필수 정보 입력`)}
             </p>
             {/* 지역 */}
             <div className="essential__section">
@@ -414,7 +416,7 @@ const TourUpdate: React.FC = () => {
             {/* 카테고리 */}
             <ThemeProvider theme={customTheme}>
               <div className="essential__section">
-                <p className="essential__subtitle">카테고리</p>
+                <p className="essential__subtitle">{t(`카테고리`)}</p>
                 {categoryList.map((category) => (
                   <Chip
                     key={category.name}
@@ -438,7 +440,7 @@ const TourUpdate: React.FC = () => {
 
             {/* 여행 날짜 */}
             <div className="essential__section">
-              <p className="essential__subtitle">투어 기간</p>
+              <p className="essential__subtitle">{t(`투어 기간`)}</p>
               <TourDatePicker
                 writeType="update"
                 setTourData={setTourData}
@@ -448,7 +450,7 @@ const TourUpdate: React.FC = () => {
 
             {/* 인원 */}
             <div className="essential__section">
-              <p className="essential__subtitle">참여 가능 인원</p>
+              <p className="essential__subtitle">{t(`참여 가능 인원`)}</p>
               <Slider
                 className="essential__slider"
                 range
@@ -506,7 +508,7 @@ const TourUpdate: React.FC = () => {
               <>
                 <Divider />
                 <CourseListHeader>
-                  <p>{index + 1}번째 코스</p>
+                  <p>{index + 1}{t(`번째 코스`)}</p>
 
                   <Button
                     type="link"
@@ -515,7 +517,7 @@ const TourUpdate: React.FC = () => {
                       deleteCourse(tourData.courses[index].courseKey)
                     }
                   >
-                    코스 삭제
+                    {t(`코스 삭제`)}
                   </Button>
                 </CourseListHeader>
 
@@ -541,7 +543,7 @@ const TourUpdate: React.FC = () => {
               }}
               icon={<PlusCircleOutlined />}
             >
-              코스 추가
+              {t(`코스 추가`)}
             </Button>
           </div>
 
@@ -557,11 +559,11 @@ const TourUpdate: React.FC = () => {
               justifyContent: "center",
             }}
           >
-            수정 완료
+            {t(`수정 완료`)}
           </Button>
         </TourDataUploadWrapper>
       ) : (
-        <div>로딩중</div>
+        <div>{t(`로딩중`)}</div>
       )}
     </>
   );

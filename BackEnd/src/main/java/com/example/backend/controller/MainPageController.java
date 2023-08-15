@@ -24,7 +24,7 @@ public class MainPageController {
     @GetMapping("/main/tour/recommend")
     public Response<List<TourRecommendDto>> tourRecommendApi(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PageableDefault(size = 4) Pageable pageable) {
+            @PageableDefault(size = 6) Pageable pageable) {
         Page<TourRecommendDto> responsePage = mainPageService.tourRecommend(userDetails.getUser(),
                 pageable);
 
@@ -34,7 +34,7 @@ public class MainPageController {
 
     @GetMapping("/main/guide/recommend")
     public Response<List<GuideRecommendDto>> guideRecommendApi(
-            @PageableDefault(size = 15) Pageable pageable) {
+            @PageableDefault(size = 6) Pageable pageable) {
         Page<GuideRecommendDto> responsePage = mainPageService.guideRecommend(pageable);
         List<GuideRecommendDto> response = responsePage.getContent();
         return new Response<>("200", "성공적으로 추천 가이드 목록을 불러왔습니다.", response);

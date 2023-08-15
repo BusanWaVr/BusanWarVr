@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useI18n } from "../../../hooks/useI18n"
 
 const Signup = () => {
+  const t = useI18n()
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -298,11 +300,11 @@ const Signup = () => {
   return (
     <>
       <h3>
-        <strong>일반 유저</strong> 회원가입
+        <strong>{t(`일반 유저`)}</strong> {t(`회원가입`)}
       </h3>
       <div className="form">
         <div className="form-el">
-          <label htmlFor="email">이메일</label> <br />
+          <label htmlFor="email">{t(`이메일`)}</label> <br />
           <input
             id="email"
             name="name"
@@ -312,7 +314,7 @@ const Signup = () => {
           />
           <p className="message">{emailMessage}</p>
           <button onClick={handleVerification} disabled={!isEmail}>
-            인증번호받기
+          {t(`인증번호받기`)}
           </button>
           <div>
             <p>{codeMessage}</p>
@@ -324,7 +326,7 @@ const Signup = () => {
                   onChange={(e) => setVerificationCode(e.target.value)}
                   disabled={isEmailConfirm}
                 />
-                <button type="submit">인증</button>
+                <button type="submit">{t(`인증`)}</button>
               </form>
             )}
           </div>
@@ -332,7 +334,7 @@ const Signup = () => {
         </div>
 
         <div className="form-el">
-          <label htmlFor="password">비밀번호</label> <br />
+          <label htmlFor="password">{t(`비밀번호`)}</label> <br />
           <input
             type="password"
             id="password"
@@ -343,7 +345,7 @@ const Signup = () => {
           <p className="message">{passwordMessage}</p>
         </div>
         <div className="form-el">
-          <label htmlFor="passwordConfirm">비밀번호 확인</label> <br />
+          <label htmlFor="passwordConfirm">{t(`비밀번호 확인`)}</label> <br />
           <input
             type="password"
             id="passwordConfirm"
@@ -356,7 +358,7 @@ const Signup = () => {
 
         <div className="form-el">
           <form onSubmit={handleSubmitName}>
-            <label htmlFor="name">닉네임</label> <br />
+            <label htmlFor="name">{t(`닉네임`)}</label> <br />
             <input
               id="name"
               name="name"
@@ -365,7 +367,7 @@ const Signup = () => {
               onChange={onChangeName}
             />
             <button type="submit" disabled={!isName}>
-              중복확인
+            {t(`중복확인`)}
             </button>
             <p className="message">{nameMessage}</p>
             <p>{nicknameMessage}</p>
@@ -375,7 +377,7 @@ const Signup = () => {
         <br />
         <br />
         <div className="form-el">
-          <label>관심 카테고리를 선택해주세요. (최소 3개, 최대 5개)</label>{" "}
+          <label>{t(`관심 카테고리를 선택해주세요. (최소 3개, 최대 5개)`)}</label>{" "}
           <p>{categoryMessage}</p>
           <br />
           {categoriesList.map((category, index) => (
@@ -394,7 +396,7 @@ const Signup = () => {
         </div>
 
         <button type="submit" onClick={handleSubmit}>
-          가입하기
+        {t(`가입하기`)}
         </button>
       </div>
     </>

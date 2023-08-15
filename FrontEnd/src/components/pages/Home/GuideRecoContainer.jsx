@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-
+import { useI18n } from "../../../hooks/useI18n"
 import GuideRecoCard from "../../blocks/GuideRecoCard";
 
 const Container = styled.div`
@@ -17,6 +17,7 @@ const MentionsContainer = styled.div`
 `;
 
 function DeadlineContainer() {
+  const t = useI18n()
   const [guideRecoData, setGuideRecoData] = useState([]);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ function DeadlineContainer() {
   return (
     <Container>
       <MentionsContainer>
-        <h5>추천 가이드 랭킹</h5>
+        <h5>{t(`추천 가이드 랭킹`)}</h5>
       </MentionsContainer>
       <GuideRecoCard guideRecoData={guideRecoData} />
     </Container>

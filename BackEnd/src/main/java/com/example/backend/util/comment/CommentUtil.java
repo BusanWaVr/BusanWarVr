@@ -6,7 +6,6 @@ import com.example.backend.model.comment.Comment;
 import com.example.backend.model.comment.CommentRepository;
 import com.example.backend.model.joiner.Joiner;
 import com.example.backend.model.joiner.JoinerRepository;
-import com.example.backend.model.tour.TourRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import com.example.backend.util.joiner.JoinerUtil;
@@ -25,7 +24,9 @@ public class CommentUtil {
     private final JoinerUtil joinerUtil;
 
     public void commentDtoList(Long tourId, List<CommentDto> commentDtos) {
+        // tour 라인 삭제
         List<Comment> commentList = commentRepository.findAllByTourId(tourId);
+
         for (Comment comment : commentList) {
             User user = userRepository.findById(comment.getUserId()).get();
             List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);

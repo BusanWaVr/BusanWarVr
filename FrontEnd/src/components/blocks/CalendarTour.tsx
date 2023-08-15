@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 import moment from "moment";
 import BoogieThinking from "../../assets/boogie_thinking.png";
+import { useI18n } from "../../hooks/useI18n"
 
 const TourWrapper = styled.div`
   background-color: #b8daff47;
@@ -60,6 +61,7 @@ interface Joiner {
 }
 
 const CalendarTour = ({ selectedTour }) => {
+  const t = useI18n()
   const [tourData, setTourData] = useState<TourData | null>(null);
 
   useEffect(() => {
@@ -109,7 +111,7 @@ const CalendarTour = ({ selectedTour }) => {
           </Link>
         ) : (
           <NoTourWrapper>
-            <p className="font-bold">예정된 투어가 없습니다.</p>
+            <p className="font-bold">{t(`예정된 투어가 없습니다.`)}</p>
             <img src={BoogieThinking} alt="" />
           </NoTourWrapper>
         )}

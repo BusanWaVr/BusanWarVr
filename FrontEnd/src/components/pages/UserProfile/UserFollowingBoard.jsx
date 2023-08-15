@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import FollowingCard from "../../blocks/FollowingCard";
+import { useI18n } from "../../../hooks/useI18n"
 
 function UserFollowingBoard() {
+  const t = useI18n()
   const { isMe } = useOutletContext();
   const [followingData, setFollowingData] = useState([]);
   const { userId } = useParams();
@@ -39,7 +41,7 @@ function UserFollowingBoard() {
       {followingData ? (
         <FollowingCard followingData={followingData} isMe={isMe} />
       ) : (
-        <p>로딩중ㅎ</p>
+        <p>{t(`로딩중ㅎ`)}</p>
       )}
     </div>
   );

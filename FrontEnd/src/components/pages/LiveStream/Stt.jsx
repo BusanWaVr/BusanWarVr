@@ -5,13 +5,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
   setIsListening,
-} from "../LiveStream/LiveStreamReducer";
+} from "./LiveStreamReducer";
 
 function Stt(props) {
 
     const dispatch = useDispatch();
 
-    const { stompClient, isListening } = useSelector((state) => state.liveStream);
+    const stompClient = props.stompClient;
+
+    const { isListening } = useSelector((state) => state.liveStream);
     const { accessToken } = useSelector((state) => state.userInfo);
     const tourUID = props.tourUID
 
