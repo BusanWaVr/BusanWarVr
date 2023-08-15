@@ -9,14 +9,25 @@ import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import CommentIcon from "@mui/icons-material/Comment";
 import CommentsDisabledIcon from "@mui/icons-material/CommentsDisabled";
 import HowToVoteIcon from "@mui/icons-material/HowToVote";
-
+import QrcodeOutlined from "@mui/icons-material/QrcodeOutlined";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+import Divider from "@mui/material/Divider";
 import styled from "styled-components";
+import { styled as muiStyled } from "@mui/material/styles";
+
+import QRCodeComponent from "./QRCodeComponent";
 
 import { useSelector, useDispatch } from "react-redux";
 
 const Toolbar = (props) => {
-  const { isAudioEnabled, isVideoEnabled, isFullScreen, isChatOpen, isVoteOpen } =
-    useSelector((state) => state.liveStream);
+  const {
+    isAudioEnabled,
+    isVideoEnabled,
+    isFullScreen,
+    isChatOpen,
+    isVoteOpen,
+    youtubeLink,
+  } = useSelector((state) => state.liveStream);
   const dispatch = useDispatch();
 
   const ToolbarContainer = styled.div`
@@ -29,6 +40,7 @@ const Toolbar = (props) => {
     background-color: #eee;
     border-radius: 30px;
     padding: 0 10px;
+    z-index: 99;
   `;
 
   const ToolbarButton = styled.button`
@@ -45,6 +57,18 @@ const Toolbar = (props) => {
     transition: none;
   `;
 
+  const HtmlTooltip = muiStyled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: "#f5f5f9",
+      color: "rgba(0, 0, 0, 0.87)",
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      border: "1px solid #dadde9",
+    },
+  }));
+
   return (
     <ToolbarContainer>
       {isVideoEnabled ? (
@@ -56,13 +80,6 @@ const Toolbar = (props) => {
           <VideocamOffIcon />
         </ToolbarButton>
       )}
-      <ToolbarButton
-        type="button"
-        id="buttonSwitchCamera"
-        onClick={props.switchCamera}
-      >
-        <CameraswitchIcon />
-      </ToolbarButton>
       {isAudioEnabled ? (
         <ToolbarButton onClick={props.toggleAudio}>
           <MicIcon />
@@ -81,7 +98,7 @@ const Toolbar = (props) => {
           <FullscreenIcon />
         </ToolbarButton>
       )}
-
+      <Divider orientation="vertical" flexItem />
       {isChatOpen ? (
         <ToolbarButton
           onClick={() => {
@@ -106,6 +123,15 @@ const Toolbar = (props) => {
       <ToolbarButton onClick={props.toggleVote}>
         <HowToVoteIcon />
       </ToolbarButton>
+
+      <HtmlTooltip
+        title={<QRCodeComponent youtubeLink={youtubeLink} />}
+        placement="top"
+      >
+        <ToolbarButton>
+          <QrcodeOutlined />
+        </ToolbarButton>
+      </HtmlTooltip>
 
       <ToolbarButton
         type="button"

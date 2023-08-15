@@ -144,7 +144,7 @@ function ChatRoom(props, ref) {
         <div
           className={`${styles.chatBody} h-full w-full`}
           ref={messageEndRef}
-          style={{ height: "calc(100% - 140px)" }}
+          style={{ height: "calc(100% - 200px)" }}
         >
           {chatMessages.map((msg, index) => {
             switch (msg.msgType) {
@@ -210,7 +210,7 @@ function ChatRoom(props, ref) {
                 style={{ width: "80px", height: "80px", margin: "10px" }}
               />
             ) : (
-              <p>스페이스를 눌러 음성채팅을 이용해보세요</p>
+              <p className="pt-5 pb-11" >스페이스를 눌러 음성채팅을 이용해보세요</p>
             )}
           </div>
         </div>

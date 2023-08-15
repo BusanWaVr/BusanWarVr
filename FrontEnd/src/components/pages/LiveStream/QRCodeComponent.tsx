@@ -3,10 +3,10 @@ import QRCode from "qrcode.react";
 import styled from "styled-components";
 
 const QRcodeDiv = styled.div`
-  position: fixed;
-  top: 100px;
-  right: 30px;
-  width: 200px;
+  // position: fixed;
+  // top: 100px;
+  // right: 30px;
+  // width: 200px;
 `;
 
 interface QRProps {

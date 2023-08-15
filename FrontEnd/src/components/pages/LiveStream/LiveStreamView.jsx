@@ -19,7 +19,6 @@ import LiveExample from "./LiveExample";
 import Loader from "../../atoms/Loader";
 import useCustomBack from "../../../hooks/useCustomBack";
 import ChatRoom from "./ChatRoom";
-import QRCodeComponent from "./QRCodeComponent";
 import VoteModal from "./VoteModal";
 
 import "./LiveStreamView.css";
@@ -545,6 +544,24 @@ const LiveStreamView = () => {
     return response.data; // The token
   };
 
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <>
       {isLoading ? (
@@ -552,10 +569,17 @@ const LiveStreamView = () => {
       ) : (
         <FullScreen handle={handleFullScreen}>
           <div style={{ width: "100vw", height: "100vh" }}>
-            <Allotment>
+            <Allotment
+              style={{ width: "100%", height: "100%", display: "flex" }}
+            >
               <Allotment.Pane
-                minSize={1200}
-                snap={false}
+                maxSize={
+                  windowSize.width < 768 && (isVoteOpen || isChatOpen)
+                    ? 0
+                    : windowSize.width
+                }
+                minSize={windowSize.width < 768 ? 0 : windowSize.width * 0.6}
+                snap={windowSize.width < 768}
                 className="bg-zinc-800"
               >
                 <Allotment vertical>
@@ -575,7 +599,13 @@ const LiveStreamView = () => {
               </Allotment.Pane>
               {/* 추가 기능 */}
               {(isVoteOpen || isChatOpen) && (
-                <Allotment.Pane minSize={300}>
+                <Allotment.Pane
+                  minSize={
+                    windowSize.width < 768
+                      ? windowSize.width
+                      : windowSize.width * 0.25
+                  }
+                >
                   <Allotment vertical>
                     {isVoteOpen && (
                       <Allotment.Pane className="bg-zinc-800 text-white">
@@ -668,6 +698,7 @@ const LiveStreamView = () => {
             handleJoinChatToggle={handleJoinChatToggle}
             onLeaveChat={onLeaveChat}
             onJoinChat={onJoinChat}
+            youtubeLink={youtubeLink}
           />
         </FullScreen>
       )}
