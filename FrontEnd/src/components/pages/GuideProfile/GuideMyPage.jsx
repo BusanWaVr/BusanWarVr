@@ -18,7 +18,7 @@ function GuideMyPage() {
   const [isMe, setIsMe] = useState(false);
 
   useEffect(() => {
-    if (userId === urlId) {
+    if (userId == urlId) {
       setIsMe(true);
     }
 
