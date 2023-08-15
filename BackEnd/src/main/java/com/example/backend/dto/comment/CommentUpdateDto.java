@@ -23,16 +23,26 @@ public class CommentUpdateDto {
     @Data
     public static class Response {
 
-        private String content;
+        private Long commentId;
+        private Long userId;
         private String nickname;
         private String profileImg;
         private Date writeDate;
+        private boolean isOwner;
+        private Long parentId;
+        private String content;
+        private boolean isDeleted;
 
-        public Response(User user, Comment comment) {
-            this.content = comment.getContent();
+        public Response(User user, Comment comment, boolean isOwner) {
+            this.commentId = comment.getId();
+            this.userId = user.getId();
             this.nickname = user.getNickname();
             this.profileImg = user.getProfileImg();
             this.writeDate = comment.getWriteDate();
+            this.isOwner = isOwner;
+            this.parentId = comment.getParentId();
+            this.content = comment.getContent();
+            this.isDeleted = comment.isDeleted();
         }
 
     }
