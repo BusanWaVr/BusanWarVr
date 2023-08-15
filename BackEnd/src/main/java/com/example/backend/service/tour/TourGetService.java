@@ -65,11 +65,11 @@ public class TourGetService {
     }
 
     public TourListDto.Response getALLTour(Pageable pageable) {
-        List<Tour> tours = tourRepository.findByIsEndedFalseOrderByStartDateDesc(pageable);
+        List<Tour> tours = tourRepository.findAllByIsEndedFalseOrderByStartDateDesc();
         List<TourDto> tourDtoList = new ArrayList<>();
 
         for (Tour tour : tours) {
-            if (tour.isEnded()) {
+            if (tour.isCanceled()) {
                 continue;
             }
             User user = userRepository.findById(tour.getUserId()).get();
@@ -91,6 +91,10 @@ public class TourGetService {
                     new TourDto(tour, user, tourCategories, tourImageUrls, courseDtos, joinerDtos));
         }
 
-        return new TourListDto.Response(tourDtoList);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), tourDtoList.size());
+
+        return new TourListDto.Response(tourDtoList.subList(start, end));
+
     }
 }
