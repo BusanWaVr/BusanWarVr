@@ -31,6 +31,7 @@ public class CommentUtil {
             User user = userRepository.findById(comment.getUserId()).get();
             List<Joiner> joinerList = joinerRepository.findAllByTourId(tourId);
             boolean isExist = joinerUtil.isExistJoinerList(user, joinerList);
+
             if (comment.getParentId() == null) {
                 List<ReCommentDto> reCommentList = new ArrayList<>();
                 reCommentDtoList(comment, reCommentList);
@@ -38,6 +39,7 @@ public class CommentUtil {
                 commentDtos.add(rootComment);
                 continue;
             }
+
             List<ReCommentDto> reCommentList = new ArrayList<>();
             reCommentDtoList(comment, reCommentList);
             CommentDto rootComment = new CommentDto(user, comment, isExist, reCommentList);
