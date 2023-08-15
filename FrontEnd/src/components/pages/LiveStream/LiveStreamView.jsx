@@ -1,5 +1,7 @@
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
+import { Allotment } from "allotment";
+import "allotment/dist/style.css";
 import Slider from "react-slick";
 import React, {
   useCallback,
@@ -10,7 +12,8 @@ import React, {
 } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import UserVideoComponent from "./UserVideoComponent";
+
+import UserVideoContainer from "./UserVideoContainer";
 import Toolbar from "./Toolbar";
 import LiveExample from "./LiveExample";
 import Loader from "../../atoms/Loader";
@@ -60,7 +63,7 @@ const LiveStreamView = () => {
     option1Cnt,
     option2Cnt,
   } = useSelector((state) => state.liveStream);
-  
+
   const { nickname, userType } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
 
@@ -548,46 +551,40 @@ const LiveStreamView = () => {
         <Loader />
       ) : (
         <FullScreen handle={handleFullScreen}>
-          <LiveExample className="live-example" videoId={videoId} />
-          <div id="session">
-            <div className="video-slider" style={{ width: "1200px" }}>
-              <Slider id="video-container" className="" {...sliderSettings}>
-                {/* 현재 유저 화면 */}
-                {publisher !== undefined ? (
-                  <div
-                    className="stream-container current-stream"
-                    onClick={() => handleMainVideoStream(publisher)}
-                    style={{ width: "200px" }}
-                  >
-                    <UserVideoComponent streamManager={publisher} />
+          <div style={{ width: "100vw", height: "100vh" }}>
+            <Allotment>
+              <Allotment.Pane
+                minSize={1200}
+                snap={false}
+                className="bg-zinc-800"
+              >
+                <Allotment vertical>
+                  {/* 유저비디오 */}
+                  <Allotment.Pane maxSize={200} snap>
+                    <UserVideoContainer
+                      publisher={publisher}
+                      subscribers={subscribers}
+                      handleMainVideoStream={handleMainVideoStream}
+                    />
+                  </Allotment.Pane>
+                  {/* VR라이브 */}
+                  <Allotment.Pane>
+                    <LiveExample className="live-example" videoId={videoId} />
+                  </Allotment.Pane>
+                </Allotment>
+              </Allotment.Pane>
+              {/* 추가 기능 */}
+              <Allotment.Pane minSize={350} className="bg-zinc-800 text-white">
+                <div>
+                  <div style={{ position: "absolute", top: 0, right: 0 }}>
+                    <button type="button" onClick={() => {}}>
+                      x
+                    </button>
                   </div>
-                ) : null}
-                {/* 다른 유저 화면 */}
-                {subscribers.map((sub, i) => (
-                  <div
-                    key={sub.id}
-                    className="stream-container"
-                    onClick={() => handleMainVideoStream(sub)}
-                    style={{ width: "200px" }}
-                  >
-                    <span>{sub.id}</span>
-                    <UserVideoComponent streamManager={sub} />
-                  </div>
-                ))}
-              </Slider>
-            </div>
+                </div>
+              </Allotment.Pane>
+            </Allotment>
           </div>
-          {/* 채팅창 */}
-          <div className={`chat-room ${isChatOpen ? "open" : ""}`}>
-            <ChatRoom
-              ref={chatRoomRef}
-              onload={onload}
-              onConnect={onConnect}
-              tourUID={tourUID}
-            />
-          </div>
-          <Stt tourUID={tourUID} />
-          {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
             toggleAudio={toggleAudio}
@@ -602,38 +599,6 @@ const LiveStreamView = () => {
             handleJoinChatToggle={handleJoinChatToggle}
             onLeaveChat={onLeaveChat}
             onJoinChat={onJoinChat}
-          />
-          <QRCodeComponent youtubeLink={youtubeLink} />
-          
-          {userType === 'GUIDE' ? 
-          // 가이드는 투표form, 유저들에게는 보이스채팅 기능
-          <div>
-            <input
-            type="text"
-            placeholder="1번 선택지"
-            value={column1}
-            onChange={onChangeColumn1}
-            />
-            <input
-            type="text"
-            placeholder="2번 선택지"
-            value={column2}
-            onChange={onChangeColumn2}
-          />
-          <button onClick={createVote}>투표 시작하기</button>
-          <button onClick={endVote}>투표 종료하기</button>
-          
-          </div> : 
-          
-          <TestTest
-            ref={initRef}
-            tourUID={tourUID}
-            accessToken={accessToken}
-            voting={voting}
-            setVoting={setVoting}
-          />}
-          <VoteModal 
-          voting={voting}
           />
         </FullScreen>
       )}
