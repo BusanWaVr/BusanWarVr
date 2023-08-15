@@ -135,6 +135,7 @@ function TestTest(props, ref) {
 
       if (response.status === 200) {
         console.log("투표 완료", response);
+        props.setVoting(false);
       } else {
         // 에러
         console.log("에러", response);

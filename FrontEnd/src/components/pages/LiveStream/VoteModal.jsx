@@ -1,16 +1,19 @@
 import React from 'react';
 import { useSelector, useDispatch } from "react-redux";
-// import {
-//   setIsAudioEnabled,
-//   setIsVideoEnabled,
-//   setIsFullScreen,
-//   setIsChatOpen,
-//   setStompClient,
-//   setOption1,
-//   setOption2,
-//   setOption1Cnt,
-//   setOption2Cnt,
-// } from "./LiveStreamReducer";
+import styled from "styled-components"
+
+
+const VoteContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, 0);
+    bottom: 300px;
+    background-color: #eee;
+    border-radius: 30px;
+    padding: 0 10px;
+  `;
 
 const VoteModal = () => {
   const {
@@ -18,16 +21,22 @@ const VoteModal = () => {
     option2,
     option1Cnt,
     option2Cnt,
+    isVoteOpen,
   } = useSelector((state) => state.liveStream);
+
+  
   return (
-    <div className="modal">
-      <div className="modal-content">
+    <div>
+      {isVoteOpen? <VoteContainer>
+      <div>
         <h2>투표 현황</h2>
         <p>{option1}: {option1Cnt}</p>
         <p>{option2}: {option2Cnt}</p>
         {/* <button onClick={onClose}>닫기</button> */}
       </div>
+    </VoteContainer> : <></>}
     </div>
+    
   );
 };
 
