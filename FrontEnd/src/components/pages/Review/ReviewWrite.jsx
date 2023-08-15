@@ -35,7 +35,6 @@ const ReviewWrite = () => {
         );
         if (response.status === 200) {
           const res = await response.json();
-          console.log(res.data);
           setTourData(res.data);
         } else {
           toast.error("해당 투어가 존재하지 않습니다.");
