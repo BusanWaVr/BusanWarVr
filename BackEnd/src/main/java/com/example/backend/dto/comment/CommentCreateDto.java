@@ -34,6 +34,7 @@ public class CommentCreateDto {
     public static class Response {
 
         private Long commentId;
+        private Long userId;
         private String nickname;
         private String profileImg;
         private Date writeDate;
@@ -43,6 +44,7 @@ public class CommentCreateDto {
 
         public Response(User user, Comment comment, boolean isOwner) {
             this.commentId = comment.getId();
+            this.userId = user.getId();
             this.nickname = user.getNickname();
             this.profileImg = user.getProfileImg();
             this.writeDate = comment.getWriteDate();
