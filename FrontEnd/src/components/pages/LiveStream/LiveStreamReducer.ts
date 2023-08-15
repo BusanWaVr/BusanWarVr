@@ -29,8 +29,8 @@ const initialState: LiveStreamState = {
   tourId: null,
   tourUID: null,
   stompClient: null,
-  option1: null,
-  option2: null,
+  option1: "1번 선택지",
+  option2: "2번 선택지",
   option1Cnt: 0,
   option2Cnt: 0,
 };

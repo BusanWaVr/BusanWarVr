@@ -632,7 +632,9 @@ const LiveStreamView = () => {
             voting={voting}
             setVoting={setVoting}
           />}
-          <VoteModal />
+          <VoteModal 
+          voting={voting}
+          />
         </FullScreen>
       )}
     </>
