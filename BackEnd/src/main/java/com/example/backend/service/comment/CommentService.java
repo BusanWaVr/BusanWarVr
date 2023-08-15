@@ -80,12 +80,14 @@ public class CommentService {
             User user) {
 
         Comment comment = commentRepository.findById(commentId).get();
+        List<Joiner> joinerList = joinerRepository.findAllByTourId(comment.getTourId());
+        boolean isExist = joinerUtil.isExistJoinerList(user, joinerList);
         if (comment.getUserId() != user.getId()) {
             throw new IllegalArgumentException("댓글 작성자만 수정 가능합니다");
         }
         comment = request.toUpdate(comment);
         commentRepository.save(comment);
-        CommentUpdateDto.Response response = new CommentUpdateDto.Response(user, comment);
+        CommentUpdateDto.Response response = new CommentUpdateDto.Response(user, comment, isExist);
 
         return response;
     }
