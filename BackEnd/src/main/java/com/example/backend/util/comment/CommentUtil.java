@@ -24,7 +24,7 @@ public class CommentUtil {
     private final JoinerUtil joinerUtil;
 
     public void commentDtoList(Long tourId, List<CommentDto> commentDtos) {
-        Tour tour = tourRepository.findById(tourId).get();
+        // tour 라인 삭제
         List<Comment> commentList = commentRepository.findAllByTourId(tourId);
 
         for (Comment comment : commentList) {
