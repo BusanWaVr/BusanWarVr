@@ -2,6 +2,25 @@ import React, { useEffect, useRef, useState } from "react";
 import TestVoice from "./TestVoice";
 import oneAudio from "../../../assets/vote1.mp3";
 import twoAudio from "../../../assets/vote2.mp3";
+import styled from "styled-components"
+
+
+const Container = styled.div`
+width: 700px;
+height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, 0);
+    bottom: 100px;
+    background-color: rgba( 0, 0, 0, 0.7 );
+    border-radius: 30px;
+    padding: 10px;
+    color: #ffffff;
+  `;
 
 function TestTest(props, ref) {
   const [selectOneAudio] = useState(new Audio(oneAudio));
@@ -146,16 +165,9 @@ function TestTest(props, ref) {
   }
 
   return (
-    <div>
-      <div>Teachable Machine Pose Model</div>
-      <button type="button" onClick={init}>
-        Start
-      </button>
-      <div>
-        <canvas id="canvas"></canvas>
-      </div>
-      <div id="label-container"></div>
-    </div>
+      <Container>
+        <h5>투표가 시작되었습니다. 1번 선택지에 투표하려면 왼손, 2번 선택지에 투표하려면 오른손을 들어주세요.</h5>
+      </Container>
   );
 }
 
