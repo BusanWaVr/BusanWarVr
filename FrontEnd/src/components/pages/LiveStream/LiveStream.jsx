@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import "./LiveStream.css";
+import styles from "./LiveStream.module.css";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -11,27 +11,16 @@ import {
 
 function LiveStream(props) {
   const navigate = useNavigate();
-  
-  const { youtubeLink, isAudioEnabled, isVideoEnabled, tourId,
-    tourUID, } = useSelector(
-      (state) => state.liveStream
-      );
+
+  const { youtubeLink, isAudioEnabled, isVideoEnabled, tourId, tourUID } =
+    useSelector((state) => state.liveStream);
   const { nickname } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
-  
-  console.log("liveLink", youtubeLink);
-  console.log("tourId", tourId);
-  console.log("tourUID", tourUID);
-  // 디폴트 youtubeLink 세팅
-  // setYoutubeLink(liveLink);
-  // console.log("youtubeLink", youtubeLink);
 
   // api 호출용 tourId
   const [apitourId, setApiTourId] = useState(`${tourId}`);
-  console.log("apitourId", apitourId);
   // tourUId
   const [mySessionId, setMySessionId] = useState(`${tourUID}`);
-
 
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
@@ -116,16 +105,16 @@ function LiveStream(props) {
   };
 
   return (
-    <div className="_container">
-      <div id="join">
-        <div id="join-dialog" className="jumbotron vertical-center">
-          <form className="form" onSubmit={joinSession}>
-            <p className="title">Let's take a trip! </p>
-            <p className="message">신나는 온라인 VR 투어를 떠나보자. </p>
+    <>
+      <div>
+        <div className={`${styles.joinDialog} jumbotron vertical-center`}>
+          <form className={styles.form} onSubmit={joinSession}>
+            <p className={styles.title}>Let's take a trip! </p>
+            <p className={styles.message}>신나는 온라인 VR 투어를 떠나보자. </p>
 
             <label>
               <input
-                className="form-control input"
+                className={`form-control ${styles.input}`}
                 type="text"
                 id="userName"
                 value={nickname}
@@ -136,7 +125,7 @@ function LiveStream(props) {
 
             <label>
               <input
-                className="form-control input"
+                className={`form-control ${styles.input}`}
                 type="text"
                 id="sessionId"
                 value={mySessionId}
@@ -147,7 +136,7 @@ function LiveStream(props) {
             </label>
             <label>
               <input
-                className="form-control input"
+                className={`form-control ${styles.input}`}
                 type="text"
                 id="sessionId"
                 value={youtubeLink}
@@ -156,7 +145,7 @@ function LiveStream(props) {
               />
               <span>라이브 스트리밍 링크</span>
             </label>
-            <div className="livestream-flex">
+            <div className={styles.livestreamFlex}>
               {/* 카메라 온오프 설정 */}
               <p>
                 <button type="button" onClick={toggleVideo}>
@@ -181,7 +170,7 @@ function LiveStream(props) {
           </form>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

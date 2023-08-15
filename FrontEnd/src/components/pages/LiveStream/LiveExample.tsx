@@ -1,9 +1,22 @@
-import "./LiveExaple.css";
 import YouTube, { YouTubeProps } from "react-youtube";
+import { styled } from "styled-components";
 
 interface Props {
   videoId: string;
 }
+
+const YoutubeContainer = styled.div`
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  padding-bottom: 10vh;
+
+  & iframe {
+    width: 100%;
+    height: 120vh !important;
+    transform: translateY(-10vh);
+  }
+`;
 
 function LiveExample({ videoId }: Props) {
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
@@ -31,15 +44,14 @@ function LiveExample({ videoId }: Props) {
 
   return (
     <>
-      <div className="youtube-header"></div>
-      <div className="youtube-container">
+      <YoutubeContainer>
         <YouTube
           videoId={videoId}
           opts={opts}
           onReady={onPlayerReady}
           onStateChange={onPlayerStateChange}
         />
-      </div>
+      </YoutubeContainer>
     </>
   );
 }

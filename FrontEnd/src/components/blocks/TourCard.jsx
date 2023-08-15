@@ -12,10 +12,10 @@ import {
 import { Avatar } from "antd";
 import { Card, CardBody, Image, Button } from "@nextui-org/react";
 import moment from "moment";
-import { useI18n } from "../../hooks/useI18n"
+import { useI18n } from "../../hooks/useI18n";
 
 function TourCard({ TourData, isMe, tourType }) {
-  const t = useI18n()
+  const t = useI18n();
   const navigate = useNavigate();
 
   const [showMateButton, setShowMateButton] = useState(false);
@@ -24,6 +24,7 @@ function TourCard({ TourData, isMe, tourType }) {
   useEffect(() => {
     setShowEditButton(tourType === "ended");
     setShowMateButton(tourType === "scheduled");
+    console.log(TourData);
   }, [tourType]);
 
   moment.locale("ko");
@@ -53,7 +54,7 @@ function TourCard({ TourData, isMe, tourType }) {
                       className=""
                       shadow="sm"
                       src={
-                        tour.image ||
+                        tour.tourImage ||
                         "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
                       }
                       style={{

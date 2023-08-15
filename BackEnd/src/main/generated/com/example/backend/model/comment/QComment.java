@@ -23,6 +23,8 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
+
     public final NumberPath<Long> parentId = createNumber("parentId", Long.class);
 
     public final NumberPath<Long> tourId = createNumber("tourId", Long.class);
