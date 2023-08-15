@@ -1,6 +1,7 @@
 // import { useState, useEffect } from "react";
 // import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { useI18n } from "../../../hooks/useI18n"
 
 import RegionCard from "../../blocks/RegionCard";
 
@@ -117,10 +118,11 @@ const regionData = [
 ];
 
 function RegionContainer() {
+  const t = useI18n()
   return (
     <Container>
       <MentionsContainer>
-        <h5>지역별 투어</h5>
+        <h5>{t(`지역별 투어`)}</h5>
       </MentionsContainer>
       <RegionCard regionData={regionData} />
     </Container>

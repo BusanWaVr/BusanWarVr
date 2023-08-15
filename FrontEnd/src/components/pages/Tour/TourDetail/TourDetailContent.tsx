@@ -6,6 +6,7 @@ import { styled } from "styled-components";
 import CurrentMate from "./CurrentMate";
 import ReviewContainer from "./ReviewContainer";
 import CommentContainer from "./CommentContainer";
+import { useI18n } from "../../../../hooks/useI18n"
 
 const TourDetailContentWrapper = styled.div`
   width: 700px;
@@ -53,6 +54,7 @@ const TourContentImage = styled.img`
 `;
 
 const TourDetailContent = ({ tourData, joiners }) => {
+  const t = useI18n()
   return (
     <>
       <TourDetailContentWrapper>
@@ -77,12 +79,12 @@ const TourDetailContent = ({ tourData, joiners }) => {
             {(new Date(tourData.endDate).getTime() -
               new Date(tourData.startDate).getTime()) /
               (1000 * 60)}
-            분 소요
+            {t(`분 소요`)}
           </p>
           <Divider type="vertical" />
           <p>
             <Groups />
-            {tourData.minMember}명 ~ {tourData.maxMember}명
+            {tourData.minMember}{t(`명`)} ~ {tourData.maxMember}{t(`명`)}
           </p>
         </TourContentInfo>
         <Divider />
@@ -94,7 +96,7 @@ const TourDetailContent = ({ tourData, joiners }) => {
           ))}
         </div>
         <Divider />
-        <p className="section-title"> 코스 소개 </p>
+        <p className="section-title"> {t(`코스 소개`)} </p>
         {tourData.courses.map((course, index) => (
           <TourDetailCourse
             key={index}
@@ -107,7 +109,7 @@ const TourDetailContent = ({ tourData, joiners }) => {
           />
         ))}
         <Divider />
-        <p className="section-title">현재 모집 현황</p>
+        <p className="section-title">{t(`현재 모집 현황`)}</p>
         <CurrentMate tourData={tourData} joiners={joiners} />
         {/* 리뷰 */}
         <ReviewContainer reviewData={tourData.reviews} />

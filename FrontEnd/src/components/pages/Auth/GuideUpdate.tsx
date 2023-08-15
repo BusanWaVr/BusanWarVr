@@ -3,8 +3,10 @@ import axios from "axios";
 import ProfileImageUpload from "./ProfileImageUpdate";
 import { toast } from "react-toastify";
 import { Button, Form, Input } from "antd";
+import { useI18n } from "../../../hooks/useI18n"
 
 function GuideUpdate() {
+  const t = useI18n()
   const convertURLtoFile = async (url: string) => {
     try {
       const response = await fetch(url);
@@ -329,7 +331,7 @@ function GuideUpdate() {
             disabled={!isName || name === localStorage.getItem("nickname")}
             ghost
           >
-            닉네임 확인
+            {t(`닉네임 확인`)}
           </Button>
         </Form.Item>
       </Form>
@@ -354,7 +356,7 @@ function GuideUpdate() {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" ghost>
-            비밀번호 확인
+          {t(`비밀번호 확인`)}
           </Button>
         </Form.Item>
       </Form>
@@ -386,7 +388,7 @@ function GuideUpdate() {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              비밀번호 변경
+            {t(`비밀번호 변경`)}
             </Button>
           </Form.Item>
         </Form>
@@ -408,7 +410,7 @@ function GuideUpdate() {
       </Form>
 
       <Button type="primary" onClick={handleSave}>
-        수정하기
+      {t(`수정하기`)}
       </Button>
     </div>
   );

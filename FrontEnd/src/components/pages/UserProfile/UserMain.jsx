@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import UserInfo from "./UserInfo";
 import UserCalendar from "./UserCalendar";
 import { styled } from "styled-components";
+import { useI18n } from "../../../hooks/useI18n"
 
 const UserInfoWrapper = styled.div`
   height: 300px;
@@ -12,6 +13,7 @@ const UserInfoWrapper = styled.div`
 `;
 
 function UserMain() {
+  const t = useI18n()
   const { userInfoData, isMe } = useOutletContext();
 
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ function UserMain() {
           <UserCalendar />
         </div>
       ) : (
-        <p>로딩중ㅎ</p>
+        <p>{t(`로딩중ㅎ`)}</p>
       )}
     </div>
   );

@@ -19,6 +19,7 @@ import {
   PlusCircleOutlined,
   EditOutlined,
 } from "@ant-design/icons";
+import { useI18n } from "../../../hooks/useI18n"
 
 const regionList = [
   "강서구",
@@ -150,6 +151,7 @@ type TourCourseInfo = {
 };
 
 const TourRegistration: React.FC = () => {
+  const t = useI18n()
   const navigate = useNavigate();
 
   const [tourData, setTourData] = useState<TourData>({
@@ -331,11 +333,11 @@ const TourRegistration: React.FC = () => {
       <EssentialInfoContainer>
         <p className="essential__title">
           <ExclamationCircleOutlined />
-          필수 정보 입력
+          {t(`필수 정보 입력`)}
         </p>
         {/* 지역 */}
         <div className="essential__section">
-          <p className="essential__subtitle">지역</p>
+          <p className="essential__subtitle">{t(`지역`)}</p>
           <Select
             style={{ width: "300px" }}
             showSearch
@@ -355,7 +357,7 @@ const TourRegistration: React.FC = () => {
         {/* 카테고리 */}
         <ThemeProvider theme={customTheme}>
           <div className="essential__section">
-            <p className="essential__subtitle">카테고리</p>
+            <p className="essential__subtitle">{t(`카테고리`)}</p>
             {categoryList.map((category) => (
               <Chip
                 key={category.name}
@@ -379,7 +381,7 @@ const TourRegistration: React.FC = () => {
 
         {/* 여행 날짜 */}
         <div className="essential__section">
-          <p className="essential__subtitle">투어 기간</p>
+          <p className="essential__subtitle">{t(`투어 기간`)}</p>
           <TourDatePicker
             writeType="registration"
             setTourData={setTourData}
@@ -389,7 +391,7 @@ const TourRegistration: React.FC = () => {
 
         {/* 인원 */}
         <div className="essential__section">
-          <p className="essential__subtitle">참여 가능 인원</p>
+          <p className="essential__subtitle">{t(`참여 가능 인원`)}</p>
           <Slider
             className="essential__slider"
             range
@@ -444,14 +446,14 @@ const TourRegistration: React.FC = () => {
         tourData.courses.map((_, index: number) => (
           <>
             <CourseListHeader>
-              <p>{index + 1}번째 코스</p>
+              <p>{index + 1}{t(`번째 코스`)}</p>
 
               <Button
                 type="link"
                 icon={<MinusOutlined />}
                 onClick={() => deleteCourse(tourData.courses[index].courseKey)}
               >
-                코스 삭제
+                {t(`코스 삭제`)}
               </Button>
             </CourseListHeader>
             <div key={index}>
@@ -476,7 +478,7 @@ const TourRegistration: React.FC = () => {
           }}
           icon={<PlusCircleOutlined />}
         >
-          코스 추가
+          {t(`코스 추가`)}
         </Button>
       </div>
 
@@ -492,7 +494,7 @@ const TourRegistration: React.FC = () => {
           justifyContent: "center",
         }}
       >
-        투어 등록
+        {t(`투어 등록`)}
       </Button>
     </TourDataUploadWrapper>
   );

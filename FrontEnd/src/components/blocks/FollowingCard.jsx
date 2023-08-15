@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Avatar, Card } from "antd";
 import BoogieNone from "../../assets/boogie_none.png";
+import { useI18n } from "../../hooks/useI18n"
 
 const { Meta } = Card;
 
 function FollowingCard({ followingData, isMe }) {
+  const t = useI18n()
   const [followedGuides, setFollowedGuides] = useState([]);
 
   useEffect(() => {
@@ -58,7 +60,7 @@ function FollowingCard({ followingData, isMe }) {
       {followingData.length === 0 ? (
         <div className="flex flex-col justify-center items-center h-full opacity-50">
           <img src={BoogieNone} alt="no_following" className="w-1/6" />
-          <p className="font-bold">팔로잉 중인 가이드가 없어요 :(</p>
+          <p className="font-bold">{t(`팔로잉 중인 가이드가 없어요 :(`)}</p>
         </div>
       ) : (
         <div className="my-4">

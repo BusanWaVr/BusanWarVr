@@ -103,7 +103,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
           {isLoggedIn && userType === "GUIDE" ? (
             <NavbarItem>
               <Link href="/tour/write" color="foreground" className="text-sm">
-                투어 개설
+              {t(`투어 개설`)}
               </Link>
             </NavbarItem>
           ) : null}
@@ -152,19 +152,19 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
                         href={`/user/${userId}/mypage/tour`}
                         className="text-sm text-slate-600"
                       >
-                        나의 투어 목록
+                        {t(`나의 투어 목록`)}
                       </Link>
                     ) : (
                       <Link
                         href={`/guide/${userId}/mypage/tour`}
                         className="text-sm text-slate-600"
                       >
-                        개설한 투어 목록
+                        {t(`개설한 투어 목록`)}
                       </Link>
                     )}
                   </DropdownItem>
                   <DropdownItem key="logout" color="danger" onClick={logout}>
-                    로그아웃
+                  {t(`로그아웃`)}
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -172,7 +172,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
           ) : (
             <NavbarItem>
               <Button onPress={onModalHandler} color="primary" variant="flat">
-                로그인
+              {t(`로그인`)}
               </Button>
             </NavbarItem>
           )}
@@ -181,12 +181,12 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
         <NavbarMenu className="gap-10">
           <NavbarMenuItem>
             <Link color="foreground" href="/tour" className="w-full" size="lg">
-              투어 검색
+            {t(`투어 검색`)}
             </Link>
           </NavbarMenuItem>
           <NavbarMenuItem>
             <Link color="foreground" href="/mate" className="w-full" size="lg">
-              메이트 모집
+            {t(`메이트 모집`)}
             </Link>
           </NavbarMenuItem>
           <NavbarMenuItem>
@@ -196,7 +196,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
               className="w-full"
               size="lg"
             >
-              스트리밍 테스트
+              {t(`스트리밍 테스트`)}
             </Link>
           </NavbarMenuItem>
           {isLoggedIn && userType === "GUIDE" ? (
@@ -207,7 +207,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
                 className="w-full"
                 size="lg"
               >
-                투어 개설
+                {t(`투어 개설`)}
               </Link>
             </NavbarMenuItem>
           ) : null}

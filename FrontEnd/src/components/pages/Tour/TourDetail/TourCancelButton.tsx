@@ -1,11 +1,13 @@
 import { Button } from "antd";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useI18n } from "../../../../hooks/useI18n"
 
 const TourCancelButton = ({ tourId }: { tourId: string | undefined }) => {
   const { accessToken } = useSelector((state: any) => state.userInfo);
 
   const cancelHandler = async () => {
+    const t = useI18n()
     try {
       console.log(accessToken);
       const res = await axios.delete(
@@ -30,7 +32,7 @@ const TourCancelButton = ({ tourId }: { tourId: string | undefined }) => {
         onClick={cancelHandler}
         danger
       >
-        투어 취소하기
+        {t(`투어 취소하기`)}
       </Button>
     </>
   );

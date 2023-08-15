@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useI18n } from "../../hooks/useI18n"
 
 function FollowBtn(guideInfoData, isMe) {
+  const t = useI18n()
   const navigate = useNavigate();
   const [follow, setFollow] = useState(false); // 초기값을 false로 설정
   const userId = guideInfoData.guideInfoData.userId;
@@ -106,11 +108,11 @@ function FollowBtn(guideInfoData, isMe) {
   console.log(guideInfoData.guideInfoData);
   return (
     <div>
-      <p>팔로워: {followerNum}</p>
+      <p>{t(`팔로워`)}: {followerNum}</p>
       {localType === "GUIDE" ? null : follow ? (
-        <button onClick={changeFollow}>언팔로우</button>
+        <button onClick={changeFollow}>{t(`언팔로우`)}</button>
       ) : (
-        <button onClick={changeFollow}>팔로우</button>
+        <button onClick={changeFollow}>{t(`팔로우`)}</button>
       )}
     </div>
   );
