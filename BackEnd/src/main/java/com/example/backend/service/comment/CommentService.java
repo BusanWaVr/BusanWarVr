@@ -96,7 +96,11 @@ public class CommentService {
         if (comment.getUserId() != user.getId()) {
             throw new IllegalArgumentException("댓글 작성자만 삭제 가능합니다");
         }
-        commentRepository.deleteById(commentId);
+        if(comment.isDeleted() == true){
+            throw new IllegalArgumentException("이미 삭제된 댓글입니다!");
+        }
+        comment.setDeleted(true);
+        commentRepository.save(comment);
     }
 
     public Page<CommentDto> getCommentList(Long tourId, Pageable pageable) {

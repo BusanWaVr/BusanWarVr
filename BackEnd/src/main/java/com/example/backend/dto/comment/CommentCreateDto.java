@@ -41,6 +41,7 @@ public class CommentCreateDto {
         private boolean isOwner;
         private Long parentId;
         private String content;
+        private boolean isDeleted;
 
         public Response(User user, Comment comment, boolean isOwner) {
             this.commentId = comment.getId();
@@ -51,6 +52,7 @@ public class CommentCreateDto {
             this.isOwner = isOwner;
             this.parentId = comment.getParentId();
             this.content = comment.getContent();
+            this.isDeleted = comment.isDeleted();
         }
     }
 
