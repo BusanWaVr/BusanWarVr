@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import TourListCard from "../../blocks/TourListCard";
 import SearchBar from "../../blocks/SearchBar";
+import { useI18n } from "../../../hooks/useI18n"
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const PrevButton = styled(Button)`
 `;
 
 function TourBoard() {
+  const t = useI18n()
   const [currentPage, setCurrentPage] = useState(0);
   const [tempPage, setTempPage] = useState(0);
   const [type, setType] = useState("TITLE");
@@ -94,13 +96,13 @@ function TourBoard() {
 
   return (
     <div>
-      <h1>투어 목록 페이지</h1>
+      <h1>{t(`투어 목록 페이지`)}</h1>
       <SearchBar onSearch={handleSearchValue} />
       <TourListCard TourData={searchResults} tempPage={tempPage} />
 
       <ButtonContainer>
         <PrevButton onClick={handlePrevClick} disabled={currentPage === 0}>
-          이전
+        {t(`이전`)}
         </PrevButton>
 
         <Button onClick={() => setTempPage(currentPage + 1)}>
@@ -112,7 +114,7 @@ function TourBoard() {
         <Button onClick={() => setTempPage(currentPage + 3)}>
           {currentPage + 3}
         </Button>
-        <Button onClick={handleNextClick}>다음</Button>
+        <Button onClick={handleNextClick}>{t(`다음`)}</Button>
       </ButtonContainer>
     </div>
   );

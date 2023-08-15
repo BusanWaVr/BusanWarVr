@@ -12,8 +12,10 @@ import {
 import { Avatar } from "antd";
 import { Card, CardBody, Image, Button } from "@nextui-org/react";
 import moment from "moment";
+import { useI18n } from "../../hooks/useI18n"
 
 function TourCard({ TourData, isMe, tourType }) {
+  const t = useI18n()
   const navigate = useNavigate();
 
   const [showMateButton, setShowMateButton] = useState(false);
@@ -117,7 +119,7 @@ function TourCard({ TourData, isMe, tourType }) {
                           variant="flat"
                         >
                           <UsergroupAddOutlined />
-                          메이트 모집
+                          {t(`메이트 모집`)}
                         </Button>
                       </Link>
                     ))}
@@ -131,7 +133,7 @@ function TourCard({ TourData, isMe, tourType }) {
                         color="primary"
                         variant="flat"
                       >
-                        리뷰 쓰기
+                        {t(`리뷰 쓰기`)}
                       </Button>
                     </Link>
                   )}
@@ -140,7 +142,7 @@ function TourCard({ TourData, isMe, tourType }) {
             </Card>
           ))
         ) : (
-          <p>투어 데이터가 없습니다</p>
+          <p>{t(`투어 데이터가 없습니다`)}</p>
         )
       ) : (
         <p>Loading...</p>

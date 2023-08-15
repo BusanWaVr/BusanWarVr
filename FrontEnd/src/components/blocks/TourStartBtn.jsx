@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "@nextui-org/react";
 import { setTourId, setTourUID } from "../pages/LiveStream/LiveStreamReducer";
+import { useI18n } from "../../hooks/useI18n"
 
 // 가이드의 투어시작하기 버튼 컴포넌트
 function TourStartBtn({ Tour }) {
+  const t = useI18n()
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,7 +30,7 @@ function TourStartBtn({ Tour }) {
         onClick={handleStartClick}
       >
         
-        방송 시작하기
+        {t(`방송 시작하기`)}
       </Button>
     </>
   );

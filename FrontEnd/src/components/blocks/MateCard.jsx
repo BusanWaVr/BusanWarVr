@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useI18n } from "../../hooks/useI18n"
 
 const CardContainer = styled.div`
   margin: 50px;
 `;
 
 function MateCard({ mateData }) {
+  const t = useI18n()
   return (
     <>
       {mateData.map((mate) => (
@@ -16,7 +18,7 @@ function MateCard({ mateData }) {
           </h3>
           <div dangerouslySetInnerHTML={{ __html: mate.content }} />
           <p>
-            참가인원: {mate.joinMember}/{mate.maxMember}
+          {t(`참가인원`)}: {mate.joinMember}/{mate.maxMember}
           </p>
         </CardContainer>
       ))}

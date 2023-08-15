@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import TourDetailContent from "./TourDetailContent";
 import TourDetailWidget from "./TourDetailWidget";
 import { styled } from "styled-components";
+import { useI18n } from "../../../../hooks/useI18n"
 
 interface TourData {
   region: string;
@@ -47,6 +48,7 @@ const TourDetailWrapper = styled.div`
 `;
 
 const TourDetail: React.FC = () => {
+  const t = useI18n()
   const { tourId } = useParams<{ tourId: string }>();
   const [tourData, setTourData] = useState<TourData | null>(null);
   const { nickname } = useSelector((state: any) => state.userInfo);
@@ -105,7 +107,7 @@ const TourDetail: React.FC = () => {
           />
         </TourDetailWrapper>
       ) : (
-        <p>로딩중</p>
+        <p>{t(`로딩중`)}</p>
       )}
     </>
   );

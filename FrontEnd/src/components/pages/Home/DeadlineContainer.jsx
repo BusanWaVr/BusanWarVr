@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import DeadCard from "../../blocks/DeadCard";
+import { useI18n } from "../../../hooks/useI18n"
 
 const Container = styled.div`
   height: 500px;
@@ -18,6 +19,7 @@ const MentionsContainer = styled.div`
 `;
 
 function DeadlineContainer() {
+  const t = useI18n()
 
   const [deadlineData, setDeadlineData] = useState([]);
 
@@ -52,7 +54,7 @@ function DeadlineContainer() {
   return (
     <Container>
       <MentionsContainer>
-      <h5>마감 임박! 같이 출발해요</h5>
+      <h5>{t(`마감 임박! 같이 출발해요`)}</h5>
       </MentionsContainer>
       <DeadCard deadlineData={deadlineData}/>
     </Container>
