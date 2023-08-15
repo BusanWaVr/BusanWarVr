@@ -1,41 +1,21 @@
-.chatroom-container {
-  position: fixed;
-  right: 30px;
-  bottom: 30px;
-}
-
 .chat {
   color: white;
 }
 
-.chat-card {
-  width: 300px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  /* opacity: 0.2; */
-  transition: all 0.3s ease-in-out;
-  /* &:hover {
-    opacity: 1;
-  } */
-}
-
-.chat-header {
+.chatHeader {
   padding: 10px;
   background-color: #f2f2f2;
   display: flex;
   align-items: center;
 }
 
-.chat-header .h2 {
+.chatHeader .h2 {
   font-size: 16px;
   color: #333;
 }
 
-.chat-body {
+.chatBody {
   padding: 20px;
-  height: 250px;
   overflow-y: scroll;
 }
 
@@ -91,20 +71,20 @@
   font-weight: bold;
 }
 
-.chat-footer {
+.chatFooter {
   padding: 10px;
   background-color: #f2f2f2;
   display: flex;
 }
 
-.chat-footer input {
+.chatFooter input {
   flex-grow: 1;
   padding: 5px;
   border: none;
   border-radius: 3px;
 }
 
-.chat-footer button {
+.chatFooter button {
   padding: 5px 10px;
   border: none;
   border-radius: 0px;
@@ -115,12 +95,12 @@
   transition: background-color 0.3s;
 }
 
-.chat-footer button:hover {
+.chatFooter button:hover {
   background-color: #385ac2;
 }
 
 /* 마이크 */
-.chat-footer-temp {
+.chatFooterTemp {
   padding: 10px;
   background-color: #f2f2f2;
   display: flex;
@@ -139,16 +119,16 @@
   }
 }
 
-.chat-card .message {
+.chatCard .message {
   animation: chatAnimation 0.3s ease-in-out;
   animation-fill-mode: both;
   animation-delay: 0.1s;
 }
 
-.chat-card .message:nth-child(even) {
+.chatCard .message:nth-child(even) {
   animation-delay: 0.2s;
 }
 
-.chat-card .message:nth-child(odd) {
+.chatCard .message:nth-child(odd) {
   animation-delay: 0.3s;
 }

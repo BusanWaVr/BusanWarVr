@@ -1,4 +1,3 @@
-import "./LiveExaple.css";
 import YouTube, { YouTubeProps } from "react-youtube";
 import { styled } from "styled-components";
 

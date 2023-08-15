@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import "./ChatRoom.css";
+import styles from "./ChatRoom.module.css";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 import { useSelector, useDispatch } from "react-redux";
 import { setStompClient } from "./LiveStreamReducer";
 import { image } from "@nextui-org/react";
-import microphone from "../../../assets/microphone.gif"
+import microphone from "../../../assets/microphone.gif";
 export type message = {
   username: string;
   content: string;
@@ -13,18 +13,15 @@ export type message = {
 
 function ChatRoom(props, ref) {
   // reducer에서 데이터 가져오기
-  const { isListening, stompClient } = useSelector(
-    (state) => state.liveStream
-  );
+  const { isListening, stompClient } = useSelector((state) => state.liveStream);
   const { accessToken, userId } = useSelector((state: any) => state.userInfo);
-  const tourUID = props.tourUID
+  const tourUID = props.tourUID;
 
   // 구독 상태를 관리해보자
   const [subscribed, setSubscribed] = useState(false);
 
   const [chatMessages, setChatMessages] = useState<message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
-
 
   // 자동 스크롤
   const messageEndRef = useRef(null);
@@ -37,28 +34,24 @@ function ChatRoom(props, ref) {
   }, [chatMessages]);
 
   useEffect(() => {
-      rnehr();
+    rnehr();
 
-      // 입장메시지 send
-      const joinMessage = {
-        roomUid: tourUID,
-        token: accessToken,
-      };
-      stompClient.send("/pub/chat/message/join", {}, JSON.stringify(joinMessage));
-  
-      console.log(stompClient);
-      console.log(props.onConnect)
+    // 입장메시지 send
+    const joinMessage = {
+      roomUid: tourUID,
+      token: accessToken,
+    };
+    stompClient.send("/pub/chat/message/join", {}, JSON.stringify(joinMessage));
 
-  },[])
+    console.log(stompClient);
+    console.log(props.onConnect);
+  }, []);
 
   // 구독하기
   const rnehr = () => {
     stompClient.subscribe(
       `/sub/chat/message/room/${tourUID}`,
       (data) => {
-        console.log(data);
-
-        console.log("--------구독으로 받아오는 메시지---------");
         const receivedMessage = JSON.parse(data.body);
         const newChatMessage = {
           msgType: receivedMessage.type,
@@ -68,14 +61,11 @@ function ChatRoom(props, ref) {
           content: receivedMessage.body,
         };
 
-        
-        console.log(receivedMessage);
-        
         setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
       },
       { id: "chat" }
-      );
-      setSubscribed(true);
+    );
+    setSubscribed(true);
   };
 
   // 구독해제
@@ -83,7 +73,6 @@ function ChatRoom(props, ref) {
     stompClient.unsubscribe(`chat`);
     const stopmClientSave = stompClient;
     setStompClient(stopmClientSave);
-    console.log(stompClient);
   };
 
   // 메시지 보내기
@@ -101,7 +90,6 @@ function ChatRoom(props, ref) {
       {},
       JSON.stringify(newMessage)
     );
-    console.log(chatMessages);
     setInputMessage("");
   };
 
@@ -146,29 +134,35 @@ function ChatRoom(props, ref) {
   }));
 
   return (
-    <div className="chatroom-container">
-      <div className="chat-card">
-        <div className="chat-header">
-          <div className="h2">chatroom</div>
+    <div className="w-full h-full text-black">
+      <div className={`h-full ${styles.chatCard}`}>
+        <div className="chat-header bg-zinc-900">
+          <div className="h2 text-white font-semibold p-4 px-6 text-left">
+            채팅
+          </div>
         </div>
-        <div className="chat-body" ref={messageEndRef}>
+        <div
+          className={`${styles.chatBody} h-full w-full`}
+          ref={messageEndRef}
+          style={{ height: "calc(100% - 140px)" }}
+        >
           {chatMessages.map((msg, index) => {
             switch (msg.msgType) {
               case "LEAVE":
                 return (
-                  <p className="leave" key={index}>
+                  <p className={`${styles.leave}`} key={index}>
                     {msg.username}님이 채팅방에서 퇴장했습니다.
                   </p>
                 );
               case "JOIN":
                 return (
-                  <p className="join" key={index}>
+                  <p className={`${styles.join}`} key={index}>
                     {msg.username}님이 채팅방에 입장했습니다.
                   </p>
                 );
               case "VOTE":
                 return (
-                  <p className="vote" key={index}>
+                  <p className={`${styles.vote}`} key={index}>
                     {msg.username}님이 {msg.content}번에 투표했습니다.
                   </p>
                 );
@@ -176,11 +170,17 @@ function ChatRoom(props, ref) {
                 return (
                   <div key={index}>
                     {msg.senderId == userId ? (
-                      <p className="message outgoing" key={index}>
+                      <p
+                        className={`${styles.message} ${styles.outgoing}`}
+                        key={index}
+                      >
                         {msg.content}
                       </p>
                     ) : (
-                      <p className="message incoming" key={index}>
+                      <p
+                        className={`${styles.message} ${styles.incoming}`}
+                        key={index}
+                      >
                         <strong>{msg.username}</strong> | {msg.content}
                       </p>
                     )}
@@ -189,24 +189,30 @@ function ChatRoom(props, ref) {
             }
           })}
         </div>
-        <div className="chat-footer">
-          <input
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleEnterPress}
-            placeholder="메세지를 입력하세요."
-          />
-          <button onClick={handleEnter} disabled={!inputMessage}>
-            send
-          </button>
-        </div>
-        <div className="chat-footer-temp">
-        {isListening ? (
-          <img src={microphone} alt="..." style={{ width: '80px', height: '80px', margin: '10px' }}/>
-        ) : (
-          <p>스페이스를 눌러 음성채팅을 이용해보세요</p>
-        )}
+        <div className="absolute bottom-0 w-full">
+          <div className={`${styles.chatFooter}`}>
+            <input
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={handleEnterPress}
+              placeholder="메세지를 입력하세요."
+            />
+            <button onClick={handleEnter} disabled={!inputMessage}>
+              send
+            </button>
+          </div>
+          <div className={styles.chatFooterTemp}>
+            {isListening ? (
+              <img
+                src={microphone}
+                alt="..."
+                style={{ width: "80px", height: "80px", margin: "10px" }}
+              />
+            ) : (
+              <p>스페이스를 눌러 음성채팅을 이용해보세요</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
-import Slider from "react-slick";
+import { Input, Button, ButtonGroup } from "@nextui-org/react";
 import React, {
   useCallback,
   useEffect,
@@ -574,15 +574,84 @@ const LiveStreamView = () => {
                 </Allotment>
               </Allotment.Pane>
               {/* 추가 기능 */}
-              <Allotment.Pane minSize={350} className="bg-zinc-800 text-white">
-                <div>
-                  <div style={{ position: "absolute", top: 0, right: 0 }}>
-                    <button type="button" onClick={() => {}}>
-                      x
-                    </button>
-                  </div>
-                </div>
-              </Allotment.Pane>
+              {(isVoteOpen || isChatOpen) && (
+                <Allotment.Pane minSize={300}>
+                  <Allotment vertical>
+                    {isVoteOpen && (
+                      <Allotment.Pane className="bg-zinc-800 text-white">
+                        <div className="bg-zinc-900 h2 text-white font-semibold p-4 px-6 text-left">
+                          투표
+                        </div>
+                        {userType === "GUIDE" ? (
+                          // 가이드는 투표form, 유저들에게는 보이스채팅 기능
+                          <div className="flex flex-col gap-4 justify-center items-center px-12 py-6 text-black">
+                            <Input
+                              type="text"
+                              label="1번 선택지"
+                              value={column1}
+                              onChange={onChangeColumn1}
+                            />
+                            <Input
+                              type="text"
+                              label="2번 선택지"
+                              value={column2}
+                              onChange={onChangeColumn2}
+                            />
+                            <div className="flex gap-4 items-center w-full">
+                              <Button
+                                color="primary"
+                                variant="flat"
+                                onClick={createVote}
+                                className="w-full"
+                              >
+                                투표 시작하기
+                              </Button>
+                              <Button
+                                color="danger"
+                                variant="flat"
+                                onClick={endVote}
+                                className="w-full"
+                              >
+                                투표 종료하기
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <TestTest
+                            ref={initRef}
+                            tourUID={tourUID}
+                            accessToken={accessToken}
+                            voting={voting}
+                            setVoting={setVoting}
+                          />
+                        )}
+                        <VoteModal voting={voting} />
+                      </Allotment.Pane>
+                    )}
+                    {isChatOpen && (
+                      <Allotment.Pane className="bg-zinc-800 text-white">
+                        <div
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                          }}
+                        >
+                          <ChatRoom
+                            ref={chatRoomRef}
+                            onload={onload}
+                            onConnect={onConnect}
+                            tourUID={tourUID}
+                          />
+                          <Stt tourUID={tourUID} />
+                        </div>
+                      </Allotment.Pane>
+                    )}
+                  </Allotment>
+                </Allotment.Pane>
+              )}
             </Allotment>
           </div>
           <Toolbar
