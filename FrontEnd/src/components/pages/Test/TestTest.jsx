@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import TestVoice from "./TestVoice";
 import oneAudio from "../../../assets/vote1.mp3";
 import twoAudio from "../../../assets/vote2.mp3";
+import handsUp from "../../../assets/handsUp.png";
+import camera from "../../../assets/camera.gif";
 import styled from "styled-components"
 
 
 const Container = styled.div`
-width: 700px;
-height: 100px;
+width: 530px;
+height: 130px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,6 +23,7 @@ height: 100px;
     padding: 10px;
     color: #ffffff;
   `;
+
 
 function TestTest(props, ref) {
   const [selectOneAudio] = useState(new Audio(oneAudio));
@@ -166,7 +169,14 @@ function TestTest(props, ref) {
 
   return (
       <Container>
-        <h5>투표가 시작되었습니다. 1번 선택지에 투표하려면 왼손, 2번 선택지에 투표하려면 오른손을 들어주세요.</h5>
+        <img src={camera} alt="..." style={{ width: '80px', height: '80px', margin: '10px' }}/>
+        <div style={{ textAlign: 'left' }}>
+
+        <h5>투표가 시작되었습니다. <br />1번 선택지에 투표하려면 왼손, <br />2번 선택지에 투표하려면 오른손을 들어주세요.</h5>
+        </div>
+
+        <img src={handsUp} alt="..." style={{ width: '80px', height: '80px', margin: '10px' }}/>
+
       </Container>
   );
 }
