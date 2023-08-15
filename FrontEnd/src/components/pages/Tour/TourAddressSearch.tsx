@@ -6,6 +6,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 import { styled } from "styled-components";
 import BoogieSearching from "../../../assets/boogie_searching.png";
+import { useI18n } from "../../../hooks/useI18n"
 
 type TourAddressSearchProps = {
   index: number;
@@ -89,6 +90,8 @@ const TourAddressSearch = ({
     },
   };
 
+  const t = useI18n()
+
   const postCode = ReactDaumPost(postConfig);
 
   return (
@@ -139,7 +142,7 @@ const TourAddressSearch = ({
           </Map>
         ) : (
           <AddressSearchDiv>
-            <div>주소를 검색해보세요</div>
+            <div>{t(`주소를 검색해보세요`)}</div>
             <img src={BoogieSearching} alt="" />
           </AddressSearchDiv>
         )}

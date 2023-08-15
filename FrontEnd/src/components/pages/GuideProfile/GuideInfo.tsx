@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import BusanBg from "../../../assets/busan_background.png";
 import { EditOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Tooltip } from "antd";
+import { useI18n } from "../../../hooks/useI18n"
 
 const UserStateWrapper = styled.div`
   background-image: linear-gradient(
@@ -51,6 +52,7 @@ const GuideIntroduction = styled.div`
 `;
 
 const UserInfo = ({ userInfoData, isMe }) => {
+  const t = useI18n()
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -70,7 +72,7 @@ const UserInfo = ({ userInfoData, isMe }) => {
       <div className="w-full md:w-1/2 md:pl-6">
         <UserInfoWrapper>
           <UserInfoHeader>
-            <p className="font-bold">회원 정보</p>
+            <p className="font-bold">{t(`회원 정보`)}</p>
             {isMe ? (
               <Tooltip title="회원 정보 수정">
                 <Button
@@ -86,7 +88,7 @@ const UserInfo = ({ userInfoData, isMe }) => {
           </UserInfoHeader>
           <GuideIntroduction>{userInfoData.introduction}</GuideIntroduction>
           <UserInfoContent>
-            <p>이메일</p>
+            <p>{t(`이메일`)}</p>
             <p style={{ display: "flex", gap: "10px", alignItems: "center" }}>
               {userInfoData.email}
               <a
@@ -98,7 +100,7 @@ const UserInfo = ({ userInfoData, isMe }) => {
             </p>
           </UserInfoContent>
           <UserInfoContent>
-            <p>닉네임</p>
+            <p>{t(`닉네임`)}</p>
             <p>{userInfoData.nickname}</p>
           </UserInfoContent>
         </UserInfoWrapper>

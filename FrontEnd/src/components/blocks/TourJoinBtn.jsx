@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "@nextui-org/react";
 import { PlayCircleFilled } from "@ant-design/icons";
+import { useI18n } from "../../hooks/useI18n"
 import {
   setTourId,
   setTourUID,
@@ -11,6 +12,7 @@ import {
 
 // 시작하기 버튼 컴포넌트
 function TourJoinBtn({ Tour }) {
+  const t = useI18n()
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -33,7 +35,7 @@ function TourJoinBtn({ Tour }) {
       onClick={handleStartClick}
     >
       <PlayCircleFilled />
-      투어 시청하기
+      {t(`투어 시청하기`)}
     </Button>
   );
 }

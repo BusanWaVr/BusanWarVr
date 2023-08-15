@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 import TourRecoCard from "../../blocks/TourRecoCard";
+import { useI18n } from "../../../hooks/useI18n"
 
 const Container = styled.div`
   height: 500px;
@@ -21,6 +22,7 @@ const MentionsContainer = styled.div`
 
 
 function TourRecoContainer() {
+  const t = useI18n()
 
   const { accessToken, refreshToken } = useSelector(
     (state) => state.userInfo
@@ -116,7 +118,7 @@ function TourRecoContainer() {
   return (
     <Container>
       <MentionsContainer>
-      {isLoggedIn ? (<h5>회원님을 위한 추천 VR 투어</h5>) : (<h5>로그인하시면 더 많은 추천 VR 투어를 보실 수 있어요.</h5>)}
+      {isLoggedIn ? (<h5>{t(`회원님을 위한 추천 VR 투어`)}</h5>) : (<h5>{t(`로그인하시면 더 많은 추천 VR 투어를 보실 수 있어요.`)}</h5>)}
 
       </MentionsContainer>
       <TourRecoCard tourRecoData={tourRecoData}/>

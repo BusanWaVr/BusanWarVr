@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useI18n } from "../../hooks/useI18n"
 
 const Input = styled.input`
   padding: 8px;
@@ -11,6 +12,7 @@ const Input = styled.input`
 
 
 function SearchBar({ onSearch }) {
+  const t = useI18n()
   const [searchValue, setSearchValue] = useState("");
   const [type, setType] = useState("TITLE");
 
@@ -32,11 +34,11 @@ function SearchBar({ onSearch }) {
   return (
     <div>
       <select id="type" name="type" value={type} onChange={handleChange}>
-        <option value="TITLE">제목</option>
-        <option value="GUIDE">가이드</option>
-        <option value="COURSE">코스</option>
-        <option value="CATEGORY">카테고리</option>
-        <option value="REGION">지역</option>
+        <option value="TITLE">{t(`제목`)}</option>
+        <option value="GUIDE">{t(`가이드`)}</option>
+        <option value="COURSE">{t(`코스`)}</option>
+        <option value="CATEGORY">{t(`카테고리`)}</option>
+        <option value="REGION">{t(`지역`)}</option>
       </select>
         <Input
         type="text"

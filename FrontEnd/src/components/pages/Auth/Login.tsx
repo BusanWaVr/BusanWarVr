@@ -3,6 +3,8 @@ import GeneralLogin from "./GeneralLogin";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+import { useI18n } from "../../../hooks/useI18n"
+
 const LoginWrapper = styled.div`
   width: 400px;
   display: flex;
@@ -31,6 +33,7 @@ interface Props {
 }
 
 function Login({ setOnLoginModal, setIsLoggedIn }: Props) {
+  const t = useI18n()
   const [isGeneralLoginVisible, setIsGeneralLoginVisible] = useState(true);
 
   // 모달이 그대로 남아있어서.. 새로고침하면서 이동하게 해뒀음
@@ -56,13 +59,13 @@ function Login({ setOnLoginModal, setIsLoggedIn }: Props) {
         />
         {/* 아직 회원이 아니신가요? 회원가입하러 가기 링크 */}
         <p>
-          아직 회원이 아니신가요? <br />
+        {t(`아직 회원이 아니신가요?`)} <br />
           <Link to="#" onClick={handleSignupLinkClick}>
-            일반 회원가입
+          {t(`일반 회원가입`)}
           </Link>
           <br />
           <Link to="#" onClick={handleGuideSignupLinkClick}>
-            가이드 회원가입
+          {t(`가이드 회원가입`)}
           </Link>
         </p>
       </div>

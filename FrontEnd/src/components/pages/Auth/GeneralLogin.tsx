@@ -14,6 +14,7 @@ import {
   changeCategory,
   changeIntroduce,
 } from "../../../store/reducers/UserInfoReducer";
+import { useI18n } from "../../../hooks/useI18n"
 
 const GeneralLoginWrapper = styled.div`
   /* Add your styling for the general login form wrapper */
@@ -60,6 +61,7 @@ interface Props {
 }
 
 function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
+  const t = useI18n()
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -143,7 +145,7 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
     <GeneralLoginWrapper>
       <form action="" id="loginForm" onSubmit={handleSubmit}>
         <div className="login-form__input-group">
-          <LoginInputLabel htmlFor="email">이메일</LoginInputLabel>
+          <LoginInputLabel htmlFor="email">{t(`이메일`)}</LoginInputLabel>
           <LoginInput
             type="text"
             id="email"
@@ -153,7 +155,7 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
             placeholder="이메일 주소 ex) busanvr@busanvr.co.kr"
             className="login-form__input-id"
           />
-          <LoginInputLabel htmlFor="password">비밀번호</LoginInputLabel>
+          <LoginInputLabel htmlFor="password">{t(`비밀번호`)}</LoginInputLabel>
           <LoginInput
             type="password"
             id="password"
@@ -165,7 +167,7 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
           />
         </div>
         <LoginButton type="submit" className="login-form__submit-btn">
-          로그인
+        {t(`로그인`)}
         </LoginButton>
       </form>
     </GeneralLoginWrapper>

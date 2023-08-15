@@ -1,8 +1,10 @@
 import GuideMyPage from "./GuideMyPage";
 import GuideMyPageRestriction from "./GuideMyPageRestriction";
 import { useSelector } from "react-redux";
+import { useI18n } from "../../../hooks/useI18n"
 
 const GuideMyPageMain = () => {
+  const t = useI18n()
   const { userId } = useSelector((state: any) => state.userInfo);
   console.log(userId);
 
@@ -19,7 +21,7 @@ const GuideMyPageMain = () => {
 
   return (
     <div>
-      <h1>업데이트페이지</h1>
+      <h1>{t(`업데이트페이지`)}</h1>
 
       {/* userId와 urlUserId 비교하여 페이지 표시 */}
 

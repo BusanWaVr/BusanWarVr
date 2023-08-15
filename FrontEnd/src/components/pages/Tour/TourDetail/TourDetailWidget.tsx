@@ -6,6 +6,7 @@ import TourReserveButton from "./TourReserveButton";
 import TourCancelButton from "./TourCancelButton";
 import TourWishButton from "./TourWishButton";
 import { Button } from "antd";
+import { useI18n } from "../../../../hooks/useI18n"
 
 const TourDetailWidgetWrapper = styled.div`
   width: 320px;
@@ -96,6 +97,8 @@ const TourDetailWidget = ({
     return newTime;
   };
 
+  const t = useI18n()
+
   const tourDate = formatDate(new Date(tourData.startDate));
   const startTime = formatTime(new Date(tourData.startDate));
   const endTime = formatTime(new Date(tourData.endDate));
@@ -105,7 +108,7 @@ const TourDetailWidget = ({
       <TourDetailWidgetWrapper>
         <StickeyWidget>
           <div className="tour-date">
-            <p className="tour-date__title">투어시간</p>
+            <p className="tour-date__title">{t(`투어시간`)}</p>
             <p className="tour-date__date">{tourDate}</p>
             <p className="tour-date__time">
               {startTime} ~ {endTime}
@@ -123,13 +126,13 @@ const TourDetailWidget = ({
                     block
                     style={{ width: "100%", height: "40px" }}
                   >
-                    취소된 투어입니다.
+                    {t(`취소된 투어입니다.`)}
                   </Button>
                 ) : (
                   <>
                     <Link to={`/tour/${tourId}/update`}>
                       <Button block style={{ width: "100%", height: "40px" }}>
-                        수정하기
+                      {t(`수정하기`)}
                       </Button>
                     </Link>
                     <TourCancelButton tourId={tourId} />
@@ -159,7 +162,7 @@ const TourDetailWidget = ({
                     block
                     style={{ width: "100%", height: "40px" }}
                   >
-                    종료된 투어입니다.
+                    {t(`종료된 투어입니다.`)}
                   </Button>
                 ) : null}
                 {tourData.canceled ? (
@@ -168,7 +171,7 @@ const TourDetailWidget = ({
                     block
                     style={{ width: "100%", height: "40px" }}
                   >
-                    취소된 투어입니다.
+                    {t(`취소된 투어입니다.`)}
                   </Button>
                 ) : null}
               </>
