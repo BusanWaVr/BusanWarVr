@@ -46,7 +46,7 @@ public class MainPageService {
     private final ImageUtil imageUtil;
 
     public Page<TourRecommendDto> tourRecommend(User user, Pageable pageable) {
-        List<Tour> tours = tourRepository.findByIsEndedFalseOrderByStartDate();
+        List<Tour> tours = tourRepository.findAllByIsEndedFalseOrderByStartDateDesc();
         List<TourRecommendDto> tourRecommendDtoList = new ArrayList<>();
         List<UserCategory> userCategoryList = userCategoryRepository.findAllByUser(user);
 

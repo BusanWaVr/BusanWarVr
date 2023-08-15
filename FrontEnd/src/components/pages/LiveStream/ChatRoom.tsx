@@ -4,7 +4,8 @@ import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 import { useSelector, useDispatch } from "react-redux";
 import { setStompClient } from "./LiveStreamReducer";
-
+import { image } from "@nextui-org/react";
+import microphone from "../../../assets/microphone.gif"
 export type message = {
   username: string;
   content: string;
@@ -12,7 +13,7 @@ export type message = {
 
 function ChatRoom(props, ref) {
   // reducer에서 데이터 가져오기
-  const { tourId, stompClient } = useSelector(
+  const { isListening, stompClient } = useSelector(
     (state) => state.liveStream
   );
   const { accessToken, userId } = useSelector((state: any) => state.userInfo);
@@ -35,8 +36,6 @@ function ChatRoom(props, ref) {
     scrollToBottom();
   }, [chatMessages]);
 
-
-  
   useEffect(() => {
       rnehr();
 
@@ -203,9 +202,11 @@ function ChatRoom(props, ref) {
           </button>
         </div>
         <div className="chat-footer-temp">
-          {/* <button onClick={handleLeaveChat}>나가기</button>
-          <button onClick={handleJoinChat}>재입장</button> */}
-          <button disabled>투표하기</button>
+        {isListening ? (
+          <img src={microphone} alt="..." style={{ width: '80px', height: '80px', margin: '10px' }}/>
+        ) : (
+          <p>스페이스를 눌러 음성채팅을 이용해보세요</p>
+        )}
         </div>
       </div>
     </div>

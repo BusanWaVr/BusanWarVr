@@ -15,16 +15,16 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 
 const Toolbar = (props) => {
-  const { isAudioEnabled, isVideoEnabled, isFullScreen, isChatOpen } =
+  const { isAudioEnabled, isVideoEnabled, isFullScreen, isChatOpen, isVoteOpen } =
     useSelector((state) => state.liveStream);
   const dispatch = useDispatch();
 
   const ToolbarContainer = styled.div`
     display: flex;
     justify-content: center;
-    // position: fixed;
+    position: fixed;
     left: 50%;
-    // transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
     bottom: 30px;
     background-color: #eee;
     border-radius: 30px;
@@ -102,7 +102,8 @@ const Toolbar = (props) => {
         </ToolbarButton>
       )}
 
-      <ToolbarButton>
+      {/* 투표 */}
+      <ToolbarButton onClick={props.toggleVote}>
         <HowToVoteIcon />
       </ToolbarButton>
 
