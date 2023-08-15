@@ -78,11 +78,19 @@ const LiveStreamSlice = createSlice({
     setOption2: (state, action: PayloadAction<string | null>) => {
       state.option2 = action.payload;
     },
+    // 투표 값을 1씩 늘림
     setOption1Cnt: (state, action: PayloadAction<number>) => {
       state.option1Cnt += action.payload;
     },
     setOption2Cnt: (state, action: PayloadAction<number>) => {
       state.option2Cnt += action.payload;
+    },
+    // 투표 값 초기화
+    setNewOption1Cnt: (state, action: PayloadAction<number>) => {
+      state.option1Cnt = action.payload;
+    },
+    setNewOption2Cnt: (state, action: PayloadAction<number>) => {
+      state.option2Cnt = action.payload;
     },
   },
 });
@@ -102,5 +110,7 @@ export const {
   setOption2,
   setOption1Cnt,
   setOption2Cnt,
+  setNewOption1Cnt,
+  setNewOption2Cnt,
 } = LiveStreamSlice.actions;
 export default LiveStreamSlice.reducer;

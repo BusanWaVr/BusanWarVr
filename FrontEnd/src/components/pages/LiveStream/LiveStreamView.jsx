@@ -21,7 +21,7 @@ import VoteModal from "./VoteModal";
 
 import "./LiveStreamView.css";
 import TestTest from "../Test/TestTest";
-import Stt from "../Test/Stt";
+import Stt from "./Stt";
 
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
@@ -38,12 +38,20 @@ import {
   setOption2,
   setOption1Cnt,
   setOption2Cnt,
+  setNewOption1Cnt,
+  setNewOption2Cnt,
 } from "./LiveStreamReducer";
 
 const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
 
 const LiveStreamView = () => {
   const navigate = useNavigate();
+
+  const [stompClient, setStompClient] = useState(null);
+  
+  useEffect(() => {
+    setStompClient(Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp")))
+  },[]);
 
   const {
     youtubeLink,
@@ -54,7 +62,7 @@ const LiveStreamView = () => {
     isVoteOpen,
     tourId,
     // tourUID,
-    stompClient,
+    // stompClient,
     option1,
     option2,
     option1Cnt,
@@ -117,13 +125,13 @@ const LiveStreamView = () => {
 
   const videoId = extractVideoIdFromLink(youtubeLink);
 
-  useEffect(() => {
-    dispatch(
-      setStompClient(
-        Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
-      )
-    );
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(
+  //     setStompClient(
+  //       Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
+  //     )
+  //   );
+  // }, [dispatch]);
 
   useEffect(() => {
     if (stompClient) {
@@ -384,6 +392,15 @@ const LiveStreamView = () => {
     }
   }, [voting]);
 
+  // 투표 시작할 때 값 초기화하기
+  useEffect(() => {
+    if (vote) {
+        dispatch(setNewOption1Cnt(0));
+        dispatch(setNewOption2Cnt(0));
+    }
+
+  }, [dispatch, vote])
+
   // 투표함 생성 받기(SUB)
   function subscribeVote(stomp) {
     stomp.subscribe(
@@ -394,8 +411,13 @@ const LiveStreamView = () => {
           option1: received.column1,
           option2: received.column2,
         };
+        // 이전 투표값 초기화
+        // dispatch(setNewOption1Cnt(0));
+        // dispatch(setNewOption2Cnt(0));
+        // 투표 진행중, 모션인식 진행중 true
         setVote(true);
         setVoting(true);
+        // 1번 선택지, 2번 선택지 값 저장
         dispatch(setOption1(received.column1));
         dispatch(setOption2(received.column2));
         console.log("투표 구독으로 받아오는 메시지", receivedMessage);
@@ -507,6 +529,7 @@ const LiveStreamView = () => {
       `/sub/chat/vote/end/${tourUID}`,
       (data) => {
         setVoting(false);
+        setVote(false);
         console.log("투표 종료");
       },
       { id: "endVote" }
@@ -584,9 +607,10 @@ const LiveStreamView = () => {
               onload={onload}
               onConnect={onConnect}
               tourUID={tourUID}
+              stompClient={stompClient}
             />
           </div>
-          <Stt tourUID={tourUID} />
+          <Stt tourUID={tourUID} stompClient={stompClient}/>
           {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
@@ -633,7 +657,7 @@ const LiveStreamView = () => {
             setVoting={setVoting}
           />}
           <VoteModal 
-          voting={voting}
+          vote={vote}
           />
         </FullScreen>
       )}

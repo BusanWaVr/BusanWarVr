@@ -12,8 +12,11 @@ export type message = {
 };
 
 function ChatRoom(props, ref) {
+  
+  const stompClient = props.stompClient;
+
   // reducer에서 데이터 가져오기
-  const { isListening, stompClient } = useSelector(
+  const { isListening } = useSelector(
     (state) => state.liveStream
   );
   const { accessToken, userId } = useSelector((state: any) => state.userInfo);
