@@ -18,6 +18,7 @@ public class ReCommentDto {
     private boolean isOwner;
     private Long parentId;
     private String content;
+    private boolean isDeleted;
 
     public ReCommentDto(User user, boolean isOwner, Comment comment) {
         this.commentId = comment.getId();
@@ -28,6 +29,7 @@ public class ReCommentDto {
         this.isOwner = isOwner;
         this.parentId = comment.getParentId();
         this.content = comment.getContent();
+        this.isDeleted = comment.isDeleted();
     }
 
 }

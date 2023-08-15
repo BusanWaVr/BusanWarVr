@@ -35,6 +35,9 @@ public class Comment {
     @Column
     private Long parentId;
 
+    @Column
+    private boolean isDeleted;
+
     public Comment(String content, User user, Tour tour, Long parentId) {
         this.content = content;
         this.tourId = tour.getId();
