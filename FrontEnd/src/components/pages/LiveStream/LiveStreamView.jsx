@@ -51,8 +51,10 @@ const LiveStreamView = () => {
   const [stompClient, setStompClient] = useState(null);
 
   useEffect(() => {
-    setStompClient(Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp")))
-  },[]);
+    setStompClient(
+      Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
+    );
+  }, []);
 
   const {
     youtubeLink,
@@ -240,7 +242,6 @@ const LiveStreamView = () => {
     stompClient.unsubscribe(`voteCnt`);
     stompClient.unsubscribe(`endVote`);
 
-
     navigate("/livestream");
   }, [session]);
 
@@ -401,11 +402,10 @@ const LiveStreamView = () => {
   // 투표 시작할 때 값 초기화하기
   useEffect(() => {
     if (vote) {
-        dispatch(setNewOption1Cnt(0));
-        dispatch(setNewOption2Cnt(0));
+      dispatch(setNewOption1Cnt(0));
+      dispatch(setNewOption2Cnt(0));
     }
-
-  }, [dispatch, vote])
+  }, [dispatch, vote]);
 
   // 투표함 생성 받기(SUB)
   function subscribeVote(stomp) {
@@ -701,8 +701,9 @@ const LiveStreamView = () => {
                             onload={onload}
                             onConnect={onConnect}
                             tourUID={tourUID}
+                            stompClient={stompClient}
                           />
-                          <Stt tourUID={tourUID} />
+                          <Stt tourUID={tourUID} stompClient={stompClient} />
                         </div>
                       </Allotment.Pane>
                     )}

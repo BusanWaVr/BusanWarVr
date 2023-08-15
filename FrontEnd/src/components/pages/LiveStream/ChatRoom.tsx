@@ -12,13 +12,10 @@ export type message = {
 };
 
 function ChatRoom(props, ref) {
-  
   const stompClient = props.stompClient;
 
   // reducer에서 데이터 가져오기
-  const { isListening } = useSelector(
-    (state) => state.liveStream
-  );
+  const { isListening } = useSelector((state) => state.liveStream);
   const { accessToken, userId } = useSelector((state: any) => state.userInfo);
   const tourUID = props.tourUID;
 
@@ -214,7 +211,9 @@ function ChatRoom(props, ref) {
                 style={{ width: "80px", height: "80px", margin: "10px" }}
               />
             ) : (
-              <p className="pt-5 pb-11" >스페이스를 눌러 음성채팅을 이용해보세요</p>
+              <p className="pt-5 pb-11">
+                스페이스를 눌러 음성채팅을 이용해보세요
+              </p>
             )}
           </div>
         </div>
