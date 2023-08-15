@@ -7,11 +7,6 @@ import Editor from "../../blocks/Editor";
 import { toast } from "react-toastify";
 import { EditOutlined } from "@ant-design/icons";
 
-const StyledWritePage = styled.div`
-  width: 60%;
-  margin: 0 auto;
-`;
-
 const MateWrite = () => {
   const { tourId } = useParams();
   const [title, setTitle] = useState("");
