@@ -17,6 +17,7 @@ import { styled as muiStyled } from "@mui/material/styles";
 
 import QRCodeComponent from "./QRCodeComponent";
 
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 const Toolbar = (props) => {
@@ -30,18 +31,48 @@ const Toolbar = (props) => {
   } = useSelector((state) => state.liveStream);
   const dispatch = useDispatch();
 
-  const ToolbarContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    position: fixed;
-    left: 50%;
-    transform: translate(-50%, 0);
-    bottom: 30px;
-    background-color: #eee;
-    border-radius: 30px;
-    padding: 0 10px;
-    z-index: 99;
-  `;
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const ToolbarContainer =
+    windowSize.width < 768
+      ? styled.div`
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          position: fixed;
+          bottom: 0;
+          background-color: #eee;
+          padding: 0 10px;
+        `
+      : styled.div`
+          display: flex;
+          justify-content: center;
+          position: fixed;
+          left: 50%;
+          transform: translate(-50%, 0);
+          bottom: 30px;
+          background-color: #eee;
+          border-radius: 30px;
+          padding: 0 10px;
+          z-index: 99;
+          box-shadow: 0px 0px 2px 2px #7d7d7d3e;
+        `;
 
   const ToolbarButton = styled.button`
     width: 60px;
@@ -53,6 +84,7 @@ const Toolbar = (props) => {
     background-color: transparent;
     &:hover {
       border: none;
+      background-color: #ccc;
     }
     transition: none;
   `;

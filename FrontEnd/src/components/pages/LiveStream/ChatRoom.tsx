@@ -189,7 +189,7 @@ function ChatRoom(props, ref) {
             }
           })}
         </div>
-        <div className="absolute bottom-0 w-full">
+        <div className="absolute w-full">
           <div className={`${styles.chatFooter}`}>
             <input
               type="text"
