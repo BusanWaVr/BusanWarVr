@@ -243,19 +243,26 @@ public class GuideInfoGetService {
         return response;
     }
 
-    public List<GuideFollowerDto> getGuideFollowerList(Long guideId) {
+    public List<GuideFollowerDto> getGuideFollowerList(Long guideId, Pageable pageable) {
         List<Follower> followers = followerRepository.findAllByGuideId(guideId);
         List<GuideFollowerDto> response = new ArrayList<>();
         for (Follower follower : followers) {
             GuideFollowerDto guideFollower = new GuideFollowerDto(follower);
             response.add(guideFollower);
         }
-        return response;
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), response.size());
+
+        Page<GuideFollowerDto> page = new PageImpl<>(response.subList(start, end),
+                pageable, response.size());
+
+        return page.getContent();
     }
 
     public GuideCanceledToursDto.Response getGuideCanceledTourList(Long guideId,
             Pageable pageable) {
-        List<Tour> tours = tourRepository.findAllByUserId(guideId, pageable);
+        List<Tour> tours = tourRepository.findAllByUserId(guideId);
         List<CanceledTourDto> tourDtoList = new ArrayList<>();
 
         for (Tour tour : tours) {
@@ -281,7 +288,13 @@ public class GuideInfoGetService {
                             joinerDtos));
         }
 
-        return new GuideCanceledToursDto.Response(tourDtoList);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), tourDtoList.size());
+
+        Page<CanceledTourDto> page = new PageImpl<>(tourDtoList.subList(start, end),
+                pageable, tourDtoList.size());
+
+        return new GuideCanceledToursDto.Response(page.getContent());
     }
 
 }
