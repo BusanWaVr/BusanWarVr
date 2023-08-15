@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import FollowingCard from "../../blocks/FollowingCard";
+import { useI18n } from "../../../hooks/useI18n"
 
 function UserFollowingBoard() {
+  const t = useI18n()
+  const { isMe } = useOutletContext();
   const [followingData, setFollowingData] = useState([]);
   const { userId } = useParams();
 
@@ -24,7 +28,6 @@ function UserFollowingBoard() {
       if (response.status === 200) {
         const data = await response.json();
         setFollowingData(data.data.guides);
-        console.log(data.data.guides);
       } else {
         alert("잠시 후 다시 시도해 주세요.");
       }
@@ -36,9 +39,9 @@ function UserFollowingBoard() {
   return (
     <div className="h-full">
       {followingData ? (
-        <FollowingCard followingData={followingData} />
+        <FollowingCard followingData={followingData} isMe={isMe} />
       ) : (
-        <p>로딩중ㅎ</p>
+        <p>{t(`로딩중ㅎ`)}</p>
       )}
     </div>
   );

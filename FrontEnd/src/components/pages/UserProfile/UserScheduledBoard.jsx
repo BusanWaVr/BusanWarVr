@@ -15,8 +15,7 @@ function UserScheduledBoard({ userTourData, isMe }) {
 
   return (
     <div>
-      <h1>예정보드</h1>
-      <TourCard TourData={TourData} isMe={isMe} />
+      <TourCard TourData={TourData} isMe={isMe} tourType="scheduled"/>
     </div>
   );
 }

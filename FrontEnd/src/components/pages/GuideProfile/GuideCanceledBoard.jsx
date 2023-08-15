@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router";
 import GuideTourCard from "../../blocks/GuideTourCard";
+import { toast } from "react-toastify";
 
 function GuideCanceledBoard() {
   const { urlId } = useParams();
@@ -25,16 +26,15 @@ function GuideCanceledBoard() {
             },
           }
         );
-        console.log(response);
         if (response.status === 200) {
-          console.log("가이드 취소정보를 받았어요");
           const data = await response.json();
           const TourData = data.data;
           const GuideTour = TourData.tourDtoList;
           setGuideTourData(GuideTour);
-          console.log("guideTourData", guideTourData);
         } else {
-          alert("투어데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요.");
+          toast.error(
+            "투어데이터를 받아올 수 없습니다. 잠시 후 다시 시도해 주세요."
+          );
         }
       } catch (error) {
         console.error(error);

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useI18n } from "../../hooks/useI18n"
 
 const CardContainer = styled.div`
   margin: 50px;
 `;
 
 function TourListCard({ TourData }) {
+  const t = useI18n()
   return (
     <div>
       {TourData ? (
@@ -27,12 +29,12 @@ function TourListCard({ TourData }) {
               </Link>
 
               <span>{tour.subTitle}</span>
-              <p>지역 : {tour.region}</p>
+              <p>{t(`지역`)} : {tour.region}</p>
 
               <Link to={`/guide/${tour.userId}/mypage`}>
                 <span> {tour.guide.nickname}</span>
               </Link>
-              <p>시작 날짜 : {tour.startDate}</p>
+              <p>{t(`시작 날짜`)} : {tour.startDate}</p>
               <p>#{tour.categorys.join(" #")}</p>
               <p>
                 <strong>
@@ -42,7 +44,7 @@ function TourListCard({ TourData }) {
             </CardContainer>
           ))
         ) : (
-          <p>투어 데이터가 없습니다</p>
+          <p>{t(`투어 데이터가 없습니다`)}</p>
         )
       ) : (
         <p>Loading...</p>

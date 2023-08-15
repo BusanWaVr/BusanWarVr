@@ -8,22 +8,25 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 
+import { useI18n } from "../../../hooks/useI18n"
+
 function GuideNavbar() {
+  const t = useI18n()
   const { urlId } = useParams();
 
   const items: MenuProps["items"] = [
     {
-      label: <Link to={`/guide/${urlId}/mypage/`}>회원 정보</Link>,
+      label: <Link to={`/guide/${urlId}/mypage/`}>{t(`회원 정보`)}</Link>,
       key: "1",
       icon: <UserOutlined />,
     },
     {
-      label: <Link to={`/guide/${urlId}/mypage/follower`}>팔로워</Link>,
+      label: <Link to={`/guide/${urlId}/mypage/follower`}>{t(`팔로워`)}</Link>,
       key: "2",
       icon: <UsergroupAddOutlined />,
     },
     {
-      label: <Link to={`/guide/${urlId}/mypage/tour`}>개설한 투어</Link>,
+      label: <Link to={`/guide/${urlId}/mypage/tour`}>{t(`개설한 투어`)}</Link>,
       key: "3",
       icon: <RocketOutlined />,
     },
@@ -32,7 +35,6 @@ function GuideNavbar() {
   return (
     <Menu
       theme="light"
-      defaultSelectedKeys={["1"]}
       mode="inline"
       items={items}
     />

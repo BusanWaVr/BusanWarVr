@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { styled } from "styled-components";
 import BusanBg from "../../../assets/busan_background.png";
 import { EditOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Tooltip } from "antd";
+import { useI18n } from "../../../hooks/useI18n"
 
 const UserStateWrapper = styled.div`
   background-image: linear-gradient(
@@ -51,11 +51,8 @@ const GuideIntroduction = styled.div`
   font-size: 16px;
 `;
 
-const UserInfo = ({ userInfoData }) => {
-  console.log(userInfoData);
-  const [userTourData, setUserTourData] = useState(null);
-  const { urlId } = useParams();
-
+const UserInfo = ({ userInfoData, isMe }) => {
+  const t = useI18n()
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -75,8 +72,8 @@ const UserInfo = ({ userInfoData }) => {
       <div className="w-full md:w-1/2 md:pl-6">
         <UserInfoWrapper>
           <UserInfoHeader>
-            <p className="font-bold">회원 정보</p>
-            {String(userInfoData.userId) === urlId ? (
+            <p className="font-bold">{t(`회원 정보`)}</p>
+            {isMe ? (
               <Tooltip title="회원 정보 수정">
                 <Button
                   type="link"
@@ -91,7 +88,7 @@ const UserInfo = ({ userInfoData }) => {
           </UserInfoHeader>
           <GuideIntroduction>{userInfoData.introduction}</GuideIntroduction>
           <UserInfoContent>
-            <p>이메일</p>
+            <p>{t(`이메일`)}</p>
             <p style={{ display: "flex", gap: "10px", alignItems: "center" }}>
               {userInfoData.email}
               <a
@@ -103,7 +100,7 @@ const UserInfo = ({ userInfoData }) => {
             </p>
           </UserInfoContent>
           <UserInfoContent>
-            <p>닉네임</p>
+            <p>{t(`닉네임`)}</p>
             <p>{userInfoData.nickname}</p>
           </UserInfoContent>
         </UserInfoWrapper>

@@ -3,6 +3,7 @@ package com.example.backend.dto.comment;
 import com.example.backend.model.comment.Comment;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.user.User;
+import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,9 +34,21 @@ public class CommentCreateDto {
     public static class Response {
 
         private Long commentId;
+        private String nickname;
+        private String profileImg;
+        private Date writeDate;
+        private boolean isOwner;
+        private Long parentId;
+        private String content;
 
-        public Response(Long commentId) {
-            this.commentId = commentId;
+        public Response(User user, Comment comment, boolean isOwner) {
+            this.commentId = comment.getId();
+            this.nickname = user.getNickname();
+            this.profileImg = user.getProfileImg();
+            this.writeDate = comment.getWriteDate();
+            this.isOwner = isOwner;
+            this.parentId = comment.getParentId();
+            this.content = comment.getContent();
         }
     }
 

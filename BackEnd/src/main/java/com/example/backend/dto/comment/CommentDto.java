@@ -11,16 +11,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentDto {
 
+    private Long commentId;
     private String nickname;
     private String profileImg;
     private Date writeDate;
+    private boolean isOwner;
+    private Long parentId;
     private String content;
     private List<ReCommentDto> reComments;
 
-    public CommentDto(User user, Comment comment, List<ReCommentDto> reComments) {
+    public CommentDto(User user, Comment comment, boolean isOwner, List<ReCommentDto> reComments) {
+        this.commentId = comment.getId();
         this.nickname = user.getNickname();
         this.profileImg = user.getProfileImg();
         this.writeDate = comment.getWriteDate();
+        this.isOwner = isOwner;
+        this.parentId = comment.getParentId();
         this.content = comment.getContent();
         this.reComments = reComments;
     }

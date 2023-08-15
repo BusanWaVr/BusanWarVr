@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { useI18n } from "../../../hooks/useI18n"
 
 const NavContainer = styled.nav`
   // background-color: #454545;
@@ -26,6 +27,7 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 function UserTourNavbar() {
+  const t = useI18n()
   const { userId } = useParams();
 
   return (
@@ -37,7 +39,7 @@ function UserTourNavbar() {
             to={`/user/${userId}/mypage/tour`}
             activeclassname="active"
           >
-            예정된 투어
+            {t(`예정된 투어`)}
           </StyledNavLink>
         </li>
         <li>
@@ -45,7 +47,7 @@ function UserTourNavbar() {
             to={`/user/${userId}/mypage/tour/ended`}
             activeclassname="active"
           >
-            지난 투어
+            {t(`지난 투어`)}
           </StyledNavLink>
         </li>
         <li>
@@ -53,7 +55,7 @@ function UserTourNavbar() {
             to={`/user/${userId}/mypage/tour/canceled`}
             activeclassname="active"
           >
-            취소된 투어
+            {t(`취소된 투어`)}
           </StyledNavLink>
         </li>
       </ul>

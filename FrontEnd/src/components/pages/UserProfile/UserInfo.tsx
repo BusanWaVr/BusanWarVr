@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import BusanBg from "../../../assets/busan_background.png";
 import { EditOutlined } from "@ant-design/icons";
 import { Button, Tooltip } from "antd";
+import { useI18n } from "../../../hooks/useI18n"
 
 const UserStateWrapper = styled.div`
   background-image: linear-gradient(
@@ -40,8 +41,8 @@ const UserInfoContent = styled.div`
   }
 `;
 
-const UserInfo = ({ userInfoData }) => {
-  const [userTourData, setUserTourData] = useState(null);
+const UserInfo = ({ userInfoData, isMe }) => {
+  const t = useI18n()
   const { userId } = useParams();
 
   useEffect(() => {
@@ -88,26 +89,30 @@ const UserInfo = ({ userInfoData }) => {
       <div className="w-full md:w-1/2 md:pl-6">
         <UserInfoWrapper>
           <UserInfoHeader>
-            <p className="font-bold">회원 정보</p>
-            <Tooltip title="회원 정보 수정">
-              <Button
-                type="link"
-                shape="circle"
-                icon={<EditOutlined />}
-                onClick={handleClick}
-              />
-            </Tooltip>
+            <p className="font-bold">{t(`회원 정보`)}</p>
+            {isMe ? (
+              <Tooltip title="회원 정보 수정">
+                <Button
+                  type="link"
+                  shape="circle"
+                  icon={<EditOutlined />}
+                  onClick={handleClick}
+                />
+              </Tooltip>
+            ) : (
+              <></>
+            )}
           </UserInfoHeader>
           <UserInfoContent>
-            <p>이메일</p>
+            <p>{t(`이메일`)}</p>
             <p>{userInfoData.email}</p>
           </UserInfoContent>
           <UserInfoContent>
-            <p>닉네임</p>
+            <p>{t(`닉네임`)}</p>
             <p>{userInfoData.nickname}</p>
           </UserInfoContent>
           <UserInfoContent>
-            <p>관심 카테고리</p>
+            <p>{t(`관심 카테고리`)}</p>
             <p>{userInfoData.categories.join(", ")}</p>
           </UserInfoContent>
         </UserInfoWrapper>

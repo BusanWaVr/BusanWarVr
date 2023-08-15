@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Button } from "antd";
+import { useI18n } from "../../../../hooks/useI18n"
 
 interface Joiner {
   profileImage: string;
@@ -74,6 +75,8 @@ const TourReserveButton = ({
     }
   };
 
+  const t = useI18n()
+
   return (
     <>
       {isJoined ? (
@@ -82,7 +85,7 @@ const TourReserveButton = ({
           style={{ width: "100%", height: "40px" }}
           danger
         >
-          예약 취소하기
+          {t(`예약 취소하기`)}
         </Button>
       ) : (
         <Button
@@ -90,7 +93,7 @@ const TourReserveButton = ({
           onClick={reserveHandler}
           style={{ width: "100%", height: "40px" }}
         >
-          투어 예약하기
+          {t(`투어 예약하기`)}
         </Button>
       )}
     </>

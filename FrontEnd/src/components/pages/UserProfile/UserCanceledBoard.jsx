@@ -3,7 +3,6 @@ import { useOutletContext } from "react-router";
 import TourCard from "../../blocks/TourCard";
 
 function UserCanceledBoard({ userTourData }) {
-
   if (!userTourData || !userTourData.canceledTours) {
     return <div>Loading...</div>;
   }
@@ -14,8 +13,7 @@ function UserCanceledBoard({ userTourData }) {
 
   return (
     <div>
-      <h1>취소보드</h1>
-      <TourCard TourData={TourData} />
+      <TourCard TourData={TourData} tourType="canceled" />
     </div>
   );
 }

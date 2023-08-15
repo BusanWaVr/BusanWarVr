@@ -6,9 +6,11 @@ interface LiveStreamState {
   isVideoEnabled: boolean;
   isFullScreen: boolean;
   isChatOpen: boolean;
+  isVoteOpen: boolean;
   tourId: string | null;
   tourUID: string | null;
-  stompClient: any;
+  // 음성 채팅
+  isListening: boolean;
   // 투표 항목 1번, 2번
   option1: string | null;
   option2: string | null;
@@ -24,11 +26,12 @@ const initialState: LiveStreamState = {
   isVideoEnabled: true,
   isFullScreen: false,
   isChatOpen: true,
+  isVoteOpen: true,
   tourId: null,
   tourUID: null,
-  stompClient: null,
-  option1: null,
-  option2: null,
+  isListening: false,
+  option1: "1번 선택지",
+  option2: "2번 선택지",
   option1Cnt: 0,
   option2Cnt: 0,
 };
@@ -52,14 +55,17 @@ const LiveStreamSlice = createSlice({
     setIsChatOpen: (state, action: PayloadAction<boolean>) => {
       state.isChatOpen = action.payload;
     },
+    setIsVoteOpen: (state, action: PayloadAction<boolean>) => {
+      state.isVoteOpen = action.payload;
+    },
     setTourId: (state, action: PayloadAction<string | null>) => {
       state.tourId = action.payload;
     },
     setTourUID: (state, action: PayloadAction<string | null>) => {
       state.tourUID = action.payload;
     },
-    setStompClient: (state, action: PayloadAction<any>) => {
-      state.stompClient = action.payload;
+    setIsListening: (state, action: PayloadAction<boolean>) => {
+      state.isListening = action.payload;
     },
     setOption1: (state, action: PayloadAction<string | null>) => {
       state.option1 = action.payload;
@@ -67,11 +73,19 @@ const LiveStreamSlice = createSlice({
     setOption2: (state, action: PayloadAction<string | null>) => {
       state.option2 = action.payload;
     },
+    // 투표 값을 1씩 늘림
     setOption1Cnt: (state, action: PayloadAction<number>) => {
       state.option1Cnt += action.payload;
     },
     setOption2Cnt: (state, action: PayloadAction<number>) => {
       state.option2Cnt += action.payload;
+    },
+    // 투표 값 초기화
+    setNewOption1Cnt: (state, action: PayloadAction<number>) => {
+      state.option1Cnt = action.payload;
+    },
+    setNewOption2Cnt: (state, action: PayloadAction<number>) => {
+      state.option2Cnt = action.payload;
     },
   },
 });
@@ -82,12 +96,15 @@ export const {
   setIsVideoEnabled,
   setIsFullScreen,
   setIsChatOpen,
+  setIsVoteOpen,
   setTourId,
   setTourUID,
-  setStompClient,
+  setIsListening,
   setOption1,
   setOption2,
   setOption1Cnt,
   setOption2Cnt,
+  setNewOption1Cnt,
+  setNewOption2Cnt,
 } = LiveStreamSlice.actions;
 export default LiveStreamSlice.reducer;

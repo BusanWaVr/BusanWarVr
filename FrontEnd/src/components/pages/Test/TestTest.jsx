@@ -2,6 +2,33 @@ import React, { useEffect, useRef, useState } from "react";
 import TestVoice from "./TestVoice";
 import oneAudio from "../../../assets/vote1.mp3";
 import twoAudio from "../../../assets/vote2.mp3";
+import handsUp from "../../../assets/handsUp.png";
+import camera from "../../../assets/camera.gif";
+import styled from "styled-components"
+
+
+const Container = styled.div`
+width: 530px;
+height: 130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, 0);
+    bottom: 100px;
+    background-color: rgba( 0, 0, 0, 0.7 );
+    border-radius: 30px;
+    padding: 10px;
+    color: #ffffff;
+
+    // & span {
+    //   background-color: rgba(4, 169, 135);
+    //   border-radius: 5px;
+    // }
+  `;
+
 
 function TestTest(props, ref) {
   const [selectOneAudio] = useState(new Audio(oneAudio));
@@ -135,6 +162,8 @@ function TestTest(props, ref) {
 
       if (response.status === 200) {
         console.log("투표 완료", response);
+        // 투표중인상태 종료 -> 렌더링X
+        props.setVoting(false);
       } else {
         // 에러
         console.log("에러", response);
@@ -146,14 +175,26 @@ function TestTest(props, ref) {
 
   return (
     <div>
-      <div>Teachable Machine Pose Model</div>
-      <button type="button" onClick={init}>
-        Start
-      </button>
+      {props.voting? 
+      <Container>
+        <img src={camera} alt="..." style={{ width: '80px', height: '80px', margin: '10px' }}/>
+        <div style={{ textAlign: 'left' }}>
+
+          <h5>투표가 시작되었습니다.
+          <br />1번 선택지에 투표하려면 <span>왼손</span>,
+          <br />2번 선택지에 투표하려면 <span>오른손</span>을 들어주세요.
+          </h5>
+        </div>
+
+        <img src={handsUp} alt="..." style={{ width: '80px', height: '80px', margin: '10px' }}/>
+
+      </Container> : <></>}
+
+      
       <div>
-        <canvas id="canvas"></canvas>
-      </div>
-      <div id="label-container"></div>
+            <canvas id="canvas"></canvas>
+            </div>
+            <div id="label-container"></div>
     </div>
   );
 }

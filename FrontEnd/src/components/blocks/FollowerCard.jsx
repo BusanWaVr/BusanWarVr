@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Button, Avatar, Card } from "antd";
 import BoogieNone from "../../assets/boogie_none.png";
+import { useI18n } from "../../hooks/useI18n"
 
 const { Meta } = Card;
 
@@ -11,12 +12,13 @@ const CardContainer = styled.div`
 `;
 
 function FollowerCard({ followerData }) {
+  const t = useI18n()
   return (
     <div className="h-full">
       {followerData.length === 0 ? (
         <div className="flex flex-col justify-center items-center h-full opacity-50">
           <img src={BoogieNone} alt="no_follower" className="w-1/6" />
-          <p className="font-bold">팔로워가 없어요 :(</p>
+          <p className="font-bold">{t(`팔로워가 없어요 :(`)}</p>
         </div>
       ) : (
         <div className="my-4">

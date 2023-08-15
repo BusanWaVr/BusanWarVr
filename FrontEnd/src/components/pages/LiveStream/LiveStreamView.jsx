@@ -21,7 +21,7 @@ import VoteModal from "./VoteModal";
 
 import "./LiveStreamView.css";
 import TestTest from "../Test/TestTest";
-import Stt from "../Test/Stt";
+import Stt from "./Stt";
 
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
@@ -32,11 +32,13 @@ import {
   setIsVideoEnabled,
   setIsFullScreen,
   setIsChatOpen,
-  setStompClient,
+  setIsVoteOpen,
   setOption1,
   setOption2,
   setOption1Cnt,
   setOption2Cnt,
+  setNewOption1Cnt,
+  setNewOption2Cnt,
 } from "./LiveStreamReducer";
 
 const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
@@ -44,21 +46,29 @@ const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
 const LiveStreamView = () => {
   const navigate = useNavigate();
 
+  const [stompClient, setStompClient] = useState(null);
+
+  useEffect(() => {
+    setStompClient(Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp")))
+  },[]);
+
   const {
     youtubeLink,
     isAudioEnabled,
     isVideoEnabled,
     isFullScreen,
     isChatOpen,
+    isVoteOpen,
     tourId,
     // tourUID,
-    stompClient,
+    // stompClient,
     option1,
     option2,
     option1Cnt,
     option2Cnt,
   } = useSelector((state) => state.liveStream);
-  const { nickname } = useSelector((state) => state.userInfo);
+  
+  const { nickname, userType } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
 
   // 그냥 모든 sessionid => tourId로 바꿔주면 되는데 무서워서 일단 이렇게
@@ -66,7 +76,9 @@ const LiveStreamView = () => {
   const { sessionid } = useParams();
   const tourUID = sessionid;
 
-  // 투표
+  // 가이드가 투표를 열어서, 현재 투표가 진행중인지
+  const [vote, setVote] = useState(false);
+  // 사용자가 모션인식으로 투표를 진행중인지
   const [voting, setVoting] = useState(false);
   // 가이드가 입력할 투표 항목
   const [column1, setColumn1] = useState("");
@@ -112,13 +124,13 @@ const LiveStreamView = () => {
 
   const videoId = extractVideoIdFromLink(youtubeLink);
 
-  useEffect(() => {
-    dispatch(
-      setStompClient(
-        Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
-      )
-    );
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(
+  //     setStompClient(
+  //       Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp"))
+  //     )
+  //   );
+  // }, [dispatch]);
 
   useEffect(() => {
     if (stompClient) {
@@ -220,7 +232,12 @@ const LiveStreamView = () => {
       session.disconnect();
     }
 
+    // 구독해제
     onLeaveChat();
+    stompClient.unsubscribe(`subVote`);
+    stompClient.unsubscribe(`voteCnt`);
+    stompClient.unsubscribe(`endVote`);
+
 
     navigate("/livestream");
   }, [session]);
@@ -332,6 +349,11 @@ const LiveStreamView = () => {
     }
   };
 
+  // 투표 모달 온오프
+  const toggleVote = () => {
+    dispatch(setIsVoteOpen(!isVoteOpen));
+  };
+
   const handleLeaveChatToggle = () => {
     dispatch(setIsChatOpen(false));
   };
@@ -374,6 +396,15 @@ const LiveStreamView = () => {
     }
   }, [voting]);
 
+  // 투표 시작할 때 값 초기화하기
+  useEffect(() => {
+    if (vote) {
+        dispatch(setNewOption1Cnt(0));
+        dispatch(setNewOption2Cnt(0));
+    }
+
+  }, [dispatch, vote])
+
   // 투표함 생성 받기(SUB)
   function subscribeVote(stomp) {
     stomp.subscribe(
@@ -384,7 +415,13 @@ const LiveStreamView = () => {
           option1: received.column1,
           option2: received.column2,
         };
+        // 이전 투표값 초기화
+        // dispatch(setNewOption1Cnt(0));
+        // dispatch(setNewOption2Cnt(0));
+        // 투표 진행중, 모션인식 진행중 true
+        setVote(true);
         setVoting(true);
+        // 1번 선택지, 2번 선택지 값 저장
         dispatch(setOption1(received.column1));
         dispatch(setOption2(received.column2));
         console.log("투표 구독으로 받아오는 메시지", receivedMessage);
@@ -496,6 +533,7 @@ const LiveStreamView = () => {
       `/sub/chat/vote/end/${tourUID}`,
       (data) => {
         setVoting(false);
+        setVote(false);
         console.log("투표 종료");
       },
       { id: "endVote" }
@@ -573,9 +611,10 @@ const LiveStreamView = () => {
               onload={onload}
               onConnect={onConnect}
               tourUID={tourUID}
+              stompClient={stompClient}
             />
           </div>
-          <Stt tourUID={tourUID} />
+          <Stt tourUID={tourUID} stompClient={stompClient}/>
           {/* 툴바 */}
           <Toolbar
             leaveSession={leaveSession}
@@ -585,26 +624,25 @@ const LiveStreamView = () => {
             toggleFullScreen={toggleFullScreen}
             isFullScreen={isFullScreen}
             isChatOpen={isChatOpen}
+            isVoteOpen={isVoteOpen}
+            toggleVote={toggleVote}
             handleLeaveChatToggle={handleLeaveChatToggle}
             handleJoinChatToggle={handleJoinChatToggle}
             onLeaveChat={onLeaveChat}
             onJoinChat={onJoinChat}
           />
           <QRCodeComponent youtubeLink={youtubeLink} />
-          {/* <button
-            onClick={() => {
-              setVoting(true);
-            }}
-          >
-            여기
-          </button>{" "} */}
-          <input
+          
+          {userType === 'GUIDE' ? 
+          // 가이드는 투표form, 유저들에게는 보이스채팅 기능
+          <div>
+            <input
             type="text"
             placeholder="1번 선택지"
             value={column1}
             onChange={onChangeColumn1}
-          />
-          <input
+            />
+            <input
             type="text"
             placeholder="2번 선택지"
             value={column2}
@@ -612,13 +650,19 @@ const LiveStreamView = () => {
           />
           <button onClick={createVote}>투표 시작하기</button>
           <button onClick={endVote}>투표 종료하기</button>
+          
+          </div> : 
+          
           <TestTest
             ref={initRef}
             tourUID={tourUID}
             accessToken={accessToken}
-          />{" "}
-          : <></>
-          <VoteModal />
+            voting={voting}
+            setVoting={setVoting}
+          />}
+          <VoteModal 
+          vote={vote}
+          />
         </FullScreen>
       )}
     </>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useI18n } from "../../hooks/useI18n"
 
 const CardContainer = styled.div`
 display: flex;
@@ -20,6 +21,7 @@ const Card = styled.div`
 `;
 
 function TourRecoCard({ tourRecoData }) {
+  const t = useI18n()
   return (
     <CardContainer>
       {tourRecoData ? (
@@ -38,7 +40,7 @@ function TourRecoCard({ tourRecoData }) {
               <Link to={`/tour/${tour.tourId}`}>
                 <h2>{tour.title}</h2>
               </Link>
-              <p>시작 날짜 : {tour.startDate}</p>
+              <p>{t(`시작 날짜`)} : {tour.startDate}</p>
               <p>#{tour.category.join(" #")}</p>
               <p>
                 <strong>
@@ -48,7 +50,7 @@ function TourRecoCard({ tourRecoData }) {
             </Card>
           ))
         ) : (
-          <p>투어 데이터가 없습니다</p>
+          <p>{t(`투어 데이터가 없습니다`)}</p>
         )
       ) : (
         <p>Loading...</p>
