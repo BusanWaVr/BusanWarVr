@@ -33,7 +33,6 @@ import {
   setIsFullScreen,
   setIsChatOpen,
   setIsVoteOpen,
-  setStompClient,
   setOption1,
   setOption2,
   setOption1Cnt,
@@ -48,7 +47,7 @@ const LiveStreamView = () => {
   const navigate = useNavigate();
 
   const [stompClient, setStompClient] = useState(null);
-  
+
   useEffect(() => {
     setStompClient(Stomp.over(new SockJS("https://busanwavrserver.store/ws-stomp")))
   },[]);
@@ -233,7 +232,12 @@ const LiveStreamView = () => {
       session.disconnect();
     }
 
+    // 구독해제
     onLeaveChat();
+    stompClient.unsubscribe(`subVote`);
+    stompClient.unsubscribe(`voteCnt`);
+    stompClient.unsubscribe(`endVote`);
+
 
     navigate("/livestream");
   }, [session]);

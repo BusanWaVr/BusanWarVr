@@ -85,8 +85,6 @@ function ChatRoom(props, ref) {
   const gowp = () => {
     stompClient.unsubscribe(`chat`);
     const stopmClientSave = stompClient;
-    setStompClient(stopmClientSave);
-    console.log(stompClient);
   };
 
   // 메시지 보내기
