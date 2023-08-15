@@ -1,4 +1,4 @@
-import NotPresentMember from "../../../../assets/boogie_notPresent.jpg";
+import NotPresentMember from "../../assets/boogie_notPresent.jpg";
 import { styled } from "styled-components";
 
 const CurrentMate = (tourData, joiners) => {
@@ -15,7 +15,7 @@ const CurrentMate = (tourData, joiners) => {
     align-items: center;
     gap: 3px;
     width: 150px;
-    height: 200px;
+    height: 150px;
     & > img {
       width: 80px;
       height: 80px;
