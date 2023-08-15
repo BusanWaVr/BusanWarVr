@@ -1,40 +1,4 @@
-.live-example {
-  position: relative;
-}
-
-#session {
-  position: absolute;
-  top: 80px;
-  z-index: 1;
-  left: 50%;
-  transform: translate(-50%, 0);
-}
-
-.video-slider {
-  margin: 0 auto;
-  opacity: 0.5;
-  transition: all 0.3s ease-in-out;
-  &:hover {
-    opacity: 1;
-  }
-}
-
-.stream-container {
-  padding: 10px;
-  width: 200px;
-  object-fit: cover;
-}
-
-.current-stream video,
-.current-stream .streamcomponent div {
-  border: 2px solid #385ac2;
-}
-
-.slick-next:before,
-.slick-prev:before {
-  color: rgb(139, 141, 255);
-}
-#join-dialog {
+.joinDialog {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,25 +54,12 @@
   text-align: left;
 }
 
-.message,
-.signin {
+.message {
   color: rgba(88, 87, 87, 0.822);
   font-size: 14px;
 }
 
-.signin {
-  text-align: center;
-}
-
-.signin a {
-  color: royalblue;
-}
-
-.signin a:hover {
-  text-decoration: underline royalblue;
-}
-
-.livestream-flex {
+.livestreamFlex {
   display: flex;
   justify-content: center;
   width: 100%;

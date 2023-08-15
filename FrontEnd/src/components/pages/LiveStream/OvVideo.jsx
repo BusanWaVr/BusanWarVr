@@ -9,5 +9,15 @@ export default function OpenViduVideoComponent({ streamManager }) {
     }
   }, [streamManager]);
 
-  return <video autoPlay={true} ref={videoRef} />;
+  return (
+    <video
+      autoPlay={true}
+      ref={videoRef}
+      className="h-full"
+      style={{
+        borderRadius: "5px",
+        objectFit: "cover",
+      }}
+    />
+  );
 }
