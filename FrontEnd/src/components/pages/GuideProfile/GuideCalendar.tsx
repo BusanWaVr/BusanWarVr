@@ -30,11 +30,10 @@ const UserCalendar = () => {
         );
         if (response.status === 200) {
           const data = await response.json();
-          console.log(data.data.scheduledTours);
           setScheduledTours(data.data.scheduledTours);
 
           const tourDates = data.data.scheduledTours.map((item) =>
-            item.startDate.substring(0, 10)
+            moment(item.startDate).utcOffset(9).format("YYYY-MM-DD")
           );
           setMark(tourDates);
         } else {
@@ -53,7 +52,8 @@ const UserCalendar = () => {
   useEffect(() => {
     const tour = scheduledTours.find(
       (item) =>
-        item.startDate.substring(0, 10) === moment(value).format("YYYY-MM-DD")
+        moment(item.startDate).utcOffset(9).format("YYYY-MM-DD") ==
+        moment(value).format("YYYY-MM-DD")
     );
 
     console.log(tour);

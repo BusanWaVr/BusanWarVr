@@ -6,10 +6,10 @@ import { Button, Checkbox, Form, Input } from "antd";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { ThemeProvider, createTheme } from "@mui/material";
-import { useI18n } from "../../../hooks/useI18n"
+import { useI18n } from "../../../hooks/useI18n";
 
 function GeneralUpdate() {
-  const t = useI18n()
+  const t = useI18n();
   const convertURLtoFile = async (url: string) => {
     try {
       const response = await fetch(url);
@@ -400,7 +400,7 @@ function GeneralUpdate() {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" disabled={!password} ghost>
-          {t(`비밀번호 확인`)}
+            {t(`비밀번호 확인`)}
           </Button>
         </Form.Item>
       </Form>
@@ -432,14 +432,14 @@ function GeneralUpdate() {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-            {t(`비밀번호 변경`)}
+              {t(`비밀번호 변경`)}
             </Button>
           </Form.Item>
         </Form>
       )}
       <ThemeProvider theme={customTheme}>
         <p style={{ fontSize: "14px", color: "rgba(0, 0, 0, 0.88)" }}>
-        {t(`카테고리`)}
+          {t(`카테고리`)}
         </p>
         <Stack direction="row" className="flex-wrap justify-center gap-3 py-3">
           {categoriesList.map((category, index) => (
@@ -464,7 +464,7 @@ function GeneralUpdate() {
       <p>{categoryMessage}</p>
 
       <Button type="primary" onClick={handleSave} className="p-3">
-      {t(`수정하기`)}
+        {t(`수정하기`)}
       </Button>
     </div>
     // <div>
