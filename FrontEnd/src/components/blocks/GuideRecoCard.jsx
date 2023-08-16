@@ -40,7 +40,7 @@ function GuideRecoCard({ guideRecoData }) {
               ) : (
                 <p>{t(`등록된 프로필 이미지가 없습니다.`)}</p>
               )}
-              <Link to={`/guide/${guide.tourId}/mypage`}>
+              <Link to={`/guide/${guide.userId}/mypage`}>
                 <h5>{guide.nickname}</h5>
               </Link>
               <p>{t(`팔로워`)} : {guide.followerNum}</p>
