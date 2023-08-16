@@ -117,19 +117,6 @@ const MateDetail = () => {
     }
   };
 
-  // // 이전 페이지 URL 가져오기
-  // const referrer = document.referrer;
-
-  // // 이전 페이지가 글쓰기 페이지였으면 최신 목록으로, 아니라면 이전 페이지로 가게 하고 싶었으나..
-  // const handleList = () => {
-  //   console.log(referrer);
-  //   if (referrer === "/mate/write") {
-  //     navigate("/mate")
-  //   } else {
-  //     navigate(-1)
-  //   }
-  // }
-
   const handleList = () => {
     navigate("/mate");
   };
@@ -150,7 +137,11 @@ const MateDetail = () => {
         >
           <div className="flex gap-5 items-center">
             <img
-              src={tourData.tourImgs[0]}
+              src={
+                tourData.tourImgs[0]
+                  ? tourData.tourImgs[0]
+                  : "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
+              }
               alt={tourData.title}
               style={{
                 width: "100px",
@@ -208,7 +199,7 @@ const MateDetail = () => {
             type="link"
             onClick={handleList}
             icon={<UnorderedListOutlined />}
-            style={{ display: "flex", alignItems: "center", color: "#2a2a2a"}}
+            style={{ display: "flex", alignItems: "center", color: "#2a2a2a" }}
           >
             목록
           </Button>
