@@ -76,7 +76,8 @@ const TourDatePicker = ({ writeType, setTourData, tourData }) => {
   };
 
   const disabledDate: RangePickerProps["disabledDate"] = (current) => {
-    return current && current < dayjs().endOf("day");
+    // return current && current < dayjs().endOf("day");
+    return false;
   };
 
   const { RangePicker } = DatePicker;

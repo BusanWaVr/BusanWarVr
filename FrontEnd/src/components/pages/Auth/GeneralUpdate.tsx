@@ -325,7 +325,7 @@ function GeneralUpdate() {
       if (selectedImageFile) {
         localStorage.setItem("profileImg", response.data.data.profileImg);
       }
-      window.location.href = `http://127.0.0.1:5173/user/${userId}/mypage/`;
+      window.location.href = `/user/${userId}/mypage/`;
     } catch (error) {
       console.error(error);
     }
