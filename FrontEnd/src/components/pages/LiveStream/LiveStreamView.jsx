@@ -43,6 +43,9 @@ import {
   setNewOption2Cnt,
 } from "./LiveStreamReducer";
 
+import styles from "./LiveStreamView.module.css";
+
+
 const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
 
 const LiveStreamView = () => {
@@ -596,7 +599,7 @@ const LiveStreamView = () => {
         <Loader />
       ) : (
         <FullScreen handle={handleFullScreen}>
-          <div style={{ width: "100vw", height: "100vh" }}>
+          <div style={{ width: "100vw", height: "100vh" }} className={`${styles.FullScreen}`}>
             <Allotment
               style={{ width: "100%", height: "100%", display: "flex" }}
             >
@@ -608,7 +611,7 @@ const LiveStreamView = () => {
                 }
                 minSize={windowSize.width < 768 ? 0 : windowSize.width * 0.6}
                 snap={windowSize.width < 768}
-                className="bg-zinc-800"
+                className={`${styles.streamContainer}`}
               >
                 <Allotment vertical>
                   {/* 유저비디오 */}
@@ -620,8 +623,8 @@ const LiveStreamView = () => {
                     />
                   </Allotment.Pane>
                   {/* VR라이브 */}
-                  <Allotment.Pane>
-                    <LiveExample className="live-example" videoId={videoId} />
+                  <Allotment.Pane className="live-example">
+                    <LiveExample videoId={videoId} />
                   </Allotment.Pane>
                 </Allotment>
               </Allotment.Pane>
@@ -636,9 +639,9 @@ const LiveStreamView = () => {
                 >
                   <Allotment vertical>
                     {isVoteOpen && (
-                      <Allotment.Pane className="bg-zinc-800 text-white">
-                        <div className="bg-zinc-900 h2 text-white font-semibold p-4 px-6 text-left">
-                          투표
+                      <Allotment.Pane className={`${styles.voteroom}`}>
+                        <div className="h2 text-white font-semibold p-4 px-6 text-left bg-zinc-900">
+                          Vote
                         </div>
                         {userType === "GUIDE" ? (
                           // 가이드는 투표form, 유저들에게는 보이스채팅 기능
@@ -683,7 +686,7 @@ const LiveStreamView = () => {
                             setVoting={setVoting}
                           />
                         )}
-                        <VoteModal voting={voting} />
+                        <VoteModal voting={voting}/>
                       </Allotment.Pane>
                     )}
                     {isChatOpen && (

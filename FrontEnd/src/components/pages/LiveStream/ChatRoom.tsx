@@ -142,7 +142,7 @@ function ChatRoom(props, ref) {
       <div className={`h-full ${styles.chatCard}`}>
         <div className={`${styles.chatheader}`}>
           <div className="h2 text-dark font-semibold p-4 px-6 text-left">
-            Chat
+            Live Chat
           </div>
         </div>
         <div
@@ -245,7 +245,7 @@ function ChatRoom(props, ref) {
                 style={{ width: "80px", height: "80px", margin: "10px" }}
               />
             ) : (
-              <p className="pt-5 pb-11">
+              <p className="pt-3 pb-7">
                 스페이스를 눌러 음성채팅을 이용해보세요
               </p>
             )}
