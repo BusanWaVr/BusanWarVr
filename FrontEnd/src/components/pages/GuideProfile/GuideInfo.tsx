@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import BusanBg from "../../../assets/busan_background.png";
 import { EditOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Tooltip } from "antd";
-import { useI18n } from "../../../hooks/useI18n"
+import { useI18n } from "../../../hooks/useI18n";
 
 const UserStateWrapper = styled.div`
   background-image: linear-gradient(
@@ -52,7 +52,7 @@ const GuideIntroduction = styled.div`
 `;
 
 const UserInfo = ({ userInfoData, isMe }) => {
-  const t = useI18n()
+  const t = useI18n();
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -86,7 +86,11 @@ const UserInfo = ({ userInfoData, isMe }) => {
               <></>
             )}
           </UserInfoHeader>
-          <GuideIntroduction>{userInfoData.introduction}</GuideIntroduction>
+          <GuideIntroduction>
+            {userInfoData.introduction
+              ? userInfoData.introduction
+              : "작성된 한 줄 소개가 없습니다."}
+          </GuideIntroduction>
           <UserInfoContent>
             <p>{t(`이메일`)}</p>
             <p style={{ display: "flex", gap: "10px", alignItems: "center" }}>
