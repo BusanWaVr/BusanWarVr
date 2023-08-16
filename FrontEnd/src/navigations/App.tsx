@@ -42,6 +42,8 @@ import UserFollowingBoard from "../components/pages/UserProfile/UserFollowingBoa
 import UserReviewBoard from "../components/pages/UserProfile/UserReviewBoard";
 import Stt from "../components/pages/LiveStream/Stt.jsx";
 import TestTest from "../components/pages/Test/TestTest.jsx";
+import TestCamera from "../components/pages/Test/TestCamera.jsx";
+import TestMic from "../components/pages/Test/TestMic.jsx";
 
 import { ToastContainer, toast } from "react-toastify";
 
@@ -140,6 +142,8 @@ function App() {
         <Route path="/test/teachable" element={<TestTest/>} />
         <Route path="/livestream/:sessionid" element={<LiveStreamView />} />
         <Route path="/teachable" element={<TestTest />} />
+        <Route path="/TestCamera" element={<TestCamera/>} />
+        <Route path="/TestMic" element={<TestMic/>} />
       </Routes>
     </>
   );

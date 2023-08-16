@@ -84,9 +84,9 @@ function TourCommentCard() {
       const data = await response.json();
       let dataBody = data.data;
       dataBody.reComments = [];
-
+      console.log(dataBody);
       setComments([...comments, dataBody]);
-
+      console.log(comments);
     } catch (error) {
       console.log(error);
     }
@@ -104,7 +104,7 @@ function TourCommentCard() {
   return (
     <CardContainer>
       {comments.map((comment, index, key) => (
-        <CommentCard comment={comment}/>
+        <CommentCard comment={comment}  />
       ))}
       
       <TextArea rows={4} onChange={handleOnchange}/>
