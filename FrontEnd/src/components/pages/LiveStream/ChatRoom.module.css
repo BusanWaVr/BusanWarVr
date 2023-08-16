@@ -2,9 +2,13 @@
   color: white;
 }
 
+.chatheader {
+  background-color: #e9eef6;
+}
+
 .chatHeader {
   padding: 10px;
-  background-color: #f2f2f2;
+  background-color: #e9eef6;
   display: flex;
   align-items: center;
 }
@@ -15,33 +19,55 @@
 }
 
 .chatBody {
+  background-color: #e9eef6;
   padding: 20px;
   overflow-y: scroll;
+  font-size: 14px;
+  color: #333;
+  margin: 0;
 }
 
 .message {
   margin-bottom: 10px;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 30px;
+}
+
+.Me {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.You {
+  display: flex;
 }
 
 .incoming {
-  background-color: #f2f2f2;
+  margin-bottom: 20px;
+  margin-left: 10px;
+  padding: 15px;
+  background-color: #ffffff;
+  text-align: left;
   width: fit-content;
   margin-right: auto;
+  box-shadow: 1px 2px 3px rgba(221, 221, 221, 0.7);
 }
 
 .outgoing {
-  background-color: #fffa97;
+  margin-bottom: 20px;
+  margin-right: 10px;
+  padding: 15px;
+  background-color: #fffad3;
   text-align: right;
   width: fit-content;
   margin-left: auto;
+  box-shadow: 1px 2px 3px rgba(221, 221, 221, 0.7);
 }
 
 .message p {
   font-size: 14px;
-  color: #333;
-  margin: 0;
+  color: #575757;
+  margin: 5px;
 }
 
 .leave {
@@ -59,7 +85,7 @@
   font-size: 14px;
   color: #26a193;
   text-align: center;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 .vote {
@@ -72,6 +98,7 @@
 }
 
 .chatFooter {
+  height: 60px;
   padding: 10px;
   background-color: #f2f2f2;
   display: flex;
@@ -81,22 +108,26 @@
   flex-grow: 1;
   padding: 5px;
   border: none;
-  border-radius: 3px;
+  border-radius: 5px;
 }
 
 .chatFooter button {
+  height: 100%;
+  width: 4rem;
+  margin-left: 10px;
   padding: 5px 10px;
+  font-size: 14px;
   border: none;
-  border-radius: 0px;
+  border-radius: 5px;
   background-color: #537cf5;
   color: #fff;
-  font-weight: bold;
+  /* font-weight: bold; */
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .chatFooter button:hover {
-  background-color: #385ac2;
+  /* background-color: #385ac2; */
 }
 
 /* 마이크 */

@@ -12,7 +12,7 @@ const VoteModal = (props) => {
       {isVoteOpen ? (
         <div className="mx-12 my-6 bg-zinc-900 p-6 rounded-md">
           <div className="mb-5 font-bold">
-            {props.voting ? (
+            {props.vote ? (
               <p>현재 진행중인 투표입니다.</p>
             ) : (
               <p>투표가 종료되었습니다.</p>

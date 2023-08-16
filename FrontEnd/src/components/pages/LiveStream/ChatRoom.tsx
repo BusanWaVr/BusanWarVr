@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setStompClient } from "./LiveStreamReducer";
 import { image } from "@nextui-org/react";
 import microphone from "../../../assets/microphone.gif";
+import { Input, Button } from "antd";
 export type message = {
   username: string;
   content: string;
@@ -61,7 +62,9 @@ function ChatRoom(props, ref) {
           senderId: receivedMessage.sender.id,
           username: receivedMessage.sender.nickname,
           content: receivedMessage.body,
+          profileImg: receivedMessage.sender.profileImg,
         };
+        console.log(receivedMessage);
 
         setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
       },
@@ -137,9 +140,9 @@ function ChatRoom(props, ref) {
   return (
     <div className="w-full h-full text-black">
       <div className={`h-full ${styles.chatCard}`}>
-        <div className="chat-header bg-zinc-900">
-          <div className="h2 text-white font-semibold p-4 px-6 text-left">
-            채팅
+        <div className={`${styles.chatheader}`}>
+          <div className="h2 text-dark font-semibold p-4 px-6 text-left">
+            Chat
           </div>
         </div>
         <div
@@ -151,15 +154,17 @@ function ChatRoom(props, ref) {
             switch (msg.msgType) {
               case "LEAVE":
                 return (
-                  <p className={`${styles.leave}`} key={index}>
-                    {msg.username}님이 채팅방에서 퇴장했습니다.
-                  </p>
+                  // <p className={`${styles.leave}`} key={index}>
+                  //   {msg.username}님이 채팅방에서 퇴장했습니다.
+                  // </p>
+                  <></>
                 );
               case "JOIN":
                 return (
-                  <p className={`${styles.join}`} key={index}>
-                    {msg.username}님이 채팅방에 입장했습니다.
-                  </p>
+                  // <p className={`${styles.join}`} key={index}>
+                  //   {msg.username}님이 채팅방에 입장했습니다.
+                  // </p>
+                  <></>
                 );
               case "VOTE":
                 return (
@@ -171,19 +176,48 @@ function ChatRoom(props, ref) {
                 return (
                   <div key={index}>
                     {msg.senderId == userId ? (
-                      <p
-                        className={`${styles.message} ${styles.outgoing}`}
-                        key={index}
-                      >
-                        {msg.content}
-                      </p>
+                      <div className={`${styles.Me}`}>
+                        {/* 프사 */}
+                        <img
+                          src={msg.profileImg}
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: "50%",
+                          }}
+                        />
+                        {/* 말풍선 */}
+                        <div
+                          className={`${styles.message} ${styles.outgoing}`}
+                          key={index}
+                        >
+                          <strong>{msg.username}</strong>
+                          <br />
+                          {msg.content}
+                        </div>
+                      </div>
                     ) : (
-                      <p
-                        className={`${styles.message} ${styles.incoming}`}
-                        key={index}
-                      >
-                        <strong>{msg.username}</strong> | {msg.content}
-                      </p>
+                      <div className={`${styles.You}`}>
+                        {/* 프사 */}
+                        <img
+                          src={msg.profileImg}
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: "50%",
+                          }}
+                          className={`${styles.meImg}`}
+                        />
+                        {/* 말풍선 */}
+                        <div
+                          className={`${styles.message} ${styles.incoming}`}
+                          key={index}
+                        >
+                          <strong>{msg.username}</strong>
+                          <br />
+                          {msg.content}
+                        </div>
+                      </div>
                     )}
                   </div>
                 );
@@ -200,7 +234,7 @@ function ChatRoom(props, ref) {
               placeholder="메세지를 입력하세요."
             />
             <button onClick={handleEnter} disabled={!inputMessage}>
-              send
+              SEND
             </button>
           </div>
           <div className={styles.chatFooterTemp}>
