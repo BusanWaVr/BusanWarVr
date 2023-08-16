@@ -4,6 +4,10 @@ import styles from "./LiveStream.module.css";
 import TestCamera from "../Test/TestCamera.jsx";
 import BlackCamera from "../Test/BlackCamera.jsx";
 import { useSelector, useDispatch } from "react-redux";
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import {
   setYoutubeLink,
   setIsAudioEnabled,
@@ -110,7 +114,7 @@ function LiveStream(props) {
 
   return (
     <>
-      <div>
+      <div className={styles.liveStreamMain}>
         <div className={`${styles.joinDialog} jumbotron vertical-center`}>
           <form className={styles.form} onSubmit={joinSession}>
             <p className={styles.title}>Let's take a trip! </p>
@@ -121,24 +125,25 @@ function LiveStream(props) {
               <div className={styles.livestreamFlex}>
               {/* 카메라 온오프 설정 */}
               <p>
-                <button type="button" onClick={toggleVideo}>
-                  {isVideoEnabled ? "카메라 켜짐" : "카메라 꺼짐"}
+                <button id={styles.cameraButton} type="button" onClick={toggleVideo}>
+                  {isVideoEnabled ? <VideocamIcon sx={{ color: "#ffff"}}/> : <VideocamOffIcon sx={{ color: "#ffff"}}/>}
                 </button>
               </p>
               {/* 마이크 온오프 설정 */}
               <p>
-                <button type="button" onClick={toggleAudio}>
-                  {isAudioEnabled ? "마이크 켜짐" : "마이크 꺼짐"}
+                
+                <button id={styles.cameraButton} type="button" onClick={toggleAudio}>
+                  {isAudioEnabled ? <MicIcon sx={{ color: "#ffff"}} /> : <MicOffIcon sx={{ color: "#ffff"}} />}
                 </button>
               </p>
             </div>
               </div>
               <div className={styles.rightSetting}>
-                <div>
+                <div style={{fontSize : "1.5rem", marginTop : "60px", marginBottom : "40px"}}>
                   {nickname}
                 </div>
                 <button
-                className="button submit"
+                id={styles.liveStreamSubmit}
                 name="commit"
                 type="submit"
                 onClick={saveYouTubeLink}
