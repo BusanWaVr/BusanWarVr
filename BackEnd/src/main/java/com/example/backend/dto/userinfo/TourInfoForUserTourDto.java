@@ -2,13 +2,14 @@ package com.example.backend.dto.userinfo;
 
 import com.example.backend.model.tour.Tour;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 
 @Data
 public class TourInfoForUserTourDto {
 
     private Long tourId;
-    private String tourImage;
+    private List<String> tourImageUrls;
     private String uid;
     private String title;
     private Date startDate;
@@ -18,9 +19,9 @@ public class TourInfoForUserTourDto {
     private GuideInfoForUserTourDto guide;
     private String link;
 
-    public TourInfoForUserTourDto(Tour tour, String tourImage, GuideInfoForUserTourDto guide) {
+    public TourInfoForUserTourDto(Tour tour, List<String> tourImageUrls, GuideInfoForUserTourDto guide) {
         this.tourId = tour.getId();
-        this.tourImage = tourImage;
+        this.tourImageUrls = tourImageUrls;
         this.uid = tour.getUid();
         this.title = tour.getTitle();
         this.startDate = tour.getStartDate();
