@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useI18n } from "../../../hooks/useI18n"
+import { toast } from "react-toastify";
+import { Button, Form, Input } from "antd";
+import { useI18n } from "../../../hooks/useI18n";
 
 const GuideSignup = () => {
-  const t = useI18n()
+  const t = useI18n();
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -216,7 +218,7 @@ const GuideSignup = () => {
       try {
         const response = await axios.post(apiUrl, formData);
         if (response.data.code === "200") {
-          alert(response.data.message);
+          toast.success(response.data.message);
           console.log(response.data);
           // TODO : 로그인 된 상태로 메인화면으로 이동
           window.location.href = "/";
@@ -224,97 +226,132 @@ const GuideSignup = () => {
       } catch (error) {
         console.log(error.response.data);
         if (error.response.data.status === "409") {
-          alert(error.response.data.message);
+          toast.error(error.response.data.message);
         } else {
-          alert("죄송합니다. 잠시 후 다시 시도해 주세요.");
+          toast.error("죄송합니다. 잠시 후 다시 시도해 주세요.");
         }
       }
     } else {
       // 필수 필드들이 모두 입력되지 않았을 경우
-      alert("모든 필수 정보를 입력해주세요.");
+      toast.warning("모든 필수 정보를 입력해주세요.");
     }
   };
 
   return (
     <>
-      <h3>
-        <strong>{t(`가이드`)}</strong> {t(`회원가입`)}
-      </h3>
-      <div className="form">
-        <div className="form-el">
-          <label htmlFor="email">{t(`이메일`)}</label> <br />
-          <input
-            id="email"
-            name="name"
+      <div className="flex flex-col items-left w-96 m-auto my-12">
+        <h3 className="mb-12">
+          <strong>{t(`가이드`)}</strong> {t(`회원가입`)}
+        </h3>
+        <Form style={{ maxWidth: 600 }} autoComplete="off" layout="vertical">
+          <Form.Item
+            label={t(`이메일`)}
+            name="email"
+            rules={[{ required: true, type: "email" }]}
             value={email}
             onChange={onChangeEmail}
             disabled={isEmailConfirm}
-          />
-          <p className="message">{emailMessage}</p>
-          <button onClick={handleVerification} disabled={!isEmail}>
-          {t(`인증번호받기`)}
-          </button>
-          <div>
-            <p>{codeMessage}</p>
-            {showVerificationForm && (
-              <form onSubmit={handleSubmitVerificationCode}>
-                <input
-                  type="text"
+            help={t(`${emailMessage} ${codeMessage}`)}
+          >
+            <Input value={name} onChange={onChangeName} />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={handleVerification}
+              disabled={!isEmail}
+              ghost
+            >
+              {t(`인증번호받기`)}
+            </Button>
+          </Form.Item>
+          {showVerificationForm && (
+            <>
+              <Form.Item
+                rules={[{ required: true }]}
+                validateStatus={emailVerifyMessage ? "error" : ""}
+                help={t(`${emailVerifyMessage}`)}
+              >
+                <Input
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
                   disabled={isEmailConfirm}
                 />
-                <button type="submit">{t(`인증`)}</button>
-              </form>
-            )}
-          </div>
-          <p className="message">{emailVerifyMessage}</p>
-        </div>
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  onClick={handleSubmitVerificationCode}
+                  ghost
+                >
+                  {t(`인증`)}
+                </Button>
+              </Form.Item>
+            </>
+          )}
 
-        <div className="form-el">
-          <label htmlFor="password">{t(`비밀번호`)}</label> <br />
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={onChangePassword}
-          />
-          <p className="message">{passwordMessage}</p>
-        </div>
-        <div className="form-el">
-          <label htmlFor="passwordConfirm">{t(`비밀번호 확인`)}</label> <br />
-          <input
-            type="password"
-            id="passwordConfirm"
-            name="passwordConfirm"
-            value={passwordConfirm}
-            onChange={onChangePasswordConfirm}
-          />
-          <p className="message">{passwordConfirmMessage}</p>
-        </div>
-        <div className="form-el">
-          <form onSubmit={handleSubmitName}>
-            <label htmlFor="name">{t(`닉네임`)}</label> <br />
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={name}
-              onChange={onChangeName}
+          <Form.Item
+            label={t(`비밀번호`)}
+            rules={[{ required: true }]}
+            help={passwordMessage}
+          >
+            <Input.Password
+              id="password"
+              name="password"
+              value={password}
+              onChange={onChangePassword}
             />
-            <button type="submit" disabled={!isName}>
-            {t(`중복확인`)}
-            </button>
-            <p className="message">{nameMessage}</p>
-            <p>{nicknameMessage}</p>
-          </form>
-        </div>
-        <br />
-        <br />
-        <button type="submit" onClick={handleSubmit}>
-        {t(`가입하기`)}
-        </button>
+          </Form.Item>
+          <Form.Item
+            htmlFor="passwordConfirm"
+            label={t(`비밀번호 확인`)}
+            rules={[{ required: true }]}
+            help={passwordConfirmMessage}
+          >
+            <Input.Password
+              id="passwordConfirm"
+              name="passwordConfirm"
+              value={passwordConfirm}
+              onChange={onChangePasswordConfirm}
+            />
+          </Form.Item>
+          <Form style={{ maxWidth: 600 }} autoComplete="off" layout="vertical">
+            <Form.Item
+              label={t(`닉네임`)}
+              name="nickname"
+              rules={[{ required: true }]}
+              help={t(`${nicknameMessage} ${nameMessage}`)}
+            >
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                value={name}
+                onChange={onChangeName}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                onClick={handleSubmitName}
+                disabled={!isName}
+                ghost
+              >
+                {t(`중복확인`)}
+              </Button>
+            </Form.Item>
+          </Form>
+
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={handleSubmit}
+            className="p-3"
+          >
+            {t(`가입하기`)}
+          </Button>
+        </Form>
       </div>
     </>
   );
