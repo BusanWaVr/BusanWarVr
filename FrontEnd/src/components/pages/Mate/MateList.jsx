@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import MateCard from "../../blocks/MateCard";
+import { Pagination } from "antd";
 
 const MateList = () => {
   const [mateListData, setMateListData] = useState([]);
@@ -23,8 +24,8 @@ const MateList = () => {
         `https://busanwavrserver.store/mate?page=${currentPage}`
       );
       if (response.status === 200) {
-        console.log("데이터18개받았어용");
         const data = await response.json();
+        console.log(parseInt(data.data.mateList.length / 6));
         setMateListData(data.data.mateList);
       } else {
         alert("메이트 목록을 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.");
@@ -54,24 +55,25 @@ const MateList = () => {
     setTempPage(2);
   };
 
+  const onChange = (e) => {
+    setTempPage(e);
+  };
+
   return (
-    <div>
-      <h1>메이트 목록 페이지</h1>
-      <MateCard
-        mateData={mateListData.slice(tempPage * 6, (tempPage + 1) * 6)}
-      />
-
-      <div>
-        <button onClick={handlePrevClick} disabled={currentPage === 0}>
-          이전
-        </button>
-
-        <button onClick={oneClick}>{currentPage * 3 + 1}</button>
-        <button onClick={twoClick}>{currentPage * 3 + 2}</button>
-        <button onClick={threeClick}>{currentPage * 3 + 3}</button>
-        <button onClick={handleNextClick}>다음</button>
+    <>
+      <div className="flex flex-col justify-around items-between">
+        <MateCard
+          mateData={mateListData.slice(tempPage * 6, (tempPage + 1) * 6)}
+        />
       </div>
-    </div>
+      <div className="w-full fixed bottom-0 py-3 backdrop-blur-md">
+        <Pagination
+          onChange={onChange}
+          defaultCurrent={1}
+          total={mateListData.length}
+        />
+      </div>
+    </>
   );
 };
 
