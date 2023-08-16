@@ -1,7 +1,8 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./LiveStream.module.css";
-
+import TestCamera from "../Test/TestCamera.jsx";
+import BlackCamera from "../Test/BlackCamera.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setYoutubeLink,
@@ -21,6 +22,7 @@ function LiveStream(props) {
   const [apitourId, setApiTourId] = useState(`${tourId}`);
   // tourUId
   const [mySessionId, setMySessionId] = useState(`${tourUID}`);
+  const [isDisableCamera, setIsDisableCamera] = useState(false);
 
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
@@ -37,6 +39,8 @@ function LiveStream(props) {
 
   // 카메라 온오프 설정 함수
   const toggleVideo = () => {
+    setIsDisableCamera(!isDisableCamera);
+    console.log(isDisableCamera);
     dispatch(setIsVideoEnabled(!isVideoEnabled));
   };
 
@@ -111,8 +115,41 @@ function LiveStream(props) {
           <form className={styles.form} onSubmit={joinSession}>
             <p className={styles.title}>Let's take a trip! </p>
             <p className={styles.message}>신나는 온라인 VR 투어를 떠나보자. </p>
-
-            <label>
+            <div className={styles.settingmain}>
+              <div className={styles.leftSetting}>
+              {isDisableCamera ? <BlackCamera/> : <TestCamera isDisable={isDisableCamera}/>}
+              <div className={styles.livestreamFlex}>
+              {/* 카메라 온오프 설정 */}
+              <p>
+                <button type="button" onClick={toggleVideo}>
+                  {isVideoEnabled ? "카메라 켜짐" : "카메라 꺼짐"}
+                </button>
+              </p>
+              {/* 마이크 온오프 설정 */}
+              <p>
+                <button type="button" onClick={toggleAudio}>
+                  {isAudioEnabled ? "마이크 켜짐" : "마이크 꺼짐"}
+                </button>
+              </p>
+            </div>
+              </div>
+              <div className={styles.rightSetting}>
+                <div>
+                  {nickname}
+                </div>
+                <button
+                className="button submit"
+                name="commit"
+                type="submit"
+                onClick={saveYouTubeLink}
+                >
+                  Join
+                </button>
+              </div>
+              
+            </div>
+            
+           {/* { <label>
               <input
                 className={`form-control ${styles.input}`}
                 type="text"
@@ -123,6 +160,9 @@ function LiveStream(props) {
               <span>닉네임</span>
             </label>
 
+            <div>
+              
+            </div>
             <label>
               <input
                 className={`form-control ${styles.input}`}
@@ -144,29 +184,8 @@ function LiveStream(props) {
                 required
               />
               <span>라이브 스트리밍 링크</span>
-            </label>
-            <div className={styles.livestreamFlex}>
-              {/* 카메라 온오프 설정 */}
-              <p>
-                <button type="button" onClick={toggleVideo}>
-                  {isVideoEnabled ? "카메라 켜짐" : "카메라 꺼짐"}
-                </button>
-              </p>
-              {/* 마이크 온오프 설정 */}
-              <p>
-                <button type="button" onClick={toggleAudio}>
-                  {isAudioEnabled ? "마이크 켜짐" : "마이크 꺼짐"}
-                </button>
-              </p>
-            </div>
-            <button
-              className="button submit"
-              name="commit"
-              type="submit"
-              onClick={saveYouTubeLink}
-            >
-              JOIN
-            </button>
+            </label>} */}
+           
           </form>
         </div>
       </div>
