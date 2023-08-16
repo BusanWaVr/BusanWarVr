@@ -4,6 +4,14 @@
   justify-content: center;
   height: 80vh;
 }
+
+.liveStreamMain {
+  background-image: url("../../../assets/liveImg.jpg");
+  background-size: cover;
+  height: 91vh;
+  filter: brightness(90%)
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -11,10 +19,11 @@
   gap: 10px;
   min-width: 400px;
   max-width: 600px;
-  background-color: #fff;
+  background-color: #fffffff0;
   padding: 20px;
   border-radius: 20px;
   position: relative;
+  box-shadow: 0 0 5px #949494;
 }
 
 .title {
@@ -64,7 +73,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  gap: 6px;
+  gap: 8px;
   margin-top: 30px;
 }
 
@@ -122,7 +131,7 @@
 }
 
 .settingmain {
-  border: 1px solid black;
+  /* border: 1px solid black; */
   width: 100vw;
   max-width: 580px;
   height: 300px;
@@ -134,8 +143,8 @@
 
 .leftSetting {
   display: flex;
-  flex: 0.7;
-  border: 1px solid red;
+  flex: 0.6;
+  /* border: 1px solid red; */
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -143,10 +152,10 @@
 
 .rightSetting{
   display: flex;
-  flex: 0.3;
-  border: 1px solid tan;
+  flex: 0.4;
+  /* border: 1px solid tan; */
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
 }
 
@@ -154,6 +163,43 @@
   color: #4169e1;
   font-weight: bold;
 }
+
+#cameraButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: royalblue;
+  width: 50px;
+  height: 40px;
+  padding: 4px;
+  border-radius: 24px;
+}
+
+#cameraButton:hover{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(118, 143, 219);
+  width: 50px;
+  height: 40px;
+  padding: 4px;
+}
+
+#liveStreamSubmit {
+  background-color: #4169e1;
+  width: 180px;
+  font-weight: bold;
+  border: 0px;
+  color: #e6e6e6;
+}
+
+#liveStreamSubmit:hover{
+  background-color: #97aceb;
+  width: 180px;
+  font-weight: bold;
+  border: 0px;
+}
+
 
 @keyframes pulse {
   from {

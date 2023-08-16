@@ -29,17 +29,17 @@ function TourCard({ TourData, isMe, tourType }) {
 
   moment.locale("ko");
 
-  const sortedTourData = TourData.slice().sort((a, b) => {
-    const startDateA = new Date(a.startDate);
-    const startDateB = new Date(b.startDate);
-    return startDateA - startDateB;
-  });
+  // const sortedTourData = TourData.slice().sort((a, b) => {
+  //   const startDateA = new Date(a.startDate);
+  //   const startDateB = new Date(b.startDate);
+  //   return startDateA - startDateB;
+  // });
 
   return (
     <div>
       {TourData ? (
         TourData.length > 0 ? (
-          sortedTourData.map((tour) => (
+          TourData.map((tour) => (
             <Card
               key={tour.tourId}
               isBlurred

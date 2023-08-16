@@ -4,7 +4,7 @@ import "./test.css";
 function BlackCamera(){
     return (
         <div className="blackCamera">
-            
+            Camera off
         </div>
     )
 }
