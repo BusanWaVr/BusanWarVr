@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button, Avatar, Card } from "antd";
 
 const ReviewDelete = ({ reviewId, userId, reviewDelete }) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -33,7 +34,16 @@ const ReviewDelete = ({ reviewId, userId, reviewDelete }) => {
     }
   };
 
-  return <button onClick={handleDelete}>삭제</button>;
+  return (
+    <Button
+      className="mt-3 bg-blue-50 p-3 rounded-md w-full"
+      color="primary"
+      variant="flat"
+      onClick={handleDelete}
+    >
+      삭제
+    </Button>
+  );
 };
 
 export default ReviewDelete;
