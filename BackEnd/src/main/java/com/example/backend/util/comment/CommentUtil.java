@@ -24,7 +24,7 @@ public class CommentUtil {
     private final JoinerUtil joinerUtil;
 
     public void commentDtoList(Long tourId, List<CommentDto> commentDtos) {
-        List<Comment> commentList = commentRepository.findAllByTourId(tourId);
+        List<Comment> commentList = commentRepository.findAllByTourIdOrderByWriteDateDesc(tourId);
 
         for (Comment comment : commentList) {
             User user = userRepository.findById(comment.getUserId()).get();
