@@ -87,7 +87,7 @@ const UserInfo = ({ userInfoData, isMe }) => {
             )}
           </UserInfoHeader>
           <GuideIntroduction>
-            {userInfoData.introduction
+            {userInfoData.introduction && userInfoData.introduction !== "null"
               ? userInfoData.introduction
               : "작성된 한 줄 소개가 없습니다."}
           </GuideIntroduction>

@@ -686,7 +686,7 @@ const LiveStreamView = () => {
                             setVoting={setVoting}
                           />
                         )}
-                        <VoteModal voting={voting}/>
+                        <VoteModal vote={vote}/>
                       </Allotment.Pane>
                     )}
                     {isChatOpen && (
