@@ -2,6 +2,7 @@ package com.example.backend.dto.mate;
 
 import com.example.backend.model.mate.Mate;
 import com.example.backend.model.tour.Tour;
+import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ public class MateInfoForListDto {
     private Long tourId;
     private String tourTitle;
     private String tourImage;
+    private Date startDate;
     private String title;
     private String content;
     private int minMember;
@@ -24,6 +26,7 @@ public class MateInfoForListDto {
         this.tourId = mate.getTourId();
         this.tourTitle = tour.getTitle();
         this.tourImage = tourImage;
+        this.startDate = tour.getStartDate();
         this.title = mate.getTitle();
         this.content = mate.getContent();
         this.minMember = mate.getMinMember();
