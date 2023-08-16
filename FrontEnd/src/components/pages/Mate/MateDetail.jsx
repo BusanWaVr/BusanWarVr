@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { Avatar, Button } from "antd";
 import styled from "styled-components";
-
-const JoinerContainer = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-`;
-
-const CenteredContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
+import CurrentMate from "../../blocks/CurrentMate";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  UnorderedListOutlined,
+} from "@ant-design/icons";
 
 const MateDetail = () => {
   const { mateId } = useParams();
   const [mateData, setMateData] = useState(null);
   const [joinerData, setJoinerData] = useState(null);
+  const [tourId, setTourId] = useState("");
+  const [tourData, setTourData] = useState(null);
   const navigate = useNavigate();
 
   // 상세페이지 데이터 받아오기
@@ -32,6 +30,7 @@ const MateDetail = () => {
 
           // mate정보만 저장하기
           setMateData(data.data.mate);
+          setTourId(data.data.mate.tourId);
 
           // joiner정보
           setJoinerData(data.data.joiners);
@@ -47,7 +46,28 @@ const MateDetail = () => {
     fetchMateData();
   }, [mateId]);
 
-  // 삭제
+  useEffect(() => {
+    const fetchTourData = async () => {
+      try {
+        const response = await fetch(
+          `https://busanwavrserver.store/tour/${mateData.tourId}`
+        );
+        if (response.status === 200) {
+          const res = await response.json();
+          console.log(res.data);
+          setTourData(res.data);
+        } else {
+          toast.error("해당 투어가 존재하지 않습니다.");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (tourId != "") {
+      fetchTourData();
+    }
+  }, [tourId]);
 
   const accessToken = localStorage.getItem("accessToken");
   const userId = parseInt(localStorage.getItem("userId"), 10);
@@ -114,73 +134,110 @@ const MateDetail = () => {
     navigate("/mate");
   };
 
-  return (
+  console.log(mateData);
+
+  return tourData && mateData ? (
     <div>
-      <h1>메이트 상세페이지</h1>
       <br />
-      {mateData ? (
-        <div>
-          <p>모집중인 투어</p>
-          <Link to={`/tour/${mateData.tourId}`}>{mateData.tourTitle}</Link>
-          <br />
-          <br />
-          <h3>
-            <strong>제목: {mateData.title}</strong>
-          </h3>
-          <p>글쓴이: {mateData.writerNickname}</p>
-          <br />
-          <span>내용: </span>
-          <div dangerouslySetInnerHTML={{ __html: mateData.content }} />
-
-          <br />
-          <br />
-          <br />
-          {joinerData.length > 0 ? (
-            <div>
-              <h3>
-                <strong>이 투어에 참여하는 사람들</strong>
-              </h3>
-              <p>
-                총 <strong>{mateData.maxMember}</strong>명 중{" "}
-                <strong>{joinerData.length}</strong>명이 모였어요.
-              </p>
-
-              <CenteredContainer>
-                <ul>
-                  {joinerData.map((joiner, index) => (
-                    <li key={index}>
-                      <JoinerContainer>
-                        <img
-                          src={joiner.profileImg}
-                          alt="프로필 이미지"
-                          // 임시로 이미지 줄여둠
-                          style={{
-                            width: "200px",
-                            height: "200px",
-                            borderRadius: "50%",
-                          }}
-                        />
-                        <div>
-                          <strong>{joiner.nickname}</strong> 님
-                        </div>
-                        <div>{joiner.joinDate}</div>
-                      </JoinerContainer>
-                    </li>
-                  ))}
-                </ul>
-              </CenteredContainer>
+      <div className="mx-4 sm:mx-24 lg:mx-48 mb-6 rounded-md">
+        <p className="text-left mb-3 font-semibold">투어 메이트 모집</p>
+        <div
+          className="text-left p-6"
+          style={{
+            borderTop: "2px solid #1983ff",
+            borderBottom: "1px solid #cccccc",
+          }}
+        >
+          <div className="flex gap-5 items-center">
+            <img
+              src={tourData.tourImgs[0]}
+              alt={tourData.title}
+              style={{
+                width: "100px",
+                height: "100px",
+                borderRadius: "5px",
+                objectFit: "cover",
+              }}
+            />
+            <div className="flex flex-col gap-1">
+              <Link to={`/tour/${mateData.tourId}`} className="text-xl">
+                {mateData.tourTitle}
+              </Link>
+              <Link
+                to={`/guide/${tourData.userId}/mypage`}
+                className="flex items-center  gap-1 text-sm"
+              >
+                <Avatar src={tourData.profileImg} alt="" />
+                <p>{tourData.nickname}</p>
+              </Link>
             </div>
-          ) : (
-            <p>참가자가 없습니다.</p>
-          )}
-          <button onClick={() => handleButtonClick({ mateData })}>수정</button>
-          <button onClick={handleDelete}>삭제</button>
-          <button onClick={handleList}>목록</button>
+          </div>
         </div>
-      ) : (
-        <p>로딩중ㅎ</p>
-      )}
+        <div
+          className="text-left py-4 flex justify-between items-center px-4"
+          style={{ borderBottom: "1px solid #cccccc" }}
+        >
+          <div className="font-bold">{mateData.title} </div>
+          <p>
+            작성자{" "}
+            <Link to={`../user/${mateData.writerId}/mypage`}>
+              {mateData.writerNickname}
+            </Link>
+          </p>
+        </div>
+        <div
+          className="text-left py-6 px-4 bg-sky-50"
+          style={{ minHeight: "250px" }}
+        >
+          <div dangerouslySetInnerHTML={{ __html: mateData.content }} />
+        </div>
+
+        <div
+          className="text-left p-4"
+          style={{
+            borderBottom: "2px solid #1983ff",
+          }}
+        >
+          <p className="text-2xl font-bold text-blue-500 my-6">
+            현재 모집 현황
+          </p>
+          <CurrentMate tourData={tourData} joiners={tourData.joiners} />
+        </div>
+        <div className="flex justify-end gap-2 mt-2">
+          <Button
+            type="link"
+            onClick={handleList}
+            icon={<UnorderedListOutlined />}
+            style={{ display: "flex", alignItems: "center", color: "#2a2a2a"}}
+          >
+            목록
+          </Button>
+          {userId === mateData.writerId ? (
+            <>
+              <Button
+                type="link"
+                onClick={() => handleButtonClick({ mateData })}
+                icon={<EditOutlined />}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                수정
+              </Button>
+              <Button
+                danger
+                type="link"
+                onClick={handleDelete}
+                icon={<DeleteOutlined />}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                삭제
+              </Button>
+            </>
+          ) : null}
+        </div>
+      </div>
     </div>
+  ) : (
+    <div>로딩 중 ...</div>
   );
 };
 

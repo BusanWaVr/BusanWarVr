@@ -12,6 +12,7 @@ public class ReviewInfoForGuideReviewDto {
     private String tourTitle;
     private Date date;
     private String content;
+    private String title;
     private double score;
     private UserInfoForGuideReviewsDto user;
 
@@ -20,6 +21,7 @@ public class ReviewInfoForGuideReviewDto {
         this.tourTitle = tour.getTitle();
         this.date = review.getDate();
         this.content = review.getContent();
+        this.title = review.getTitle();
         this.score = review.getScore();
         this.user = user;
     }
