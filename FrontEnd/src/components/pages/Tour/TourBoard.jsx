@@ -27,9 +27,14 @@ function TourBoard() {
   const [currentPage, setCurrentPage] = useState(0);
   const [tempPage, setTempPage] = useState(0);
   const [type, setType] = useState("TITLE");
+  const [temp, setTemp] = useState(0);
+  const [totalSize, setTotalSize] = useState(0);
 
   // 검색결과값
   const [searchResults, setSearchResults] = useState([]);
+  const [searchResultFirst, setSearchResultFirst] = useState([]);
+  const [searchResultSecond, setSearchResultSecond] = useState([]);
+  const [searchResultThird, setSearchResultThird] = useState([]);
 
   // 검색어 (Searchbar에서 받아옴)
   const [searchValue, setSearchValue] = useState("");
@@ -54,6 +59,7 @@ function TourBoard() {
 
   // 초기값 통신
   useEffect(() => {
+    console.log(tempPage);
     const fetchData = async () => {
       try {
         const requestBody = {
@@ -73,8 +79,34 @@ function TourBoard() {
         if (response.status === 200) {
           console.log("투어데이터 받았어요");
           const data = await response.json();
-          setSearchResults(data.data);
-          // console.log("부모에서 넘겨주고 있음", data.data);
+          
+          console.log("부모에서 넘겨주고 있음", data.data);
+          const size = data.data.length;
+          setTotalSize(size);
+          if(size > 0 && size < 7){
+            setSearchResults(data.data.slice(0, size));
+            setSearchResultFirst(data.data.slice(0, size));
+            setSearchResultSecond([]);
+            setSearchResultThird([]);
+          }
+          else if(size > 6 && size < 13){
+            setSearchResults(data.data.slice(0, 6));
+            setSearchResultFirst(data.data.slice(0, 6));
+            setSearchResultSecond(data.data.slice(7, size));
+            setSearchResultThird([]);
+          }
+          else if(size > 12 && size < 19){
+            setSearchResults(data.data.slice(0, 6));
+            setSearchResultFirst(data.data.slice(0, 6));
+            setSearchResultSecond(data.data.slice(6, 12));
+            setSearchResultThird(data.data.slice(12, size));
+          }
+          
+          if(temp < tempPage && size == 0){
+            setCurrentPage((currentPage) => currentPage - 3);
+            setTempPage((tempPage) => tempPage - 1);
+          }
+
         } else {
           alert(data.message);
         }
@@ -87,11 +119,15 @@ function TourBoard() {
   }, [tempPage, searchValue, type]);
 
   const handlePrevClick = () => {
+    setTemp(tempPage);
     setCurrentPage((currentPage) => currentPage - 3);
+    setTempPage((tempPage) => tempPage - 1);
   };
 
   const handleNextClick = () => {
+    setTemp(tempPage);
     setCurrentPage((currentPage) => currentPage + 3);
+    setTempPage((tempPage) => tempPage + 1);
   };
 
   return (
@@ -105,15 +141,26 @@ function TourBoard() {
         {t(`이전`)}
         </PrevButton>
 
-        <Button onClick={() => setTempPage(currentPage + 1)}>
+
+        
+        <Button onClick={() => {
+          setSearchResults(searchResultFirst);
+        }}>
           {currentPage + 1}
         </Button>
-        <Button onClick={() => setTempPage(currentPage + 2)}>
+        {searchResultSecond.length == 0 ? <></> : <Button onClick={() => {
+          setSearchResults(searchResultSecond);
+        }}>
           {currentPage + 2}
         </Button>
-        <Button onClick={() => setTempPage(currentPage + 3)}>
+        }
+        
+        {searchResultThird.length == 0 ? <></> : <Button onClick={() => {
+          setSearchResults(searchResultThird);
+        }}>
           {currentPage + 3}
-        </Button>
+        </Button>}
+        
         <Button onClick={handleNextClick}>{t(`다음`)}</Button>
       </ButtonContainer>
     </div>
