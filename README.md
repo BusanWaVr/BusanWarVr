@@ -15,7 +15,7 @@
 - [팀 메뉴트리](https://miro.com/app/board/uXjVM1wjrzs=/)
 
 - [팀 노션 바로가기](https://molangmolang.notion.site/99b8316d1e874164b050fdfa33139c33?pvs=4)
-    
+  
 
 ### 🛠 기능 요약 
 
@@ -33,7 +33,7 @@
 
 ### 🔥 Front-End Stack
 - React, TypeScript
-- WebRtc.
+- WebRtc, Azure STT
 
 ### 🔥 Back-End Stack
 - Spring Boot, Spring Security
