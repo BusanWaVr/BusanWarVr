@@ -5,6 +5,7 @@ import {
   UserOutlined,
   RocketOutlined,
   UsergroupAddOutlined,
+  FormOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 
@@ -29,6 +30,11 @@ function GuideNavbar() {
       label: <Link to={`/guide/${urlId}/mypage/tour`}>{t(`개설한 투어`)}</Link>,
       key: "3",
       icon: <RocketOutlined />,
+    },
+    {
+      label: <Link to={`/guide/${urlId}/mypage/review`}>{t(`리뷰 목록`)}</Link>,
+      key: "4",
+      icon: <FormOutlined />,
     },
   ];
 
