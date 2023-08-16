@@ -1,5 +1,6 @@
 package com.example.backend.service.user;
 
+import com.example.backend.dto.review.ReviewUserInfoDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserFollowDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserTourDto;
 import com.example.backend.dto.userinfo.GuideInfoForUserWishDto;
@@ -114,11 +115,20 @@ public class UserInfoGetService {
     public UserInfoDto.Response getUserInfo(Long userId) {
         User user = userRepository.findById(userId).get();
         List<String> categories = new ArrayList<>();
+
         categoryUtil.userCategoryList(user, categories);
+
         List<Follower> followings = followerRepository.findAllByUserId(userId);
         int followingNum = followings.size();
         List<Review> reviews = reviewRepository.findAllByUserId(userId);
-        UserInfoDto.Response response = new UserInfoDto.Response(user, categories, followingNum, reviews);
+        List<ReviewUserInfoDto> reviewUserInfoDtos = new ArrayList<>();
+
+        for (Review review : reviews){
+            Tour tour = tourRepository.findById(review.getTourId()).get();
+            reviewUserInfoDtos.add(new ReviewUserInfoDto(review, tour));
+        }
+
+        UserInfoDto.Response response = new UserInfoDto.Response(user, categories, followingNum, reviewUserInfoDtos);
         return response;
     }
 
