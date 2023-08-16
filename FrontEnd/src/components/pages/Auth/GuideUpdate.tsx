@@ -42,6 +42,11 @@ function GuideUpdate() {
   const [introduction, setIntroduction] = useState(
     `${localStorage.getItem("introduce")}`
   );
+
+  // 문자열 "null"로 오는거 처리
+  const sanitizedIntroduction = introduction === "null" ? "" : introduction;
+
+
   const [introductionMessage, setIntroductionMessage] = useState("");
   const [isIntroduction, setIsIntroduction] = useState(true);
 
@@ -291,7 +296,7 @@ function GuideUpdate() {
       if (introduction) {
         localStorage.setItem("introduce", introduction);
       }
-      window.location.href = `http://127.0.0.1:5173/guide/${userId}/mypage/`;
+      window.location.href = `/guide/${userId}/mypage/`;
     } catch (error) {
       console.error(error);
     }
@@ -299,7 +304,7 @@ function GuideUpdate() {
 
   const initialValues = {
     nickname: name,
-    introduction: introduction,
+    introduction: sanitizedIntroduction,
   };
 
   return (

@@ -68,8 +68,8 @@ function Stt(props) {
   }
 
   // 스페이스바를 누를 때 마이크 동작 시작
-  function handleSpaceKeyDown(event) {
-    if (event.code === "Space" && !isListening) {
+  function handleControlKeyDown(event) {
+    if (event.code === "ControlLeft" && !isListening) {
       console.log("마이크on");
       dispatch(setIsListening(true));
       sttFromMic();
@@ -77,8 +77,8 @@ function Stt(props) {
   }
 
   // 스페이스바를 떼면 마이크 동작 종료
-  function handleSpaceKeyUp(event) {
-    if (event.code === "Space") {
+  function handleControlKeyUp(event) {
+    if (event.code === "ControlLeft") {
       console.log("마이크off");
       dispatch(setIsListening(false));
     }
@@ -86,12 +86,12 @@ function Stt(props) {
 
   // 페이지가 처음 로드될 때 이벤트 핸들러 등록
   useEffect(() => {
-    document.addEventListener("keydown", handleSpaceKeyDown);
-    document.addEventListener("keyup", handleSpaceKeyUp);
+    document.addEventListener("keydown", handleControlKeyDown);
+    document.addEventListener("keyup", handleControlKeyUp);
 
     return () => {
-      document.removeEventListener("keydown", handleSpaceKeyDown);
-      document.removeEventListener("keyup", handleSpaceKeyUp);
+      document.removeEventListener("keydown", handleControlKeyDown);
+      document.removeEventListener("keyup", handleControlKeyUp);
     };
   }, [isListening]);
 

@@ -84,9 +84,10 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error("Login failed.");
+      if (response.status !== 200) {
+        alert("로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.");
       }
+
 
       const res = await response.json();
       const accessToken = res.data.access_Token;
@@ -117,7 +118,7 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
 
       console.log(localStorage);
 
-      // 로그인이 성공유무
+      // 로그인 성공유무
       console.log("Login successful");
       setOnLoginModal(false);
       setIsLoggedIn(true);
@@ -138,9 +139,11 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
         dispatch(setWishTour(JSON.stringify(wishTour)));
         navigate("/");
       } catch (error) {
+        // alert(error.message);
         console.error(error);
       }
     } catch (error) {
+      // alert(error.message);
       console.error("Error during login:", error);
     }
   };

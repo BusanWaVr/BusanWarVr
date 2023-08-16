@@ -57,6 +57,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
     }
 
     setIsLoggedIn(false);
+    window.location.reload();
   };
 
   const nickname = localStorage.getItem("nickname");
