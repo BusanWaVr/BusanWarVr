@@ -125,7 +125,11 @@ public class UserInfoGetService {
 
         for (Review review : reviews){
             Tour tour = tourRepository.findById(review.getTourId()).get();
-            reviewUserInfoDtos.add(new ReviewUserInfoDto(review, tour));
+            TourImage tourImage = tourImageRepository.findByTourId(tour.getId());
+            if(tourImage != null){
+                reviewUserInfoDtos.add(new ReviewUserInfoDto(review, tour, tourImage.getImage().getUrl()));
+            }
+            reviewUserInfoDtos.add(new ReviewUserInfoDto(review, tour, null));
         }
 
         UserInfoDto.Response response = new UserInfoDto.Response(user, categories, followingNum, reviewUserInfoDtos);
