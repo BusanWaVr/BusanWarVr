@@ -4,6 +4,10 @@ import styles from "./LiveStream.module.css";
 import TestCamera from "../Test/TestCamera.jsx";
 import BlackCamera from "../Test/BlackCamera.jsx";
 import { useSelector, useDispatch } from "react-redux";
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import {
   setYoutubeLink,
   setIsAudioEnabled,
@@ -12,7 +16,7 @@ import {
 
 function LiveStream(props) {
   const navigate = useNavigate();
-
+  const profileImg = localStorage.getItem("profileImg"); 
   const { youtubeLink, isAudioEnabled, isVideoEnabled, tourId, tourUID } =
     useSelector((state) => state.liveStream);
   const { nickname } = useSelector((state) => state.userInfo);
@@ -110,7 +114,7 @@ function LiveStream(props) {
 
   return (
     <>
-      <div>
+      <div className={styles.liveStreamMain}>
         <div className={`${styles.joinDialog} jumbotron vertical-center`}>
           <form className={styles.form} onSubmit={joinSession}>
             <p className={styles.title}>Let's take a trip! </p>
@@ -121,24 +125,39 @@ function LiveStream(props) {
               <div className={styles.livestreamFlex}>
               {/* 카메라 온오프 설정 */}
               <p>
-                <button type="button" onClick={toggleVideo}>
-                  {isVideoEnabled ? "카메라 켜짐" : "카메라 꺼짐"}
+                <button id={styles.cameraButton} type="button" onClick={toggleVideo}>
+                  {isVideoEnabled ? <VideocamIcon sx={{ color: "#ffff"}}/> : <VideocamOffIcon sx={{ color: "#ffff"}}/>}
                 </button>
               </p>
               {/* 마이크 온오프 설정 */}
               <p>
-                <button type="button" onClick={toggleAudio}>
-                  {isAudioEnabled ? "마이크 켜짐" : "마이크 꺼짐"}
+                
+                <button id={styles.cameraButton} type="button" onClick={toggleAudio}>
+                  {isAudioEnabled ? <MicIcon sx={{ color: "#ffff"}} /> : <MicOffIcon sx={{ color: "#ffff"}} />}
                 </button>
               </p>
             </div>
               </div>
               <div className={styles.rightSetting}>
-                <div>
+                <div style={{fontSize : "1.2rem", marginTop : "40px", marginBottom : "10px"}}>
+                  <div style={{display : "flex", justifyContent : "center", alignItems : "center"}}>
+                    <img src={profileImg} style={{borderRadius : "100%", width : "40%", marginBottom : "20px"}}/>
+                  </div>
                   {nickname}
                 </div>
+                <label>
+              <input
+                className={`form-control ${styles.input}`}
+                type="text"
+                id="sessionId"
+                value={youtubeLink}
+                onChange={handleChangeYouTubeLink}
+                required
+              />
+              <span>라이브 스트리밍 링크</span>
+            </label>
                 <button
-                className="button submit"
+                id={styles.liveStreamSubmit}
                 name="commit"
                 type="submit"
                 onClick={saveYouTubeLink}
@@ -149,7 +168,7 @@ function LiveStream(props) {
               
             </div>
             
-           {/* { <label>
+           <label>
               <input
                 className={`form-control ${styles.input}`}
                 type="text"
@@ -184,7 +203,7 @@ function LiveStream(props) {
                 required
               />
               <span>라이브 스트리밍 링크</span>
-            </label>} */}
+            </label>
            
           </form>
         </div>

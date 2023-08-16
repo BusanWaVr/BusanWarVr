@@ -1,6 +1,5 @@
 #cameraview {
     border-radius: 12px;
-    border: 2px solid royalblue;
     width: 200px;
     height: 150px;
 }
@@ -11,4 +10,8 @@
     height: 150px;
     border-radius: 12px;
     background-color: rgb(17, 17, 17);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
 }

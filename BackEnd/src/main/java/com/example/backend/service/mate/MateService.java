@@ -18,6 +18,7 @@ import com.example.backend.model.tourimage.TourImage;
 import com.example.backend.model.tourimage.TourImageRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
+import com.example.backend.util.image.ImageUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +36,7 @@ public class MateService {
     private final TourRepository tourRepository;
     private final JoinerRepository joinerRepository;
     private final TourImageRepository tourImageRepository;
+    private final ImageUtil imageUtil;
 
     @Transactional
     public MateRegistDto.Response registMateService(Request request, User user) {
@@ -78,11 +80,13 @@ public class MateService {
         List<MateInfoForListDto> mateInfoForListDtos = new ArrayList<>();
         for (Mate mate : mates) {
             Tour tour = tourRepository.findById(mate.getTourId()).get();
-            TourImage tourImage = tourImageRepository.findByTourId(tour.getId());
-            if(tourImage != null){
-                mateInfoForListDtos.add(new MateInfoForListDto(mate, tour, tourImage.getImage().getUrl()));
+            List<TourImage> tourImageList = tourImageRepository.findAllByTourId(tour.getId());
+            List<String> tourImageUrls = new ArrayList<>();
+            if(tourImageList == null){
+                mateInfoForListDtos.add(new MateInfoForListDto(mate, tour, null));
             }
-            mateInfoForListDtos.add(new MateInfoForListDto(mate, tour, null));
+            imageUtil.tourImageUrlList(tour.getId(), tourImageUrls);
+            mateInfoForListDtos.add(new MateInfoForListDto(mate, tour, tourImageUrls));
         }
 
         return new MateListDto.Response(mateInfoForListDtos);
