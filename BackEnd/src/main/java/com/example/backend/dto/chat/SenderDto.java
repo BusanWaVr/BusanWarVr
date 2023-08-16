@@ -9,12 +9,14 @@ public class SenderDto {
     private Long id;
     private String email;
     private String nickname;
+    private String profileImg;
     private String type;
 
     public SenderDto(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.nickname = user.getNickname();
+        this.profileImg = user.getProfileImg();
         this.type = user.getType().toString();
     }
 }
