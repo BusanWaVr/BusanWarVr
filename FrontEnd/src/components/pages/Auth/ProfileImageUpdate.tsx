@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ImgCrop from "antd-img-crop";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 import type { RcFile, UploadProps } from "antd/es/upload";
@@ -53,6 +52,7 @@ const ProfileImageUpload: React.FC = ({
   };
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+    console.log(newFileList);
     setFileList(newFileList);
     handleImageChange(newFileList);
   };
@@ -65,16 +65,14 @@ const ProfileImageUpload: React.FC = ({
   );
   return (
     <>
-      <ImgCrop>
-        <Upload
-          listType="picture-circle"
-          fileList={fileList}
-          onPreview={handlePreview}
-          onChange={(files) => handleChange(files)}
-        >
-          {fileList.length == 1 ? null : uploadButton}
-        </Upload>
-      </ImgCrop>
+      <Upload
+        listType="picture-circle"
+        fileList={fileList}
+        onPreview={handlePreview}
+        onChange={(files) => handleChange(files)}
+      >
+        {fileList.length == 1 ? null : uploadButton}
+      </Upload>
 
       <Modal
         open={previewOpen}

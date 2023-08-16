@@ -14,7 +14,7 @@ import {
   changeCategory,
   changeIntroduce,
 } from "../../../store/reducers/UserInfoReducer";
-import { useI18n } from "../../../hooks/useI18n"
+import { useI18n } from "../../../hooks/useI18n";
 
 const GeneralLoginWrapper = styled.div`
   /* Add your styling for the general login form wrapper */
@@ -61,7 +61,7 @@ interface Props {
 }
 
 function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
-  const t = useI18n()
+  const t = useI18n();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -96,7 +96,11 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
       const nickname = res.data.nickname;
       const profileImg = res.data.profileImg;
       const userType = res.data.type;
-      const introduce = res.data.introduce;
+      const introduce = `${
+        res.data.introduce
+          ? res.data.introduce
+          : "작성된 한 줄 소개가 없습니다."
+      }`;
       const category = res.data.category;
 
       console.log("res.data", res.data);
@@ -167,7 +171,7 @@ function GeneralLogin({ setOnLoginModal, setIsLoggedIn }: Props) {
           />
         </div>
         <LoginButton type="submit" className="login-form__submit-btn">
-        {t(`로그인`)}
+          {t(`로그인`)}
         </LoginButton>
       </form>
     </GeneralLoginWrapper>
