@@ -168,7 +168,7 @@ function LiveStream(props) {
               
             </div>
             
-           {/* { <label>
+           <label>
               <input
                 className={`form-control ${styles.input}`}
                 type="text"
@@ -203,7 +203,7 @@ function LiveStream(props) {
                 required
               />
               <span>라이브 스트리밍 링크</span>
-            </label>} */}
+            </label>
            
           </form>
         </div>
