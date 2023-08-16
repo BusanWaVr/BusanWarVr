@@ -9,7 +9,7 @@
   background-image: url("../../../assets/liveImg.jpg");
   background-size: cover;
   height: 91vh;
-  filter: brightness(93%)
+  filter: brightness(90%)
 }
 
 .form {
@@ -19,11 +19,11 @@
   gap: 10px;
   min-width: 400px;
   max-width: 600px;
-  background-color: #fff;
+  background-color: #fffffff0;
   padding: 20px;
   border-radius: 20px;
   position: relative;
-  border: 2px solid royalblue;
+  box-shadow: 0 0 5px #949494;
 }
 
 .title {
