@@ -14,6 +14,8 @@ import com.example.backend.model.mate.Mate;
 import com.example.backend.model.mate.MateRepository;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tour.TourRepository;
+import com.example.backend.model.tourimage.TourImage;
+import com.example.backend.model.tourimage.TourImageRepository;
 import com.example.backend.model.user.User;
 import com.example.backend.model.user.UserRepository;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class MateService {
     private final UserRepository userRepository;
     private final TourRepository tourRepository;
     private final JoinerRepository joinerRepository;
+    private final TourImageRepository tourImageRepository;
 
     @Transactional
     public MateRegistDto.Response registMateService(Request request, User user) {
@@ -74,7 +77,12 @@ public class MateService {
         List<Mate> mates = mateRepository.findAllByOrderByIdDesc(pageable);
         List<MateInfoForListDto> mateInfoForListDtos = new ArrayList<>();
         for (Mate mate : mates) {
-            mateInfoForListDtos.add(new MateInfoForListDto(mate));
+            Tour tour = tourRepository.findById(mate.getTourId()).get();
+            TourImage tourImage = tourImageRepository.findByTourId(tour.getId());
+            if(tourImage != null){
+                mateInfoForListDtos.add(new MateInfoForListDto(mate, tour, tourImage.getImage().getUrl()));
+            }
+            mateInfoForListDtos.add(new MateInfoForListDto(mate, tour, null));
         }
 
         return new MateListDto.Response(mateInfoForListDtos);
