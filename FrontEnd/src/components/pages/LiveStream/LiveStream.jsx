@@ -139,12 +139,23 @@ function LiveStream(props) {
             </div>
               </div>
               <div className={styles.rightSetting}>
-                <div style={{fontSize : "1.2rem", marginTop : "40px", marginBottom : "40px"}}>
+                <div style={{fontSize : "1.2rem", marginTop : "40px", marginBottom : "10px"}}>
                   <div style={{display : "flex", justifyContent : "center", alignItems : "center"}}>
                     <img src={profileImg} style={{borderRadius : "100%", width : "40%", marginBottom : "20px"}}/>
                   </div>
                   {nickname}
                 </div>
+                <label>
+              <input
+                className={`form-control ${styles.input}`}
+                type="text"
+                id="sessionId"
+                value={youtubeLink}
+                onChange={handleChangeYouTubeLink}
+                required
+              />
+              <span>라이브 스트리밍 링크</span>
+            </label>
                 <button
                 id={styles.liveStreamSubmit}
                 name="commit"
