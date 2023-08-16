@@ -27,6 +27,7 @@ function CommentCard(props){
     
     useEffect(() => {
         console.log(comment);
+        console.log(props.comment.reComments);
     }, [comment]);
 
     const handleOnchange = (e) => {
