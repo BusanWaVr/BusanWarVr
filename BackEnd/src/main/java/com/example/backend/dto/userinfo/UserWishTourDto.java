@@ -9,7 +9,7 @@ import lombok.Data;
 public class UserWishTourDto {
 
     private long tourId;
-    private String tourImage;
+    private List<String> tourImageUrls;
     private String title;
     private Date startDate;
     private int currentMember;
@@ -17,9 +17,9 @@ public class UserWishTourDto {
     private List<String> category;
     private GuideInfoForUserWishDto guide;
 
-    public UserWishTourDto(Tour tour, String tourImage, List<String> category, GuideInfoForUserWishDto guide) {
+    public UserWishTourDto(Tour tour, List<String> tourImageUrls, List<String> category, GuideInfoForUserWishDto guide) {
         this.tourId = tour.getId();
-        this.tourImage = tourImage;
+        this.tourImageUrls = tourImageUrls;
         this.title = tour.getTitle();
         this.startDate = tour.getStartDate();
         this.currentMember = tour.getCurrentMember();

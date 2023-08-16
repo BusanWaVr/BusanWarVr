@@ -4,6 +4,7 @@ import com.example.backend.model.review.Review;
 import com.example.backend.model.tour.Tour;
 import com.example.backend.model.tourimage.TourImage;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,10 +18,10 @@ public class ReviewUserInfoDto {
     private double score;
     private long userId;
     private long tourId;
-    private String tourImage;
+    private List<String> tourImageUrls;
     private String tourTitle;
 
-    public ReviewUserInfoDto(Review review, Tour tour, String tourImage){
+    public ReviewUserInfoDto(Review review, Tour tour, List<String> tourImageUrls){
         this.id = review.getId();
         this.title = review.getTitle();
         this.content = review.getContent();
@@ -28,7 +29,7 @@ public class ReviewUserInfoDto {
         this.score = review.getScore();
         this.userId = review.getUserId();
         this.tourId = review.getTourId();
-        this.tourImage = tourImage;
+        this.tourImageUrls = tourImageUrls;
         this.tourTitle = tour.getTitle();
     }
 }

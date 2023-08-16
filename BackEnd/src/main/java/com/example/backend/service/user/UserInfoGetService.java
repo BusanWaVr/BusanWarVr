@@ -30,6 +30,7 @@ import com.example.backend.model.user.UserRepository;
 import com.example.backend.model.wish.Wish;
 import com.example.backend.model.wish.WishRepository;
 import com.example.backend.util.category.CategoryUtil;
+import com.example.backend.util.image.ImageUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +51,7 @@ public class UserInfoGetService {
     private final JoinerRepository joinerRepository;
     private final TourImageRepository tourImageRepository;
     private final CategoryUtil categoryUtil;
-    private final ImageRepository imageRepository;
+    private final ImageUtil imageUtil;
 
     public UserWishDto.Response getUserWishList(Long userId, Pageable pageable) {
         List<Wish> userWishLists = wishRepository.findAllByUserId(userId, pageable);
@@ -69,14 +70,14 @@ public class UserInfoGetService {
             User tourGuide = userRepository.findById(tour.getUserId()).get();
 
             GuideInfoForUserWishDto guide = new GuideInfoForUserWishDto(tourGuide);
-            TourImage tourImage = tourImageRepository.findByTourId(tour.getId());
-            String tourImageUrl;
-            if(tourImage == null){
+            List<TourImage> tourImageList = tourImageRepository.findAllByTourId(tour.getId());
+            List<String> tourImageUrls = new ArrayList<>();
+            if(tourImageList == null){
                 wishList.add(new UserWishTourDto(tour, null, categoryList, guide));
                 continue;
             }
-            tourImageUrl = tourImage.getImage().getUrl();
-            wishList.add(new UserWishTourDto(tour, tourImageUrl, categoryList, guide));
+            imageUtil.tourImageUrlList(tour.getId(), tourImageUrls);
+            wishList.add(new UserWishTourDto(tour, tourImageUrls, categoryList, guide));
         }
         return new UserWishDto.Response(wishList);
     }
@@ -125,11 +126,13 @@ public class UserInfoGetService {
 
         for (Review review : reviews){
             Tour tour = tourRepository.findById(review.getTourId()).get();
-            TourImage tourImage = tourImageRepository.findByTourId(tour.getId());
-            if(tourImage != null){
-                reviewUserInfoDtos.add(new ReviewUserInfoDto(review, tour, tourImage.getImage().getUrl()));
+            List<TourImage> tourImageList = tourImageRepository.findAllByTourId(tour.getId());
+            List<String> tourImageUrls = new ArrayList<>();
+            if(tourImageList == null){
+                reviewUserInfoDtos.add(new ReviewUserInfoDto(review, tour, null));
             }
-            reviewUserInfoDtos.add(new ReviewUserInfoDto(review, tour, null));
+            imageUtil.tourImageUrlList(tour.getId(), tourImageUrls);
+            reviewUserInfoDtos.add(new ReviewUserInfoDto(review, tour, tourImageUrls));
         }
 
         UserInfoDto.Response response = new UserInfoDto.Response(user, categories, followingNum, reviewUserInfoDtos);
@@ -176,15 +179,15 @@ public class UserInfoGetService {
     private TourInfoForUserTourDto createTourInfoForUserTourDto(Tour tour) {
 
         User guide = userRepository.findById(tour.getUserId()).get();
-        TourImage tourImage = tourImageRepository.findByTourId(tour.getId());
         GuideInfoForUserTourDto guideInfo = new GuideInfoForUserTourDto(guide);
-        String tourImageUrl;
-        if(tourImage == null){
+        List<TourImage> tourImageList = tourImageRepository.findAllByTourId(tour.getId());
+        List<String> tourImageUrls = new ArrayList<>();
+        if(tourImageList == null){
             TourInfoForUserTourDto tourInfo = new TourInfoForUserTourDto(tour, null, guideInfo);
             return tourInfo;
         }
-        tourImageUrl = tourImage.getImage().getUrl();
-        TourInfoForUserTourDto tourInfo = new TourInfoForUserTourDto(tour, tourImageUrl, guideInfo);
+        imageUtil.tourImageUrlList(tour.getId(), tourImageUrls);
+        TourInfoForUserTourDto tourInfo = new TourInfoForUserTourDto(tour, tourImageUrls, guideInfo);
 
         return tourInfo;
     }

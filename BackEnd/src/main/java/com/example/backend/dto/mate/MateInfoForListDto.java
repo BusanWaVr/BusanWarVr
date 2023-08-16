@@ -3,6 +3,7 @@ package com.example.backend.dto.mate;
 import com.example.backend.model.mate.Mate;
 import com.example.backend.model.tour.Tour;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,7 @@ public class MateInfoForListDto {
     private Long mateId;
     private Long tourId;
     private String tourTitle;
-    private String tourImage;
+    private List<String> tourImageUrls;
     private Date startDate;
     private String title;
     private String content;
@@ -21,11 +22,11 @@ public class MateInfoForListDto {
     private int maxMember;
     private int joinMember;
 
-    public MateInfoForListDto(Mate mate, Tour tour, String tourImage) {
+    public MateInfoForListDto(Mate mate, Tour tour, List<String> tourImageUrls) {
         this.mateId = mate.getId();
         this.tourId = mate.getTourId();
         this.tourTitle = tour.getTitle();
-        this.tourImage = tourImage;
+        this.tourImageUrls = tourImageUrls;
         this.startDate = tour.getStartDate();
         this.title = mate.getTitle();
         this.content = mate.getContent();
