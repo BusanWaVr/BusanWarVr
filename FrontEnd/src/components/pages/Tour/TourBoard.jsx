@@ -3,7 +3,8 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import TourListCard from "../../blocks/TourListCard";
 import SearchBar from "../../blocks/SearchBar";
-import { useI18n } from "../../../hooks/useI18n"
+import { useI18n } from "../../../hooks/useI18n";
+import { Pagination } from "antd";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -23,9 +24,9 @@ const PrevButton = styled(Button)`
 `;
 
 function TourBoard() {
-  const t = useI18n()
-  const [currentPage, setCurrentPage] = useState(0);
-  const [tempPage, setTempPage] = useState(0);
+  const t = useI18n();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [tempPage, setTempPage] = useState(1);
   const [type, setType] = useState("TITLE");
 
   // 검색결과값
@@ -94,15 +95,18 @@ function TourBoard() {
     setCurrentPage((currentPage) => currentPage + 3);
   };
 
+  const onChange = (e) => {
+    setCurrentPage(e);
+  };
+
   return (
     <div>
-      <h1>{t(`투어 목록 페이지`)}</h1>
       <SearchBar onSearch={handleSearchValue} />
       <TourListCard TourData={searchResults} tempPage={tempPage} />
 
       <ButtonContainer>
         <PrevButton onClick={handlePrevClick} disabled={currentPage === 0}>
-        {t(`이전`)}
+          {t(`이전`)}
         </PrevButton>
 
         <Button onClick={() => setTempPage(currentPage + 1)}>
@@ -116,6 +120,13 @@ function TourBoard() {
         </Button>
         <Button onClick={handleNextClick}>{t(`다음`)}</Button>
       </ButtonContainer>
+      <div className="w-full fixed bottom-0 py-3 backdrop-blur-md border-top">
+        <Pagination
+          onChange={onChange}
+          defaultCurrent={1}
+          total={searchResults.length}
+        />
+      </div>
     </div>
   );
 }
