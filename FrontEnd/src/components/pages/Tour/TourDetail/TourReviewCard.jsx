@@ -7,9 +7,8 @@ const CardContainer = styled.div`
 `;
 
 const Card = styled.div`
-  margin: 20px;
+margin: 5px;
   width: 200px;
-  height: 350px;
 `;
 
 function TourReviewCard({ reviewData }) {

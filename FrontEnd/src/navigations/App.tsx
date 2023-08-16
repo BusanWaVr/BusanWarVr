@@ -23,6 +23,7 @@ import GuideMyPage from "../components/pages/GuideProfile/GuideMyPage.jsx";
 import GuideMain from "../components/pages/GuideProfile/GuideMain.jsx";
 import GuideFollower from "../components/pages/GuideProfile/GuideFollower.jsx";
 import GuideTourBoard from "../components/pages/GuideProfile/GuideTourBoard.jsx";
+import GuideReviewBoard from "../components/pages/GuideProfile/GuideReviewBoard.jsx";
 
 import TourBoard from "../components/pages/Tour/TourBoard";
 import TourUpdate from "../components/pages/Tour/TourUpdate.tsx";
@@ -109,6 +110,7 @@ function App() {
               <Route path="" element={<GuideMain />} />
               <Route path="follower" element={<GuideFollower />} />
               <Route path="tour" element={<GuideTourBoard />} />
+              <Route path="review" element={<GuideReviewBoard />} />
             </Route>
           </Route>
 
