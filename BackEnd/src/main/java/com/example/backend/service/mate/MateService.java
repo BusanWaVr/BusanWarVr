@@ -76,6 +76,7 @@ public class MateService {
     }
 
     public MateListDto.Response getMateList(Pageable pageable) {
+        List<Mate> totalMateList = mateRepository.findAll();
         List<Mate> mates = mateRepository.findAllByOrderByIdDesc(pageable);
         List<MateInfoForListDto> mateInfoForListDtos = new ArrayList<>();
         for (Mate mate : mates) {
@@ -89,7 +90,7 @@ public class MateService {
             mateInfoForListDtos.add(new MateInfoForListDto(mate, tour, tourImageUrls));
         }
 
-        return new MateListDto.Response(mateInfoForListDtos);
+        return new MateListDto.Response(totalMateList.size(), mateInfoForListDtos);
     }
 
     @Transactional

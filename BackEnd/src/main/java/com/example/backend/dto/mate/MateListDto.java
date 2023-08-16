@@ -13,6 +13,8 @@ public class MateListDto {
     @NoArgsConstructor
     public static class Response {
 
+        private int totalCount;
         private List<MateInfoForListDto> mateList;
+
     }
 }
