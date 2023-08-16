@@ -16,7 +16,7 @@ import {
 
 function LiveStream(props) {
   const navigate = useNavigate();
-
+  const profileImg = localStorage.getItem("profileImg"); 
   const { youtubeLink, isAudioEnabled, isVideoEnabled, tourId, tourUID } =
     useSelector((state) => state.liveStream);
   const { nickname } = useSelector((state) => state.userInfo);
@@ -139,7 +139,10 @@ function LiveStream(props) {
             </div>
               </div>
               <div className={styles.rightSetting}>
-                <div style={{fontSize : "1.5rem", marginTop : "60px", marginBottom : "40px"}}>
+                <div style={{fontSize : "1.2rem", marginTop : "40px", marginBottom : "40px"}}>
+                  <div style={{display : "flex", justifyContent : "center", alignItems : "center"}}>
+                    <img src={profileImg} style={{borderRadius : "100%", width : "40%", marginBottom : "20px"}}/>
+                  </div>
                   {nickname}
                 </div>
                 <button
