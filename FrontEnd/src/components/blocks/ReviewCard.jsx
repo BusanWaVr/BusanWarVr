@@ -25,7 +25,7 @@ function ReviewCard({ ReviewData, isMe }) {
   const handleEditClick = (review) => {
     navigate(`/review/${review.id}/edit`, {
       state: {
-        reviewId: review.id,
+        tourId: review.tourId,
         title: review.title,
         content: review.content,
         score: review.score,
