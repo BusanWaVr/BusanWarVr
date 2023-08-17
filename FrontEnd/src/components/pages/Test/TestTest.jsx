@@ -4,6 +4,8 @@ import oneAudio from "../../../assets/vote1.mp3";
 import twoAudio from "../../../assets/vote2.mp3";
 import handsUp from "../../../assets/handsUp.png";
 import camera from "../../../assets/camera.gif";
+import voteStart from "../../../assets/voteStart.mp3";
+import voteEnd from "../../../assets/voteEnd.mp3";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -31,6 +33,7 @@ const Container = styled.div`
 function TestTest(props, ref) {
   const [selectOneAudio] = useState(new Audio(oneAudio));
   const [selectTwoAudio] = useState(new Audio(twoAudio));
+  const [voteStartAudio] = useState(new Audio(voteStart));
   const [playSoundOne, setPlaySoundOne] = useState(0);
   const isLooping = useRef(true);
 
@@ -57,6 +60,7 @@ function TestTest(props, ref) {
   let model, webcam, ctx, labelContainer, maxPredictions;
 
   async function init() {
+    voteStartAudio.play();
     console.log("init실행");
     const modelURL = URL + "model.json";
     const metadataURL = URL + "metadata.json";
