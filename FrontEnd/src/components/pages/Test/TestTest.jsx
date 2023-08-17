@@ -191,7 +191,7 @@ function TestTest(props, ref) {
       </Container> : <></>}
 
       
-      <div>
+      <div style={{ display: 'none' }}>
             <canvas id="canvas"></canvas>
             </div>
             <div id="label-container"></div>
