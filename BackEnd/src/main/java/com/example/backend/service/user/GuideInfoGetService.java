@@ -34,9 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,25 +50,25 @@ public class GuideInfoGetService {
     private final CourseUtil courseUtil;
     private final JoinerUtil joinerUtil;
 
-    public GuideScheduledToursDto.Response guideScheduledToursService(Long guideId,
-            Pageable pageable) throws IllegalAccessException {
-        User guide = userRepository.findById(guideId).get();
-        if (guide.getType().toString() == "USER") {
-            throw new IllegalAccessException("가이드가 아닙니다!");
-        }
-        return getGuideScheduledTours(guide, pageable);
-    }
-
-    public GuideEndedToursDto.Response guideEndedToursService(Long guideId, Pageable pageable)
+    public GuideScheduledToursDto.Response guideScheduledToursService(Long guideId)
             throws IllegalAccessException {
         User guide = userRepository.findById(guideId).get();
         if (guide.getType().toString() == "USER") {
             throw new IllegalAccessException("가이드가 아닙니다!");
         }
-        return getGuideEndedTours(guide, pageable);
+        return getGuideScheduledTours(guide);
     }
 
-    public GuideScheduledToursDto.Response getGuideScheduledTours(User guide, Pageable pageable) {
+    public GuideEndedToursDto.Response guideEndedToursService(Long guideId)
+            throws IllegalAccessException {
+        User guide = userRepository.findById(guideId).get();
+        if (guide.getType().toString() == "USER") {
+            throw new IllegalAccessException("가이드가 아닙니다!");
+        }
+        return getGuideEndedTours(guide);
+    }
+
+    public GuideScheduledToursDto.Response getGuideScheduledTours(User guide) {
         List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId());
         List<TourInfoForGuideScheduledToursDto> responseList = new ArrayList<>();
         List<TourImage> tourImages = tourImageCustomRepoistory.findTourImagesByGuide(guide);
@@ -106,15 +103,11 @@ public class GuideInfoGetService {
                 responseList.add(scheduledToursDto);
             }
         }
-        // 페이징 적용
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), responseList.size());
-        Page<TourInfoForGuideScheduledToursDto> page = new PageImpl<>(
-                responseList.subList(start, end), pageable, responseList.size());
-        return new GuideScheduledToursDto.Response(page.getContent());
+
+        return new GuideScheduledToursDto.Response(responseList);
     }
 
-    public GuideEndedToursDto.Response getGuideEndedTours(User guide, Pageable pageable) {
+    public GuideEndedToursDto.Response getGuideEndedTours(User guide) {
         List<Tour> tourLists = tourRepository.findAllByUserId(guide.getId());
         List<TourInfoForGuideEndedTours> responseList = new ArrayList<>();
         List<TourImage> tourImages = tourImageCustomRepoistory.findTourImagesByGuide(guide);
@@ -133,18 +126,14 @@ public class GuideInfoGetService {
                 TourImage tourImage = tourIdToImageMap.get(tour.getId());
                 if (tourImage != null) {
                     endedToursDto.setImage(tourImage.getImage().getUrl());
-                    responseList.add(endedToursDto);
+                } else {
+                    endedToursDto.setImage(null);
                 }
-                endedToursDto.setImage(null);
                 responseList.add(endedToursDto);
             }
         }
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), responseList.size());
-        Page<TourInfoForGuideEndedTours> page = new PageImpl<>(responseList.subList(start, end),
-                pageable, responseList.size());
-        return new GuideEndedToursDto.Response(page.getContent());
+        return new GuideEndedToursDto.Response(responseList);
     }
 
     public void tourIdToImage(List<TourImage> tourImages, Map<Long, TourImage> tourIdToImageMap) {
@@ -187,21 +176,21 @@ public class GuideInfoGetService {
         return response;
     }
 
-    public GuideReviewsDto.Response guideReviewsService(Long guideId, Pageable pageable)
+    public GuideReviewsDto.Response guideReviewsService(Long guideId)
             throws IllegalAccessException {
         User guide = userRepository.findById(guideId).get();
         if (guide.getType().toString() == "USER") {
             throw new IllegalAccessException("가이드가 아닙니다!");
         }
-        return getGuideReviews(guide, pageable);
+        return getGuideReviews(guide);
     }
 
-    public GuideReviewsDto.Response getGuideReviews(User guide, Pageable pageable) {
+    public GuideReviewsDto.Response getGuideReviews(User guide) {
         List<Tour> tourList = tourRepository.findAllByUserId(guide.getId());
         List<ReviewInfoForGuideReviewDto> responseList = new ArrayList<>();
 
         for (Tour tour : tourList) {
-            List<Review> reviewsList = reviewRepository.findAllByTourId(tour.getId(), pageable);
+            List<Review> reviewsList = reviewRepository.findAllByTourId(tour.getId());
             for (Review review : reviewsList) {
 
                 User user = userRepository.findById(review.getUserId()).get();
@@ -214,15 +203,11 @@ public class GuideInfoGetService {
                 responseList.add(reviewInfo);
             }
         }
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), responseList.size());
-        Page<ReviewInfoForGuideReviewDto> page = new PageImpl<>(responseList.subList(start, end),
-                pageable, responseList.size());
-        return new GuideReviewsDto.Response(page.getContent());
+
+        return new GuideReviewsDto.Response(responseList);
     }
 
-    public GuideHomeDto.Response guideHome(Long guideId, Pageable pageable)
-            throws IllegalAccessException {
+    public GuideHomeDto.Response guideHome(Long guideId) throws IllegalAccessException {
         GuideHomeDto.Response response = new GuideHomeDto.Response();
         User guide = userRepository.findById(guideId).get();
         if (guide.getType().toString() == "USER") {
@@ -230,20 +215,19 @@ public class GuideInfoGetService {
         }
         response.setIntroduction(guide.getIntroduction());
 
-        GuideScheduledToursDto.Response scheduledToursResponse = getGuideScheduledTours(guide,
-                pageable);
+        GuideScheduledToursDto.Response scheduledToursResponse = getGuideScheduledTours(guide);
         response.setScheduledTours(scheduledToursResponse.getScheduledTours());
 
-        GuideEndedToursDto.Response endedToursResponse = getGuideEndedTours(guide, pageable);
+        GuideEndedToursDto.Response endedToursResponse = getGuideEndedTours(guide);
         response.setEndedTours(endedToursResponse.getEndedTours());
 
-        GuideReviewsDto.Response reviewsResponse = getGuideReviews(guide, pageable);
+        GuideReviewsDto.Response reviewsResponse = getGuideReviews(guide);
         response.setReviews(reviewsResponse.getReviews());
 
         return response;
     }
 
-    public List<GuideFollowerDto> getGuideFollowerList(Long guideId, Pageable pageable) {
+    public List<GuideFollowerDto> getGuideFollowerList(Long guideId) {
         List<Follower> followers = followerRepository.findAllByGuideId(guideId);
         List<GuideFollowerDto> response = new ArrayList<>();
         for (Follower follower : followers) {
@@ -251,17 +235,10 @@ public class GuideInfoGetService {
             response.add(guideFollower);
         }
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), response.size());
-
-        Page<GuideFollowerDto> page = new PageImpl<>(response.subList(start, end),
-                pageable, response.size());
-
-        return page.getContent();
+        return response;
     }
 
-    public GuideCanceledToursDto.Response getGuideCanceledTourList(Long guideId,
-            Pageable pageable) {
+    public GuideCanceledToursDto.Response getGuideCanceledTourList(Long guideId) {
         List<Tour> tours = tourRepository.findAllByUserId(guideId);
         List<CanceledTourDto> tourDtoList = new ArrayList<>();
 
@@ -283,18 +260,11 @@ public class GuideInfoGetService {
             List<JoinerDto> joinerDtos = new ArrayList<>();
             joinerUtil.joinerDtoList(tourId, joinerDtos);
 
-            tourDtoList.add(
-                    new CanceledTourDto(tour, tourCategories, tourImageUrls, courseDtos,
-                            joinerDtos));
+            tourDtoList.add(new CanceledTourDto(tour, tourCategories, tourImageUrls, courseDtos,
+                    joinerDtos));
         }
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), tourDtoList.size());
-
-        Page<CanceledTourDto> page = new PageImpl<>(tourDtoList.subList(start, end),
-                pageable, tourDtoList.size());
-
-        return new GuideCanceledToursDto.Response(page.getContent());
+        return new GuideCanceledToursDto.Response(tourDtoList);
     }
 
 }
