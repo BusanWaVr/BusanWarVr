@@ -90,6 +90,9 @@ const LiveStreamView = () => {
 
   // 가이드가 투표를 열어서, 현재 투표가 진행중인지
   const [vote, setVote] = useState(false);
+
+  const [voteType, setVoteType] = useState(0);
+
   // 사용자가 모션인식으로 투표를 진행중인지
   const [voting, setVoting] = useState(false);
   // 가이드가 입력할 투표 항목
@@ -455,6 +458,7 @@ const LiveStreamView = () => {
           setVoteMessages([]);
           // 투표 진행중, 모션인식 진행중 true
           setVote(true);
+          setVoteType(1);
           setVoting(true);
           dispatch(setIsVoteOpen(true));
           // 1번 선택지, 2번 선택지 값 저장
@@ -577,6 +581,7 @@ const LiveStreamView = () => {
         `/sub/chat/vote/end/${tourUID}`,
         (data) => {
           setVoting(false);
+          setVoteType(2);
           setVote(false);
           console.log("투표 종료");
           voteEndAudio.play();
@@ -733,7 +738,7 @@ const LiveStreamView = () => {
                             }}
                           />
                         )}
-                        <VoteModal vote={vote} className={styles.votemodal} />
+                        <VoteModal vote={vote} className={styles.votemodal} voteType={voteType}/>
                         {voteMessages.map((msg, index) => (
                           <p key={index} className={styles.votemessage}>
                             {msg.nickname}님이 {msg.selectType}번에
