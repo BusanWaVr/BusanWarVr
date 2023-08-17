@@ -54,6 +54,7 @@ function App() {
   return (
     <>
       <ToastContainer
+        toastClassName="text-left text-sm"
         position="bottom-left"
         autoClose={2000}
         hideProgressBar={false}
