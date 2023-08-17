@@ -1,0 +1,22 @@
+.searchBar span,
+.searchBar input,
+.searchBar button {
+  border: none !important;
+  height: 100%;
+}
+.searchBar {
+  border: 2px solid #1983ff;
+  border-radius: 50px;
+  overflow: hidden;
+  height: 50px;
+}
+.searchBar input:focus {
+  box-shadow: none !important;
+}
+
+.searchBar button span {
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
