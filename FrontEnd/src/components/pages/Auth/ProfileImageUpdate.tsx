@@ -3,6 +3,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 import type { RcFile, UploadProps } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
+import { toast } from "react-toastify";
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -52,7 +53,16 @@ const ProfileImageUpload: React.FC = ({
   };
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-    console.log(newFileList);
+    const isAllValid = newFileList.every((file) => {
+      const filetype = file.name.split(".")[1].toLowerCase();
+      return filetype === "jpg" || filetype === "png" || filetype === "jpeg";
+    });
+
+    if (!isAllValid) {
+      toast.warning("JPG, PNG, JPEG의 이미지 파일만 선택 가능합니다.");
+      return;
+    }
+
     setFileList(newFileList);
     handleImageChange(newFileList);
   };
@@ -66,6 +76,7 @@ const ProfileImageUpload: React.FC = ({
   return (
     <>
       <Upload
+        accept=".jpg,.png,.jpeg,.JPG,.PNG,.JPEG"
         listType="picture-circle"
         fileList={fileList}
         onPreview={handlePreview}
