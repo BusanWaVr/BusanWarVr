@@ -82,10 +82,10 @@ public class GuideInfoGetService {
 
             boolean isCanceled = tour.isCanceled();
 
-            Date startDate = tour.getStartDate();
+            Date endDate = tour.getEndDate();
             TourInfoForGuideScheduledToursDto scheduledToursDto = new TourInfoForGuideScheduledToursDto();
 
-            if (!isCanceled && startDate.after(now)) {
+            if (!isCanceled && endDate.after(now)) {
                 scheduledToursDto.setTourId(tour.getId());
                 scheduledToursDto.setUid(tour.getUid());
                 scheduledToursDto.setTitle(tour.getTitle());
