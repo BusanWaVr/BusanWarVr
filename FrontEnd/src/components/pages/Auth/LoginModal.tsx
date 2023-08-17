@@ -13,9 +13,10 @@ const Backdrop = styled.div`
 `;
 
 const Dialog = styled.dialog`
-  position: absolute;
+  position: fixed;
   top: 50%;
-  transform: translate(0, -50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
   border: none;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
