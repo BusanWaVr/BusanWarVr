@@ -650,6 +650,7 @@ const LiveStreamView = () => {
           >
             <Allotment
               style={{ width: "100%", height: "100%", display: "flex" }}
+              defaultSizes={[75, 25]}
             >
               <Allotment.Pane
                 maxSize={
@@ -661,7 +662,7 @@ const LiveStreamView = () => {
                 snap={windowSize.width < 768}
                 className={`${styles.streamContainer}`}
               >
-                <Allotment vertical>
+                <Allotment vertical defaultSizes={[25, 75]}>
                   {/* 유저비디오 */}
                   <Allotment.Pane maxSize={200} snap>
                     <UserVideoContainer

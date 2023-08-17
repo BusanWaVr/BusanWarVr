@@ -300,6 +300,7 @@ const TourRegistration: React.FC = () => {
           },
         }
       );
+      console.log(res.data.data);
       if (res.data.code == 200) {
         toast.success("투어를 성공적으로 등록하였습니다.");
         navigate(`../tour/${res.data.data.tourId}`);
@@ -410,7 +411,7 @@ const TourRegistration: React.FC = () => {
         placeholder="제목을 입력해주세요."
         value={tourData.title}
         onChange={(e) => setTourData({ ...tourData, title: e.target.value })}
-        style={{ height: "50px", "font-size": "18px" }}
+        style={{ height: "50px", fontSize: "18px" }}
       />
 
       {/* 서브 제목 */}
