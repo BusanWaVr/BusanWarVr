@@ -108,8 +108,8 @@ const WishCard = ({ wishData }) => {
                   alt="Card example background"
                   className="z-0 w-full h-full scale-125 -translate-y-6 object-cover data-[loaded=true]:opacity-50"
                   src={
-                    wish.tourImage
-                      ? wish.tourImage
+                    wish.tourImageUrls != []
+                      ? wish.tourImageUrls[0]
                       : "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
                   }
                 />
