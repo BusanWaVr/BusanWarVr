@@ -151,11 +151,11 @@ public class UserInfoGetService {
             Tour tour = joiner.getTour();
             TourInfoForUserTourDto tourInfo = createTourInfoForUserTourDto(tour);
 
-            Date startDate = tour.getStartDate();
+            Date endDate = tour.getEndDate();
             boolean isEnded = tour.isEnded();
             boolean isCanceled = tour.isCanceled();
 
-            if (!isCanceled && startDate.after(now)) {
+            if (!isCanceled && endDate.after(now)) {
                 scheduledTours.add(tourInfo);
             }
 

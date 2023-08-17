@@ -18,10 +18,10 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --sash-size: 12px;
-  --sash-hover-size: 12px;
-  --focus-border: #007fd4;
-  --separator-border: #828282;
+  --sash-size: 5px;
+  --sash-hover-size: 5px;
+  --focus-border: #eeeeee;
+  --separator-border: none;
 }
 
 ::-webkit-scrollbar {
@@ -52,7 +52,6 @@ li {
 
 a {
   font-weight: 500;
-  color: #646cff;
   text-decoration: inherit;
 }
 a:hover {
@@ -71,11 +70,9 @@ h1 {
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   transition: border-color 0.25s;
 }
 

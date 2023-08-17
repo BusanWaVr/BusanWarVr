@@ -6,7 +6,7 @@ import TourReserveButton from "./TourReserveButton";
 import TourCancelButton from "./TourCancelButton";
 import TourWishButton from "./TourWishButton";
 import { Button } from "antd";
-import { useI18n } from "../../../../hooks/useI18n"
+import { useI18n } from "../../../../hooks/useI18n";
 
 const TourDetailWidgetWrapper = styled.div`
   width: 320px;
@@ -97,7 +97,7 @@ const TourDetailWidget = ({
     return newTime;
   };
 
-  const t = useI18n()
+  const t = useI18n();
 
   const tourDate = formatDate(new Date(tourData.startDate));
   const startTime = formatTime(new Date(tourData.startDate));
@@ -132,7 +132,7 @@ const TourDetailWidget = ({
                   <>
                     <Link to={`/tour/${tourId}/update`}>
                       <Button block style={{ width: "100%", height: "40px" }}>
-                      {t(`수정하기`)}
+                        {t(`수정하기`)}
                       </Button>
                     </Link>
                     <TourCancelButton tourId={tourId} />
@@ -148,6 +148,7 @@ const TourDetailWidget = ({
                 new Date(tourData.startDate) > new Date() ? (
                   <TourReserveButton
                     tourId={tourId}
+                    maxMember={tourData.maxMember}
                     isJoined={isJoined}
                     setIsJoined={setIsJoined}
                     joiners={joiners}

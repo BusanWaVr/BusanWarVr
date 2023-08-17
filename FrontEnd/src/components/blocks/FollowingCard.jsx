@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Avatar, Card } from "antd";
 import BoogieNone from "../../assets/boogie_none.png";
-import { useI18n } from "../../hooks/useI18n"
+import { useI18n } from "../../hooks/useI18n";
+import { toast } from "react-toastify";
 
 const { Meta } = Card;
 
 function FollowingCard({ followingData, isMe }) {
-  const t = useI18n()
+  const t = useI18n();
   const [followedGuides, setFollowedGuides] = useState([]);
 
   useEffect(() => {
@@ -40,15 +41,15 @@ function FollowingCard({ followingData, isMe }) {
         data.message === "성공적으로 가이드를 팔로우했습니다."
       ) {
         setFollowedGuides([...followedGuides, id]);
-        console.log("가이드를 팔로우했습니다.");
+        toast.success("가이드를 팔로우했습니다.");
       } else if (
         response.status === 200 &&
         data.message === "성공적으로 가이드를 언팔로우했습니다."
       ) {
         setFollowedGuides(followedGuides.filter((guideId) => guideId !== id));
-        console.log("가이드를 언팔로우했습니다.");
+        toast.success("가이드를 언팔로우했습니다.");
       } else {
-        console.log("팔로우 요청 실패");
+        toast.error("팔로우 요청 실패");
       }
     } catch (error) {
       console.error("팔로우 오류", error);

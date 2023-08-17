@@ -87,6 +87,9 @@ const LiveStreamSlice = createSlice({
     setNewOption2Cnt: (state, action: PayloadAction<number>) => {
       state.option2Cnt = action.payload;
     },
+    addVoteToBoard: (state, action: PayloadAction<any>) => {
+      state.voteBoard = [...state.voteBoard, action.payload.data];
+    },
   },
 });
 

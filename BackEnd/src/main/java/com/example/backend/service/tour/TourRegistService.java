@@ -45,53 +45,57 @@ public class TourRegistService {
         }
 
         Tour tour = request.toTour(user);
-        tourRepository.save(tour);
         TourRegistDto.Response response = new TourRegistDto.Response(tour);
 
+        List<Image> tourImages = new ArrayList<>();
         // 이미지 등록 부분 조건적으로 처리
         if (request.getTourImgs() != null && !request.getTourImgs().isEmpty()) {
             // 투어 이미지 저장해 url 가져와서 Image 객체 생성 및 저장
-            List<Image> tourImages = new ArrayList<>();
             for (MultipartFile file : request.getTourImgs()) {
                 Image image = imageUtil.saveImage(file);
                 tourImages.add(image);
-            }
-
-            // TourImage 객체 생성 및 저장
-            for (Image image : tourImages) {
-                TourImage tourImage = new TourImage();
-                tourImage.setTour(tour);
-                tourImage.setImage(image);
-                tourImageRepository.save(tourImage);
-            }
-        }
-
-        // 가이드가 선택한 카테고리 이름들을 TourCategory 객체로 변환하고 저장
-        for (String categoryName : request.getCategory()) {
-            if (categoryRepository.findByName(categoryName) != null) {
-                categoryUtil.tourCategoryCreate(tour, categoryRepository.findByName(categoryName));
-            } else {
-                throw new IllegalAccessException("등록된 카테고리만 추가 가능합니다.");
             }
         }
 
         // Course 객체 생성 및 저장
         for (CourseDto.Request courseDto : request.getCourses()) {
-            Course course = new Course(courseDto.getLon(), courseDto.getLat(),
-                    courseDto.getTitle(),
-                    courseDto.getContent(), tour.getId());
-            courseRepository.save(course);
-
             // 이미지 등록 부분 조건적으로 처리
             if (courseDto.getImage() != null) {
                 Image image = imageUtil.saveImage(courseDto.getImage());
+
+                Course course = new Course(courseDto.getLon(), courseDto.getLat(),
+                        courseDto.getTitle(),
+                        courseDto.getContent(), tour.getId());
 
                 // CourseImage 객체 생성 및 저장
                 CourseImage courseImage = new CourseImage();
                 courseImage.setCourse(course);
                 courseImage.setImage(image);
+                courseRepository.save(course);
                 courseImageRepository.save(courseImage);
             }
+        }
+
+        // 가이드가 선택한 카테고리 이름들을 TourCategory 객체로 변환하고 저장
+        for (String categoryName : request.getCategory()) {
+            if (categoryRepository.findByName(categoryName) == null) {
+                throw new IllegalAccessException("등록된 카테고리만 추가 가능합니다.");
+            }
+        }
+
+        tourRepository.save(tour);
+
+        // 가이드가 선택한 카테고리 이름들을 TourCategory 객체로 변환하고 저장
+        for (String categoryName : request.getCategory()) {
+            categoryUtil.tourCategoryCreate(tour, categoryRepository.findByName(categoryName));
+        }
+
+        // TourImage 객체 생성 및 저장
+        for (Image image : tourImages) {
+            TourImage tourImage = new TourImage();
+            tourImage.setTour(tour);
+            tourImage.setImage(image);
+            tourImageRepository.save(tourImage);
         }
         return response;
     }

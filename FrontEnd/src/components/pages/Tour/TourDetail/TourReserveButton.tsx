@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Button } from "antd";
-import { useI18n } from "../../../../hooks/useI18n"
+import { useI18n } from "../../../../hooks/useI18n";
+import { toast } from "react-toastify";
 
 interface Joiner {
   profileImage: string;
@@ -11,12 +12,14 @@ interface Joiner {
 
 const TourReserveButton = ({
   tourId,
+  maxMember,
   isJoined,
   setIsJoined,
   joiners,
   setJoiners,
 }: {
   tourId: string | undefined;
+  maxMember: number | undefined;
   isJoined: boolean;
   setIsJoined: (isjoined: boolean) => void;
   joiners: Joiner[];
@@ -27,8 +30,11 @@ const TourReserveButton = ({
   );
 
   const reserveHandler = async () => {
+    if (maxMember == joiners.length) {
+      toast.error("정원이 마감된 투어입니다.");
+      return;
+    }
     try {
-      console.log(accessToken);
       const res = await axios.post(
         `https://busanwavrserver.store/tour/reservation/${tourId}`,
         {},
@@ -38,16 +44,20 @@ const TourReserveButton = ({
           },
         }
       );
-      console.log(res.data);
-      setIsJoined(true);
-      setJoiners([
-        ...joiners,
-        {
-          profileImage: profileImage,
-          nickname: nickname,
-          joinDate: new Date().toISOString(),
-        },
-      ]);
+      if (res.data.code == 200) {
+        toast.success(res.data.message);
+        setIsJoined(true);
+        setJoiners([
+          ...joiners,
+          {
+            profileImage: profileImage,
+            nickname: nickname,
+            joinDate: new Date().toISOString(),
+          },
+        ]);
+      } else {
+        toast.error("잠시 후 다시 시도해주세요.");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -55,7 +65,6 @@ const TourReserveButton = ({
 
   const cancelHandler = async () => {
     try {
-      console.log(accessToken);
       const res = await axios.delete(
         `https://busanwavrserver.store/tour/reservation/${tourId}`,
         {
@@ -64,18 +73,22 @@ const TourReserveButton = ({
           },
         }
       );
-      console.log(res.data);
-      setIsJoined(false);
-      const updatedJoiners = joiners.filter(
-        (joiner) => joiner.nickname !== nickname
-      );
-      setJoiners(updatedJoiners);
+      if (res.data.code == 200) {
+        toast.success(res.data.message);
+        setIsJoined(false);
+        const updatedJoiners = joiners.filter(
+          (joiner) => joiner.nickname !== nickname
+        );
+        setJoiners(updatedJoiners);
+      } else {
+        toast.error("잠시 후 다시 시도해 주세요.");
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const t = useI18n()
+  const t = useI18n();
 
   return (
     <>

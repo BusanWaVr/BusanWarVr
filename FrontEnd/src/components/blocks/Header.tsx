@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useI18n } from "../../hooks/useI18n"
-import LangeBtn from "./LangBtn"
+import { useNavigate, NavLink } from "react-router-dom";
+import { useI18n } from "../../hooks/useI18n";
+import LangeBtn from "./LangBtn";
 
 import {
   Navbar,
@@ -30,7 +30,9 @@ interface Props {
 }
 
 function Header({ isLoggedIn, setIsLoggedIn }: Props) {
-  const t = useI18n()
+  const navigate = useNavigate();
+
+  const t = useI18n();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [onLoginModal, setOnLoginModal] = useState(false);
   const [userInfo, setUserInfo] = useState({});
@@ -57,7 +59,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
     }
 
     setIsLoggedIn(false);
-    window.location.reload();
+    navigate("/");
   };
 
   const nickname = localStorage.getItem("nickname");
@@ -93,7 +95,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
           </NavbarItem>
           <NavbarItem>
             <Link color="foreground" href="/mate" className="text-sm">
-            {t(`메이트 모집`)}
+              {t(`메이트 모집`)}
             </Link>
           </NavbarItem>
           <NavbarItem>
@@ -104,17 +106,11 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
           {isLoggedIn && userType === "GUIDE" ? (
             <NavbarItem>
               <Link href="/tour/write" color="foreground" className="text-sm">
-              {t(`투어 개설`)}
+                {t(`투어 개설`)}
               </Link>
             </NavbarItem>
           ) : null}
         </NavbarContent>
-
-        {/* 다국어 버튼 */}
-        <NavbarContent justify="end">
-          <LangeBtn />
-        </NavbarContent>
-
         <NavbarContent justify="end">
           {isLoggedIn ? (
             <>
@@ -133,39 +129,43 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Profile Actions" variant="flat">
                   <DropdownItem key="profile" className="h-14 gap-2">
-                    <Link
-                      href={
+                    <NavLink
+                      to={
                         userType === "USER"
                           ? `/user/${userId}/mypage`
                           : `/guide/${userId}/mypage`
                       }
                       className="flex-col text-left items-start"
                     >
+                      <div>
                       <p className="font-bold text-sm">{nickname}</p>
-                      <p className="font-semibold text-sm text-left">
-                        {email}
-                      </p>
-                    </Link>
+                      <p className="font-semibold text-sm text-left">{email}</p>
+
+                      </div>
+                    </NavLink>
                   </DropdownItem>
                   <DropdownItem key="settings">
                     {userType === "USER" ? (
-                      <Link
-                        href={`/user/${userId}/mypage/tour`}
+                      <NavLink
+                        to={`/user/${userId}/mypage/tour`}
                         className="text-sm text-slate-600"
                       >
+                        <div>
                         {t(`나의 투어 목록`)}
-                      </Link>
+
+                        </div>
+                      </NavLink>
                     ) : (
-                      <Link
-                        href={`/guide/${userId}/mypage/tour`}
+                      <NavLink
+                        to={`/guide/${userId}/mypage/tour`}
                         className="text-sm text-slate-600"
                       >
                         {t(`개설한 투어 목록`)}
-                      </Link>
+                      </NavLink>
                     )}
                   </DropdownItem>
                   <DropdownItem key="logout" color="danger" onClick={logout}>
-                  {t(`로그아웃`)}
+                    {t(`로그아웃`)}
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -173,21 +173,24 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
           ) : (
             <NavbarItem>
               <Button onPress={onModalHandler} color="primary" variant="flat">
-              {t(`로그인`)}
+                {t(`로그인`)}
               </Button>
             </NavbarItem>
           )}
+          <NavbarItem>
+            <LangeBtn />
+          </NavbarItem>
         </NavbarContent>
 
         <NavbarMenu className="gap-10">
           <NavbarMenuItem>
             <Link color="foreground" href="/tour" className="w-full" size="lg">
-            {t(`투어 검색`)}
+              {t(`투어 검색`)}
             </Link>
           </NavbarMenuItem>
           <NavbarMenuItem>
             <Link color="foreground" href="/mate" className="w-full" size="lg">
-            {t(`메이트 모집`)}
+              {t(`메이트 모집`)}
             </Link>
           </NavbarMenuItem>
           <NavbarMenuItem>

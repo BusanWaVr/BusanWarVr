@@ -1,37 +1,45 @@
 import "./Home.css";
 import styled from "styled-components";
-import axios from "axios";
 import VideoContainer from "./VideoContainer";
 import TourRecoContainer from "./TourRecoContainer";
 import DeadlineContainer from "./DeadlineContainer";
 import GuideRecoContainer from "./GuideRecoContainer";
 import RegionContainer from "./RegionContainer";
+import { SectionsContainer, Section } from "react-fullpage";
 
-const Main = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-const Container = styled.div`
-  width: 80%;
-`;
+let options = {
+  activeClass: "active", // the class that is appended to the sections links
+  anchors: ["main", "region", "recommend", "deadline", "guide"], // the anchors for each sections
+  arrowNavigation: true, // use arrow keys
+  className: "SectionContainer", // the class name for the section container
+  delay: 1000, // the scroll animation speed
+  navigation: false, // use dots navigatio
+  scrollBar: false, // use the browser default scrollbar
+  sectionClassName: "Section", // the section class name
+  sectionPaddingTop: "0", // the section top padding
+  sectionPaddingBottom: "0", // the section bottom padding
+  verticalAlign: false, // align the content of each section vertical
+};
+
 const Home: React.FC = () => {
-  async function hadlerTest() {
-    const test = await axios.get("https://busanopenvidu.store/test");
-    console.log(test);
-  }
-
   return (
-    <Main>
-      <VideoContainer />
-      <Container>
-        <button onClick={hadlerTest}>count is</button>
-        <TourRecoContainer />
-        <DeadlineContainer />
-        <GuideRecoContainer />
+    <SectionsContainer {...options}>
+      <Section>
+        <VideoContainer />
+      </Section>
+      <Section>
         <RegionContainer />
-      </Container>
-    </Main>
+      </Section>
+      <Section>
+        <TourRecoContainer />
+      </Section>
+      <Section>
+        <DeadlineContainer />
+      </Section>
+      <Section>
+        <GuideRecoContainer />
+      </Section>
+    </SectionsContainer>
   );
 };
 

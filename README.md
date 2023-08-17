@@ -15,9 +15,9 @@
 
 ### 기획 배경
 ---
-- ...
--
-- 
+- 우리가 사랑하는 도시, 부산을 많은 사람들에게 알려주고 싶다.
+- 부산의 다양한 여행지들을 직접 가지 않고도 실시간 VR 영상으로 즐길 수 있게 하면 어떨까?
+- 부산에 관심 있는 사람들이 직접 부산을 방문한 것처럼 즐거운 경험을 가질 수 있는 서비스를 만들어보자!
 
 
 ### 프로젝트 개요
@@ -48,28 +48,106 @@
 **Back-end Stack**
 - IntelliJ IDE
 - Springboot 
-- ...
+- JPA
+- QueryDsl
+- Stomp Pub/Sub
+- Spring Security
+- JWT
+- MailSender
 
 **Front-End Stack**
 - Visual Studio Code IDE
-- ...
+- React
+- TailWind CSS
+- TypeScript
+- Redux
+- antD
+- WebRTC
 
-** DB**
+**DB**
 - Mysql
 - Redis
 - Mongodb
 
+**Storage**
+- amazon web S3
+
 **CI/CD**
 - AWS
 - Jenkins
-- ...
+- Docker
+- Nginx
+- Https
+
+**Other**
+- OpenVidu
+- Teachable Machine
+- MicroSoft Azure STT
+- KaKao Map
 
 ### ✔ 프로젝트 파일 구조
 ---
 #### Back
-[구조]
+```
+BackEnd
+  ├── config
+  │   ├── amazonS3
+  │   ├── emailConfig
+  │   ├── openApi
+  │   ├── queryDsl
+  │   ├── redis
+  │   ├── stomp
+  │   └── websocket
+  │
+  ├── controller
+  │   └── controllers...
+  │
+  ├── dto
+  │   └── simple
+  │       
+  ├── document
+  ├── exception
+  │   ├── security
+  │   └── type
+  │
+  ├── model
+  │   └── models....
+  │
+  ├── service
+  │   └── services....
+  │
+  ├── utils
+  └── security
+```
 #### Front
-[구조]
+```
+FrontEnd
+  ├── node_modules
+  ├── public
+  └── src
+      ├── assets
+      ├── components
+      │   ├── atoms
+      │   ├── blocks
+      │   ├── common
+      │   └── pages
+      │       ├── Auth
+      │       ├── GuideProfile
+      │       ├── Home
+      │       ├── LiveStream
+      │       ├── Mate
+      │       ├── Review
+      │       ├── Root
+      │       ├── Test
+      │       ├── Tour
+      │       └── UserProfile
+      ├── hooks
+      ├── navigations
+      ├── store
+      ├── store
+      │   └── reducers
+      └── utils
+```
 
 ### ✔ 협업 Tool
 ---
@@ -96,6 +174,10 @@
   - 컨벤션 정리
   - 간트차트 관리
   - 스토리보드, 스퀀스다이어그램, 기능명세서 등 모두가 공유해야 하는 문서 관리 
+- Discord
+  - 오프라인에서 작업할 경우 Team Discord 채널에서 작업
+  - 작업하면서 의사소통 역량을 높이기 위해 사용
+  - 페어 프로그래밍을 지향하기 위해 사용
 - ...
 
 ### 👩‍💻 멤버 구성 - 이미지로 할지? 역할을 더 상세히 나눌지?
@@ -107,21 +189,21 @@
 - 황재영 : Back-End
 - 김민구 : Back-End
 
+### ✔ 아키텍처
+---
+![image (1)](https://github.com/BusanWaVr/BusanWarVr/assets/59672589/7e6f12f6-8336-4dcd-8342-1d6cbec8e621)
+
+### ✔ ERD
+---
+![image](https://github.com/BusanWaVr/BusanWarVr/assets/59672589/05cf983a-0c96-4a53-ae36-24c2f5aac772)
+
 ### ✔ 프로젝트 산출물
 ---
-- [기능명세서](./docs/기능명세서.md)
-- [디자인&컨셉기획](./docs/디자인&컨셉기획.md)
-- [스토리보드](./docs/스토리보드.md)
-- [시퀀스다이어그램](./docs/시퀀스다이어그램.md)
-- [아키텍처](./docs/서비스_아키텍처.md)
-- [와이어프레임](./docs/와이어프레임.md)
-- [컨벤션](./docs/컨벤션.md)
-- [API](./docs/API.md)
-- [ERD](./docs/ERD.md)
-- [회의록](./docs/회의록.md)
-- [테스트케이스](./docs/TUPLI_테스트케이스.xlsx)
-- [시스템기술서](./docs/TUPLI_시스템_기술서.docx)
-- [명세기술서](./docs/TUPLI_명세_기술서.docx)
+- [기능명세서](https://www.notion.so/molangmolang/4ea6840ab9ed4947b61d78355c98c993?pvs=4)
+- [와이어프레임](https://www.figma.com/file/7GGkxudmaNRwDje7VLlHeK/Untitled?type=design&mode=design&t=STKqHjQZDDVpGnip-1)
+- [컨벤션](https://www.notion.so/molangmolang/ea75f736858746359a519d622d66fe3f?pvs=4)
+- [API](https://www.notion.so/molangmolang/API-7221bcdd11374665949d3a3c28e052d1?pvs=4)
+- [회의록](https://www.notion.so/molangmolang/0ee780bdf21f400098e277a610b04b69?pvs=4)
 
 ### ✔ 프로젝트 결과물
 ---

@@ -2,10 +2,10 @@ import React from "react";
 import BoogieNone from "../../assets/boogie_none.png";
 import { Divider } from "antd";
 import WishCard from "../blocks/WishCard.jsx";
-import { useI18n } from "../../hooks/useI18n"
+import { useI18n } from "../../hooks/useI18n";
 
 function WishCardList({ wishData }) {
-  const t = useI18n()
+  const t = useI18n();
   const sortedWishData = [...wishData].sort((a, b) => {
     return new Date(a.startDate) - new Date(b.startDate);
   });
@@ -30,7 +30,7 @@ function WishCardList({ wishData }) {
       )}
       <WishCard wishData={upcomingWishData} />
       <Divider />
-      <h2 className="text-xl font-semibold mb-2">{t(`지난 투어`)}</h2>
+      {/* <p>{t(`찜한 투어`)}</p> */}
       <WishCard wishData={pastWishData} />
     </>
   );

@@ -4,6 +4,7 @@ import { Modal, Upload } from "antd";
 import type { RcFile, UploadProps } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
 import { styled } from "styled-components";
+import { toast } from "react-toastify";
 
 type TourImageUploadProps = {
   imageFiles: File[] | string[] | null;
@@ -65,6 +66,16 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
   };
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+    const isAllValid = newFileList.every((file) => {
+      const filetype = file.name.split(".")[1].toLowerCase();
+      return filetype === "jpg" || filetype === "png" || filetype === "jpeg";
+    });
+
+    if (!isAllValid) {
+      toast.warning("JPG, PNG, JPEG의 이미지 파일만 선택 가능합니다.");
+      return;
+    }
+
     const newImageFiles = newFileList.map((file) => file.originFileObj);
     setImageFiles(newImageFiles);
   };
@@ -80,6 +91,7 @@ const TourImageUpload: React.FC<TourImageUploadProps> = ({
     <>
       <ImageUploadWrapper>
         <Upload
+          accept=".jpg,.png,.jpeg,.JPG,.PNG,.JPEG"
           listType="picture-card"
           fileList={fileList}
           onPreview={handlePreview}

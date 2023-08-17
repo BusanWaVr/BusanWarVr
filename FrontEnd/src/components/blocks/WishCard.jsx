@@ -7,11 +7,13 @@ import { TeamOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Divider } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { setWishTour } from "../../store/reducers/UserInfoReducer";
-import { useI18n } from "../../hooks/useI18n"
+import { useI18n } from "../../hooks/useI18n";
 
 const WishCard = ({ wishData }) => {
-  const t = useI18n()
+  const t = useI18n();
   const dispatch = useDispatch();
+
+  const { userType } = useSelector((state) => state.userInfo);
 
   const { accessToken, wishTour } = useSelector((state) => state.userInfo);
   const [wishlist, setWishlist] = useState(JSON.parse(wishTour));
@@ -72,12 +74,14 @@ const WishCard = ({ wishData }) => {
                     {formatDate(wish.startDate)}
                   </p>
                   <div style={{ width: "1.2rem" }}>
-                    <Heart
-                      activeColor="#ff6161ff"
-                      inactiveColor="#ff4040ff"
-                      isActive={isInWishlist(wish.tourId)}
-                      onClick={() => btnClickHandler(wish.tourId)}
-                    />
+                    {userType == "USER" && (
+                      <Heart
+                        activeColor="#ff6161ff"
+                        inactiveColor="#ff4040ff"
+                        isActive={isInWishlist(wish.tourId)}
+                        onClick={() => btnClickHandler(wish.tourId)}
+                      />
+                    )}
                   </div>
                 </div>
 
@@ -98,14 +102,14 @@ const WishCard = ({ wishData }) => {
                   )}
                 </div>
               </CardHeader>
-              <Link to={`/tour/${wish.tourId}/`} className="h-full">
+              <Link to={`/tour/${wish.tourId}`} className="h-full">
                 <Image
                   removeWrapper
                   alt="Card example background"
                   className="z-0 w-full h-full scale-125 -translate-y-6 object-cover data-[loaded=true]:opacity-50"
                   src={
-                    wish.tourImage
-                      ? wish.tourImage
+                    wish.tourImageUrls != []
+                      ? wish.tourImageUrls[0]
                       : "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
                   }
                 />

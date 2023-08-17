@@ -1,53 +1,56 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useI18n } from "../../hooks/useI18n"
-
-const Input = styled.input`
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-`;
-
+import { useI18n } from "../../hooks/useI18n";
+import { Cascader, Input, Select, Space } from "antd";
+const { Option } = Select;
+const { Search } = Input;
+import styles from "./Searchbar.module.css";
 
 function SearchBar({ onSearch }) {
-  const t = useI18n()
+  const t = useI18n();
+
   const [searchValue, setSearchValue] = useState("");
   const [type, setType] = useState("TITLE");
 
-
-  const handleChange = (e) => {
-    const { value, name } = e.target;
-    if (name === "searchValue") {
-      setSearchValue(value);
-    } else if (name === "type") {
-      setType(value);
-    }
+  const handleChangeType = (e) => {
+    setType(e);
   };
-  
+
+  const handleChangeValue = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const selectBefore = (
+    <Select
+      defaultValue="TITLE"
+      name="type"
+      value={type}
+      onChange={handleChangeType}
+    >
+      <Option value="TITLE">{t(`ㅤ제목ㅤㅤ`)}</Option>
+      <Option value="GUIDE">{t(`ㅤ가이드ㅤ`)}</Option>
+      <Option value="COURSE">{t(`ㅤ코스ㅤㅤ`)}</Option>
+      <Option value="CATEGORY">{t(`ㅤ카테고리`)}</Option>
+      <Option value="REGION">{t(`ㅤ지역ㅤㅤ`)}</Option>
+    </Select>
+  );
+
   useEffect(() => {
     onSearch(searchValue, type);
   }, [searchValue, type]);
 
-
   return (
-    <div>
-      <select id="type" name="type" value={type} onChange={handleChange}>
-        <option value="TITLE">{t(`제목`)}</option>
-        <option value="GUIDE">{t(`가이드`)}</option>
-        <option value="COURSE">{t(`코스`)}</option>
-        <option value="CATEGORY">{t(`카테고리`)}</option>
-        <option value="REGION">{t(`지역`)}</option>
-      </select>
-        <Input
-        type="text"
-        name="searchValue"
-        value={searchValue}
-        onChange={handleChange}
-        placeholder="검색어를 입력하세요"
-      />
-    </div>
+    <Search
+      size="large"
+      addonBefore={selectBefore}
+      defaultValue="mysite"
+      value={searchValue}
+      onChange={handleChangeValue}
+      placeholder="검색어를 입력하세요"
+      className={styles.searchBar}
+      style={{ zIndex: "1", position: "relative", background: "white" }}
+    />
   );
 }
 
