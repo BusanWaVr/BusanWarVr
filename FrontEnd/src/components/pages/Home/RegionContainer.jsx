@@ -1,21 +1,25 @@
 // import { useState, useEffect } from "react";
 // import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { useI18n } from "../../../hooks/useI18n"
+import { useI18n } from "../../../hooks/useI18n";
 
 import RegionCard from "../../blocks/RegionCard";
 
 const Container = styled.div`
-  height: 500px;
-  // background-color: #999999;
+  width: 80%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 5;
+  position: relative;
 `;
 
 const MentionsContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50px;
-  // background-color: #565656;
 `;
 
 const regionData = [
@@ -118,11 +122,13 @@ const regionData = [
 ];
 
 function RegionContainer() {
-  const t = useI18n()
+  const t = useI18n();
   return (
     <Container>
       <MentionsContainer>
-        <h5>{t(`지역별 투어`)}</h5>
+        <h5 className="font-bold text-3xl md:text-4xl text-blue-500 my-6">
+          {t(`지역별 투어`)}
+        </h5>
       </MentionsContainer>
       <RegionCard regionData={regionData} />
     </Container>

@@ -7,10 +7,10 @@ import { TeamOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Divider } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { setWishTour } from "../../store/reducers/UserInfoReducer";
-import { useI18n } from "../../hooks/useI18n"
+import { useI18n } from "../../hooks/useI18n";
 
 const WishCard = ({ wishData }) => {
-  const t = useI18n()
+  const t = useI18n();
   const dispatch = useDispatch();
 
   const { accessToken, wishTour } = useSelector((state) => state.userInfo);
@@ -98,7 +98,7 @@ const WishCard = ({ wishData }) => {
                   )}
                 </div>
               </CardHeader>
-              <Link to={`/tour/${wish.tourId}/`} className="h-full">
+              <Link to={`/tour/${wish.tourId}`} className="h-full">
                 <Image
                   removeWrapper
                   alt="Card example background"
