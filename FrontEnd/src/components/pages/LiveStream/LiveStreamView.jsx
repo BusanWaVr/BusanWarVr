@@ -413,31 +413,31 @@ const LiveStreamView = () => {
 
   // 투표함 생성 받기(SUB)
   function subscribeVote(stomp) {
-    if ("subVote" in stomp.subscriptions) {
-      console.log("이미 subVote를 구독중입니다.");
-    } else {
-      stomp.subscribe(
-        `/sub/chat/vote/create/room/${tourUID}`,
-        (data) => {
-          const received = JSON.parse(data.body);
-          const receivedMessage = {
-            option1: received.column1,
-            option2: received.column2,
-          };
-          // 이전 투표현황 초기화
-          setVoteMessages([]);
-          // 투표 진행중, 모션인식 진행중 true
-          setVote(true);
-          setVoting(true);
-          dispatch(setIsVoteOpen(true));
-          // 1번 선택지, 2번 선택지 값 저장
-          dispatch(setOption1(received.column1));
-          dispatch(setOption2(received.column2));
-          console.log("투표 구독으로 받아오는 메시지", receivedMessage);
-        },
-        { id: "subVote" }
-      );
-    }
+    // if ("subVote" in stomp.subscriptions) {
+    //   console.log("이미 subVote를 구독중입니다.");
+    // } else {
+    // }
+    stomp.subscribe(
+      `/sub/chat/vote/create/room/${tourUID}`,
+      (data) => {
+        const received = JSON.parse(data.body);
+        const receivedMessage = {
+          option1: received.column1,
+          option2: received.column2,
+        };
+        // 이전 투표현황 초기화
+        setVoteMessages([]);
+        // 투표 진행중, 모션인식 진행중 true
+        setVote(true);
+        setVoting(true);
+        dispatch(setIsVoteOpen(true));
+        // 1번 선택지, 2번 선택지 값 저장
+        dispatch(setOption1(received.column1));
+        dispatch(setOption2(received.column2));
+        console.log("투표 구독으로 받아오는 메시지", receivedMessage);
+      },
+      { id: "subVote" }
+    );
   }
   const onChangeColumn1 = (e) => {
     setColumn1(e.target.value);
@@ -485,30 +485,30 @@ const LiveStreamView = () => {
 
   // 사용자 투표 실시간 받기(SUB)
   function subscribeVoteCnt(stomp) {
-    if ("voteCnt" in stomp.subscriptions) {
-      console.log("이미 voteCnt를 구독중입니다.");
-    } else {
-      stomp.subscribe(
-        `/sub/chat/vote/room/${tourUID}`,
-        (data) => {
-          const received = JSON.parse(data.body);
-          const receivedMessage = {
-            nickname: received.sender.nickname,
-            selectType: received.selectType,
-          };
-          setVoteMessages((prevMessages) => [...prevMessages, receivedMessage]);
-          console.log("사용자 투표로 받아오는 메시지", receivedMessage);
-          if (received.selectType == 1) {
-            dispatch(setOption1Cnt(1));
-            console.log(option1Cnt);
-          } else {
-            dispatch(setOption2Cnt(1));
-            console.log(option2Cnt);
-          }
-        },
-        { id: "voteCnt" }
-      );
-    }
+    // if ("voteCnt" in stomp.subscriptions) {
+    //   console.log("이미 voteCnt를 구독중입니다.");
+    // } else {
+    // }
+    stomp.subscribe(
+      `/sub/chat/vote/room/${tourUID}`,
+      (data) => {
+        const received = JSON.parse(data.body);
+        const receivedMessage = {
+          nickname: received.sender.nickname,
+          selectType: received.selectType,
+        };
+        setVoteMessages((prevMessages) => [...prevMessages, receivedMessage]);
+        console.log("사용자 투표로 받아오는 메시지", receivedMessage);
+        if (received.selectType == 1) {
+          dispatch(setOption1Cnt(1));
+          console.log(option1Cnt);
+        } else {
+          dispatch(setOption2Cnt(1));
+          console.log(option2Cnt);
+        }
+      },
+      { id: "voteCnt" }
+    );
   }
 
   // 가이드 투표 종료하기(POST)
@@ -543,19 +543,19 @@ const LiveStreamView = () => {
 
   // 가이드 투표 종료인지 확인하기(SUB)
   function subscribeEndVote(stomp) {
-    if ("endVote" in stomp.subscriptions) {
-      console.log("이미 endVote를 구독중입니다.");
-    } else {
-      stomp.subscribe(
-        `/sub/chat/vote/end/${tourUID}`,
-        (data) => {
-          setVoting(false);
-          setVote(false);
-          console.log("투표 종료");
-        },
-        { id: "endVote" }
-      );
-    }
+    // if ("endVote" in stomp.subscriptions) {
+    //   console.log("이미 endVote를 구독중입니다.");
+    // } else {
+    // }
+    stomp.subscribe(
+      `/sub/chat/vote/end/${tourUID}`,
+      (data) => {
+        setVoting(false);
+        setVote(false);
+        console.log("투표 종료");
+      },
+      { id: "endVote" }
+    );
   }
 
   const getToken = useCallback(async () => {

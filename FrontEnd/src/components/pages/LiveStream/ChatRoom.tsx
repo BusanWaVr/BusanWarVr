@@ -52,29 +52,29 @@ function ChatRoom(props, ref) {
 
   // 구독하기
   const rnehr = () => {
-    if ("chat" in stompClient.subscriptions) {
-      console.log("이미 chat을 구독중입니다.");
-    } else {
-      stompClient.subscribe(
-        `/sub/chat/message/room/${tourUID}`,
-        (data) => {
-          const receivedMessage = JSON.parse(data.body);
-          const newChatMessage = {
-            msgType: receivedMessage.type,
-            userType: receivedMessage.sender.type,
-            senderId: receivedMessage.sender.id,
-            username: receivedMessage.sender.nickname,
-            content: receivedMessage.body,
-            profileImg: receivedMessage.sender.profileImg,
-          };
-          console.log(receivedMessage);
+    // if ("chat" in stompClient.subscriptions) {
+    //   console.log("이미 chat을 구독중입니다.");
+    // } else {
+    // }
+    stompClient.subscribe(
+      `/sub/chat/message/room/${tourUID}`,
+      (data) => {
+        const receivedMessage = JSON.parse(data.body);
+        const newChatMessage = {
+          msgType: receivedMessage.type,
+          userType: receivedMessage.sender.type,
+          senderId: receivedMessage.sender.id,
+          username: receivedMessage.sender.nickname,
+          content: receivedMessage.body,
+          profileImg: receivedMessage.sender.profileImg,
+        };
+        console.log(receivedMessage);
 
-          setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
-        },
-        { id: "chat" }
-      );
-      setSubscribed(true);
-    }
+        setChatMessages((prevMessages) => [...prevMessages, newChatMessage]);
+      },
+      { id: "chat" }
+    );
+    setSubscribed(true);
   };
 
   // 구독해제
