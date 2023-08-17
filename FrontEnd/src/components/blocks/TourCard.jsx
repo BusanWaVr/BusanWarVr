@@ -54,8 +54,9 @@ function TourCard({ TourData, isMe, tourType }) {
                       className=""
                       shadow="sm"
                       src={
-                        tour.tourImage ||
-                        "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
+                        tour.tourImageUrls != []
+                          ? tour.tourImageUrls[0]
+                          : "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
                       }
                       style={{
                         width: "400px",
