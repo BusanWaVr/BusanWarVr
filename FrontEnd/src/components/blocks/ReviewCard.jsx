@@ -25,7 +25,7 @@ function ReviewCard({ ReviewData, isMe }) {
   const handleEditClick = (review) => {
     navigate(`/review/${review.id}/edit`, {
       state: {
-        reviewId: review.id,
+        tourId: review.tourId,
         title: review.title,
         content: review.content,
         score: review.score,
@@ -41,7 +41,7 @@ function ReviewCard({ ReviewData, isMe }) {
   console.log(reviews);
 
   return (
-    <div className="flex flex-col items-center justify-center py-12">
+    <div className="max-w-[400px] md:max-w-[610px] py-12">
       {reviews ? (
         reviews.length > 0 ? (
           reviews.map((review) => (
@@ -79,15 +79,23 @@ function ReviewCard({ ReviewData, isMe }) {
                     </div>
                     <div className="flex justify-between items-start">
                       <div className="flex flex-col gap-0">
-                        <h1 className="text-base md:text-large font-semibold mt-1 ">
+                        <h1 className="text-base font-semibold mt-1 ">
                           {review.tourTitle}
                         </h1>
                         <div className="my-1">
-                          <p>{review.title}</p>
-                        </div>
-                        <div className="flex items-center gap-1 text-blue-600 text-base">
-                          <StarFilled />
-                          {review.score}
+                          <p className="font-semibold">
+                            "{review.title}"
+                            <div className="flex items-center gap-1 text-blue-600 text-base">
+                              <StarFilled />
+                              {review.score}
+                            </div>
+                          </p>
+                          <p>
+                            {review.content
+                              .replace(/(<([^>]+)>)/gi, "")
+                              .replace("&gt;", "")
+                              .replace("&lt;", "")}
+                          </p>
                         </div>
                       </div>
                     </div>
