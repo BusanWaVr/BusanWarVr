@@ -131,12 +131,21 @@ const LiveStreamView = () => {
   );
 
   const extractVideoIdFromLink = (link) => {
-    const regex = /(?:\?v=)([^&]+)/;
-    const match = link.match(regex);
-    return match ? match[1] : null;
+    const url = new URL(link);
+
+    if (link.includes("://youtu.be/")) {
+      // https://youtu.be/2aI8sshVz6k
+      return url.pathname.replace(/^\//, "");
+    } else if (link.includes("://www.youtube.com/watch?v=")) {
+      // https://www.youtube.com/watch?v=1QR1OuCEh8k
+      return url.searchParams.get("v");
+    } else if (link.includes("://www.youtube.com/live")) {
+      return url.pathname.split("/live/")[1];
+    }
   };
 
   const videoId = extractVideoIdFromLink(youtubeLink);
+
 
   const [progress, setProgress] = useState(0);
   // 뒤로가기 막기
@@ -643,7 +652,7 @@ const LiveStreamView = () => {
                   windowSize.width < 768 && (isVoteOpen || isChatOpen)
                     ? 0
                     : windowSize.width
-                }
+                  }
                 minSize={windowSize.width < 768 ? 0 : windowSize.width * 0.6}
                 snap={windowSize.width < 768}
                 className={`${styles.streamContainer}`}
@@ -660,6 +669,22 @@ const LiveStreamView = () => {
                   {/* VR라이브 */}
                   <Allotment.Pane className="live-example">
                     <LiveExample videoId={videoId} />
+                  <Toolbar
+                    leaveSession={leaveSession}
+                    toggleAudio={toggleAudio}
+                    toggleVideo={toggleVideo}
+                    switchVideo={switchVideo}
+                    toggleFullScreen={toggleFullScreen}
+                    isFullScreen={isFullScreen}
+                    isChatOpen={isChatOpen}
+                    isVoteOpen={isVoteOpen}
+                    toggleVote={toggleVote}
+                    handleLeaveChatToggle={handleLeaveChatToggle}
+                    handleJoinChatToggle={handleJoinChatToggle}
+                    onLeaveChat={onLeaveChat}
+                    onJoinChat={onJoinChat}
+                    youtubeLink={youtubeLink}
+                  />
                   </Allotment.Pane>
                 </Allotment>
               </Allotment.Pane>
@@ -732,6 +757,7 @@ const LiveStreamView = () => {
                             투표했습니다.
                           </p>
                         ))}
+
                       </Allotment.Pane>
                     )}
                     {isChatOpen && (
@@ -761,22 +787,6 @@ const LiveStreamView = () => {
               )}
             </Allotment>
           </div>
-          <Toolbar
-            leaveSession={leaveSession}
-            toggleAudio={toggleAudio}
-            toggleVideo={toggleVideo}
-            switchVideo={switchVideo}
-            toggleFullScreen={toggleFullScreen}
-            isFullScreen={isFullScreen}
-            isChatOpen={isChatOpen}
-            isVoteOpen={isVoteOpen}
-            toggleVote={toggleVote}
-            handleLeaveChatToggle={handleLeaveChatToggle}
-            handleJoinChatToggle={handleJoinChatToggle}
-            onLeaveChat={onLeaveChat}
-            onJoinChat={onJoinChat}
-            youtubeLink={youtubeLink}
-          />
         </FullScreen>
       )}
     </>
