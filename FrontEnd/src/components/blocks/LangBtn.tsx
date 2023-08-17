@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import i18n from "../../utils/locale"
 import { useI18n } from "../../hooks/useI18n"
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
+import LanguageIcon from '@mui/icons-material/Language';
 
 
 const storedLang = localStorage.getItem("wantedLanguage") || "KO"
@@ -28,7 +29,7 @@ const handleLanguageChange = (lang) => {
 
     <Dropdown>
                 <DropdownTrigger>
-                <p className="font-semibold text-sm">{t(`다국어 지원`)}</p>
+                <LanguageIcon />
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Profile Actions" variant="flat">
                   <DropdownItem key="EN" color="primary" onClick={() => handleLanguageChange('EN')}>
