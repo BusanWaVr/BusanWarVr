@@ -4,7 +4,6 @@ import { AccessTime, Groups } from "@mui/icons-material";
 import { Divider, Space, Tag } from "antd";
 import { styled } from "styled-components";
 import CurrentMate from "../../../blocks/CurrentMate";
-import ReviewContainer from "./ReviewContainer";
 import { useI18n } from "../../../../hooks/useI18n"
 
 const TourDetailContentWrapper = styled.div`
@@ -110,8 +109,6 @@ const TourDetailContent = ({ tourData, joiners }) => {
         <Divider />
         <p className="section-title">{t(`현재 모집 현황`)}</p>
         <CurrentMate tourData={tourData} joiners={joiners} />
-        {/* 리뷰 */}
-        <ReviewContainer reviewData={tourData.reviews} />
       </TourDetailContentWrapper>
     </>
   );
