@@ -6,7 +6,7 @@ const GuideRoute = () => {
 
   if (!userId) {
     alert("로그인이 필요한 기능입니다.");
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   } else if (userType !== "GUIDE") {
     alert("권한이 없습니다.");
     return <Navigate to="/" />;
