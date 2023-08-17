@@ -112,8 +112,10 @@ function TestTest(props, ref) {
 
     if (caseOne == "1.00") {
       setPlaySoundOne(1);
+      isLooping.current = false;
     } else if (caseTwo == "1.00") {
       setPlaySoundOne(2);
+      isLooping.current = false;
     }
 
     for (let i = 0; i < maxPredictions; i++) {

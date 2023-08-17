@@ -685,7 +685,7 @@ const LiveStreamView = () => {
                       : windowSize.width * 0.25
                   }
                 >
-                  <Allotment vertical>
+                  <Allotment vertical defaultSizes={[3, 7]}>
                     {isVoteOpen && (
                       <Allotment.Pane className={`${styles.voteroom}`}>
                         <div className="h2 text-white font-semibold p-4 px-6 text-left bg-zinc-900">
