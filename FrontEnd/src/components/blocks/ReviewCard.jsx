@@ -6,7 +6,7 @@ import ReviewDelete from "../pages/Review/ReviewDelete";
 import { useI18n } from "../../hooks/useI18n";
 import { Card, CardBody, Image, Button } from "@nextui-org/react";
 // import BoogieNone from "../../assets/boogie_none.png";
-import { CalendarOutlined } from "@ant-design/icons";
+import { StarFilled } from "@ant-design/icons";
 import "moment/locale/ko";
 import moment from "moment";
 
@@ -25,7 +25,7 @@ function ReviewCard({ ReviewData, isMe }) {
   const handleEditClick = (review) => {
     navigate(`/review/${review.id}/edit`, {
       state: {
-        reviewId: review.reviewId,
+        reviewId: review.id,
         title: review.title,
         content: review.content,
         score: review.score,
@@ -38,8 +38,10 @@ function ReviewCard({ ReviewData, isMe }) {
     setReviews(updatedReviews);
   }
 
+  console.log(reviews);
+
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center py-12">
       {reviews ? (
         reviews.length > 0 ? (
           reviews.map((review) => (
@@ -57,8 +59,9 @@ function ReviewCard({ ReviewData, isMe }) {
                       className=""
                       shadow="sm"
                       src={
-                        review.tourImage ||
-                        "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
+                        review.tourImageUrls != []
+                          ? review.tourImageUrls[0]
+                          : "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
                       }
                       style={{
                         width: "400px",
@@ -69,26 +72,24 @@ function ReviewCard({ ReviewData, isMe }) {
                   </div>
 
                   <div className="flex flex-col col-span-6 md:col-span-8">
+                    <div className="text-xs md:text-sm w-full text-right text-zinc-400">
+                      {moment(review.date)
+                        .utcOffset(9)
+                        .format("YYYY/MM/DD HH:mm")}
+                    </div>
                     <div className="flex justify-between items-start">
                       <div className="flex flex-col gap-0">
-                        {/* <Link to={`/review/${review.reviewId}/`}> */}
                         <h1 className="text-base md:text-large font-semibold mt-1 ">
                           {review.tourTitle}
                         </h1>
-                        {/* </Link> */}
-                        <div className="my-2">
-                          <p>{review.score}</p>
+                        <div className="my-1">
+                          <p>{review.title}</p>
+                        </div>
+                        <div className="flex items-center gap-1 text-blue-600 text-base">
+                          <StarFilled />
+                          {review.score}
                         </div>
                       </div>
-                    </div>
-
-                    <div className="flex mt-1 gap-2 items-center">
-                      <CalendarOutlined />
-                      <p className="text-xs md:text-sm">
-                        {moment(review.date)
-                          .utcOffset(9)
-                          .format("YYYY/MM/DD HH:mm")}
-                      </p>
                     </div>
 
                     <div className="flex w-full items-center justify-center"></div>
@@ -103,7 +104,7 @@ function ReviewCard({ ReviewData, isMe }) {
                         variant="flat"
                         onClick={() => handleEditClick(review)}
                       >
-                        {t(`수정`)}
+                        {t(`리뷰 수정하기`)}
                       </Button>
                     )}
                   </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Avatar, Card } from "antd";
+import { Button, ButtonGroup } from "@nextui-org/react";
 
 const ReviewDelete = ({ reviewId, userId, reviewDelete }) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -36,12 +36,12 @@ const ReviewDelete = ({ reviewId, userId, reviewDelete }) => {
 
   return (
     <Button
-      className="mt-3 bg-blue-50 p-3 rounded-md w-full"
-      color="primary"
+      className="mt-3 p-3 rounded-md w-full"
+      color="danger"
       variant="flat"
       onClick={handleDelete}
     >
-      삭제
+      리뷰 삭제하기
     </Button>
   );
 };
