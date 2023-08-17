@@ -5,7 +5,6 @@ import { Divider, Space, Tag } from "antd";
 import { styled } from "styled-components";
 import CurrentMate from "../../../blocks/CurrentMate";
 import ReviewContainer from "./ReviewContainer";
-import CommentContainer from "./CommentContainer";
 import { useI18n } from "../../../../hooks/useI18n"
 
 const TourDetailContentWrapper = styled.div`
@@ -113,8 +112,6 @@ const TourDetailContent = ({ tourData, joiners }) => {
         <CurrentMate tourData={tourData} joiners={joiners} />
         {/* 리뷰 */}
         <ReviewContainer reviewData={tourData.reviews} />
-        {/* 댓글 */}
-        <CommentContainer />
       </TourDetailContentWrapper>
     </>
   );
