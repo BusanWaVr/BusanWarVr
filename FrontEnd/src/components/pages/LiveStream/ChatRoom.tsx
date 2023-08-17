@@ -46,12 +46,16 @@ function ChatRoom(props, ref) {
     };
     stompClient.send("/pub/chat/message/join", {}, JSON.stringify(joinMessage));
 
-    console.log(stompClient);
+    console.log(stompClient.subscriptions);
     console.log(props.onConnect);
   }, []);
 
   // 구독하기
   const rnehr = () => {
+    // if ("chat" in stompClient.subscriptions) {
+    //   console.log("이미 chat을 구독중입니다.");
+    // } else {
+    // }
     stompClient.subscribe(
       `/sub/chat/message/room/${tourUID}`,
       (data) => {
@@ -154,23 +158,22 @@ function ChatRoom(props, ref) {
             switch (msg.msgType) {
               case "LEAVE":
                 return (
-                  // <p className={`${styles.leave}`} key={index}>
-                  //   {msg.username}님이 채팅방에서 퇴장했습니다.
-                  // </p>
-                  <></>
+                  <p className={`${styles.leave}`} key={index}>
+                    {msg.username}님이 채팅방에서 퇴장했습니다.
+                  </p>
                 );
               case "JOIN":
                 return (
-                  // <p className={`${styles.join}`} key={index}>
-                  //   {msg.username}님이 채팅방에 입장했습니다.
-                  // </p>
-                  <></>
+                  <p className={`${styles.join}`} key={index}>
+                    {msg.username}님이 채팅방에 입장했습니다.
+                  </p>
                 );
               case "VOTE":
                 return (
-                  <p className={`${styles.vote}`} key={index}>
-                    {msg.username}님이 {msg.content}번에 투표했습니다.
-                  </p>
+                  // <p className={`${styles.vote}`} key={index}>
+                  //   {msg.username}님이 {msg.content}번에 투표했습니다.
+                  // </p>
+                  <></>
                 );
               default:
                 return (
@@ -245,9 +248,7 @@ function ChatRoom(props, ref) {
                 style={{ width: "80px", height: "80px", margin: "10px" }}
               />
             ) : (
-              <p className="pt-3 pb-7">
-                스페이스를 눌러 음성채팅을 이용해보세요
-              </p>
+              <p className="pt-3 pb-7">Ctrl을 눌러 음성채팅을 이용해보세요</p>
             )}
           </div>
         </div>

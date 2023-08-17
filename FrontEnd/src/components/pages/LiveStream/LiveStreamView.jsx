@@ -45,7 +45,6 @@ import {
 
 import styles from "./LiveStreamView.module.css";
 
-
 const APPLICATION_SERVER_URL = "https://busanopenvidu.store/api/v1/openvidu";
 
 const LiveStreamView = () => {
@@ -90,6 +89,8 @@ const LiveStreamView = () => {
   // 가이드가 입력할 투표 항목
   const [column1, setColumn1] = useState("");
   const [column2, setColumn2] = useState("");
+  // 투표 메시지 관리
+  const [voteMessages, setVoteMessages] = useState([]);
 
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -241,9 +242,9 @@ const LiveStreamView = () => {
 
     // 구독해제
     onLeaveChat();
-    stompClient.unsubscribe(`subVote`);
-    stompClient.unsubscribe(`voteCnt`);
-    stompClient.unsubscribe(`endVote`);
+    stompClient.unsubscribe("subVote");
+    stompClient.unsubscribe("voteCnt");
+    stompClient.unsubscribe("endVote");
 
     navigate("/livestream");
   }, [session]);
@@ -412,6 +413,10 @@ const LiveStreamView = () => {
 
   // 투표함 생성 받기(SUB)
   function subscribeVote(stomp) {
+    // if ("subVote" in stomp.subscriptions) {
+    //   console.log("이미 subVote를 구독중입니다.");
+    // } else {
+    // }
     stomp.subscribe(
       `/sub/chat/vote/create/room/${tourUID}`,
       (data) => {
@@ -420,9 +425,8 @@ const LiveStreamView = () => {
           option1: received.column1,
           option2: received.column2,
         };
-        // 이전 투표값 초기화
-        // dispatch(setNewOption1Cnt(0));
-        // dispatch(setNewOption2Cnt(0));
+        // 이전 투표현황 초기화
+        setVoteMessages([]);
         // 투표 진행중, 모션인식 진행중 true
         setVote(true);
         setVoting(true);
@@ -435,7 +439,6 @@ const LiveStreamView = () => {
       { id: "subVote" }
     );
   }
-
   const onChangeColumn1 = (e) => {
     setColumn1(e.target.value);
   };
@@ -482,6 +485,10 @@ const LiveStreamView = () => {
 
   // 사용자 투표 실시간 받기(SUB)
   function subscribeVoteCnt(stomp) {
+    // if ("voteCnt" in stomp.subscriptions) {
+    //   console.log("이미 voteCnt를 구독중입니다.");
+    // } else {
+    // }
     stomp.subscribe(
       `/sub/chat/vote/room/${tourUID}`,
       (data) => {
@@ -490,6 +497,7 @@ const LiveStreamView = () => {
           nickname: received.sender.nickname,
           selectType: received.selectType,
         };
+        setVoteMessages((prevMessages) => [...prevMessages, receivedMessage]);
         console.log("사용자 투표로 받아오는 메시지", receivedMessage);
         if (received.selectType == 1) {
           dispatch(setOption1Cnt(1));
@@ -535,6 +543,10 @@ const LiveStreamView = () => {
 
   // 가이드 투표 종료인지 확인하기(SUB)
   function subscribeEndVote(stomp) {
+    // if ("endVote" in stomp.subscriptions) {
+    //   console.log("이미 endVote를 구독중입니다.");
+    // } else {
+    // }
     stomp.subscribe(
       `/sub/chat/vote/end/${tourUID}`,
       (data) => {
@@ -599,7 +611,10 @@ const LiveStreamView = () => {
         <Loader />
       ) : (
         <FullScreen handle={handleFullScreen}>
-          <div style={{ width: "100vw", height: "100vh" }} className={`${styles.FullScreen}`}>
+          <div
+            style={{ width: "100vw", height: "100vh" }}
+            className={`${styles.FullScreen}`}
+          >
             <Allotment
               style={{ width: "100%", height: "100%", display: "flex" }}
             >
@@ -702,7 +717,14 @@ const LiveStreamView = () => {
                             setVoting={setVoting}
                           />
                         )}
-                        <VoteModal vote={vote} className={styles.votemodal}/>
+                        <VoteModal vote={vote} className={styles.votemodal} />
+                        {voteMessages.map((msg, index) => (
+                          <p key={index} className={styles.votemessage}>
+                            {msg.nickname}님이 {msg.selectType}번에
+                            투표했습니다.
+                          </p>
+                        ))}
+
                       </Allotment.Pane>
                     )}
                     {isChatOpen && (

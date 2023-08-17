@@ -13,18 +13,19 @@ const VoteModal = (props) => {
         <div className="mx-12 bg-zinc-900 p-6 rounded-md text-white">
           <div className="mb-5 font-bold">
             {props.vote ? (
-              <p>현재 진행중인 투표입니다.</p>
+              <h1 className="text-2xl">투표 진행중</h1>
             ) : (
               <p>투표가 종료되었습니다.</p>
             )}
           </div>
-
-          <p>
-            {option1}: {option1Cnt}
-          </p>
-          <p>
-            {option2}: {option2Cnt}
-          </p>
+          <div className="flex justify-between">
+            <div>
+              <strong>{option1}</strong> : {option1Cnt}
+            </div>
+            <div>
+              {option2Cnt} : <strong>{option2}</strong>
+            </div>
+          </div>
         </div>
       ) : (
         <></>
