@@ -1,22 +1,27 @@
 .FullScreen {
-    background-color: #252525;
+  background-color: #252525;
 }
-
 
 .streamContainer {
   /* background-color: #ffffff; */
 }
 
-
 .live-example {
-    background-color: #e9eef6;
-
+  background-color: #e9eef6;
 }
 
 .voteroom {
-    /* background-color: #e9eef6; */
+  /* background-color: #e9eef6; */
 }
 
+.votemessage {
+  margin-bottom: 5px;
+  padding: 10px;
+  font-size: 14px;
+  color: #ffffff;
+  text-align: center;
+  /* font-weight: bold; */
+}
 .votemodal {
-    margin-top: 10px;
+  margin-top: 10px;
 }

@@ -170,9 +170,10 @@ function ChatRoom(props, ref) {
                 );
               case "VOTE":
                 return (
-                  <p className={`${styles.vote}`} key={index}>
-                    {msg.username}님이 {msg.content}번에 투표했습니다.
-                  </p>
+                  // <p className={`${styles.vote}`} key={index}>
+                  //   {msg.username}님이 {msg.content}번에 투표했습니다.
+                  // </p>
+                  <></>
                 );
               default:
                 return (

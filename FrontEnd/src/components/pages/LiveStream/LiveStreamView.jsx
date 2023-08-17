@@ -89,6 +89,8 @@ const LiveStreamView = () => {
   // 가이드가 입력할 투표 항목
   const [column1, setColumn1] = useState("");
   const [column2, setColumn2] = useState("");
+  // 투표 메시지 관리
+  const [voteMessages, setVoteMessages] = useState([]);
 
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -422,9 +424,8 @@ const LiveStreamView = () => {
             option1: received.column1,
             option2: received.column2,
           };
-          // 이전 투표값 초기화
-          // dispatch(setNewOption1Cnt(0));
-          // dispatch(setNewOption2Cnt(0));
+          // 이전 투표현황 초기화
+          setVoteMessages([]);
           // 투표 진행중, 모션인식 진행중 true
           setVote(true);
           setVoting(true);
@@ -495,6 +496,7 @@ const LiveStreamView = () => {
             nickname: received.sender.nickname,
             selectType: received.selectType,
           };
+          setVoteMessages((prevMessages) => [...prevMessages, receivedMessage]);
           console.log("사용자 투표로 받아오는 메시지", receivedMessage);
           if (received.selectType == 1) {
             dispatch(setOption1Cnt(1));
@@ -638,22 +640,6 @@ const LiveStreamView = () => {
                   {/* VR라이브 */}
                   <Allotment.Pane className="live-example">
                     <LiveExample videoId={videoId} />
-                    <Toolbar
-                      leaveSession={leaveSession}
-                      toggleAudio={toggleAudio}
-                      toggleVideo={toggleVideo}
-                      switchVideo={switchVideo}
-                      toggleFullScreen={toggleFullScreen}
-                      isFullScreen={isFullScreen}
-                      isChatOpen={isChatOpen}
-                      isVoteOpen={isVoteOpen}
-                      toggleVote={toggleVote}
-                      handleLeaveChatToggle={handleLeaveChatToggle}
-                      handleJoinChatToggle={handleJoinChatToggle}
-                      onLeaveChat={onLeaveChat}
-                      onJoinChat={onJoinChat}
-                      youtubeLink={youtubeLink}
-                    />
                   </Allotment.Pane>
                 </Allotment>
               </Allotment.Pane>
@@ -716,6 +702,12 @@ const LiveStreamView = () => {
                           />
                         )}
                         <VoteModal vote={vote} className={styles.votemodal} />
+                        {voteMessages.map((msg, index) => (
+                          <p key={index} className={styles.votemessage}>
+                            {msg.nickname}님이 {msg.selectType}번에
+                            투표했습니다.
+                          </p>
+                        ))}
                       </Allotment.Pane>
                     )}
                     {isChatOpen && (
@@ -745,6 +737,22 @@ const LiveStreamView = () => {
               )}
             </Allotment>
           </div>
+          <Toolbar
+            leaveSession={leaveSession}
+            toggleAudio={toggleAudio}
+            toggleVideo={toggleVideo}
+            switchVideo={switchVideo}
+            toggleFullScreen={toggleFullScreen}
+            isFullScreen={isFullScreen}
+            isChatOpen={isChatOpen}
+            isVoteOpen={isVoteOpen}
+            toggleVote={toggleVote}
+            handleLeaveChatToggle={handleLeaveChatToggle}
+            handleJoinChatToggle={handleJoinChatToggle}
+            onLeaveChat={onLeaveChat}
+            onJoinChat={onJoinChat}
+            youtubeLink={youtubeLink}
+          />
         </FullScreen>
       )}
     </>
