@@ -6,6 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { setStompClient } from "./LiveStreamReducer";
 import { image } from "@nextui-org/react";
 import microphone from "../../../assets/microphone.gif";
+import soundwave from "../../../assets/soundwave.png";
+import speaker from "../../../assets/speaker.png";
+import megaphone from "../../../assets/megaphone.png";
 import { Input, Button } from "antd";
 export type message = {
   username: string;
@@ -168,13 +171,6 @@ function ChatRoom(props, ref) {
                     {msg.username}님이 채팅방에 입장했습니다.
                   </p>
                 );
-              case "VOTE":
-                return (
-                  // <p className={`${styles.vote}`} key={index}>
-                  //   {msg.username}님이 {msg.content}번에 투표했습니다.
-                  // </p>
-                  <></>
-                );
               default:
                 return (
                   <div key={index}>
@@ -194,9 +190,21 @@ function ChatRoom(props, ref) {
                           className={`${styles.message} ${styles.outgoing}`}
                           key={index}
                         >
-                          <strong>{msg.username}</strong>
-                          <br />
-                          {msg.content}
+                          <div className="flex flex-row-reverse">
+                            <strong>{msg.username}</strong>
+                            {msg.content.startsWith("reco") && (
+                  <img
+                    src={soundwave}
+                    alt="..."
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      marginRight: "5px",
+                    }}
+                  />
+                )}
+                          </div>
+                          {msg.content.startsWith("reco") ? msg.content.substring(4) : msg.content}
                         </div>
                       </div>
                     ) : (
@@ -216,9 +224,31 @@ function ChatRoom(props, ref) {
                           className={`${styles.message} ${styles.incoming}`}
                           key={index}
                         >
-                          <strong>{msg.username}</strong>
-                          <br />
-                          {msg.content}
+                          <div className="flex">
+                            <strong>{msg.username}</strong>
+                            {msg.content && msg.content.startsWith("reco") ? (
+  <img
+    src={soundwave}
+    alt="..."
+    style={{
+      width: "20px",
+      height: "20px",
+      marginLeft: "5px",
+    }}
+  />
+) : msg.userType == "GUIDE" ? (
+  <img
+    src={megaphone}
+    alt="..."
+    style={{
+      width: "20px",
+      height: "20px",
+      marginLeft: "5px",
+    }}
+  />
+) : null}
+                          </div>
+                          {msg.content.startsWith("reco") ? msg.content.substring(4) : msg.content}
                         </div>
                       </div>
                     )}
@@ -248,7 +278,7 @@ function ChatRoom(props, ref) {
                 style={{ width: "80px", height: "80px", margin: "10px" }}
               />
             ) : (
-              <p className="pt-3 pb-7">Ctrl을 눌러 음성채팅을 이용해보세요</p>
+              <p className={`${styles.ctrl}`}>Ctrl을 눌러 음성채팅을 이용해보세요</p>
             )}
           </div>
         </div>
