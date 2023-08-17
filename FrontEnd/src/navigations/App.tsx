@@ -44,6 +44,7 @@ import Stt from "../components/pages/LiveStream/Stt.jsx";
 import TestTest from "../components/pages/Test/TestTest.jsx";
 import TestCamera from "../components/pages/Test/TestCamera.jsx";
 import TestMic from "../components/pages/Test/TestMic.jsx";
+import NotFound from "../components/pages/Test/NotFound.jsx";
 
 import { ToastContainer, toast } from "react-toastify";
 
@@ -82,8 +83,6 @@ function App() {
             <Route path="/livestream" element={<LiveStream />} />
             <Route path="/update" element={<Update />} />
           </Route>
-
-          
 
           <Route element={<PrivateRoute />}>
             <Route path="/chatroom" element={<ChatRoom />} />
@@ -129,21 +128,14 @@ function App() {
             <Route path="/mateedit/:mateId" element={<MateEdit />} />
           </Route>
 
-          <Route
-            path="*"
-            element={
-              <h3>
-                <b>NOT FOUND PAGE</b>
-              </h3>
-            }
-          />
+          <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="/test/stt" element={<Stt/>} />
-        <Route path="/test/teachable" element={<TestTest/>} />
+        <Route path="/test/stt" element={<Stt />} />
+        <Route path="/test/teachable" element={<TestTest />} />
         <Route path="/livestream/:sessionid" element={<LiveStreamView />} />
         <Route path="/teachable" element={<TestTest />} />
-        <Route path="/TestCamera" element={<TestCamera/>} />
-        <Route path="/TestMic" element={<TestMic/>} />
+        <Route path="/TestCamera" element={<TestCamera />} />
+        <Route path="/TestMic" element={<TestMic />} />
       </Routes>
     </>
   );
