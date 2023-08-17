@@ -13,6 +13,8 @@ const WishCard = ({ wishData }) => {
   const t = useI18n();
   const dispatch = useDispatch();
 
+  const { userType } = useSelector((state) => state.userInfo);
+
   const { accessToken, wishTour } = useSelector((state) => state.userInfo);
   const [wishlist, setWishlist] = useState(JSON.parse(wishTour));
   const isInWishlist = (tourId) => {
@@ -72,12 +74,14 @@ const WishCard = ({ wishData }) => {
                     {formatDate(wish.startDate)}
                   </p>
                   <div style={{ width: "1.2rem" }}>
-                    <Heart
-                      activeColor="#ff6161ff"
-                      inactiveColor="#ff4040ff"
-                      isActive={isInWishlist(wish.tourId)}
-                      onClick={() => btnClickHandler(wish.tourId)}
-                    />
+                    {userType == "USER" && (
+                      <Heart
+                        activeColor="#ff6161ff"
+                        inactiveColor="#ff4040ff"
+                        isActive={isInWishlist(wish.tourId)}
+                        onClick={() => btnClickHandler(wish.tourId)}
+                      />
+                    )}
                   </div>
                 </div>
 
