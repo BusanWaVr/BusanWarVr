@@ -1,30 +1,23 @@
-import styled from "styled-components";
-import ReactPlayer from "react-player";
-
-const Container = styled.div`
-  pointer-events: none;
-  height: 450px;
-  width: 100%;
-  overflow: hidden;
-  & iframe {
-    transform: translate(0, -160px) scale(1.5);
-  }
-`;
+import React, { useState, useEffect } from "react";
+import videoBackground from "../../../assets/main_background.mp4";
+import styles from "./VideoContainer.module.css";
 
 function VideoContainer() {
   return (
-    <Container>
-      <ReactPlayer
-        url={"https://www.youtube.com/watch?v=Ooh3IAeInws"}
-        width="100vw"
-        height="100vh"
-        loop={true}
-        playing={true}
-        muted={true}
-        controls={false}
-        playbackRate={4}
+    <div className="main">
+      <video
+        src={videoBackground}
+        autoPlay
+        loop
+        muted
+        style={{
+          objectFit: "cover",
+          width: "100vw",
+          height: "calc(100vh - 4rem)",
+        }}
       />
-    </Container>
+      <div className={styles.iconScroll}></div>
+    </div>
   );
 }
 

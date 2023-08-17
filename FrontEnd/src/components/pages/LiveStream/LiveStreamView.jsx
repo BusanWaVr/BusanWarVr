@@ -131,9 +131,17 @@ const LiveStreamView = () => {
   );
 
   const extractVideoIdFromLink = (link) => {
-    const regex = /(?:\?v=)([^&]+)/;
-    const match = link.match(regex);
-    return match ? match[1] : null;
+    const url = new URL(link);
+
+    if (link.includes("://youtu.be/")) {
+      // https://youtu.be/2aI8sshVz6k
+      return url.pathname.replace(/^\//, "");
+    } else if (link.includes("://www.youtube.com/watch?v=")) {
+      // https://www.youtube.com/watch?v=1QR1OuCEh8k
+      return url.searchParams.get("v");
+    } else if (link.includes("://www.youtube.com/live")) {
+      return url.pathname.split("/live/")[1];
+    }
   };
 
   const videoId = extractVideoIdFromLink(youtubeLink);

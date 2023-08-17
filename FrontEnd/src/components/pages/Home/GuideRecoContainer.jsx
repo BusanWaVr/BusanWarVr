@@ -1,23 +1,25 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useI18n } from "../../../hooks/useI18n"
+import { useI18n } from "../../../hooks/useI18n";
 import GuideRecoCard from "../../blocks/GuideRecoCard";
 
 const Container = styled.div`
-  height: 400px;
-  // background-color: #999999;
+  height: calc(100% - 4rem);
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const MentionsContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50px;
-  // background-color: #565656;
 `;
 
 function DeadlineContainer() {
-  const t = useI18n()
+  const t = useI18n();
   const [guideRecoData, setGuideRecoData] = useState([]);
 
   useEffect(() => {
@@ -50,7 +52,9 @@ function DeadlineContainer() {
   return (
     <Container>
       <MentionsContainer>
-        <h5>{t(`추천 가이드 랭킹`)}</h5>
+        <h5 className="font-bold text-3xl md:text-4xl text-blue-500 my-12">
+          {t(`추천 가이드 랭킹`)}
+        </h5>
       </MentionsContainer>
       <GuideRecoCard guideRecoData={guideRecoData} />
     </Container>
