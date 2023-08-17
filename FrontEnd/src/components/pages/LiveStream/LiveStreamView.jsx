@@ -608,7 +608,7 @@ const LiveStreamView = () => {
                   windowSize.width < 768 && (isVoteOpen || isChatOpen)
                     ? 0
                     : windowSize.width
-                }
+                  }
                 minSize={windowSize.width < 768 ? 0 : windowSize.width * 0.6}
                 snap={windowSize.width < 768}
                 className={`${styles.streamContainer}`}
@@ -625,6 +625,22 @@ const LiveStreamView = () => {
                   {/* VR라이브 */}
                   <Allotment.Pane className="live-example">
                     <LiveExample videoId={videoId} />
+                  <Toolbar
+                    leaveSession={leaveSession}
+                    toggleAudio={toggleAudio}
+                    toggleVideo={toggleVideo}
+                    switchVideo={switchVideo}
+                    toggleFullScreen={toggleFullScreen}
+                    isFullScreen={isFullScreen}
+                    isChatOpen={isChatOpen}
+                    isVoteOpen={isVoteOpen}
+                    toggleVote={toggleVote}
+                    handleLeaveChatToggle={handleLeaveChatToggle}
+                    handleJoinChatToggle={handleJoinChatToggle}
+                    onLeaveChat={onLeaveChat}
+                    onJoinChat={onJoinChat}
+                    youtubeLink={youtubeLink}
+                  />
                   </Allotment.Pane>
                 </Allotment>
               </Allotment.Pane>
@@ -686,7 +702,7 @@ const LiveStreamView = () => {
                             setVoting={setVoting}
                           />
                         )}
-                        <VoteModal vote={vote}/>
+                        <VoteModal vote={vote} className={styles.votemodal}/>
                       </Allotment.Pane>
                     )}
                     {isChatOpen && (
@@ -716,22 +732,6 @@ const LiveStreamView = () => {
               )}
             </Allotment>
           </div>
-          <Toolbar
-            leaveSession={leaveSession}
-            toggleAudio={toggleAudio}
-            toggleVideo={toggleVideo}
-            switchVideo={switchVideo}
-            toggleFullScreen={toggleFullScreen}
-            isFullScreen={isFullScreen}
-            isChatOpen={isChatOpen}
-            isVoteOpen={isVoteOpen}
-            toggleVote={toggleVote}
-            handleLeaveChatToggle={handleLeaveChatToggle}
-            handleJoinChatToggle={handleJoinChatToggle}
-            onLeaveChat={onLeaveChat}
-            onJoinChat={onJoinChat}
-            youtubeLink={youtubeLink}
-          />
         </FullScreen>
       )}
     </>
