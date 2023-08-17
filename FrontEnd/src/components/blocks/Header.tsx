@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { useI18n } from "../../hooks/useI18n";
 import LangeBtn from "./LangBtn";
 
@@ -129,33 +129,39 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Profile Actions" variant="flat">
                   <DropdownItem key="profile" className="h-14 gap-2">
-                    <Link
-                      href={
+                    <NavLink
+                      to={
                         userType === "USER"
                           ? `/user/${userId}/mypage`
                           : `/guide/${userId}/mypage`
                       }
                       className="flex-col text-left items-start"
                     >
+                      <div>
                       <p className="font-bold text-sm">{nickname}</p>
                       <p className="font-semibold text-sm text-left">{email}</p>
-                    </Link>
+
+                      </div>
+                    </NavLink>
                   </DropdownItem>
                   <DropdownItem key="settings">
                     {userType === "USER" ? (
-                      <Link
-                        href={`/user/${userId}/mypage/tour`}
+                      <NavLink
+                        to={`/user/${userId}/mypage/tour`}
                         className="text-sm text-slate-600"
                       >
+                        <div>
                         {t(`나의 투어 목록`)}
-                      </Link>
+
+                        </div>
+                      </NavLink>
                     ) : (
-                      <Link
-                        href={`/guide/${userId}/mypage/tour`}
+                      <NavLink
+                        to={`/guide/${userId}/mypage/tour`}
                         className="text-sm text-slate-600"
                       >
                         {t(`개설한 투어 목록`)}
-                      </Link>
+                      </NavLink>
                     )}
                   </DropdownItem>
                   <DropdownItem key="logout" color="danger" onClick={logout}>
