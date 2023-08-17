@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useI18n } from "../../hooks/useI18n";
+import { Divider } from "antd";
 import NotPresentMember from "../../assets/boogie_notPresent.jpg";
 import PresentMember from "../../assets/boogie_present.jpg";
+import moment from "moment";
 
 const CardContainer = styled.div`
-  height: 150px;
   border-radius: 15px;
-  border: 1px solid #1983ff;
 `;
 
 function MateCard({ mateData }) {
@@ -20,10 +20,28 @@ function MateCard({ mateData }) {
           <CardContainer
             key={mate.mateId}
             className="flex flex-col justify-center bg-sky-100 text-left p-6 gap-2"
+            style={{}}
           >
-            <p className="text-xs font-semibold">
-              {mate.joinMember} / {mate.maxMember}
-            </p>
+            <div className="flex gap-4 items-center">
+              <img
+                src={
+                  mate.tourImageUrls[0]
+                    ? mate.tourImageUrls[0]
+                    : "https://datacdn.ibtravel.co.kr/files/2023/05/09182530/226b2f068fe92fe9e423f7f17422d994_img-1.jpeg"
+                }
+                className="w-24 h-16 rounded-md object-cover bg-sky-200"
+                alt=""
+              />
+              <div>
+                <p>{mate.tourTitle}</p>
+                <p className="text-xs text-gray-400">
+                  {moment(mate.startDate)
+                    .utcOffset(9)
+                    .format("YYYY/MM/DD HH:mm")}
+                </p>
+              </div>
+            </div>
+            <Divider style={{ margin: "4px" }} />
             <h3>
               <Link to={`/matedetail/${mate.mateId}`}>{mate.title}</Link>
             </h3>
@@ -34,7 +52,7 @@ function MateCard({ mateData }) {
                 },
                 (_, index) => (
                   <img
-                    className="w-9 rounded-xl opacity-80"
+                    className="w-9 rounded-xl opacity-100"
                     key={index}
                     src={PresentMember}
                     alt="프로필 이미지"
@@ -47,7 +65,7 @@ function MateCard({ mateData }) {
                 },
                 (_, index) => (
                   <img
-                    className="w-9 rounded-xl opacity-50"
+                    className="w-9 rounded-xl opacity-100"
                     key={index + mate.joinMember}
                     src={NotPresentMember}
                     alt="프로필 이미지"
