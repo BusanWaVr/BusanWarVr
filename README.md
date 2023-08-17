@@ -48,28 +48,106 @@
 **Back-end Stack**
 - IntelliJ IDE
 - Springboot 
-- ...
+- JPA
+- QueryDsl
+- Stomp Pub/Sub
+- Spring Security
+- JWT
+- MailSender
 
 **Front-End Stack**
 - Visual Studio Code IDE
-- ...
+- React
+- TailWind CSS
+- TypeScript
+- Redux
+- antD
+- WebRTC
 
-** DB**
+**DB**
 - Mysql
 - Redis
 - Mongodb
 
+**Storage**
+- amazon web S3
+
 **CI/CD**
 - AWS
 - Jenkins
-- ...
+- Docker
+- Nginx
+- Https
+
+**Other**
+- OpenVidu
+- Teachable Machine
+- MicroSoft Azure STT
+- KaKao Map
 
 ### ✔ 프로젝트 파일 구조
 ---
 #### Back
-[구조]
+```
+BackEnd
+  ├── config
+  │   ├── amazonS3
+  │   ├── emailConfig
+  │   ├── openApi
+  │   ├── queryDsl
+  │   ├── redis
+  │   ├── stomp
+  │   └── websocket
+  │
+  ├── controller
+  │   └── controllers...
+  │
+  ├── dto
+  │   └── simple
+  │       
+  ├── document
+  ├── exception
+  │   ├── security
+  │   └── type
+  │
+  ├── model
+  │   └── models....
+  │
+  ├── service
+  │   └── services....
+  │
+  ├── utils
+  └── security
+```
 #### Front
-[구조]
+```
+FrontEnd
+  ├── node_modules
+  ├── public
+  └── src
+      ├── assets
+      ├── components
+      │   ├── atoms
+      │   ├── blocks
+      │   ├── common
+      │   └── pages
+      │       ├── Auth
+      │       ├── GuideProfile
+      │       ├── Home
+      │       ├── LiveStream
+      │       ├── Mate
+      │       ├── Review
+      │       ├── Root
+      │       ├── Test
+      │       ├── Tour
+      │       └── UserProfile
+      ├── hooks
+      ├── navigations
+      ├── store
+      ├── store
+      │   └── reducers
+      └── utils
+```
 
 ### ✔ 협업 Tool
 ---
@@ -96,6 +174,10 @@
   - 컨벤션 정리
   - 간트차트 관리
   - 스토리보드, 스퀀스다이어그램, 기능명세서 등 모두가 공유해야 하는 문서 관리 
+- Discord
+  - 오프라인에서 작업할 경우 Team Discord 채널에서 작업
+  - 작업하면서 의사소통 역량을 높이기 위해 사용
+  - 페어 프로그래밍을 지향하기 위해 사용
 - ...
 
 ### 👩‍💻 멤버 구성 - 이미지로 할지? 역할을 더 상세히 나눌지?
