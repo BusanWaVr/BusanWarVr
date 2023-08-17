@@ -63,15 +63,17 @@ const Toolbar = (props) => {
       : styled.div`
           display: flex;
           justify-content: center;
-          position: fixed;
+          position: absolute;
           left: 50%;
           transform: translate(-50%, 0);
           bottom: 30px;
           background-color: #eee;
+          // background-color: rgba(238,238,238, 0.3);
+          // backdrop-filter: blur(10px);
           border-radius: 30px;
           padding: 0 10px;
           z-index: 99;
-          box-shadow: 0px 0px 2px 2px #7d7d7d3e;
+          // box-shadow: 0px 0px 2px 2px #7d7d7d3e;
         `;
 
   const ToolbarButton = styled.button`

@@ -18,10 +18,10 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --sash-size: 12px;
-  --sash-hover-size: 12px;
-  --focus-border: #007fd4;
-  --separator-border: #828282;
+  --sash-size: 5px;
+  --sash-hover-size: 5px;
+  --focus-border: #eeeeee;
+  --separator-border: none;
 }
 
 ::-webkit-scrollbar {

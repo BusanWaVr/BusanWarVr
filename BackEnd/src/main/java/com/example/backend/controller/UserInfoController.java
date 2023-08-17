@@ -10,8 +10,6 @@ import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.user.UserInfoGetService;
 import com.example.backend.service.user.UserInfoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,10 +24,8 @@ public class UserInfoController {
     private final UserInfoGetService userInfoGetService;
 
     @GetMapping("/user/wish/{userId}")
-    public Response getUserWishList(@PathVariable Long userId,
-            @PageableDefault(size = 6) Pageable pageable) {
-        UserWishDto.Response response = userInfoGetService.getUserWishList(
-                userId, pageable);
+    public Response getUserWishList(@PathVariable Long userId) {
+        UserWishDto.Response response = userInfoGetService.getUserWishList(userId);
 
         return new Response<>("200", "성공적으로 위시리스트를 가져왔습니다.", response);
     }
@@ -48,11 +44,8 @@ public class UserInfoController {
     }
 
     @GetMapping("/user/following/{userId}")
-    public Response<UserFollowDto.Response> getFollowingGuides(
-            @PathVariable Long userId,
-            @PageableDefault(size = 6) Pageable pageable) {
-        UserFollowDto.Response response = userInfoGetService.getFollowingGuideList(
-                userId, pageable);
+    public Response<UserFollowDto.Response> getFollowingGuides(@PathVariable Long userId) {
+        UserFollowDto.Response response = userInfoGetService.getFollowingGuideList(userId);
 
         return new Response<>("200", "성공적으로 팔로잉하는 가이드의 목록을 가져왔습니다.", response);
     }
