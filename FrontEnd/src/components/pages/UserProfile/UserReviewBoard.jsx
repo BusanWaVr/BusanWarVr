@@ -14,7 +14,7 @@ function UserReviewBoard() {
   const ReviewData = userInfoData.reviews;
 
   return (
-    <div className="h-full">
+    <div className="h-full flex w-full flex-col items-center">
       <ReviewCard ReviewData={ReviewData} isMe={isMe} />
     </div>
   );
