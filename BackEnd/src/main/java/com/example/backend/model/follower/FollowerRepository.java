@@ -7,9 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FollowerRepository extends JpaRepository<Follower, Long> {
+
     void deleteByUserAndGuide(User user, User guide);
+
     boolean existsByUserAndGuide(User user, User guide);
-    List<Follower> findAllByUser(User user, Pageable pageable);
+
+    List<Follower> findAllByUser(User user);
+
     List<Follower> findAllByGuide(User guide);
 
     List<Follower> findAllByUserId(Long userId);
