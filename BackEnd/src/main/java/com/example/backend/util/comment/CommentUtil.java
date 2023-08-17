@@ -34,6 +34,7 @@ public class CommentUtil {
             if (comment.getParentId() != null) {
                 continue;
             }
+
             List<ReCommentDto> reCommentList = new ArrayList<>();
             reCommentDtoList(comment, reCommentList);
             CommentDto rootComment = new CommentDto(user, comment, isExist, reCommentList);
