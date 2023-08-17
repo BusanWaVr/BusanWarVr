@@ -67,9 +67,66 @@
 ### ✔ 프로젝트 파일 구조
 ---
 #### Back
-[구조]
+```
+BackEnd
+  ├── config
+  │   ├── amazonS3
+  │   ├── emailConfig
+  │   ├── openApi
+  │   ├── queryDsl
+  │   ├── redis
+  │   ├── stomp
+  │   └── websocket
+  │
+  ├── controller
+  │   └── controllers...
+  │
+  ├── dto
+  │   └── simple
+  │       
+  ├── document
+  ├── exception
+  │   ├── security
+  │   └── type
+  │
+  ├── model
+  │   └── models....
+  │
+  ├── service
+  │   └── services....
+  │
+  ├── utils
+  └── security
+```
 #### Front
-[구조]
+```
+FrontEnd
+  ├── node_modules
+  ├── public
+  └── src
+      ├── assets
+      ├── components
+      │   ├── atoms
+      │   ├── blocks
+      │   ├── common
+      │   └── pages
+      │       ├── Auth
+      │       ├── GuideProfile
+      │       ├── Home
+      │       ├── LiveStream
+      │       ├── Mate
+      │       ├── Review
+      │       ├── Root
+      │       ├── Test
+      │       ├── Tour
+      │       └── UserProfile
+      ├── hooks
+      ├── navigations
+      ├── store
+      ├── store
+      │   └── reducers
+      └── utils
+```
 
 ### ✔ 협업 Tool
 ---
