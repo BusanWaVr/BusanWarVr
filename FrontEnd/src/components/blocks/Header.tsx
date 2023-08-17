@@ -30,6 +30,8 @@ interface Props {
 }
 
 function Header({ isLoggedIn, setIsLoggedIn }: Props) {
+  const navigate = useNavigate();
+
   const t = useI18n();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [onLoginModal, setOnLoginModal] = useState(false);
@@ -57,7 +59,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
     }
 
     setIsLoggedIn(false);
-    window.location.reload();
+    navigate("/");
   };
 
   const nickname = localStorage.getItem("nickname");
