@@ -5,7 +5,7 @@ import { Pagination } from "antd";
 
 const MateList = () => {
   const [mateListData, setMateListData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(2);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalInfo, setTotalInfo] = useState(12);
 
   const navigate = useNavigate();

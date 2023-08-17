@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Avatar, Card } from "antd";
 import BoogieNone from "../../assets/boogie_none.png";
-import { useI18n } from "../../hooks/useI18n"
+import { useI18n } from "../../hooks/useI18n";
+import { toast } from "react-toastify";
 
 const { Meta } = Card;
 
 function FollowingCard({ followingData, isMe }) {
-  const t = useI18n()
+  const t = useI18n();
   const [followedGuides, setFollowedGuides] = useState([]);
 
   useEffect(() => {
