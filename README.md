@@ -189,21 +189,21 @@ FrontEnd
 - 황재영 : Back-End
 - 김민구 : Back-End
 
+### ✔ 아키텍처
+---
+![image (1)](https://github.com/BusanWaVr/BusanWarVr/assets/59672589/7e6f12f6-8336-4dcd-8342-1d6cbec8e621)
+
+### ✔ ERD
+---
+![image](https://github.com/BusanWaVr/BusanWarVr/assets/59672589/05cf983a-0c96-4a53-ae36-24c2f5aac772)
+
 ### ✔ 프로젝트 산출물
 ---
-- [기능명세서](./docs/기능명세서.md)
-- [디자인&컨셉기획](./docs/디자인&컨셉기획.md)
-- [스토리보드](./docs/스토리보드.md)
-- [시퀀스다이어그램](./docs/시퀀스다이어그램.md)
-- [아키텍처](./docs/서비스_아키텍처.md)
-- [와이어프레임](./docs/와이어프레임.md)
-- [컨벤션](./docs/컨벤션.md)
-- [API](./docs/API.md)
-- [ERD](./docs/ERD.md)
-- [회의록](./docs/회의록.md)
-- [테스트케이스](./docs/TUPLI_테스트케이스.xlsx)
-- [시스템기술서](./docs/TUPLI_시스템_기술서.docx)
-- [명세기술서](./docs/TUPLI_명세_기술서.docx)
+- [기능명세서](https://www.notion.so/molangmolang/4ea6840ab9ed4947b61d78355c98c993?pvs=4)
+- [와이어프레임](https://www.figma.com/file/7GGkxudmaNRwDje7VLlHeK/Untitled?type=design&mode=design&t=STKqHjQZDDVpGnip-1)
+- [컨벤션](https://www.notion.so/molangmolang/ea75f736858746359a519d622d66fe3f?pvs=4)
+- [API](https://www.notion.so/molangmolang/API-7221bcdd11374665949d3a3c28e052d1?pvs=4)
+- [회의록](https://www.notion.so/molangmolang/0ee780bdf21f400098e277a610b04b69?pvs=4)
 
 ### ✔ 프로젝트 결과물
 ---
