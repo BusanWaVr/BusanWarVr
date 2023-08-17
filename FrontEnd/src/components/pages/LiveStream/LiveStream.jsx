@@ -19,7 +19,7 @@ function LiveStream(props) {
   const profileImg = localStorage.getItem("profileImg"); 
   const { youtubeLink, isAudioEnabled, isVideoEnabled, tourId, tourUID } =
     useSelector((state) => state.liveStream);
-  const { nickname } = useSelector((state) => state.userInfo);
+  const { nickname, userType } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
 
   // api 호출용 tourId
@@ -146,7 +146,9 @@ function LiveStream(props) {
                   {nickname}
                 </div>
                 <label>
-              <input
+                  {userType === "GUIDE" ? 
+                  <div>
+                    <input
                 className={`form-control ${styles.input}`}
                 type="text"
                 id="sessionId"
@@ -155,6 +157,10 @@ function LiveStream(props) {
                 required
               />
               <span>라이브 스트리밍 링크</span>
+                  </div>
+                  
+                  : <></>}
+              
             </label>
                 <button
                 id={styles.liveStreamSubmit}
@@ -168,7 +174,7 @@ function LiveStream(props) {
               
             </div>
             
-           <label>
+           {/* <label>
               <input
                 className={`form-control ${styles.input}`}
                 type="text"
@@ -203,7 +209,7 @@ function LiveStream(props) {
                 required
               />
               <span>라이브 스트리밍 링크</span>
-            </label>
+            </label> */}
            
           </form>
         </div>
