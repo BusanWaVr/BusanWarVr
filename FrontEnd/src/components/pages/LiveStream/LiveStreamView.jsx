@@ -28,6 +28,8 @@ import Stt from "./Stt";
 import SockJS from "sockjs-client/dist/sockjs";
 import Stomp from "stompjs";
 
+import voteEnd from "../../../assets/voteEnd.mp3"
+
 import { useSelector, useDispatch } from "react-redux";
 import {
   setIsAudioEnabled,
@@ -51,6 +53,10 @@ const LiveStreamView = () => {
   const navigate = useNavigate();
 
   const [stompClient, setStompClient] = useState(null);
+
+  // 투표 종료 음성
+  const [voteEndAudio] = useState(new Audio(voteEnd));
+
 
   useEffect(() => {
     setStompClient(
@@ -553,6 +559,7 @@ const LiveStreamView = () => {
         setVoting(false);
         setVote(false);
         console.log("투표 종료");
+        voteEndAudio.play();
       },
       { id: "endVote" }
     );
