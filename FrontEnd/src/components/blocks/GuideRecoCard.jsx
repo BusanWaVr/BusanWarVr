@@ -2,6 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useI18n } from "../../hooks/useI18n";
+import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
+import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
+import AssistantPhotoRoundedIcon from "@mui/icons-material/AssistantPhotoRounded";
 
 const CardContainer = styled.div`
   display: flex;
@@ -13,8 +16,14 @@ const CardContainer = styled.div`
 `;
 
 const Card = styled.div`
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin: 5px;
   min-width: 200px;
+  height: 300px;
   border-radius: 20px;
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 `;
 
 function GuideRecoCard({ guideRecoData }) {
@@ -39,26 +48,61 @@ function GuideRecoCard({ guideRecoData }) {
                   height: "100px",
                 }}
               />
-              <div>
+              <div
+                style={{
+                  width: "120px",
+                }}
+              >
                 <Link
                   to={`/guide/${guide.userId}/mypage`}
-                  className=" font-bold block my-2"
+                  className="font-bold block my-2"
                 >
-                  <h5>{guide.nickname}</h5>
+                  <div
+                    style={{
+                      fontSize: "20px",
+                    }}
+                  >
+                    {guide.nickname}
+                  </div>
                 </Link>
-                <di className="">
+              </div>
+              <div className="">
+                <div className="flex justify-between mb-2">
+                  <StarOutlineRoundedIcon
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      marginRight: "10px",
+                    }}
+                  />
                   <p>
                     <strong>{t(`평점`)}</strong> {guide.averageScore}
                   </p>
-                  <div className="text-sm flex gap-2">
-                    <p>
-                      <strong>{t(`팔로워`)}</strong> {guide.followerNum}
-                    </p>
-                    <p>
-                      <strong>{t(`투어 수`)}</strong> {guide.tourNumbers}
-                    </p>
-                  </div>
-                </di>
+                </div>
+                <div className="flex justify-between mb-2">
+                  <PeopleOutlineRoundedIcon
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      marginRight: "10px",
+                    }}
+                  />
+                  <p>
+                    <strong>{t(`팔로워`)}</strong> {guide.followerNum}
+                  </p>
+                </div>
+                <div className="flex justify-between mb-2">
+                  <AssistantPhotoRoundedIcon
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      marginRight: "10px",
+                    }}
+                  />
+                  <p>
+                    <strong>{t(`투어 수`)}</strong> {guide.tourNumbers}
+                  </p>
+                </div>
               </div>
             </Card>
           ))

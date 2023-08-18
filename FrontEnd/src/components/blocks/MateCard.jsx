@@ -19,8 +19,11 @@ function MateCard({ mateData }) {
         {mateData.map((mate) => (
           <CardContainer
             key={mate.mateId}
-            className="flex flex-col justify-center bg-sky-100 text-left p-6 gap-2"
-            style={{}}
+            className="flex flex-col justify-center bg-white text-left p-6 gap-2"
+            style={{
+              boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.1)",
+              border: "1px solid rgba(0, 0, 0, 0.05)",
+            }}
           >
             <div className="flex gap-4 items-center">
               <img

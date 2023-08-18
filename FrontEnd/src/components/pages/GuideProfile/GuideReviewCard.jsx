@@ -78,40 +78,12 @@ function GuideReviewCard({ ReviewData }) {
             </Card>
           ))
         ) : (
-          <></>
+          <p>아직 작성된 리뷰가 없습니다.</p>
         )
       ) : (
         <p>Loading...</p>
       )}
     </div>
-    // <div>
-    //   {ReviewData ? (
-    //     ReviewData.length > 0 ? (
-    //       ReviewData.map((review) => (
-    //         <CardContainer key={review.content}>
-    //           <Link to={`/tour/${review.tourId}`}>
-    //             <p>{review.tourTitle}</p>
-    //           </Link>
-    //           <h3>
-    //             {t(`별점`)} : {review.score}
-    //           </h3>
-    //           <div dangerouslySetInnerHTML={{ __html: review.content }} />
-    //           <p>
-    //             {" "}
-    //             {t(`작성 날짜`)} : {review.date}
-    //           </p>
-    //           <Link to={`/user/${review.user.id}/mypage`}>
-    //             <p>{review.user.name}</p>
-    //           </Link>
-    //         </CardContainer>
-    //       ))
-    //     ) : (
-    //       <p>{t(`작성된 리뷰가 없습니다.`)}</p>
-    //     )
-    //   ) : (
-    //     <p>{t(`로딩중ㅎ`)}</p>
-    //   )}
-    // </div>
   );
 }
 
