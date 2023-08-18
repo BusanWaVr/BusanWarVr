@@ -98,11 +98,11 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
               {t(`메이트 모집`)}
             </Link>
           </NavbarItem>
-          <NavbarItem>
+          {/* <NavbarItem>
             <Link color="foreground" href="/livestream" className="text-sm">
               {t(`스트리밍 테스트`)}
             </Link>
-          </NavbarItem>
+          </NavbarItem> */}
           {isLoggedIn && userType === "GUIDE" ? (
             <NavbarItem>
               <Link href="/tour/write" color="foreground" className="text-sm">
@@ -138,9 +138,10 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
                       className="flex-col text-left items-start"
                     >
                       <div>
-                      <p className="font-bold text-sm">{nickname}</p>
-                      <p className="font-semibold text-sm text-left">{email}</p>
-
+                        <p className="font-bold text-sm">{nickname}</p>
+                        <p className="font-semibold text-sm text-left">
+                          {email}
+                        </p>
                       </div>
                     </NavLink>
                   </DropdownItem>
@@ -150,10 +151,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
                         to={`/user/${userId}/mypage/tour`}
                         className="text-sm text-slate-600"
                       >
-                        <div>
-                        {t(`나의 투어 목록`)}
-
-                        </div>
+                        <div>{t(`나의 투어 목록`)}</div>
                       </NavLink>
                     ) : (
                       <NavLink
@@ -193,7 +191,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
               {t(`메이트 모집`)}
             </Link>
           </NavbarMenuItem>
-          <NavbarMenuItem>
+          {/* <NavbarMenuItem>
             <Link
               color="foreground"
               href="/livestream"
@@ -202,7 +200,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: Props) {
             >
               {t(`스트리밍 테스트`)}
             </Link>
-          </NavbarMenuItem>
+          </NavbarMenuItem> */}
           {isLoggedIn && userType === "GUIDE" ? (
             <NavbarMenuItem>
               <Link
