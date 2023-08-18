@@ -78,7 +78,7 @@ function GuideReviewCard({ ReviewData }) {
             </Card>
           ))
         ) : (
-          <></>
+          <p>아직 작성된 리뷰가 없습니다.</p>
         )
       ) : (
         <p>Loading...</p>
