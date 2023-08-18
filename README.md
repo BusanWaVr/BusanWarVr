@@ -211,5 +211,5 @@ FrontEnd
 - [중간발표자료](./ppt/TUPLI_중간발표.pptx)
 - [최종발표자료](./ppt/TUPLI_최종발표.pptx)
 
-### ✈️ 부산와Vr 서비스 화면
-... 서비스 화면 Gif
+### ✈️ 부산와Vr 서비스
+- [접속 URL](https://busanwavr.store/)
