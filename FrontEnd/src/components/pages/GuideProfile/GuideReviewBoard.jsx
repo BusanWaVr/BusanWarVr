@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
-import { useI18n } from "../../../hooks/useI18n"
+import { useI18n } from "../../../hooks/useI18n";
 import GuideReviewCard from "./GuideReviewCard";
 
 function GuideReviewBoard() {
-  const t = useI18n()
+  const t = useI18n();
   const { urlId } = useParams();
   const { isMe } = useOutletContext();
   const [guideReviewData, setGuideReviewData] = useState([]);
@@ -38,10 +38,9 @@ function GuideReviewBoard() {
     fetchData();
   }, []);
 
-
   return (
-    <div>
-      <GuideReviewCard ReviewData={guideReviewData}/>
+    <div class="h-full flex w-full flex-col items-center">
+      <GuideReviewCard ReviewData={guideReviewData} />
     </div>
   );
 }

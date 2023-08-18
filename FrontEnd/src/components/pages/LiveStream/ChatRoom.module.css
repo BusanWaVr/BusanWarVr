@@ -130,6 +130,12 @@
   /* background-color: #385ac2; */
 }
 
+.ctrl {
+  font-size: 15px;
+  padding-top: 15px;
+  padding-bottom: 30px;
+}
+
 /* 마이크 */
 .chatFooterTemp {
   padding: 10px;

@@ -90,6 +90,9 @@ const LiveStreamView = () => {
 
   // 가이드가 투표를 열어서, 현재 투표가 진행중인지
   const [vote, setVote] = useState(false);
+
+  const [voteType, setVoteType] = useState(0);
+
   // 사용자가 모션인식으로 투표를 진행중인지
   const [voting, setVoting] = useState(false);
   // 가이드가 입력할 투표 항목
@@ -456,6 +459,7 @@ const LiveStreamView = () => {
           setVoteMessages([]);
           // 투표 진행중, 모션인식 진행중 true
           setVote(true);
+          setVoteType(1);
           setVoting(true);
           dispatch(setIsVoteOpen(true));
           // 1번 선택지, 2번 선택지 값 저장
@@ -578,6 +582,7 @@ const LiveStreamView = () => {
         `/sub/chat/vote/end/${tourUID}`,
         (data) => {
           setVoting(false);
+          setVoteType(2);
           setVote(false);
           console.log("투표 종료");
           voteEndAudio.play();
@@ -646,6 +651,7 @@ const LiveStreamView = () => {
           >
             <Allotment
               style={{ width: "100%", height: "100%", display: "flex" }}
+              defaultSizes={[75, 25]}
             >
               <Allotment.Pane
                 maxSize={
@@ -657,7 +663,7 @@ const LiveStreamView = () => {
                 snap={windowSize.width < 768}
                 className={`${styles.streamContainer}`}
               >
-                <Allotment vertical>
+                <Allotment vertical defaultSizes={[25, 75]}>
                   {/* 유저비디오 */}
                   <Allotment.Pane maxSize={200} snap>
                     <UserVideoContainer
@@ -697,7 +703,7 @@ const LiveStreamView = () => {
                       : windowSize.width * 0.25
                   }
                 >
-                  <Allotment vertical>
+                  <Allotment vertical defaultSizes={[3, 7]}>
                     {isVoteOpen && (
                       <Allotment.Pane className={`${styles.voteroom}`}>
                         <div className="h2 text-white font-semibold p-4 px-6 text-left bg-zinc-900">
@@ -750,7 +756,7 @@ const LiveStreamView = () => {
                             }}
                           />
                         )}
-                        <VoteModal vote={vote} className={styles.votemodal} />
+                        <VoteModal vote={vote} className={styles.votemodal} voteType={voteType}/>
                         {voteMessages.map((msg, index) => (
                           <p key={index} className={styles.votemessage}>
                             {msg.nickname}님이 {msg.selectType}번에

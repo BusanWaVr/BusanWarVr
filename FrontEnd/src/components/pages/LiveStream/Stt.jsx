@@ -21,7 +21,7 @@ function Stt(props) {
       const voiceMessage = {
         roomUid: tourUID,
         token: accessToken,
-        message: recognizedText,
+        message: "reco" + recognizedText,
       };
 
       stompClient.send(
