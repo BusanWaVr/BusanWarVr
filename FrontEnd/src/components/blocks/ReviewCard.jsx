@@ -38,8 +38,6 @@ function ReviewCard({ ReviewData, isMe }) {
     setReviews(updatedReviews);
   }
 
-  console.log(reviews);
-
   return (
     <div className="max-w-[400px] md:max-w-[610px] py-12">
       {reviews ? (
@@ -80,7 +78,9 @@ function ReviewCard({ ReviewData, isMe }) {
                     <div className="flex justify-between items-start">
                       <div className="flex flex-col gap-0">
                         <h1 className="text-base font-semibold mt-1 ">
-                          {review.tourTitle}
+                          <Link to={`../../tour/${review.tourId}`}>
+                            {review.tourTitle}
+                          </Link>
                         </h1>
                         <div className="my-1">
                           <p className="font-semibold">
